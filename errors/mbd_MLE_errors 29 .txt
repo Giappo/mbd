@@ -1,0 +1,26 @@
+You are optimizing lambda mu q 
+You are fixing nothing 
+Optimizing the likelihood - this may take a while. 
+The loglikelihood for the initial parameter values is -4.976654 
+Optimization has not converged. Try again with different initial values.
+$lambda
+[1] -1
+
+$mu
+[1] -1
+
+$q
+[1] -1
+
+$LL
+[1] -1
+
+$`additional species`
+[1] 0
+
+$`number of tips`
+[1] 3
+
+$`tree id`
+[1] 29
+

@@ -1,0 +1,103 @@
+---
+title: "Using MBD"
+author: "Giovanni Laudanno"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{"Using MBD"}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## MBD introduction
+
+MBD is a package to support multiple birth model. This model accounts for a diversification process in which multiple birth (at different nodes) are allowed to occur at the same time.
+The basic framework is described in Etienne et al. 2012^[Etienne, R.S., Haegeman, B., Stadler, T., Aze, T., Pearson, P.N., Purvis, A., Phillimore, A.B.: Diversity-dependence brings molecular phylogenies closer to agreement with the
+fossil record. Proceedings of the Royal Society of London B: Biological Sciences
+279(1732), 1300–1309 (2012) ].
+The main purpose of the package is to provide a tool to estimate, given a phylogenetic tree, the likelihood for a set of three parameters: $\lambda$,$\mu$ and $q$.
+Here:
+
+- $\lambda$ is the sympatric speciation rate;
+
+- $\mu$ is the extinction rate;
+
+- $\nu$ is the multiple allopatric speciation trigger rate;
+
+- $q$ is the single-lineage speciation probability.
+
+Those parameters may be inferred through a maximum likelihood approach using the function mbd_ML.
+
+## MBD usage
+
+First clear memory and load the package:
+
+```{r}
+rm(list = ls()); options(warn = -1);
+suppressWarnings( suppressPackageStartupMessages( library(MBD) ) )
+```
+
+Then we set some basic parameters to create a simulated tree:
+
+```{r}
+set.seed(14) #set.seed(42)
+sim_pars <- c(0.2, 0.15, 2, 0.1); soc <- 2; cond <- 1; age <- 10;#sim_pars <- c(0.2, 0.1, 1.5, 0.1); soc = 2; cond = 1; age = 10;
+sim <- MBD:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond, tips_interval = c(0, Inf))
+
+```
+
+Here "sim_pars" are $\lambda$, $\mu$, $\nu$ and $q$, i.e. the parameters we want to eventually be able to infer. There are also additional auxilary parameters such as "soc" (equal to 1 if we want a stem, or 2 if we want a crown), "cond" (let us condition the tree on the survival of crown species) and "age" (being the total age of the tree).
+
+The "sim" list contain different objects.
+You can visualize the full tree and keep track of species that die before present time (missing species):
+
+```{r, fig.show='hold'}
+plot(sim$tas)
+```
+
+If you want you can also show the reconstrucred tree, obtained cutting the kinks from the previous tree:
+
+```{r, fig.show='hold'}
+plot(sim$tes)
+```
+
+The dataframe containing all the information related to this tree is labeled as L (or L-table). You can access it by typing:
+
+```{r}
+sim$L
+```
+
+In this table:
+
+- the first column are the times at which species are born;
+
+- the second contains labels of the species' parents; positive and negative values only indicate whether the species belongs to the left or right crown lineage;
+
+- the third contains the labels of the daughter species themselves; positive and negative values only indicate whether the species belongs to the left or right crown lineage;
+
+- the fourth contains the extinction times of the species. If this is equal to -1, then the species is still extant.
+
+To recover the vector of branching times use:
+
+```{r}
+sim$brts
+```
+
+In this vector values repeated more than once indicate that a multiple birth process has taken place.
+Since we are not interested in the topology of the tree, this vector alone can be used to calculate the likelihood of the tree with the function "mbd_loglik":
+
+```{r}
+test_pars <- c(0.3, 0.05, 1.0, 0.08)
+mbd_loglik(pars = test_pars, brts = sim$brts, soc = soc, cond = cond, missnumspec = 0)
+```
+
+You can also ask for an optimization of the likelihood function using the function "mbd_ML" either considering a variation of all the parameters ($\lambda, \mu, \nu, q$) or any their subset of your choice. If you want for example to maximize the likelihood only for the parameter q:
+
+```{r}
+#Uncomment if you are keen to wait.
+#idparsopt <- 4
+#ids <- 1:4; idparsfix <- ids[-idparsopt];
+#parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
+#MBD:::mbd_ML(brts = sim$brts, initparsopt = initparsopt, idparsopt = idparsopt, parsfix = parsfix, idparsfix = idparsfix, soc = soc, cond = cond)
+
+```
