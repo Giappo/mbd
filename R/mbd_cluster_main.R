@@ -21,17 +21,17 @@ if (.Platform$OS.type == "windows")
 {
   libs_dir <- dirname(getwd())
   results_dir <- paste0(dirname(getwd()),"/results")
+  devtools::install_github(repo = "Giappo/mbd")
 }
 if(.Platform$OS.type == "unix")
 {
   home_dir <- substring(getwd(),1,13)
   libs_dir <- paste0(home_dir,'/mbd_like/libs')
   results_dir <- paste0(dirname(getwd()),"/sims")
+  lib_files <- list.files(pattern=paste0('[.]tar'), path=libs_dir, full.names=TRUE)
+  install.packages(lib_files, repos = NULL, dependencies = T)
+  # devtools::install_github(repo = "Giappo/mbd") #MAYBE THE BEST OPTION FOR CLUSTER TOO???
 }
-lib_files <- list.files(pattern=paste0('[.]tar'),path=libs_dir, full.names=TRUE)
-mylibrary <- paste0(home_dir,'/R/x86_64-pc-linux-gnu-library/3.3/')
-# install.packages(lib_files, repos = NULL, lib = mylibrary, dependencies = T)
-install.packages(lib_files, repos = NULL, dependencies = T)
 
 # Counts the amount of CPUs minus the master CPU -----
 if (.Platform$OS.type == "unix")
