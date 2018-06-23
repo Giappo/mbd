@@ -26,7 +26,6 @@ suppressWarnings( rm(targetTable,all_results1,all_results,fileData,i) )
 return(results)
 }
 
-#CORRELATION ANALYSIS FUNCTIONS#############################################################################################
 #analysis function
 correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars,
                               percentage_hidden_outliers=0.04,openit=0,idparsopt,mother_folder){
@@ -107,7 +106,6 @@ percentiles_function = function(results, sim_pars, printit = 1, quantiles_choice
   }
   out <- percentiles
 }
-############################################################################################################################
 
 #converts a matrix in a dataframe that can be used with ggplot
 heatmap2dataframe = function(x,y,Matrix, x.name="x", y.name="y", heatmap.name="HeatMap"){
@@ -162,6 +160,7 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
 }
 
 #gets heatmap of my matrices
+#' @export
 myheatmap = function(matrix,logs=1,colormap=heat.colors(15),...){
   if (is.matrix(matrix)==F){matrix=as.matrix(matrix)}
   T=t(matrix[nrow(matrix):1,1:ncol(matrix)])

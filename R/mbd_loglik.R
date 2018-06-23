@@ -29,18 +29,18 @@
 mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
                        missnumspec = 0, safety_threshold = 1e-3,
                        methode = "expo", alpha = 10, minimum_multiple_births = 0){
-
+  
   #Optional stuff that I might need to run the program one line at the time:
   #brts=sim_data[[1]];missnumspec=0;pars=sim_pars;missing_interval=c(1,Inf);methode="expo"
-
+  
   #BASIC SETTINGS AND CHECKS
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
   min_tips <- tips_interval[1]; max_tips <- tips_interval[2]; abstol <- 1e-16; reltol <- 1e-10;
-
+  
   condition1 <- (any(is.nan(pars)) != 0 | any(is.infinite(pars)) != 0)
   condition2 <- (lambda < 0 | mu < 0 | nu < 0 |
-                  q <= 0 + safety_threshold | q >= 1 - safety_threshold |
-                  minimum_multiple_births < 0)
+                   q <= 0 + safety_threshold | q >= 1 - safety_threshold |
+                   minimum_multiple_births < 0)
   condition3 <- (length(pars) != 4)
   if (condition1 | condition2)
   {
@@ -51,7 +51,7 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
     print("wrong number of input parameters")
     loglik <- -Inf
   }else if (mu == 0 && cond == 0 && tips_interval == c(0, Inf) &&
-           missnumspec == 0 && minimum_multiple_births == 0)
+            missnumspec == 0 && minimum_multiple_births == 0)
   {
     loglik <- MBD:::pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
   }else

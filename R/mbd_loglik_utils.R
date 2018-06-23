@@ -49,6 +49,7 @@ create_B0 <- function(max_number_of_species, q, k, b, matrix_builder = hyperA_Ha
 #' @title Internal MBD function
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
+#' @export
 create_A <- function(lambda, mu, nu, q, k, max_number_of_species){
   nvec <- 0:max_number_of_species
   M <- MBD:::create_A0(max_number_of_species = max_number_of_species,
@@ -64,6 +65,7 @@ create_A <- function(lambda, mu, nu, q, k, max_number_of_species){
 #' @title Internal MBD function
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
+#' @export
 create_B <- function(lambda, nu, q, k, b, max_number_of_species){
   M <- MBD:::create_B0(max_number_of_species = max_number_of_species, q = q, k = k, b = b)
   B <- lambda * k * diag(max_number_of_species + 1) * (b == 1) + nu * choose(k, b) * (q^b) * M
@@ -73,6 +75,7 @@ create_B <- function(lambda, nu, q, k, b, max_number_of_species){
 #' @title Internal MBD function
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
+#' @export
 create_A.no_mbd = function(lambda,mu,nu,q,k,max_number_of_species,minimum_multiple_births){
   nvec <- 0:max_number_of_species
   M <- MBD:::create_A0(max_number_of_species = max_number_of_species,lambda = nu,mu = mu,q = q,k = k)
@@ -85,6 +88,7 @@ create_A.no_mbd = function(lambda,mu,nu,q,k,max_number_of_species,minimum_multip
 #' @title Internal MBD function
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
+#' @export
 create_B.no_mbd = function(lambda,nu,q,k,b,max_number_of_species,minimum_multiple_births){
   M <- MBD:::create_B0(max_number_of_species = max_number_of_species, q = q, k = k, b = b)
   B <- lambda * k * diag(max_number_of_species + 1) * (b == 1) + nu * choose(k,b) * (q^b) * M
@@ -95,6 +99,7 @@ create_B.no_mbd = function(lambda,nu,q,k,b,max_number_of_species,minimum_multipl
 #' @title Internal MBD function
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
+#' @export
 calculate_conditional_probability <- function (brts, pars, tips_interval = c(0, Inf),
                                                cond = 1, soc = 2, alpha, methode = "expo",
                                                abstol = 1e-16, reltol = 1e-10,
@@ -144,6 +149,7 @@ calculate_conditional_probability <- function (brts, pars, tips_interval = c(0, 
 #' @title Internal MBD function
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
+#' @export
 calculate_conditional_probability2 <- function (brts, pars, missing_tips_interval = c(0, Inf),
                                                 soc = 2, alpha, methode = "expo",
                                                 abstol = 1e-16, reltol = 1e-10,
@@ -221,6 +227,7 @@ calculate_conditional_probability2 <- function (brts, pars, missing_tips_interva
 #' @title Internal MBD function
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
+#' @export
 A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
                        A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo"){
 
@@ -280,6 +287,7 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 #' @title Internal MBD function
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
+#' @export
 mbd_loglik_rhs <- function (t, x, pars){
   #builds right hand side of the ODE set for multiple birth model
   with(as.list(x), {
