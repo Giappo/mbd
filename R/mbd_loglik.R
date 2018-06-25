@@ -28,7 +28,7 @@
 
 mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
                        missnumspec = 0, safety_threshold = 1e-3,
-                       methode = "expo", alpha = 10, minimum_multiple_births = 0){
+                       methode = "expo", alpha = 10, minimum_multiple_births = 0, print_errors = 1){
   
   #Optional stuff that I might need to run the program one line at the time:
   #brts=sim_data[[1]];missnumspec=0;pars=sim_pars;missing_interval=c(1,Inf);methode="expo"
@@ -42,13 +42,17 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
                    q <= 0 + safety_threshold | q >= 1 - safety_threshold |
                    minimum_multiple_births < 0)
   condition3 <- (length(pars) != 4)
-  if (condition1 | condition2)
+  if       (condition1)
   {
-    print("input parameters are wrong")
+    if (print_errors == 1){print("input parameters are either infinite or NaN")}
+    loglik <- -Inf
+  }else if (condition2)
+  {
+    if (print_errors == 1){print("input parameters have wrong values")}
     loglik <- -Inf
   }else if (condition3)
   {
-    print("wrong number of input parameters")
+    if (print_errors == 1){print("wrong number of input parameters")}
     loglik <- -Inf
   }else if (mu == 0 && cond == 0 && tips_interval == c(0, Inf) &&
             missnumspec == 0 && minimum_multiple_births == 0)
@@ -63,7 +67,9 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
     N0 <- soc #number of starting species
     k_interval <- N0 + cumsum(births)
     max_k <- max(k_interval)
-
+    lx <- max_number_of_species
+    
+    #ALPHA ANALYSIS
     deltaAlpha <- 1; count <- 0; same_result_count <- 0; Pc.notanumber <- 1;
     while (Pc.notanumber)
     {

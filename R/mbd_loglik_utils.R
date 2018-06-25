@@ -181,9 +181,6 @@ calculate_conditional_probability2 <- function (brts, pars, missing_tips_interva
   Pc <- sum(total_product[tips_components]); Pc
 
 
-
-
-
   if (min_tips < soc)
   min_tips <- max(min_tips, soc * cond) #check this
   N0 <- soc
@@ -221,6 +218,40 @@ calculate_conditional_probability2 <- function (brts, pars, missing_tips_interva
     total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
     Pc <- sum(total_product[tips_components])
   }
+  return(list(Pc = Pc, A2_v1 = A2_v1))
+}
+
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+calculate_conditional_probability3 <- function (brts, 
+                                                pars, 
+                                                lx = 200,
+                                                soc = 2, 
+                                                methode = "expo",
+                                                abstol = 1e-16, 
+                                                reltol = 1e-10){
+  
+  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
+  total_time <- max(abs(brts));
+  
+  m <- 0:lx; length(m)
+  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
+  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
+  Qi <- c(1, rep(0, lx)); length(Qi)
+  
+  TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+                       max_number_of_species = lx); dim(TM); max(is.na(TM)); max(is.infinite(TM))
+  
+  # A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+  # precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+  
+  A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+  
+  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+  Pc <- sum(total_product)
+  
   return(list(Pc = Pc, A2_v1 = A2_v1))
 }
 

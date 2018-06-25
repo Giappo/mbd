@@ -7,7 +7,8 @@
 mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
   idparsfix = (1:4)[-idparsopt], brts, cond = 1, soc = 2,
   tips_interval = c(0, Inf), missnumspec = 0, methode = "expo",
-  alpha = 20, minimum_multiple_births = 0, pars.transform = 0)
+  alpha = 20, minimum_multiple_births = 0, pars.transform = 0,
+  print_errors = 0)
 }
 \description{
 Internal MBD function.
