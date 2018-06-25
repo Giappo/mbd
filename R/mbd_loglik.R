@@ -20,9 +20,9 @@
 #'
 #' @examples
 #' set.seed(11)
-#' simulated_data = MBD:::mbd_sim( pars=c(0.6,0.1,2.2,0.1),soc=2,age=10,cond=1 )
+#' simulated_data = MBD:::mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
 #' plot(simulated_data$tas)
-#' mbd_loglik( pars=c(0.8,0.05,2.2,0.1),brts=simulated_data$brts,soc=2,cond=1,missnumspec=0 )
+#' mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts,soc = 2, cond = 1, missnumspec = 0)
 #'
 #' @export
 mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
@@ -120,6 +120,7 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
       #MATRIX DIMENSION SETUP
       max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
       lx <- max_number_of_species
+      
       nvec <- 0:max_number_of_species
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
