@@ -25,7 +25,6 @@
 #' mbd_loglik( pars=c(0.8,0.05,2.2,0.1),brts=simulated_data$brts,soc=2,cond=1,missnumspec=0 )
 #'
 #' @export
-
 mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
                        missnumspec = 0, safety_threshold = 1e-3,
                        methode = "expo", alpha = 10, minimum_multiple_births = 0, print_errors = 1){

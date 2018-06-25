@@ -55,6 +55,7 @@ mbd_ML <- function(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], 
   # - optimmethod = 'subplex' (current default) or 'simplex' (default of previous versions)
 
   if (missing(parsfix) && (length(idparsfix) == 0)){parsfix <- NULL}
+  alpha <- alpha + 0
 
   options(warn=-1)
   namepars <- c("lambda", "mu", "nu", "q"); Npars <- length(namepars); #if you add more parameters to your model just change this
