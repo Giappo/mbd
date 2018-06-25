@@ -66,7 +66,6 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
     N0 <- soc #number of starting species
     k_interval <- N0 + cumsum(births)
     max_k <- max(k_interval)
-    lx <- max_number_of_species
     
     #ALPHA ANALYSIS
     deltaAlpha <- 1; count <- 0; same_result_count <- 0; Pc.notanumber <- 1;
@@ -120,6 +119,7 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
     {
       #MATRIX DIMENSION SETUP
       max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
+      lx <- max_number_of_species
       nvec <- 0:max_number_of_species
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
