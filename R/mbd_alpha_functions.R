@@ -49,23 +49,24 @@ mbd_alpha_ML = function(s, path = "F://Dropbox//University//R//MBD//results//[20
     for (alpha in alpha.min:alpha.max)
       {
       if(.Platform$OS.type=="windows"){print(alpha)}
-      time.alpha[alpha] = system.time( MLE.alpha[[alpha]] <- tryCatch( MBD:::mbd_ML0(brts=sim_data[[s]], alpha = alpha,
-                                               initparsopt=initparsopt,
-                                               idparsopt=idparsopt,
-                                               idparsfix = (1:3)[-idparsopt],
-                                               parsfix = parsfix,
-                                               missnumspec=0,
-                                               cond= cond,
-                                               soc = soc,
-                                               tips_interval=tips_interval,
-                                               res = 10*(1+length(brts)+missnumspec),
-                                               tol = c(1E-3, 1E-4, 1E-6),
-                                               maxiter = 1000 * round((1.25)^length(idparsopt)),
-                                               changeloglikifnoconv = FALSE,
-                                               optimmethod = 'subplex')
+      time.alpha[alpha] = system.time( MLE.alpha[[alpha]] <- tryCatch(MBD:::mbd_ML0(brts=sim_data[[s]], 
+                                                                                    alpha = alpha,
+                                                                                    initparsopt = initparsopt,
+                                                                                    idparsopt = idparsopt,
+                                                                                    idparsfix = (1:3)[-idparsopt],
+                                                                                    parsfix = parsfix,
+                                                                                    missnumspec = 0,
+                                                                                    cond = cond,
+                                                                                    soc = soc,
+                                                                                    tips_interval = tips_interval,
+                                                                                    res = 10 * (1 + length(brts) + missnumspec),
+                                                                                    tol = c(1E-3, 1E-4, 1E-6),
+                                                                                    maxiter = 1000 * round((1.25)^length(idparsopt)),
+                                                                                    changeloglikifnoconv = FALSE,
+                                                                                    optimmethod = 'subplex')
                                      ))
     }
-    out <- matrix(unlist(MLE.alpha),nrow=length(time.alpha),ncol=6,byrow = T);
+    out <- matrix(unlist(MLE.alpha), nrow = length(time.alpha), ncol = 6,byrow = T);
     out[,5] <- time.alpha
     out[,6] <- alpha.min:alpha.max
     out <- cbind(out, rep(s, length(time.alpha)))

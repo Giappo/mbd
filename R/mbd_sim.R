@@ -36,80 +36,84 @@
 #'
 #' @export
 mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
-                    tips_interval = c(soc * (cond == 1), Inf), minimum_multiple_births = 0)
+                    tips_interval = c(0, Inf), minimum_multiple_births = 0)
 {
-  if (tips_interval[2]<tips_interval[1] || any(pars<0)){print("ERROR! Check again your settings.");break}
-  lambda = pars[1]; mu = pars[2]; nu = pars[3]; q=pars[4]; N0=soc
-  tips=-1; conditioning_on_survival=cond; multiple_births_check = 0;
-  while ( tips<tips_interval[1] | tips>tips_interval[2] | conditioning_on_survival | multiple_births_check == 0)
+  if (tips_interval[2] < tips_interval[1] || any(pars < 0)){print("ERROR! Check again your settings.");break}
+  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]; N0 <- soc
+  tips <- -1; crown_species_dead <- cond; multiple_births_check <- 0;
+  keep_the_sim <- 0
+  while (keep_the_sim == 0 | multiple_births_check == 0)
   {
-    total_count=N0
-    pool=1:N0
-    while (total_count==N0 | length(pool)<N0)
+    total_count <- N0
+    pool <- 1:N0
+    while (total_count == N0 | length(pool) < N0)
     {
-      total_count=N0
-      N=N0
-      pool=c(-1,2)
-      t=age
-      L = matrix(0,nrow=1e6,4)
-      L[,4]=-1
-      L[,3]=0
-      L[1,1:4] = c(t,0,-1,-1)
-      L[2,1:4] = c(t,-1,2,-1)
-      while (t>0)
+      total_count <- N0
+      N <- N0
+      pool <- c(-1,2)
+      t <- age
+      L <- matrix(0, nrow = 1e6, 4)
+      L[,4] <- -1
+      L[,3] <- 0
+      L[1,1:4] <- c(t,0,-1,-1)
+      L[2,1:4] <- c(t,-1,2,-1)
+      while (t > 0)
       {
-        N=length(pool)
-        total_rate = N*(lambda + mu) + nu
-        deltaT=rexp(1,rate = total_rate)
-        outcome=sample(c(-1,1,2),size=1,prob = c(N*mu,N*lambda,nu))
-        deltaN=-1*(outcome==-1)+1*(outcome==1)+rbinom(n=1,size=N,prob=q)*(outcome==2)
-        t=t-deltaT
+        N <- length(pool)
+        total_rate <- N * (lambda + mu) + nu
+        deltaT <- rexp(1, rate = total_rate)
+        outcome <- sample(c(-1,1,2), size = 1, prob = c(N * mu, N * lambda, nu))
+        deltaN <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * rbinom(n = 1, size = N, prob = q)
+        t <- t - deltaT
 
-        if (deltaN>0 & t>0)
+        if (deltaN > 0 & t > 0)
         {
-          if (N>1) {parents=sample(pool,replace = F,size=deltaN)}else{parents=pool}
-          new_interval=(total_count+1):(total_count+deltaN)
-          L[new_interval,1]=t#-(deltaN:1)*1e-5 add this if you need separate time points
-          L[new_interval,2]=parents
-          L[new_interval,3]=abs(new_interval)*sign(parents)
+          if (N > 1) {parents <- sample(pool, replace = FALSE, size = deltaN)}else{parents <- pool}
+          new_interval <- (total_count + 1):(total_count + deltaN)
+          L[new_interval,1] <- t#-(deltaN:1)*1e-5 add this if you need separate time points
+          L[new_interval,2] <- parents
+          L[new_interval,3] <- abs(new_interval) * sign(parents)
 
-          pool=c(pool, abs(new_interval)*sign(parents) )
-          total_count=total_count+deltaN
+          pool <- c(pool, abs(new_interval) * sign(parents) )
+          total_count <- total_count + deltaN
         }
-        if (deltaN<0 & t>0)
+        if (deltaN < 0 & t > 0)
         {
-          if (N>1) {dead=sample(pool,replace = F,size=1)}else{dead=pool}
+          if (N > 1) {dead <- sample(pool, replace = FALSE, size = 1)}else{dead <- pool}
           # dead=abs(dead)
-          L[abs(dead),4]=t
-          pool=pool[pool!=dead]
+          L[abs(dead),4] <- t
+          pool <- pool[pool != dead]
         }
         # print(pool)
       }
     }
-    L=L[(1:total_count),]
-    extinct_species = sum(L[,4]!=-1)
+    L <- L[(1:total_count),]
+    extinct_species <- sum(L[,4] != -1)
     #tips check
-    tips=length(L[,4][L[,4]==-1])
+    tips <- length(L[,4][L[,4] == -1])
     #survival of crown check
-    alive=L[L[,4]==-1,]
-    alive=matrix(alive,ncol=4)
-    conditioning_on_survival = ( length( unique(sign(alive[,3])) )!=2 )*cond
+    alive <- L[L[,4] == -1,]
+    alive <- matrix(alive, ncol = 4)
+    crown_species_dead <- ( length( unique(sign(alive[,3])) ) != 2 ) * cond #if cond == 0 they will always look like they're alive, because I don't care
     #multiple births check
-    births.reconstructed_tree=unlist(unname(sort(DDD:::L2brts(L,dropextinct = T),decreasing = T)) )
-    births.full_tree=unlist(unname(sort(DDD:::L2brts(L,dropextinct = F),decreasing = T)) )
-    multiple_births.reconstructed_tree = sum( duplicated(births.reconstructed_tree) )
-    multiple_births.full_tree = sum( duplicated(births.full_tree) )
+    births.reconstructed_tree <- unlist(unname(sort(DDD:::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
+    births.full_tree <- unlist(unname(sort(DDD:::L2brts(L, dropextinct = FALSE), decreasing = TRUE)) )
+    multiple_births.reconstructed_tree <- sum( duplicated(births.reconstructed_tree) )
+    multiple_births.full_tree <- sum( duplicated(births.full_tree) )
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multiple_births.full_tree>=minimum_multiple_births)
-    multiple_births_check = (multiple_births.reconstructed_tree>=minimum_multiple_births)
+    multiple_births_check <- (multiple_births.reconstructed_tree >= minimum_multiple_births)
+    
+    keep_the_sim <- (!crown_species_dead) & (tips >= tips_interval[1] & tips <= tips_interval[2]) #should i keep this simulation?
   }
-  time_points=unlist(unname(sort(DDD:::L2brts(L,dropextinct = T),decreasing = T)) )
-  brts = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
-  tes = DDD:::L2phylo(L,dropextinct = T)
-  tas = DDD:::L2phylo(L,dropextinct = F)
+  time_points <- unlist(unname(sort(DDD:::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
+  brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
+  tes <- DDD:::L2phylo(L, dropextinct = TRUE)
+  tas <- DDD:::L2phylo(L, dropextinct = FALSE)
   #   plot(tas)
   #   plot(tes)
-  out = list(brts=brts,tes = tes, tas = tas, extinct_species=extinct_species,L = L, minimum_multiple_births = multiple_births.full_tree)
+  out <- list(brts = brts, tes = tes, tas = tas, extinct_species = extinct_species, L = L, 
+              minimum_multiple_births = multiple_births.full_tree)
   return(out)
 }
 
@@ -250,14 +254,15 @@ mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
 #' out = MBD:::mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
 #'
 #' @export
-mbd_sim_dataset = function(sim_pars=c(0.5,0.1,0.3,0.15),soc=2,cond=1,age=10,max_sims=1000,tips_interval = c(soc*(cond==1),100),edge=Inf,minimum_multiple_births=0){
+mbd_sim_dataset = function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
+                           tips_interval = c(0, 100), edge = Inf, minimum_multiple_births = 0){
   # mbd_sim_dataset creates a full simulated dataset of "max_sims" trees
   #"edge" gives the extent of fluctuations around the mean that i want to consider
 
-  if (sim_pars[2]==0){cond=0;tips_interval=c(0,Inf)} #this allows me to use the analytical formula
+  if (sim_pars[2] == 0){cond = 0; tips_interval = c(0, Inf)} #this allows me to use the analytical formula CHECK THIS!
 
-  N0=soc
-  if (cond == 1){tips_interval[1]=max(N0,tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
+  N0 = soc
+  # if (cond == 1){tips_interval[1] = max(N0, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
   if (edge != Inf && tips_interval == c(0, Inf))
   {
     estimation=MBD:::mbd_P_eq(test_parameters=sim_pars,age=age,max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
@@ -267,38 +272,39 @@ mbd_sim_dataset = function(sim_pars=c(0.5,0.1,0.3,0.15),soc=2,cond=1,age=10,max_
   }
 
   #simulate trees
-  sim_data=sim_tes=sim_tas=vector("list",max_sims)
-  ext_species=rep(NA,max_sims)
+  sim_data <- sim_tes <- sim_tas <- vector("list",max_sims)
+  ext_species <- rep(NA, max_sims)
   for (s in 1:max_sims)
   {
-    simulation=MBD:::mbd_sim(pars=sim_pars,soc=soc,age=age,cond=cond,tips_interval = tips_interval,minimum_multiple_births=minimum_multiple_births)
-    sim_data[[s]]=simulation$brts
-    ext_species[s]=simulation$extinct_species
-    sim_tes[[s]] = simulation$tes
-    sim_tas[[s]] = simulation$tas
+    simulation=MBD:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond,
+                             tips_interval = tips_interval, minimum_multiple_births = minimum_multiple_births)
+    sim_data[[s]]  <- simulation$brts
+    ext_species[s] <- simulation$extinct_species
+    sim_tes[[s]]   <- simulation$tes
+    sim_tas[[s]]   <- simulation$tas
   }
 
-  max_k=(N0-1)+(is.list(sim_data))*max(sapply(sim_data, length))+(1-is.list(sim_data))*length(sim_data)
+  max_k <- (N0 - 1) + (is.list(sim_data)) * max(sapply(sim_data, length)) + (1 - is.list(sim_data)) * length(sim_data)
   if (is.list(sim_data))
   {
     all_the_births=sapply(sim_data, FUN = function(brts){return(MBD:::brts2time_intervals_and_births(brts)$births)})
   }else{
     all_the_births=MBD:::brts2time_intervals_and_births(sim_data)$births
   }
-  max_b=max(unlist(all_the_births))
+  max_b <- max(unlist(all_the_births))
 
-  additional_species = tips = rep(0,max_sims)
+  additional_species <- tips <- rep(0, max_sims)
   for (s in 1:max_sims){
-    additional_species[s] = sum( duplicated(sim_data[[s]]) )
-    tips[s] = length(sim_data[[s]])+1
+    additional_species[s] <- sum(duplicated(sim_data[[s]]))
+    tips[s] <- length(sim_data[[s]]) + 1
   }
   #saving sims and settings
   # simpath=paste("sims/",sim_pars[1],"-",sim_pars[2],"-",sim_pars[3],"-",sim_pars[4],"/",sep = '')
-  simpath = getwd()
-  datapath=paste(simpath,"/data",sep = '')
-  sim_data_name = paste(datapath,"/sim_data",sep = '')
-  general_settings_name = paste(datapath,"/general_settings",sep = '')
-  sim_trees_name = paste(datapath,"/sim_trees",sep = '')
+  simpath <- getwd()
+  datapath <- paste0(simpath,"/data")
+  sim_data_name <- paste0(datapath,"/sim_data")
+  general_settings_name <- paste0(datapath,"/general_settings")
+  sim_trees_name <- paste0(datapath,"/sim_trees")
   if (file.exists(sim_data_name)){suppressWarnings( file.remove(sim_data_name) )}
   save(sim_data,file=sim_data_name)
   if (file.exists(general_settings_name)){suppressWarnings( file.remove(general_settings_name) )}

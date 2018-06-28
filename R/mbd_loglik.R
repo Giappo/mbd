@@ -25,36 +25,46 @@
 #' mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
 #'
 #' @export
-mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
-                       missnumspec = 0, safety_threshold = 1e-3,
-                       methode = "expo", alpha = 10, minimum_multiple_births = 0, print_errors = 1){
+mbd_loglik <- function(pars, 
+                       brts, 
+                       soc = 2, 
+                       cond = 1, 
+                       tips_interval = c(0, Inf),
+                       missnumspec = 0, 
+                       safety_threshold = 1e-3,
+                       methode = "expo", 
+                       alpha = 10, 
+                       minimum_multiple_births = 0, 
+                       print_errors = TRUE){
   
   #Optional stuff that I might need to run the program one line at the time:
   #brts = sim_data[[1]]; missnumspec = 0;pars = sim_pars; missing_interval = c(1, Inf); methode = "expo"
   
   #BASIC SETTINGS AND CHECKS
-  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
-  min_tips <- tips_interval[1]; max_tips <- tips_interval[2]; abstol <- 1e-16; reltol <- 1e-10;
+  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]
+  abstol <- 1e-16; reltol <- 1e-10
+  if (cond == 0) {tips_interval <- c(0, Inf)}
+  # min_tips <- tips_interval[1]; max_tips <- tips_interval[2]
   
   condition1 <- (any(is.nan(pars)) != 0 | any(is.infinite(pars)) != 0)
   condition2 <- (lambda < 0 | mu < 0 | nu < 0 |
-                 q <= 0 + safety_threshold | q >= 1 - safety_threshold |
+                 q <= 0 + safety_threshold | 
+                 q >= 1 - safety_threshold |
                  minimum_multiple_births < 0)
   condition3 <- (length(pars) != 4)
   if       (condition1)
   {
-    if (print_errors == 1){print("input parameters are either infinite or NaN")}
+    if (print_errors == TRUE){print("input parameters are either infinite or NaN")}
     loglik <- -Inf
   }else if (condition2)
   {
-    if (print_errors == 1){print("input parameters have wrong values")}
+    if (print_errors == TRUE){print("input parameters have wrong values")}
     loglik <- -Inf
   }else if (condition3)
   {
-    if (print_errors == 1){print("wrong number of input parameters")}
+    if (print_errors == TRUE){print("wrong number of input parameters")}
     loglik <- -Inf
-  }else if (mu == 0 && cond == 0 && tips_interval == c(0, Inf) &&
-            missnumspec == 0 && minimum_multiple_births == 0)
+  }else if (mu == 0 && tips_interval <- c(0, Inf) && missnumspec == 0 && minimum_multiple_births == 0)
   {
     loglik <- MBD:::pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
   }else
@@ -67,15 +77,18 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
     N0 <- soc #number of starting species
     k_interval <- N0 + cumsum(births)
     max_k <- max(k_interval)
+    Pc <- 1
     
     if (cond == 1){
       #ALPHA ANALYSIS (computes Pc and uses it to estimate what alpha is better to use)
-      Pc_and_lx <- calculate_conditional_probability(brts = sim$brts, 
+      Pc_and_lx <- MBD::calculate_conditional_probability(brts = sim$brts, 
                                                      pars = sim_pars, 
                                                      soc = soc,
+                                                     tips_interval = tips_interval,  
                                                      methode = methode, 
                                                      abstol = abstol, 
                                                      reltol = reltol)
+      
       Pc <- Pc_and_lx$Pc
       lx <- Pc_and_lx$lx
       alpha <- lx/max_k
@@ -116,7 +129,7 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
           }
           nan_values <- 1; break
         }
-        if (any(Qt[t,]<0)){negative_values <- 1; break}
+        if (any(Qt[t,] < 0)){negative_values <- 1; break}
 
         #Applying C operator (this is a trick to avoid precision issues)
         C[t] <- 1/(sum(Qt[t,])); Qt[t,] <- Qt[t,] * C[t]
@@ -168,7 +181,6 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
     {
       loglik <- loglik - log(Pc) * (cond == 1) #conditioned likelihood
     }
-
   }
   return(loglik)
 }
@@ -323,9 +335,9 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
 
     Mk_N0=MBD:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = N0)
     A2_v1=MBD:::A_operator(Q = Qt[1,],transition_matrix = Mk_N0,time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
-    if (methode!="sexpm"){A2_v1=MBD:::negatives_correction(A2_v1,pars)} #it removes some small negative values that can occurr as bugs from the integration process
-    if (debug_check==1){print(head(A2_v1,max_tips))}
-    total_product=A2_v1*one_over_Cm*one_over_qm_binom
+    if (methode != "sexpm"){A2_v1=MBD:::negatives_correction(A2_v1,pars)} #it removes some small negative values that can occurr as bugs from the integration process
+    if (debug_check == 1){print(head(A2_v1, max_tips))}
+    total_product=A2_v1 * one_over_Cm * one_over_qm_binom
     Pc=sum(total_product[tips_components])
 
     if (Pc==0){#slowest and best accuracy

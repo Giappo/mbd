@@ -181,6 +181,7 @@ calculate_conditional_probability0 <- function (brts,
                                                 pars,
                                                 lx = 200,
                                                 soc = 2,
+                                                tips_interval = c(0, Inf),
                                                 methode = 'expo',
                                                 abstol = 1e-16,
                                                 reltol = 1e-10){
@@ -202,7 +203,11 @@ calculate_conditional_probability0 <- function (brts,
   # A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
 
   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
-  Pc <- sum(total_product)
+  missingspecies_min <- max((tips_interval[1] - 2), 0 )
+  missingspecies_max <- min((tips_interval[2] - 2), lx)
+  tips_components <- 1 + c(missingspecies_min, missingspecies_max) # +1 is because of the zero-th component
+  Pc <- sum(total_product[tips_components[1]:tips_components[2]])
+  # Pc <- sum(total_product)
 
   return(Pc)
 }
@@ -229,12 +234,13 @@ find_best_lx_for_Pc <- function(brts,
   for (lx2 in lxvec)
   {
     lx.test[i] <- MBD::calculate_conditional_probability0(brts = brts,
-                                                     pars = c(pars[1], 0, pars[3], pars[4]),
-                                                     lx = lx2, 
-                                                     soc = soc,
-                                                     methode = methode,
-                                                     abstol = abstol,
-                                                     reltol = reltol)
+                                                          pars = c(pars[1], 0, pars[3], pars[4]),
+                                                          lx = lx2, 
+                                                          soc = soc,
+                                                          tips_interval = c(0, Inf),
+                                                          methode = methode,
+                                                          abstol = abstol,
+                                                          reltol = reltol)
     if (!is.na(abs(lx.test[i]))) if (abs(lx.test[i] - 1) < 0.01) {right.lx.coord <- i; lx <- lxvec[right.lx.coord]; break}
     i <- i + 1
   }; lx.test
@@ -248,12 +254,13 @@ find_best_lx_for_Pc <- function(brts,
   for (lx2 in lxvec)
   {
     lx.test2[j] <- MBD::calculate_conditional_probability0(brts = brts,
-                                                      pars = c(pars[1], 0, pars[3], pars[4]),
-                                                      lx = lx2, 
-                                                      soc = soc,
-                                                      methode = methode,
-                                                      abstol = abstol,
-                                                      reltol = reltol)
+                                                           pars = c(pars[1], 0, pars[3], pars[4]),
+                                                           lx = lx2, 
+                                                           soc = soc,
+                                                           tips_interval = c(0, Inf),
+                                                           methode = methode,
+                                                           abstol = abstol,
+                                                           reltol = reltol)
     if (!is.na(abs(lx.test2[i]))) if (abs(lx.test2[j] - 1) < 0.01) {right.lx.coord2 <- j; lx <- lxvec2[right.lx.coord2]; break}
     j <- j + 1
   }; lx.test2
@@ -273,6 +280,7 @@ find_best_lx_for_Pc <- function(brts,
 calculate_conditional_probability <- function (brts,
                                                pars,
                                                soc = 2,
+                                               tips_interval = c(0, Inf),
                                                methode = 'expo',
                                                abstol = 1e-16,
                                                reltol = 1e-10){
@@ -282,6 +290,7 @@ calculate_conditional_probability <- function (brts,
                                            pars = pars,
                                            lx = lx,
                                            soc = soc,
+                                           tips_interval = tips_interval,
                                            methode = methode,
                                            abstol = abstol,
                                            reltol = reltol)

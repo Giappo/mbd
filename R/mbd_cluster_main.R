@@ -1,6 +1,6 @@
 #' @export
 mbd_cluster_main <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
-                             tips_interval = c(soc * (cond == 1), 100), edge = Inf, minimum_multiple_births = 0){
+                             tips_interval = c(0, 100), edge = Inf, minimum_multiple_births = 0){
 # Set up the cores -----
 list.of.packages <- c("parallel", "snow")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -50,7 +50,7 @@ if (.Platform$OS.type == "windows")
 
 # Set up sims -----
 if (sim_pars[2] == 0){cond <- 0; tips_interval <- c(0, Inf)} #this allows me to use the analytical formula
-if (cond == 1){tips_interval[1] <- max(soc, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
+# if (cond == 1){tips_interval[1] <- max(soc, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
 sim_parameter.list <- vector("list", max_sims); for (i in 1:max_sims){sim_parameter.list[[i]] <- sim_pars}
 
 # Simulate trees -----

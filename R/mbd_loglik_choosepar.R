@@ -14,8 +14,8 @@ mbd_loglik_choosepar  <- function(trparsopt, trparsfix, idparsopt=1:4,
   
   namepars <- c("lambda","mu","nu","q"); Npars <- length(namepars);
   if (length(trparsopt) == 4 && missing(trparsfix)){trparsfix <- NULL}
-  trpars1 = rep(0,Npars)
-  trpars1[idparsopt] = trparsopt
+  trpars1 = rep(0, Npars)
+  trpars1[idparsopt] <- trparsopt
   if (length(idparsfix) != 0)
   {
     trpars1[idparsfix] <- trparsfix

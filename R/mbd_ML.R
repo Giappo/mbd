@@ -197,7 +197,7 @@ mbd_ML <- function(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], 
 #' @export
 mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
                     parsfix, missnumspec = 0, cond = 1, soc = 2, tips_interval=c(0,Inf),
-                    res = 10*(1+length(brts)+missnumspec), tol = c(1E-3, 1E-4, 1E-6),
+                    res = 10 * (1 + length(brts) + missnumspec), tol = c(1E-3, 1E-4, 1E-6),
                     maxiter = 1000 * round((1.25)^length(idparsopt)), changeloglikifnoconv = FALSE,
                     optimmethod = 'subplex', methode = "expo", alpha = 20, pars.transform = 1)
 {# bracket#1
@@ -207,7 +207,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
   # - optimmethod = 'subplex' (current default) or 'simplex' (default of previous versions)
 
-  if (missing(parsfix) && (length(idparsfix)==0)){parsfix=NULL}
+  if (missing(parsfix) && (length(idparsfix)==0)){parsfix <- NULL}
 
   options(warn=-1)
   namepars <- c("lambda","mu","q"); Npars <- length(namepars); #if you add more parameters to your model just change this
