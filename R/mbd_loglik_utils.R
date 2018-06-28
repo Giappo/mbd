@@ -246,11 +246,11 @@ find_best_lx_for_Pc <- function(brts,
   }; lx.test
   if (right.lx.coord == 0)
   {
-    right.lx.coord <- which(abs(lx.test - 1) == min(abs(lx.test - 1), na.rm = T))
+    right.lx.coord <- which(abs(lx.test - 1) == min(abs(lx.test - 1), na.rm = TRUE))
     lx <- lxvec[right.lx.coord]
   }
   
-  lx.test2 <- rep(NA, length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2*step1/a)))); j <- 1; right.lx.coord2 <- 0
+  lx.test2 <- rep(NA, length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2 * step1/a)))); j <- 1; right.lx.coord2 <- 0
   for (lx2 in lxvec)
   {
     lx.test2[j] <- MBD::calculate_conditional_probability0(brts = brts,

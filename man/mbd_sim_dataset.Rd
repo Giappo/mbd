@@ -5,8 +5,8 @@
 \title{Creates a full simulated dataset of trees under the multiple birth death process}
 \usage{
 mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
-  age = 10, max_sims = 1000, tips_interval = c(soc * (cond == 1), 100),
-  edge = Inf, minimum_multiple_births = 0)
+  age = 10, max_sims = 1000, tips_interval = c(0, 100), edge = Inf,
+  minimum_multiple_births = 0)
 }
 \arguments{
 \item{soc}{stands for stem or crown. Set 1 for stem or 2 for crown.}

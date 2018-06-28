@@ -5,7 +5,8 @@
 \title{Internal MBD function}
 \usage{
 calculate_conditional_probability0(brts, pars, lx = 200, soc = 2,
-  methode = "expo", abstol = 1e-16, reltol = 1e-10)
+  tips_interval = c(0, Inf), methode = "expo", abstol = 1e-16,
+  reltol = 1e-10)
 }
 \description{
 Internal MBD function.

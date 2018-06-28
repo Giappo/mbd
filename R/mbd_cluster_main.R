@@ -36,17 +36,17 @@ if(.Platform$OS.type == "unix")
 }
 
 # Counts the amount of CPUs minus the master CPU -----
-if (.Platform$OS.type == "unix")
-{
-  cpu <- (mpi.universe.size() - 1)
-  cl  <- makeMPIcluster(cpu)
-}
-if (.Platform$OS.type == "windows")
-{
+# if (.Platform$OS.type == "unix")
+# {
+#   cpu <- (mpi.universe.size() - 1)
+#   cl  <- makeMPIcluster(cpu)
+# }
+# if (.Platform$OS.type == "windows")
+# {
   cpu <- detectCores() # Number of cores requested.
   hosts <- rep("localhost", cpu)
   cl <- makeCluster(hosts, type = "SOCK")
-}
+# }
 
 # Set up sims -----
 if (sim_pars[2] == 0){cond <- 0; tips_interval <- c(0, Inf)} #this allows me to use the analytical formula

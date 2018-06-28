@@ -64,7 +64,7 @@ mbd_loglik <- function(pars,
   {
     if (print_errors == TRUE){print("wrong number of input parameters")}
     loglik <- -Inf
-  }else if (mu == 0 && tips_interval <- c(0, Inf) && missnumspec == 0 && minimum_multiple_births == 0)
+  }else if (mu == 0 && all(tips_interval == c(0, Inf)) && missnumspec == 0 && minimum_multiple_births == 0)
   {
     loglik <- MBD:::pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
   }else

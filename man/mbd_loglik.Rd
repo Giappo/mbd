@@ -6,7 +6,7 @@
 \usage{
 mbd_loglik(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
   missnumspec = 0, safety_threshold = 0.001, methode = "expo",
-  alpha = 10, minimum_multiple_births = 0, print_errors = 1)
+  alpha = 10, minimum_multiple_births = 0, print_errors = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:
