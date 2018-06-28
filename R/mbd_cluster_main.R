@@ -22,7 +22,7 @@ if (.Platform$OS.type == "windows")
   libs_dir <- dirname(getwd())
   results_dir <- paste0(dirname(getwd()),"/results")
   dir.create(results_dir, showWarnings = FALSE)
-  devtools::install_github(repo = "Giappo/mbd")
+  # devtools::install_github(repo = "Giappo/mbd")
 }
 if(.Platform$OS.type == "unix")
 {
@@ -30,8 +30,8 @@ if(.Platform$OS.type == "unix")
   libs_dir <- paste0(home_dir,'/mbd_like/libs')
   results_dir <- paste0(dirname(getwd()),"/sims")
   dir.create(results_dir, showWarnings = FALSE)
-  lib_files <- list.files(pattern=paste0('[.]tar'), path=libs_dir, full.names=TRUE)
-  install.packages(lib_files, repos = NULL, dependencies = T)
+  # lib_files <- list.files(pattern=paste0('[.]tar'), path=libs_dir, full.names=TRUE)
+  # install.packages(lib_files, repos = NULL, dependencies = T)
   # devtools::install_github(repo = "Giappo/mbd") #MAYBE THE BEST OPTION FOR CLUSTER TOO???
 }
 

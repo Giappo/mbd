@@ -22,7 +22,7 @@
 #' set.seed(11)
 #' simulated_data = MBD:::mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
 #' plot(simulated_data$tas)
-#' mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts,soc = 2, cond = 1, missnumspec = 0)
+#' mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
 #'
 #' @export
 mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
@@ -30,7 +30,7 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
                        methode = "expo", alpha = 10, minimum_multiple_births = 0, print_errors = 1){
   
   #Optional stuff that I might need to run the program one line at the time:
-  #brts=sim_data[[1]];missnumspec=0;pars=sim_pars;missing_interval=c(1,Inf);methode="expo"
+  #brts = sim_data[[1]]; missnumspec = 0;pars = sim_pars; missing_interval = c(1, Inf); methode = "expo"
   
   #BASIC SETTINGS AND CHECKS
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
@@ -38,8 +38,8 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
   
   condition1 <- (any(is.nan(pars)) != 0 | any(is.infinite(pars)) != 0)
   condition2 <- (lambda < 0 | mu < 0 | nu < 0 |
-                   q <= 0 + safety_threshold | q >= 1 - safety_threshold |
-                   minimum_multiple_births < 0)
+                 q <= 0 + safety_threshold | q >= 1 - safety_threshold |
+                 minimum_multiple_births < 0)
   condition3 <- (length(pars) != 4)
   if       (condition1)
   {
@@ -59,6 +59,7 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
     loglik <- MBD:::pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
   }else
   {#MAIN
+    
     #ADJUSTING DATA
     data <- MBD:::brts2time_intervals_and_births(brts)
     time_intervals <- c(0, data$time_intervals)
@@ -67,52 +68,20 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
     k_interval <- N0 + cumsum(births)
     max_k <- max(k_interval)
     
-    #ALPHA ANALYSIS
-    deltaAlpha <- 1; count <- 0; same_result_count <- 0; Pc.notanumber <- 1;
-    while (Pc.notanumber)
-    {
-      Pc1 <- MBD:::calculate_conditional_probability(brts = brts, pars = pars, tips_interval = tips_interval, cond = cond, soc = soc, alpha = alpha, methode = methode,
-                                                     abstol = abstol, reltol = reltol, minimum_multiple_births = minimum_multiple_births)$Pc
-      Pc.notanumber <- is.nan(Pc1)
-      alpha <- alpha - Pc.notanumber
+    if (cond == 1){
+      #ALPHA ANALYSIS (computes Pc and uses it to estimate what alpha is better to use)
+      Pc_and_lx <- calculate_conditional_probability(brts = sim$brts, 
+                                                     pars = sim_pars, 
+                                                     soc = soc,
+                                                     methode = methode, 
+                                                     abstol = abstol, 
+                                                     reltol = reltol)
+      Pc <- Pc_and_lx$Pc
+      lx <- Pc_and_lx$lx
+      alpha <- lx/max_k
     }
-    while (deltaAlpha != 0 && count < 100 && same_result_count < 5)
-    {
-      Pc2 <- MBD:::calculate_conditional_probability(brts = brts, pars = pars, cond = cond,
-                                                     soc = soc, tips_interval = tips_interval,
-                                                     alpha = alpha + deltaAlpha, methode = methode,
-                                                     abstol = abstol, reltol = reltol,
-                                                     minimum_multiple_births = minimum_multiple_births)$Pc
-      if (is.nan(Pc2))
-      {
-        deltaAlpha <- deltaAlpha - 1
-      }else if (Pc2 < Pc1)
-      {
-        deltaAlpha <- deltaAlpha + 1
-        same_result_count <- same_result_count + 1
-      }else
-      {
-        same_result_count <- 0
-        deltaPc <- abs(Pc2 - Pc1)/Pc1;
-        # deltaAlpha = floor(  10*(-1 + 2/( 1 + exp(-(1/2*deltaPc)) ))  )
-        deltaAlpha <- floor(10 * deltaPc)
-        alpha <- alpha + deltaAlpha
-        Pc1 <- Pc2
-      }
-
-      count = count + 1
-      # print(alpha)
-    }
-    if (max_k * alpha >= 2000)
-    {#check to see whether alpha is too big to be handled without memory issues
-      alpha <- floor(1500/max_k);
-      Pc1 <- MBD:::calculate_conditional_probability(brts = brts, pars = pars, tips_interval = tips_interval, cond = cond, soc = soc, alpha = alpha, methode = methode,
-                                                  abstol = abstol, reltol = reltol, minimum_multiple_births = minimum_multiple_births)$Pc
-    }
-    Pc <- Pc1
-    if (count >= 100){alpha <- 10}
-    if (Pc <= 0 | Pc == Inf | Pc == -Inf){Pc <- 1; print("there's a problem with Pc")}
-
+    
+    #LIKELIHOOD INTEGRATION
     start_over_again <- 1; iterations <- 0;
     negative_values <- nan_values <- 0;
     while (start_over_again == 1 & iterations < 100)
@@ -120,17 +89,16 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
       #MATRIX DIMENSION SETUP
       max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
       lx <- max_number_of_species
-      
       nvec <- 0:max_number_of_species
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
-      Qi <- c(1,rep(0,max_number_of_species))
-      Qt <- matrix(0,ncol = (max_number_of_species+1), nrow = length(time_intervals))
+      Qi <- c(1, rep(0, max_number_of_species))
+      Qt <- matrix(0, ncol = (max_number_of_species + 1), nrow = length(time_intervals))
       Qt[1,] <- Qi
       dimnames(Qt)[[2]] <- paste0("Q", 0:max_number_of_species)
       k <- N0 #N0 is the number of species at t=1
       t <- 2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
-      C <- rep(1, (length(time_intervals))); D <- C
+      D <- C <- rep(1, (length(time_intervals)))
       logB <- 0;
 
       #EVOLVING THE INITIAL STATE TO THE LAST BRANCHING POINT
@@ -140,7 +108,7 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
         transition_matrix <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = max_number_of_species)
         Qt[t,] <- MBD:::A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
         if (methode != "sexpm"){Qt[t,] <- MBD:::negatives_correction(Qt[t,], pars)} #it removes some small negative values that can occurr as bugs from the integration process
-        if ( any(is.nan(Qt[t,])) )
+        if (any(is.nan(Qt[t,])))
         {
           if (Sys.info()[['sysname']] == "Windows")
           {
@@ -185,7 +153,7 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
     }
 
     #Selecting the state I am interested in
-    vm <- 1/choose((k+missnumspec), k)
+    vm <- 1/choose((k + missnumspec), k)
     P  <- vm * Qt[t, (missnumspec + 1)] #I have to include +1 because of Q0
 
     #Removing C and D effects from the LL
@@ -198,7 +166,7 @@ mbd_loglik <- function(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
       loglik <- -Inf
     }else
     {
-      loglik <- loglik - log(Pc) #conditioned likelihood
+      loglik <- loglik - log(Pc) * (cond == 1) #conditioned likelihood
     }
 
   }

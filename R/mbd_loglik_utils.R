@@ -100,165 +100,6 @@ create_B.no_mbd = function(lambda,nu,q,k,b,max_number_of_species,minimum_multipl
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability <- function (brts, pars, tips_interval = c(0, Inf),
-                                               cond = 1, soc = 2, alpha, methode = "expo",
-                                               abstol = 1e-16, reltol = 1e-10,
-                                               minimum_multiple_births = 0){
-
-  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
-  min_tips <- tips_interval[1]; max_tips <- tips_interval[2];
-  min_tips <- max(min_tips, soc * cond) #check this
-  N0 <- soc
-  total_time <- max(abs(brts));
-  births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
-  k_interval <- N0 + cumsum(births)
-  max_k <- max(k_interval)
-  max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
-
-  if (!(cond == 1 | tips_interval[1] > 0 | tips_interval[2] < Inf))
-  {
-    Pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))
-  }else
-  {
-    m <- 0:max_number_of_species;
-    one_over_Cm <- (3 * (m + 1))/(m + 3)
-    one_over_qm_binom <- 1/choose((m + N0), N0)
-    tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
-    if (cond == 1){tips_components <- tips_components - N0} #I am already considering the starting species to survive. I must not double count them!
-
-    Qi <- c(1, rep(0, max_number_of_species))
-    Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
-                            max_number_of_species = max_number_of_species)
-    A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
-                              precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
-    if (methode != "sexpm"){A2_v1 <- MBD:::negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
-
-    if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
-    {
-      Mk_N0.no_mbd <- MBD:::create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-      A2_v1.no_mbd <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
-      A2_v1 <- A2_v1 - A2_v1.no_mbd
-    }
-
-    total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
-    Pc <- sum(total_product[tips_components])
-  }
-  return(list(Pc = Pc, A2_v1 = A2_v1))
-}
-
-#' @title Internal MBD function
-#' @description Internal MBD function.
-#' @details This is not to be called by the user.
-#' @export
-calculate_conditional_probability2 <- function (brts, pars, missing_tips_interval = c(0, Inf),
-                                                soc = 2, alpha, methode = "expo",
-                                                abstol = 1e-16, reltol = 1e-10,
-                                                minimum_multiple_births = 0){
-
-  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
-  min_tips <- missing_tips_interval[1]; max_tips <- missing_tips_interval[2];
-  N0 <- soc
-  total_time <- max(abs(brts))
-  births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
-  k_interval <- N0 + cumsum(births)
-  max_k <- max(k_interval)
-  max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
-
-  m <- 0:max_number_of_species
-  one_over_Cm <- (3 * (m + 1))/(m + 3)
-  one_over_qm_binom <- 1/choose((m + N0), N0)
-  tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
-
-  Qi    <- c(1, rep(0, max_number_of_species))
-  Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
-                          max_number_of_species = max_number_of_species)
-  A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
-                            precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
-
-  # MBD::mbd_loglik(pars = pars, brts = c(total_time), soc = soc, cond = 0, missnumspec = 0)
-
-  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
-  Pc <- sum(total_product[tips_components]); Pc
-
-
-  if (min_tips < soc)
-  min_tips <- max(min_tips, soc * cond) #check this
-  N0 <- soc
-  total_time <- max(abs(brts));
-  births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
-  k_interval <- N0 + cumsum(births)
-  max_k <- max(k_interval)
-  max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
-
-  if (!(cond == 1 | tips_interval[1] > 0 | tips_interval[2] < Inf))
-  {
-    Pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))
-  }else
-  {
-    m <- 0:max_number_of_species;
-    one_over_Cm <- (3 * (m + 1))/(m + 3)
-    one_over_qm_binom <- 1/choose((m + N0), N0)
-    tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
-    if (cond == 1){tips_components <- tips_components - N0} #I am already considering the starting species to survive. I must not double count them!
-
-    Qi <- c(1, rep(0, max_number_of_species))
-    Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
-                            max_number_of_species = max_number_of_species)
-    A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
-                              precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
-    if (methode != "sexpm"){A2_v1 <- MBD:::negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
-
-    if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
-    {
-      Mk_N0.no_mbd <- MBD:::create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-      A2_v1.no_mbd <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
-      A2_v1 <- A2_v1 - A2_v1.no_mbd
-    }
-
-    total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
-    Pc <- sum(total_product[tips_components])
-  }
-  return(list(Pc = Pc, A2_v1 = A2_v1))
-}
-
-#' @title Internal MBD function
-#' @description Internal MBD function.
-#' @details This is not to be called by the user.
-#' @export
-calculate_conditional_probability3 <- function (brts, 
-                                                pars, 
-                                                lx = 200,
-                                                soc = 2, 
-                                                methode = "expo",
-                                                abstol = 1e-16, 
-                                                reltol = 1e-10){
-  
-  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
-  total_time <- max(abs(brts));
-  
-  m <- 0:lx; length(m)
-  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
-  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
-  Qi <- c(1, rep(0, lx)); length(Qi)
-  
-  TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
-                       max_number_of_species = lx); dim(TM); max(is.na(TM)); max(is.infinite(TM))
-  
-  # A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
-  # precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
-  
-  A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
-  
-  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
-  Pc <- sum(total_product)
-  
-  return(list(Pc = Pc, A2_v1 = A2_v1))
-}
-
-#' @title Internal MBD function
-#' @description Internal MBD function.
-#' @details This is not to be called by the user.
-#' @export
 A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
                        A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo"){
 
@@ -331,3 +172,368 @@ mbd_loglik_rhs <- function (t, x, pars){
     return(list(out))
   })
 }
+
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+calculate_conditional_probability0 <- function (brts,
+                                                pars,
+                                                lx = 200,
+                                                soc = 2,
+                                                methode = 'expo',
+                                                abstol = 1e-16,
+                                                reltol = 1e-10){
+
+  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
+  total_time <- max(abs(brts));
+
+  m <- 0:lx; length(m)
+  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
+  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
+  Qi <- c(1, rep(0, lx)); length(Qi)
+
+  TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+                       max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
+
+  A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+  precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+
+  # A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+
+  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+  Pc <- sum(total_product)
+
+  return(Pc)
+}
+
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+find_best_lx_for_Pc <- function(brts, 
+                                pars,
+                                soc = 2,
+                                methode = 'expo',
+                                abstol = 1e-16,
+                                reltol = 1e-10,
+                                iterations = 20,
+                                interval.min = 500,
+                                interval.max = 1400) {
+  
+  a <- iterations/2
+  interval.width <- interval.max - interval.min
+  step1 <- floor(interval.width/a)
+  
+  lx.test <- rep(NA, length(lxvec <- seq(interval.min + step1, interval.max - step1, step1))); i <- 1; right.lx.coord <- 0
+  for (lx2 in lxvec)
+  {
+    lx.test[i] <- MBD::calculate_conditional_probability0(brts = brts,
+                                                     pars = c(pars[1], 0, pars[3], pars[4]),
+                                                     lx = lx2, 
+                                                     soc = soc,
+                                                     methode = methode,
+                                                     abstol = abstol,
+                                                     reltol = reltol)
+    if (!is.na(abs(lx.test[i]))) if (abs(lx.test[i] - 1) < 0.01) {right.lx.coord <- i; lx <- lxvec[right.lx.coord]; break}
+    i <- i + 1
+  }; lx.test
+  if (right.lx.coord == 0)
+  {
+    right.lx.coord <- which(abs(lx.test - 1) == min(abs(lx.test - 1), na.rm = T))
+    lx <- lxvec[right.lx.coord]
+  }
+  
+  lx.test2 <- rep(NA, length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2*step1/a)))); j <- 1; right.lx.coord2 <- 0
+  for (lx2 in lxvec)
+  {
+    lx.test2[j] <- MBD::calculate_conditional_probability0(brts = brts,
+                                                      pars = c(pars[1], 0, pars[3], pars[4]),
+                                                      lx = lx2, 
+                                                      soc = soc,
+                                                      methode = methode,
+                                                      abstol = abstol,
+                                                      reltol = reltol)
+    if (!is.na(abs(lx.test2[i]))) if (abs(lx.test2[j] - 1) < 0.01) {right.lx.coord2 <- j; lx <- lxvec2[right.lx.coord2]; break}
+    j <- j + 1
+  }; lx.test2
+  if (right.lx.coord2 == 0)
+  {
+    right.lx.coord2 <- which(abs(lx.test2 - 1) == min(abs(lx.test2 - 1), na.rm = T))
+    lx <- lxvec2[right.lx.coord2]
+  }
+  
+  return(lx)
+}
+
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+calculate_conditional_probability <- function (brts,
+                                               pars,
+                                               soc = 2,
+                                               methode = 'expo',
+                                               abstol = 1e-16,
+                                               reltol = 1e-10){
+  
+  lx <- find_best_lx_for_Pc(brts = brts, pars = pars)
+  Pc <- calculate_conditional_probability0(brts = brts,
+                                           pars = pars,
+                                           lx = lx,
+                                           soc = soc,
+                                           methode = methode,
+                                           abstol = abstol,
+                                           reltol = reltol)
+  return(list(Pc = Pc, lx = lx))
+}
+
+
+
+
+
+
+
+
+
+#' ##' @title Internal MBD function
+#' #' @description Internal MBD function.
+#' #' @details This is not to be called by the user.
+#' #' @export
+#' calculate_conditional_probability <- function (brts, pars, tips_interval = c(0, Inf),
+#'                                                cond = 1, soc = 2, alpha, methode = "expo",
+#'                                                abstol = 1e-16, reltol = 1e-10,
+#'                                                minimum_multiple_births = 0){
+#'   
+#'   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
+#'   min_tips <- tips_interval[1]; max_tips <- tips_interval[2];
+#'   min_tips <- max(min_tips, soc * cond) #check this
+#'   N0 <- soc
+#'   total_time <- max(abs(brts));
+#'   births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
+#'   k_interval <- N0 + cumsum(births)
+#'   max_k <- max(k_interval)
+#'   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
+#'   
+#'   if (!(cond == 1 | tips_interval[1] > 0 | tips_interval[2] < Inf))
+#'   {
+#'     Pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))
+#'   }else
+#'   {
+#'     m <- 0:max_number_of_species;
+#'     one_over_Cm <- (3 * (m + 1))/(m + 3)
+#'     one_over_qm_binom <- 1/choose((m + N0), N0)
+#'     tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
+#'     if (cond == 1){tips_components <- tips_components - N0} #I am already considering the starting species to survive. I must not double count them!
+#'     
+#'     Qi <- c(1, rep(0, max_number_of_species))
+#'     Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+#'                             max_number_of_species = max_number_of_species)
+#'     A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+#'                               precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#'     if (methode != "sexpm"){A2_v1 <- MBD:::negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
+#'     
+#'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
+#'     {
+#'       Mk_N0.no_mbd <- MBD:::create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
+#'       A2_v1.no_mbd <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+#'       A2_v1 <- A2_v1 - A2_v1.no_mbd
+#'     }
+#'     
+#'     total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+#'     Pc <- sum(total_product[tips_components])
+#'   }
+#'   return(list(Pc = Pc, A2_v1 = A2_v1))
+#' }
+#' 
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+#' calculate_conditional_probability2 <- function (brts, pars, missing_tips_interval = c(0, Inf),
+#'                                                 soc = 2, alpha, methode = "expo",
+#'                                                 abstol = 1e-16, reltol = 1e-10,
+#'                                                 minimum_multiple_births = 0){
+#'   
+#'   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
+#'   min_tips <- missing_tips_interval[1]; max_tips <- missing_tips_interval[2];
+#'   N0 <- soc
+#'   total_time <- max(abs(brts))
+#'   births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
+#'   k_interval <- N0 + cumsum(births)
+#'   max_k <- max(k_interval)
+#'   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
+#'   
+#'   m <- 0:max_number_of_species
+#'   one_over_Cm <- (3 * (m + 1))/(m + 3)
+#'   one_over_qm_binom <- 1/choose((m + N0), N0)
+#'   tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
+#'   
+#'   Qi    <- c(1, rep(0, max_number_of_species))
+#'   Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+#'                           max_number_of_species = max_number_of_species)
+#'   A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+#'                             precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#'   
+#'   # MBD::mbd_loglik(pars = pars, brts = c(total_time), soc = soc, cond = 0, missnumspec = 0)
+#'   
+#'   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+#'   Pc <- sum(total_product[tips_components]); Pc
+#'   
+#'   
+#'   if (min_tips < soc)
+#'     min_tips <- max(min_tips, soc * cond) #check this
+#'   N0 <- soc
+#'   total_time <- max(abs(brts));
+#'   births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
+#'   k_interval <- N0 + cumsum(births)
+#'   max_k <- max(k_interval)
+#'   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
+#'   
+#'   if (!(cond == 1 | tips_interval[1] > 0 | tips_interval[2] < Inf))
+#'   {
+#'     Pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))
+#'   }else
+#'   {
+#'     m <- 0:max_number_of_species;
+#'     one_over_Cm <- (3 * (m + 1))/(m + 3)
+#'     one_over_qm_binom <- 1/choose((m + N0), N0)
+#'     tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
+#'     if (cond == 1){tips_components <- tips_components - N0} #I am already considering the starting species to survive. I must not double count them!
+#'     
+#'     Qi <- c(1, rep(0, max_number_of_species))
+#'     Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+#'                             max_number_of_species = max_number_of_species)
+#'     A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+#'                               precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#'     if (methode != "sexpm"){A2_v1 <- MBD:::negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
+#'     
+#'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
+#'     {
+#'       Mk_N0.no_mbd <- MBD:::create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
+#'       A2_v1.no_mbd <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+#'       A2_v1 <- A2_v1 - A2_v1.no_mbd
+#'     }
+#'     
+#'     total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+#'     Pc <- sum(total_product[tips_components])
+#'   }
+#'   return(list(Pc = Pc, A2_v1 = A2_v1))
+#' }
+#' 
+#' #' @title Internal MBD function
+#' #' @description Internal MBD function.
+#' #' @details This is not to be called by the user.
+#' #' @export
+#' calculate_conditional_probability3 <- function (brts, 
+#'                                                 pars, 
+#'                                                 lx = 200,
+#'                                                 soc = 2){
+#'   
+#'   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
+#'   total_time <- max(abs(brts));
+#'   
+#'   m <- 0:lx; length(m)
+#'   one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
+#'   one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
+#'   Qi <- c(1, rep(0, lx)); length(Qi)
+#'   
+#'   TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+#'                        max_number_of_species = lx); dim(TM); max(is.na(TM)); max(is.infinite(TM))
+#'   
+#'   # A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+#'   # precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#'   
+#'   A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+#'   
+#'   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+#'   Pc <- sum(total_product)
+#'   
+#'   return(list(Pc = Pc, A2_v1 = A2_v1))
+#' }
+#' 
+#' #' @title Internal MBD function
+#' #' @description Internal MBD function.
+#' #' @details This is not to be called by the user.
+#' #' @export
+#' alpha_analysis <- function(brts,
+#'                            pars,
+#'                            tips_interval,
+#'                            cond,
+#'                            soc,
+#'                            alpha,
+#'                            max_k,
+#'                            methode = 'expo',
+#'                            abstol,
+#'                            reltol,
+#'                            minimum_multiple_births){
+#'   deltaAlpha <- 1; count <- 0; same_result_count <- 0; Pc.notanumber <- 1;
+#'   while (Pc.notanumber)
+#'   {
+#'     Pc1 <- MBD:::calculate_conditional_probability(brts = brts,
+#'                                                    pars = pars,
+#'                                                    tips_interval = tips_interval,
+#'                                                    cond = cond,
+#'                                                    soc = soc,
+#'                                                    alpha = alpha,
+#'                                                    methode = methode,
+#'                                                    abstol = abstol,
+#'                                                    reltol = reltol,
+#'                                                    minimum_multiple_births = minimum_multiple_births)$Pc
+#'     # Pc1 <- MBD:::calculate_conditional_probability(alpha = alpha, ...)$Pc
+#'     Pc.notanumber <- is.nan(Pc1)
+#'     alpha <- alpha - Pc.notanumber
+#'   }
+#'   while (deltaAlpha != 0 && count < 100 && same_result_count < 5)
+#'   {
+#'     Pc2 <- MBD:::calculate_conditional_probability(brts = brts,
+#'                                                    pars = pars,
+#'                                                    tips_interval = tips_interval,
+#'                                                    cond = cond,
+#'                                                    soc = soc,
+#'                                                    alpha = alpha + deltaAlpha,
+#'                                                    methode = methode,
+#'                                                    abstol = abstol,
+#'                                                    reltol = reltol,
+#'                                                    minimum_multiple_births = minimum_multiple_births)$Pc
+#'     # Pc2 <- MBD:::calculate_conditional_probability(alpha = alpha + deltaAlpha, ...)$Pc
+#'     if (is.nan(Pc2))
+#'     {
+#'       deltaAlpha <- deltaAlpha - 1
+#'     }else if (Pc2 < Pc1)
+#'     {
+#'       deltaAlpha <- deltaAlpha + 1
+#'       same_result_count <- same_result_count + 1
+#'     }else
+#'     {
+#'       same_result_count <- 0
+#'       deltaPc <- abs(Pc2 - Pc1)/Pc1;
+#'       # deltaAlpha = floor(  10*(-1 + 2/( 1 + exp(-(1/2*deltaPc)) ))  )
+#'       deltaAlpha <- floor(10 * deltaPc)
+#'       alpha <- alpha + deltaAlpha
+#'       Pc1 <- Pc2
+#'     }
+#'     
+#'     count = count + 1
+#'     # print(alpha)
+#'   }
+#'   if (max_k * alpha >= 2000)
+#'   {#check to see whether alpha is too big to be handled without memory issues
+#'     alpha <- floor(1500/max_k);
+#'     Pc1 <- MBD:::calculate_conditional_probability(brts = brts,
+#'                                                    pars = pars,
+#'                                                    tips_interval = tips_interval,
+#'                                                    cond = cond,
+#'                                                    soc = soc,
+#'                                                    alpha = alpha,
+#'                                                    methode = methode,
+#'                                                    abstol = abstol,
+#'                                                    reltol = reltol,
+#'                                                    minimum_multiple_births = minimum_multiple_births)$Pc
+#'     # Pc1 <- MBD:::calculate_conditional_probability(alpha = alpha, ...)$Pc
+#'   }
+#'   Pc <- Pc1
+#'   if (count >= 100){alpha <- 10}
+#'   if (Pc <= 0 | Pc == Inf | Pc == -Inf){Pc <- 1; print("there's a problem with Pc")}
+#'   return(list(Pc = Pc, alpha = alpha))
+#' }
