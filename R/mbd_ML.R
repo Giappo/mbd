@@ -387,7 +387,7 @@ mbd_ML_cluster <- function(s, initparsopt = c(0.5, 0.1, 1.7, 0.15)){
   print(out2)
 
   write.table(matrix(out,ncol = length(out)),file = paste(simpath,"/mbd_MLE",s,".txt",sep = ''),append = T,row.names = F,col.names = F, sep = ",")
-  if (res[1:4] != rep(-1, Npars)){suppressWarnings(  file.remove( paste(simpath,"/errors/mbd_MLE_errors",s,".txt",sep = '') )  )}
+  if (res[1:4] != rep(-1, Npars)){suppressWarnings(  file.remove( paste0(simpath,"/errors/mbd_MLE_errors",s,".txt") )  )}
 }
 
 # pmb_ML_cluster----------------

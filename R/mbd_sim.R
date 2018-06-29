@@ -38,7 +38,7 @@
 mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
                     tips_interval = c(0, Inf), minimum_multiple_births = 0)
 {
-  if (tips_interval[2] < tips_interval[1] || any(pars < 0)){print("ERROR! Check again your settings.");break}
+  if (tips_interval[2] < tips_interval[1] || any(pars < 0)){stop("ERROR! Check again your settings.")}
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]; N0 <- soc
   tips <- -1; crown_species_dead <- cond; multiple_births_check <- 0;
   keep_the_sim <- 0
@@ -156,7 +156,7 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
                      tips_interval = c(soc * (cond == 1), Inf), minimum_multiple_births = 0)
 {
-  if (tips_interval[2]<tips_interval[1]){print("ERROR! Check again your settings.");break}
+  if (tips_interval[2]<tips_interval[1]){stop("ERROR! Check again your settings.")}
   lambda=pars[1]; mu=pars[2]; q=pars[3]; N0=soc
   tips=-1; conditioning_on_survival=cond; multiple_births_check = 0;
   while ( tips<tips_interval[1] | tips>tips_interval[2] | conditioning_on_survival | multiple_births_check == 0)
@@ -265,10 +265,10 @@ mbd_sim_dataset = function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, ag
   # if (cond == 1){tips_interval[1] = max(N0, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
   if (edge != Inf && tips_interval == c(0, Inf))
   {
-    estimation=MBD:::mbd_P_eq(test_parameters=sim_pars,age=age,max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
-    max_tips=round(estimation$avg_n*(1+edge));
-    min_tips=max(0,round(estimation$avg_n*(1-edge)));
-    tips_interval=c(min_tips,max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
+    estimation <- MBD:::mbd_P_eq(test_parameters = sim_pars, age = age, max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
+    max_tips <- round(estimation$avg_n*(1 + edge));
+    min_tips <- max(0,round(estimation$avg_n * (1 - edge)));
+    tips_interval <- c(min_tips, max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
   }
 
   #simulate trees
@@ -276,8 +276,8 @@ mbd_sim_dataset = function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, ag
   ext_species <- rep(NA, max_sims)
   for (s in 1:max_sims)
   {
-    simulation=MBD:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond,
-                             tips_interval = tips_interval, minimum_multiple_births = minimum_multiple_births)
+    simulation <- MBD:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond,
+                                tips_interval = tips_interval, minimum_multiple_births = minimum_multiple_births)
     sim_data[[s]]  <- simulation$brts
     ext_species[s] <- simulation$extinct_species
     sim_tes[[s]]   <- simulation$tes

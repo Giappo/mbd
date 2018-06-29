@@ -71,6 +71,7 @@ mbd_loglik <- function(pars,
   {#MAIN
     
     #ADJUSTING DATA
+    lx <- max_number_of_species <- 1400; alpha <- max_number_of_species/10 #bonus line to simplify
     data <- MBD:::brts2time_intervals_and_births(brts)
     time_intervals <- c(0, data$time_intervals)
     births <- c(0, data$births)
@@ -92,16 +93,16 @@ mbd_loglik <- function(pars,
       # Pc <- Pc_and_lx$Pc
       # lx <- Pc_and_lx$lx
       # alpha <- lx/max_k
-      lx <- find_best_lx_for_Pc(brts = brts, 
-                                pars = pars,
-                                soc = soc,
-                                methode = methode,
-                                abstol = abstol,
-                                reltol = reltol,
-                                iterations = 18,
-                                interval.min = 500,
-                                interval.max = 1500)
-      alpha <- floor((lx)/max_k)
+      # lx <- find_best_lx_for_Pc(brts = brts, 
+      #                           pars = pars,
+      #                           soc = soc,
+      #                           methode = methode,
+      #                           abstol = abstol,
+      #                           reltol = reltol,
+      #                           iterations = 18,
+      #                           interval.min = 500,
+      #                           interval.max = 1500)
+      # alpha <- floor((lx)/max_k)
       Pc <- MBD::calculate_conditional_probability02(brts = brts, 
                                                      pars = pars,
                                                      soc = soc,
@@ -118,7 +119,8 @@ mbd_loglik <- function(pars,
     while (start_over_again == 1 & iterations < 100)
     {
       #MATRIX DIMENSION SETUP
-      max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
+      # max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
+      max_number_of_species <- 10 * alpha; #bonus line to simplify
       lx <- max_number_of_species
       nvec <- 0:max_number_of_species
 
