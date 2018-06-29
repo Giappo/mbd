@@ -2,7 +2,7 @@
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
 #' @export
-mbd_loglik_choosepar  <- function(trparsopt, trparsfix, idparsopt=1:4,
+mbd_loglik_choosepar  <- function(trparsopt, trparsfix, idparsopt = 1:4,
                                   idparsfix = (1:4)[-idparsopt], brts, cond = 1, soc = 2,
                                   tips_interval = c(0, Inf), missnumspec = 0, methode = "expo",
                                   alpha = 20, minimum_multiple_births = 0, pars.transform = 0, print_errors = 0){

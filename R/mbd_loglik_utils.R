@@ -129,7 +129,7 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
     # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-    R.utils:::evalWithTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
   }
 
   if (any(!is.numeric(result)) || any(is.nan(result))) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
@@ -137,14 +137,14 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
     # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-    R.utils:::evalWithTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
   }
   else if (any(result < 0)) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
     # result=deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-    R.utils:::evalWithTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
   }
 
   # if ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && methode!="sexpm"){
@@ -179,7 +179,7 @@ mbd_loglik_rhs <- function (t, x, pars){
 #' @export
 calculate_conditional_probability0 <- function (brts,
                                                 pars,
-                                                lx = 200,
+                                                lx = 1000,
                                                 soc = 2,
                                                 tips_interval = c(0, Inf),
                                                 methode = 'expo',
@@ -211,6 +211,89 @@ calculate_conditional_probability0 <- function (brts,
 
   return(Pc)
 }
+
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+calculate_conditional_probability02 <- function (brts,
+                                                 pars,
+                                                 lx = 1000,
+                                                 soc = 2,
+                                                 tips_interval = c(0, Inf),
+                                                 methode = 'expo',
+                                                 abstol = 1e-16,
+                                                 reltol = 1e-10){
+  
+  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
+  total_time <- max(abs(brts));
+  
+  m <- 0:lx; length(m)
+  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
+  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
+  # Qi <- c(1, rep(0, lx)); length(Qi)
+  Qi <- rep(0, lx + 1);  Qi[3] <- 1 #starting with k = 0 and m = 2 missing species
+  k <- 0 #assuming 0 species
+  
+  TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
+                       max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
+  
+  A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+                            precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol); A2_v1
+  
+  # A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+  
+  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+  tips_components <- 1 + 0:1 #these are the components I want to exclude (the one corresponding to 0 and 1 tips)
+  Pc <- 1 - sum(total_product[tips_components]); Pc
+  # Pc <- sum(total_product)
+  
+  return(Pc)
+}
+
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+calculate_conditional_probability0PB <- function (brts,
+                                                  pars,
+                                                  lx = 200,
+                                                  soc = 2,
+                                                  tips_interval = c(0, Inf),
+                                                  methode = 'expo',
+                                                  abstol = 1e-16,
+                                                  reltol = 1e-10){
+  
+  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
+  total_time <- max(abs(brts))
+  if (mu != 0){cat('mu is supposed to be equal zero to use this function'); return(Pc <- NA)}
+  
+  m <- 0:lx; length(m)
+  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
+  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
+  Qi <- c(1, rep(0, lx)); length(Qi)
+  
+  TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+                       max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
+  
+  A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+                            precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+  
+  # A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+  
+  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+  missingspecies_min <- max((tips_interval[1] - 2), 0 )
+  missingspecies_max <- min((tips_interval[2] - 2), lx)
+  tips_components <- 1 + c(missingspecies_min, missingspecies_max) # +1 is because of the zero-th component
+  opposite_tips_components <- (m + 1)[!((m + 1) %in% (tips_components[1]:tips_components[2]))]
+  # Pc <- sum(total_product[tips_components[1]:tips_components[2]])
+  Pc <- 1 - sum(total_product[opposite_tips_components])
+  # Pc <- sum(total_product)
+  
+  return(Pc)
+}
+
+
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
@@ -285,25 +368,30 @@ calculate_conditional_probability <- function (brts,
                                                abstol = 1e-16,
                                                reltol = 1e-10){
   
-  lx <- find_best_lx_for_Pc(brts = brts, pars = pars)
-  Pc <- calculate_conditional_probability0(brts = brts,
-                                           pars = pars,
-                                           lx = lx,
-                                           soc = soc,
-                                           tips_interval = tips_interval,
-                                           methode = methode,
-                                           abstol = abstol,
-                                           reltol = reltol)
+  lx <- find_best_lx_for_Pc(brts = brts, pars = pars, soc = soc)
+  if (pars[2] == 0)
+  {
+    Pc <- MBD::calculate_conditional_probability0PB(brts = brts,
+                                                    pars = pars,
+                                                    lx = lx,
+                                                    soc = soc,
+                                                    tips_interval = tips_interval,
+                                                    methode = methode,
+                                                    abstol = abstol,
+                                                    reltol = reltol)  
+  }else
+  {
+    Pc <- MBD::calculate_conditional_probability02(brts = brts,
+                                                   pars = pars,
+                                                   lx = lx,
+                                                   soc = soc,
+                                                   tips_interval = tips_interval,
+                                                   methode = methode,
+                                                   abstol = abstol,
+                                                   reltol = reltol)
+  }
   return(list(Pc = Pc, lx = lx))
 }
-
-
-
-
-
-
-
-
 
 #' ##' @title Internal MBD function
 #' #' @description Internal MBD function.

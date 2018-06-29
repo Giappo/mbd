@@ -3,6 +3,8 @@
 export(A_operator)
 export(calculate_conditional_probability)
 export(calculate_conditional_probability0)
+export(calculate_conditional_probability02)
+export(calculate_conditional_probability0PB)
 export(create_A)
 export(create_A.no_mbd)
 export(create_B)

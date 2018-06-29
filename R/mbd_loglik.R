@@ -81,17 +81,35 @@ mbd_loglik <- function(pars,
     
     if (cond == 1){
       #ALPHA ANALYSIS (computes Pc and uses it to estimate what alpha is better to use)
-      Pc_and_lx <- MBD::calculate_conditional_probability(brts = sim$brts, 
-                                                     pars = sim_pars, 
-                                                     soc = soc,
-                                                     tips_interval = tips_interval,  
-                                                     methode = methode, 
-                                                     abstol = abstol, 
-                                                     reltol = reltol)
+      # Pc_and_lx <- MBD::calculate_conditional_probability(brts = sim$brts, 
+      #                                                     pars = sim_pars, 
+      #                                                     soc = soc,
+      #                                                     tips_interval = tips_interval,  
+      #                                                     methode = methode, 
+      #                                                     abstol = abstol, 
+      #                                                     reltol = reltol)
       
-      Pc <- Pc_and_lx$Pc
-      lx <- Pc_and_lx$lx
-      alpha <- lx/max_k
+      # Pc <- Pc_and_lx$Pc
+      # lx <- Pc_and_lx$lx
+      # alpha <- lx/max_k
+      lx <- find_best_lx_for_Pc(brts = brts, 
+                                pars = pars,
+                                soc = soc,
+                                methode = methode,
+                                abstol = abstol,
+                                reltol = reltol,
+                                iterations = 18,
+                                interval.min = 500,
+                                interval.max = 1500)
+      alpha <- floor((lx)/max_k)
+      Pc <- MBD::calculate_conditional_probability02(brts = brts, 
+                                                     pars = pars,
+                                                     soc = soc,
+                                                     lx = lx,
+                                                     tips_interval = tips_interval,
+                                                     methode = methode,
+                                                     abstol = abstol,
+                                                     reltol = reltol)
     }
     
     #LIKELIHOOD INTEGRATION

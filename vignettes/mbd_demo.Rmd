@@ -88,16 +88,16 @@ Since we are not interested in the topology of the tree, this vector alone can b
 
 ```{r}
 test_pars <- c(0.3, 0.05, 1.0, 0.08)
-mbd_loglik(pars = test_pars, brts = sim$brts, soc = soc, cond = cond, missnumspec = 0)
+MBD::mbd_loglik(pars = test_pars, brts = sim$brts, soc = soc, cond = cond, missnumspec = 0)
 ```
 
 You can also ask for an optimization of the likelihood function using the function "mbd_ML" either considering a variation of all the parameters ($\lambda, \mu, \nu, q$) or any their subset of your choice. If you want for example to maximize the likelihood only for the parameter q:
 
 ```{r}
 # Uncomment if you are keen to wait.
-# idparsopt <- 4
-# ids <- 1:4; idparsfix <- ids[-idparsopt];
-# parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
-# MBD:::mbd_ML(brts = sim$brts, initparsopt = initparsopt, idparsopt = idparsopt, parsfix = parsfix, idparsfix = idparsfix, soc = soc, cond = cond)
+idparsopt <- 4
+ids <- 1:4; idparsfix <- ids[-idparsopt];
+parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
+MBD:::mbd_ML(brts = sim$brts, initparsopt = initparsopt, idparsopt = idparsopt, parsfix = parsfix, idparsfix = idparsfix, soc = soc, cond = cond)
 
 ```
