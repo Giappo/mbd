@@ -306,11 +306,11 @@ mbd_sim_dataset = function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, ag
   general_settings_name <- paste0(datapath,"/general_settings")
   sim_trees_name <- paste0(datapath,"/sim_trees")
   if (file.exists(sim_data_name)){suppressWarnings( file.remove(sim_data_name) )}
-  save(sim_data,file=sim_data_name)
+  save(sim_data, file = sim_data_name)
   if (file.exists(general_settings_name)){suppressWarnings( file.remove(general_settings_name) )}
   save(sim_pars,soc,age,cond,max_sims,tips_interval,max_k,max_b,ext_species,additional_species,tips,minimum_multiple_births,file=general_settings_name)
   if (file.exists(sim_trees_name)){suppressWarnings( file.remove(sim_trees_name) )}
-  save(sim_tas,sim_tes,file=sim_trees_name)
+  save(sim_tas,sim_tes, file = sim_trees_name)
   return(sim_data)
 }
 

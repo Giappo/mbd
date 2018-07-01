@@ -339,7 +339,7 @@ mbd_ML_cluster <- function(s, initparsopt = c(0.5, 0.1, 1.7, 0.15)){
   load(file = paste0(datapath,"/sim_data"))
 
   if (!file.exists(paste0(simpath,"/errors"))){dir.create(paste0(simpath,"/errors"))}
-  sink(file = paste0(simpath,"/errors/mbd_MLE_errors",s,".txt"), append = T)
+  sink(file = paste0(simpath,"/errors/mbd_MLE_errors",s,".txt"), append = TRUE)
 
   res <- MBD:::mbd_ML(brts = sim_data[[s]],
                       initparsopt = initparsopt,
