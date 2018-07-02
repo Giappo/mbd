@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=7:57:58
+#SBATCH --time=2:57:58
 
 lambda=$1
 mu=$2
@@ -9,9 +9,7 @@ max_sims=$5
 
 cd /home/$USER/mbd_like/
 
-sbatch install_packages.bash --output=testinst.out
-
-sleep 40
+sbatch install_packages.bash --output=testinst.out & sleep 60
 
 rm testinst.out
 

@@ -4,9 +4,7 @@
 max_sims=$1
 
 echo "rm -rfv errors/*"
-sbatch /home/$USER/mbd_like/install_packages.bash 
-
-sleep 40
+#sbatch /home/$USER/mbd_like/install_packages.bash & sleep 60
 
 echo "library(expoRkit)" > zzz_ML.R
 echo "library(MBD)" >> zzz_ML.R
@@ -23,7 +21,7 @@ echo "module load R/3.3.1-foss-2016a" >> zMLjob$s
 echo "Rscript zzz_ML.R $s" >> zMLjob$s
 echo "rm zMLjob$s" >> zMLjob$s
 
-#sbatch --partition=regular --mem=12GB --job-name=ML$s --mail-type=FAIL,TIME_LIMIT --mail-user=glaudanno@gmail.com zMLjob$s
+#NEVER ASK FOR MORE THAN 9GB OF MEMORY!
 sbatch --partition=regular --mem=9GB --job-name=ML$s --mail-type=FAIL,TIME_LIMIT --mail-user=glaudanno@gmail.com zMLjob$s
 
 done
