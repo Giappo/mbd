@@ -5796,3 +5796,32 @@ You are fixing nothing
 Optimizing the likelihood - this may take a while. 
 The loglikelihood for the initial parameter values is -15.13576 
 [1] 1.50 0.10 0.15 0.10
+You are optimizing lambda mu nu q 
+You are fixing nothing 
+Optimizing the likelihood - this may take a while. 
+[[1]]
+[1] -5.0000000 -3.5724786 -2.4783133 -0.4208426
+
+[[2]]
+[1] -5.000000 -3.817692
+
+[[3]]
+[1] -5.0000000 -1.3432529 -0.3830261
+
+[1] 1
+You are optimizing lambda mu nu q 
+You are fixing nothing 
+Optimizing the likelihood - this may take a while. 
+The loglikelihood for the initial parameter values is -9.131499 
+function () 
+.Internal(getwd())
+<bytecode: 0x000000000a829238>
+<environment: namespace:base>
+[1] "F:/Dropbox/University/Progress/RQ1-multiple-birth-death/MBD"
+[1] "F:/Dropbox/University/Progress/RQ1-multiple-birth-death/MBD"
+[1] FALSE
+You are optimizing lambda mu nu q 
+You are fixing nothing 
+Optimizing the likelihood - this may take a while. 
+The loglikelihood for the initial parameter values is -9.131499 
+[1] 0.20 0.15 2.00 0.15

@@ -341,21 +341,21 @@ mbd_ML_cluster <- function(s, initparsopt = c(0.5, 0.1, 1.7, 0.15)){
   if (!file.exists(paste0(simpath,"/errors"))){dir.create(paste0(simpath,"/errors"))}
   sink(file = paste0(simpath,"/errors/mbd_MLE_errors",s,".txt"), append = TRUE)
 
-  res <- MBD:::mbd_ML(brts = sim_data[[s]],
-                      initparsopt = initparsopt,
-                      idparsopt = idparsopt,
-                      idparsfix = (1:Npars)[-idparsopt],
-                      parsfix = parsfix,
-                      missnumspec = 0,
-                      cond = cond,
-                      soc = soc,
-                      tips_interval = tips_interval,
-                      res = 10 * (1 + length(brts) + missnumspec),
-                      tol = c(1E-3, 1E-4, 1E-6),
-                      maxiter = 1000 * round((1.25)^length(idparsopt)),
-                      changeloglikifnoconv = FALSE,
-                      optimmethod = 'subplex',
-                      minimum_multiple_births = minimum_multiple_births)
+  res <- MBD::mbd_ML(brts = sim_data[[s]],
+                     initparsopt = initparsopt,
+                     idparsopt = idparsopt,
+                     idparsfix = (1:Npars)[-idparsopt],
+                     parsfix = parsfix,
+                     missnumspec = 0,
+                     cond = cond,
+                     soc = soc,
+                     tips_interval = tips_interval,
+                     res = 10 * (1 + length(brts) + missnumspec),
+                     tol = c(1E-3, 1E-4, 1E-6),
+                     maxiter = 1000 * round((1.25)^length(idparsopt)),
+                     changeloglikifnoconv = FALSE,
+                     optimmethod = 'subplex',
+                     minimum_multiple_births = minimum_multiple_births)
 
   #additional tree info
   how_many_multiple <- percent_multiple <- -1;

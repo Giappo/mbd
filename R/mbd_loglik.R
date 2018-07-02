@@ -71,7 +71,7 @@ mbd_loglik <- function(pars,
   {#MAIN
     
     #ADJUSTING DATA
-    lx <- max_number_of_species <- 1400; alpha <- max_number_of_species/10 #bonus line to simplify
+    lx <- 1000; alpha <- lx/10 #bonus line to simplify
     data <- MBD:::brts2time_intervals_and_births(brts)
     time_intervals <- c(0, data$time_intervals)
     births <- c(0, data$births)
@@ -82,8 +82,8 @@ mbd_loglik <- function(pars,
     
     if (cond == 1){
       #ALPHA ANALYSIS (computes Pc and uses it to estimate what alpha is better to use)
-      # Pc_and_lx <- MBD::calculate_conditional_probability(brts = sim$brts, 
-      #                                                     pars = sim_pars, 
+      # Pc_and_lx <- MBD::calculate_conditional_probability(brts = brts, 
+      #                                                     pars = pars, 
       #                                                     soc = soc,
       #                                                     tips_interval = tips_interval,  
       #                                                     methode = methode, 
@@ -120,15 +120,14 @@ mbd_loglik <- function(pars,
     {
       #MATRIX DIMENSION SETUP
       # max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
-      max_number_of_species <- 10 * alpha; #bonus line to simplify
-      lx <- max_number_of_species
-      nvec <- 0:max_number_of_species
+      lx <- 10 * alpha; #bonus line to simplify
+      nvec <- 0:lx
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
-      Qi <- c(1, rep(0, max_number_of_species))
-      Qt <- matrix(0, ncol = (max_number_of_species + 1), nrow = length(time_intervals))
+      Qi <- c(1, rep(0, lx))
+      Qt <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals))
       Qt[1,] <- Qi
-      dimnames(Qt)[[2]] <- paste0("Q", 0:max_number_of_species)
+      dimnames(Qt)[[2]] <- paste0("Q", 0:lx)
       k <- N0 #N0 is the number of species at t=1
       t <- 2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
       D <- C <- rep(1, (length(time_intervals)))
@@ -138,7 +137,7 @@ mbd_loglik <- function(pars,
       while (t <= length(time_intervals))
       {
         #Applying A operator
-        transition_matrix <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = max_number_of_species)
+        transition_matrix <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
         Qt[t,] <- MBD:::A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
         if (methode != "sexpm"){Qt[t,] <- MBD:::negatives_correction(Qt[t,], pars)} #it removes some small negative values that can occurr as bugs from the integration process
         if (any(is.nan(Qt[t,])))
@@ -158,7 +157,7 @@ mbd_loglik <- function(pars,
         {
           #Applying B operator
           B <- MBD:::create_B(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
-                              max_number_of_species = max_number_of_species)
+                              max_number_of_species = lx)
           Qt[t,] <- (B %*% Qt[t,])
           if (methode != "sexpm"){Qt[t,] <- MBD:::negatives_correction(Qt[t,], pars)}
           if (any(is.nan(Qt[t,])))
@@ -180,7 +179,7 @@ mbd_loglik <- function(pars,
         }else{break}
       }
       if (negative_values == 1){alpha <- alpha + 2}
-      if (nan_values == 1)     {alpha <- alpha - 5; if(alpha <= 0){alpha <- 5}}
+      if (nan_values == 1)     {alpha <- alpha - 5; if(alpha <= 0){alpha <- 6}}
       iterations <- iterations + 1
       start_over_again <- (nan_values) || (negative_values)
     }
