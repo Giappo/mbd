@@ -61,30 +61,35 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
       {
         N <- length(pool)
         total_rate <- N * (lambda + mu) + nu
-        deltaT <- rexp(1, rate = total_rate)
-        outcome <- sample(c(-1,1,2), size = 1, prob = c(N * mu, N * lambda, nu))
-        deltaN <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * rbinom(n = 1, size = N, prob = q)
-        t <- t - deltaT
-
-        if (deltaN > 0 & t > 0)
+        if (total_rate > 0)
         {
-          if (N > 1) {parents <- sample(pool, replace = FALSE, size = deltaN)}else{parents <- pool}
-          new_interval <- (total_count + 1):(total_count + deltaN)
-          L[new_interval,1] <- t#-(deltaN:1)*1e-5 add this if you need separate time points
-          L[new_interval,2] <- parents
-          L[new_interval,3] <- abs(new_interval) * sign(parents)
-
-          pool <- c(pool, abs(new_interval) * sign(parents) )
-          total_count <- total_count + deltaN
-        }
-        if (deltaN < 0 & t > 0)
+          deltaT <- rexp(1, rate = total_rate)
+          outcome <- sample(c(-1,1,2), size = 1, prob = c(N * mu, N * lambda, nu))
+          deltaN <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * rbinom(n = 1, size = N, prob = q)
+          t <- t - deltaT
+  
+          if (deltaN > 0 & t > 0)
+          {
+            if (N > 1) {parents <- sample(pool, replace = FALSE, size = deltaN)}else{parents <- pool}
+            new_interval <- (total_count + 1):(total_count + deltaN)
+            L[new_interval,1] <- t#-(deltaN:1)*1e-5 add this if you need separate time points
+            L[new_interval,2] <- parents
+            L[new_interval,3] <- abs(new_interval) * sign(parents)
+  
+            pool <- c(pool, abs(new_interval) * sign(parents) )
+            total_count <- total_count + deltaN
+          }
+          if (deltaN < 0 & t > 0)
+          {
+            if (N > 1) {dead <- sample(pool, replace = FALSE, size = 1)}else{dead <- pool}
+            L[abs(dead),4] <- t
+            pool <- pool[pool != dead]
+          }
+          # print(pool)
+        }else
         {
-          if (N > 1) {dead <- sample(pool, replace = FALSE, size = 1)}else{dead <- pool}
-          # dead=abs(dead)
-          L[abs(dead),4] <- t
-          pool <- pool[pool != dead]
+          t <- 0 
         }
-        # print(pool)
       }
     }
     L <- L[(1:total_count),]
@@ -254,7 +259,7 @@ mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
 #' out = MBD:::mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
 #'
 #' @export
-mbd_sim_dataset = function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
+mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
                            tips_interval = c(0, 100), edge = Inf, minimum_multiple_births = 0){
   # mbd_sim_dataset creates a full simulated dataset of "max_sims" trees
   #"edge" gives the extent of fluctuations around the mean that i want to consider

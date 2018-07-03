@@ -17,7 +17,8 @@ do
 
 echo "#!/bin/bash" > zMLjob$s
 echo "#SBATCH --time=169:59:00" >> zMLjob$s #--time=229:59:00 #--time=95:59:00
-echo "module load R/3.3.1-foss-2016a" >> zMLjob$s
+#echo "module load R/3.3.1-foss-2016a" >> zMLjob$s
+echo "module load R/3.4.4-foss-2018a-X11-20180131" >> zMLjob$s
 echo "Rscript zzz_ML.R $s" >> zMLjob$s
 echo "rm zMLjob$s" >> zMLjob$s
 

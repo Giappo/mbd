@@ -12,6 +12,7 @@
 #' @param brts A set of branching times of a phylogeny.
 #' @param soc Sets whether stem or crown age should be used (1 or 2)
 #' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
+#' @param lx It is the number of ODEs considered for the computation.
 #' @param tips_interval It takes into account tips boundaries constrain on simulated dataset.
 #' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
 #' @param methode Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.
@@ -29,6 +30,7 @@ mbd_loglik <- function(pars,
                        brts, 
                        soc = 2, 
                        cond = 1, 
+                       lx = 700,
                        tips_interval = c(0, Inf),
                        missnumspec = 0, 
                        safety_threshold = 1e-3,
@@ -71,7 +73,7 @@ mbd_loglik <- function(pars,
   {#MAIN
     
     #ADJUSTING DATA
-    lx <- 1000; alpha <- lx/10 #bonus line to simplify
+    alpha <- lx/10 #bonus line to simplify
     data <- MBD:::brts2time_intervals_and_births(brts)
     time_intervals <- c(0, data$time_intervals)
     births <- c(0, data$births)

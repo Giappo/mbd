@@ -4,8 +4,8 @@
 \alias{mbd_loglik}
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
-mbd_loglik(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
-  missnumspec = 0, safety_threshold = 0.001, methode = "expo",
+mbd_loglik(pars, brts, soc = 2, cond = 1, lx = 700, tips_interval = c(0,
+  Inf), missnumspec = 0, safety_threshold = 0.001, methode = "expo",
   alpha = 10, minimum_multiple_births = 0, print_errors = TRUE)
 }
 \arguments{
@@ -22,6 +22,8 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, tips_interval = c(0, Inf),
 \item{soc}{Sets whether stem or crown age should be used (1 or 2)}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+
+\item{lx}{It is the number of ODEs considered for the computation.}
 
 \item{tips_interval}{It takes into account tips boundaries constrain on simulated dataset.}
 

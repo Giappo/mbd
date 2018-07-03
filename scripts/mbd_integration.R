@@ -15,6 +15,12 @@ if (1){
         ((1 - s)/2) * ( m * (tm - ti.minus)          ) +
           ((1 + s)/2) * (-m * (tm - ti      ) + sqrt(m))
       )
+    
+    if (all(out == 0))
+    {
+      x <- abs(tm - ti)
+      out[which(x == min(x))] <- 1
+    }
     return(out)
   }
   draw.triangles<- function(tm, brts, brts.bars){
