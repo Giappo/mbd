@@ -4,7 +4,7 @@ Title: Multiple Birth Death Diversification
 Version: 0.0.0.9000
 Author: Giovanni Laudanno <glaudanno@gmail.com>
 Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
-Depends: R (>= 3.2.0), DDD (>= 3.4), ape, deSolve, expoRkit, methods, R.utils, RCurl
+Depends: R (>= 3.2.0), DDD (>= 3.4), ape, deSolve, expoRkit, methods, R.utils, RCurl, nLTT, raket, pirouette
 Imports: testit, subplex, maps, msm
 Description: Multiple Birth fun.
 License: GPL-3

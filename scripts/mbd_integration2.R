@@ -41,26 +41,55 @@ if (1) {#functions
     }
     return(sampled.brts)
   }
-}
-
-N <- 5
-age <- -10
-tm <- seq(age, 0, 0.1)
-brts <- c(age, sort(runif(n = N, min = -9.9, max = 0.1), decreasing = F))
-brts.bars <- c(0, abs(rnorm(n = N, mean = 0, sd = 0.5)))
-
-max_step <- 20; res <- rep(0, max_step); repetitions <- 1E3
-for (i in 1:max_step)
-{
-  Nsteps <- (10 * i)
-  tm2 <- seq(age, 0, abs(age - 0)/Nsteps)
-  for (r in 1:repetitions)
-  {
-    test <- sample.brts(tm = tm2, brts = brts, brts.bars = brts.bars)
-    births <- MBD:::brts2time_intervals_and_births(test)$births
-    res[i] <- res[i] + sum(births > 1)
+  MB.percentage_vs_Nbins <- function(Nbrts, repetitions = 1E4, age = -10, bars.sd = (age/Nbrts)/4) {
+    
+    age <- -abs(age); N <- Nbrts; bars.sd <- abs(bars.sd)
+    brts <- c(age, sort(runif(n = N, min = -9.9, max = 0.1), decreasing = F))
+    brts.bars <- c(0, abs(rnorm(n = N, mean = 0, sd = bars.sd)))
+    
+    max_step <- 20; res <- rep(0, max_step); 
+    for (i in 1:max_step)
+    {
+      Nsteps <- (10 * i)
+      tm2 <- seq(from = age, to = 0, by = abs(age - 0)/Nsteps)
+      len_birth <- rep(0, repetitions)
+      for (r in 1:repetitions)
+      {
+        test <- sample.brts(tm = tm2, brts = brts, brts.bars = brts.bars)
+        births <- MBD:::brts2time_intervals_and_births(test)$births
+        res[i] <- res[i] + sum(births > 1)
+        len_birth[r] <- length(births)
+      }
+      res[i] <- res[i]/(sum(len_birth))
+    }
+    df <- data.frame(percentage_multiple_events = res, Nbins = (10 * 1:max_step))
+    plot.integration <- ggplot2::ggplot(data = df, ggplot2::aes(x = Nbins, y = percentage_multiple_events)) + ggplot2::geom_point() +
+      ggplot2::ggtitle(paste0("% multiple events for different binning\n",
+                              "brts = ", paste(signif(brts,2), collapse = ", "),
+                              "\nbrts.bars = ", paste(signif(brts.bars,2), collapse = ", ")))
+    
+    dir_name <- paste0(dirname(getwd()),"//results//mbd_integration//"); suppressWarnings(dir.create(dir_name))
+    
+    j <- 1; while ((file_name <- paste0("MB_percentage_vs_Nbins-N=", N, "-bars.sd=", bars.sd, "-", j,".png")) %in% list.files(folder_name)) {j <- j + 1}; file_name
+    file_path <- paste0(dir_name, file_name); file_path
+    png(filename = file_path)
+    plot(plot.integration)
+    dev.off()
+    
+    return(MB_percentage = df)
   }
-  res[i] <- res[i]/(repetitions * length(births))
 }
-plot(res~(Nsteps <- (10 * 1:max_step)))
 
+#test
+# N <- 5; repetitions <- 5E4; bars.sd <- 0.5; age <- -10 # tm <- seq(age, 0, 0.1)
+Nvec <- (Nmin <- 2):(Nmax <- 10); test_MB.percentage <- vector("list", Nmax)
+for (NN in Nvec)
+{
+  test_MB.percentage[[NN]] <- MB.percentage_vs_Nbins(Nbrts = NN)
+}; test_MB.percentage
+
+i <- 1
+ggplot2::ggplot(data = test_MB.percentage[[i <- i + (i < Nmax) - (Nmax - Nmin) * (i >= Nmax)]]
+                , ggplot2::aes(x = Nbins, y = percentage_multiple_events)) + 
+  ggplot2::geom_point() +
+  ggplot2::ggtitle(paste0("% multiple events for different binning")); i
