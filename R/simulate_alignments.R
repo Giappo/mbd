@@ -240,6 +240,9 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
 }
 
 
+#test <- MBD::alignments_comparison_multiple(sim_pars = (sim_pars <- c(0.2, 0.15, 2, 0.15)), max_sims = 100)
+
+##### DUMPSTER
 # devtools::install_github("richelbilderbeek/tracerer", dependencies = TRUE)
 # devtools::install_github("richelbilderbeek/beastier", dependencies = TRUE)
 # devtools::install_github("richelbilderbeek/babette", dependencies = TRUE)
@@ -250,10 +253,3 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
 # devtools::install_github("richelbilderbeek/raket", dependencies = TRUE)
 # install.packages("nLTT")
 # library("ape"); library("raket"); library("nLTT")
-
-
-
-# sim_pars = c(0.2, 0.15, 2, 0.15)
-# 
-# nLTT.MBD.test <- compare.MBD.with.alignments.BEAST.posterior(sim_pars = c(0.2, 0.15, 2, 0.15), sequence_length = 10^3)
-# nLTT.BD.test  <- compare.MBD.with.alignments.BEAST.posterior(sim_pars = c(0.2, 0.15, 0, 0.15), sequence_length = 10^3)
