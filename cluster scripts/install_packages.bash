@@ -4,7 +4,15 @@ echo "home_dir = substring(getwd(),1,13)" > Rsetup.R
 echo "libs_dir = paste0(home_dir,'/mbd_like/libs')" >> Rsetup.R
 echo "lib_files = list.files(pattern=paste0('[.]tar'),path=libs_dir, full.names=TRUE)" >> Rsetup.R
 echo "mylibrary = paste0(home_dir,'/R/x86_64-pc-linux-gnu-library/3.3/')" >> Rsetup.R
+echo "install.packages('expoRkit', repos='http://cran.us.r-project.org')" >> Rsetup.R
+echo "install.packages('DDD', repos='http://cran.us.r-project.org')" >> Rsetup.R
+echo "install.packages('devtools', repos='http://cran.us.r-project.org')" >> Rsetup.R
+echo "library(devtools)" >> Rsetup.R
+echo "devtools::install_github('richelbilderbeek/raket')" >> Rsetup.R
+echo "library(raket)" >> Rsetup.R
+echo "library(pirouette)" >> Rsetup.R
 echo "devtools::install_github('Giappo/MBD')" >> Rsetup.R
+echo "library(MBD)" >> Rsetup.R
 #echo "devtools::install_github('richelbilderbeek/babette')" >> Rsetup.R
 #echo "install.packages(lib_files, repos = NULL, lib = mylibrary, dependencies = TRUE)" >> Rsetup.R
 

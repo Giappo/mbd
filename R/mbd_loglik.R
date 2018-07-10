@@ -116,9 +116,9 @@ mbd_loglik <- function(pars,
     }
     
     #LIKELIHOOD INTEGRATION
-    start_over_again <- 1; iterations <- 0;
+    start_over_again <- 1; iterations <- 0; max_iterations <- 100
     negative_values <- nan_values <- 0;
-    while (start_over_again == 1 & iterations < 100)
+    while (start_over_again == 1 & iterations < max_iterations)
     {
       #MATRIX DIMENSION SETUP
       # max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix

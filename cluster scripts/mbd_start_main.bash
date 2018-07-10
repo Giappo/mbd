@@ -11,6 +11,9 @@ cd /home/$USER/mbd_like/
 
 chmod +x install_packages.bash
 ./install_packages.bash --output=testinst.out
+#sbatch install_packages.bash
+
+sleep 60
 
 rm testinst.out
 

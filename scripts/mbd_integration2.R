@@ -1,6 +1,6 @@
 # rm(list = ls())
 if (1) {#functions
-  draw.triangle <- function(tm, brt, brt.bar){
+  draw.triangle  <- function(tm, brt, brt.bar){
     ti.minus <- brt - brt.bar
     ti.plus  <- brt + brt.bar;
     half_interval <- abs(ti.plus - ti.minus)/2  #brts.bars?
@@ -22,7 +22,7 @@ if (1) {#functions
     }
     return(out)
   }
-  draw.triangles<- function(tm, brts, brts.bars){
+  draw.triangles <- function(tm, brts, brts.bars){
     brts2 <- brts[-1]
     brts.bars2 <- brts.bars[-1]
     triangles <- vector("list", N <- length(brts2))
@@ -32,7 +32,7 @@ if (1) {#functions
     }
     return(triangles)
   }
-  sample.brts <- function(tm, brts, brts.bars) {
+  sample.brts    <- function(tm, brts, brts.bars) {
     triangles <- draw.triangles(tm = tm, brts = brts, brts.bars = brts.bars)
     sampled.brts <- c(max(abs(brts)), rep(NA, length(brts) - 1))
     for (i in 2:length(brts))
@@ -81,7 +81,7 @@ if (1) {#functions
 }
 
 #test
-# N <- 5; repetitions <- 5E4; bars.sd <- 0.5; age <- -10 # tm <- seq(age, 0, 0.1)
+# N <- 5; repetit-3.5724ions <- 5E4; bars.sd <- 0.5; age <- -10 # tm <- seq(age, 0, 0.1)
 Nvec <- (Nmin <- 2):(Nmax <- 10); test_MB.percentage <- vector("list", Nmax)
 for (NN in Nvec)
 {

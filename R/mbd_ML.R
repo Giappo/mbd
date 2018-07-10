@@ -125,7 +125,7 @@ mbd_ML <- function(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], 
           if (pars.transform == 1)
           {
             #Rampal's transformation
-            MLpars = MLtrpars/(1-MLtrpars)
+            MLpars = MLtrpars/(1 - MLtrpars)
           }else
           {
             MLpars <- MLtrpars

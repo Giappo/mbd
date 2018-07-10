@@ -1,8 +1,19 @@
 #' @export
-BD.Nct <- function(lambda, mu, t, N0 = 2) {
+P_t1_t2 <- function(lambda, mu, t1, t2) {
+  P_t1_t2 <- (1 - mu/lambda)/(1 - (mu/lambda) * exp(-(lambda - mu) *(t2 - t1)) )
+  return(P_t1_t2)
+}
+
+#' @export
+BD.Nct <- function(lambda, mu, t, N0 = 2, age) {
   #average amount of species for a conditioned BD process
-  Lt  <- exp((lambda - mu) * t)
-  Nct <- N0 * Lt/(1 - ((mu * (Lt - 1))/(Lt * lambda - mu))^N0)
+  #Nct <- N0 * Lt/(1 - ((mu * (Lt - 1))/(Lt * lambda - mu))^N0) #old version from etienne 2008
+  tt  <- t
+  TT  <- abs(age)
+  Lt  <- exp((lambda - mu) * tt)
+  Nct <- N0 * Lt * P_t1_t2(lambda = lambda, mu = mu, t1 = tt, t2 = TT) * 
+    (P_t1_t2(lambda = lambda, mu = mu, t1 = 0, t2 = TT))^-1#new version from etienne & rosindell 2012, formula #15
+  
   return(Nct)
 }
 
@@ -10,26 +21,32 @@ BD.Nct <- function(lambda, mu, t, N0 = 2) {
 BD.Nmutations <- function(lambda, mu, age, N0 = 2, sequence_length = 1000, mutation_rate = 1/age) {
   
   age <- abs(age)
-  ft  <- function(t) {Nct(t, lambda = lambda, mu = mu, N0 = N0)}
+  ft  <- function(t) {MBD::BD.Nct(t, lambda = lambda, mu = mu, N0 = N0, age = age)}
   Nmutations <- mutation_rate * sequence_length * integrate(f = ft, lower = 0, upper = age)[[1]]
   return(Nmutations)
 }
 
 #' @export
-BD.infer.lambda.from.mutations <- function(Nsubs, MBD.lambda, mu, age, N0 = 2, sequence_length = 1000, mutation_rate = 1/age, Nsteps = 40) {
+BD.infer.lambda.from.mutations <- function(Nsubs, 
+                                           MBD.lambda, 
+                                           mu, 
+                                           age, 
+                                           N0 = 2, 
+                                           sequence_length = 1000, 
+                                           mutation_rate = 1/age, 
+                                           Nsteps = 40) {
   lavec <- seq((min.lambda <- 0.5 * MBD.lambda), (max.lambda <- 6 * MBD.lambda), by = abs(max.lambda - min.lambda)/(Nsteps))
   NN <- rep(NA, length(lavec))
   for (i in 1:length(lavec))
   {
-    NN[i] <- BD.Nmutations(lambda = lavec[i], mu = mu, age = age,
+    NN[i] <- MBD::BD.Nmutations(lambda = lavec[i], mu = mu, age = age,
                            N0 = N0, sequence_length = sequence_length, mutation_rate = mutation_rate)
   }
-  
   md <- lm(log(NN) ~ lavec)
   fit.test <- nls(NN ~ b*exp(m*lavec), start = list(m = coef(md)[2], b = coef(md)[1]))
   # plot(lavec, predict(fit.test), type = "l"); points(lavec, NN)
   # plot(coef(fit.test)[2] * exp(coef(fit.test)[1] * lavec) ~ lavec , type = "l"); points(lavec, NN)
-  best.lambda <- (log(Nsubs) - log(coef(fit.test)[2]))/coef(fit.test)[1]
+  best.lambda <- (log(Nsubs) - log(coef(fit.test)[2]))/coef(fit.test)[1]; #best.lambda
   return(best.lambda)
 }
 
@@ -85,7 +102,7 @@ alignments_comparison_single <- function(sim_phylo,
   }
   mean.nLTT <- mean(nLTT.diff); mean.nLTT
   std.nLTT  <- sqrt(var(nLTT.diff)); std.nLTT
-  df.nLTT <- data.frame(diff = nLTT.diff)
+  df.nLTT   <- data.frame(diff = nLTT.diff)
   
   return(list(alignment = pirouette.out$alignment, 
               trees = pirouette.out$trees,
@@ -165,7 +182,6 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
     BD.alignment[[s]] <- BD.out$alignment
     BD.trees[[s]]     <- BD.out$trees
     BD.estimates[[s]] <- BD.out$estimates 
-    
   }
   
   #roba
