@@ -4,8 +4,9 @@
 \alias{calculate_conditional_probability}
 \title{Internal MBD function}
 \usage{
-calculate_conditional_probability(brts, pars, soc = 2, tips_interval = c(0,
-  Inf), methode = "expo", abstol = 1e-16, reltol = 1e-10)
+calculate_conditional_probability(brts, pars, lx = 1000, soc = 2,
+  tips_interval = c(0, Inf), methode = "expo", abstol = 1e-16,
+  reltol = 1e-10)
 }
 \description{
 Internal MBD function.

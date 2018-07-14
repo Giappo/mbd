@@ -10,5 +10,65 @@ mbd_loglik_rhs(t, x, pars)
 Internal MBD function.
 }
 \details{
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+A_operator_old <- function(Q, transition_matrix, time_interval, precision = 50L,
+                       A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo"){
+
+precision_limit <- 3000
+
+if (methode == "sexpm")
+  {
+    exp_matrix <- rsexpm:::sexpm(transition_matrix * time_interval)
+    result     <- exp_matrix %*% Q
+  }else if (methode == "expo")
+  {
+    result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
+    while ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && precision < precision_limit )
+    {
+      precision <- precision + 200
+      result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)}
+    if (!any(is.nan(result)))
+    {
+      while (any(result < 0) && precision < precision_limit)
+      {
+        precision <- precision + 200
+        result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
+      }
+    }
+  }else if (methode=="lsoda")
+  {
+    times <- c(0, time_interval)
+    ode_matrix <- transition_matrix
+    # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
+    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+  }
+
+if (any(!is.numeric(result)) || any(is.nan(result))) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
+  {
+    times <- c(0, time_interval)
+    ode_matrix <- transition_matrix
+    # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
+    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+  }
+  else if (any(result < 0)) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
+  {
+    times <- c(0, time_interval)
+    ode_matrix <- transition_matrix
+    # result=deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
+    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+  }
+
+# if ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && methode!="sexpm"){
+  #     # to run this you actually need sexpm to be installed which, on the cluster, might not be the case.
+  #     exp_matrix = rsexpm:::sexpm(transition_matrix*time_interval)
+  #     result = exp_matrix %*% Q
+  # }
+
+return(result)
+}
+
 This is not to be called by the user.
 }

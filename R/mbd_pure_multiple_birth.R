@@ -86,7 +86,7 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
                                  idparsfix = (1:4)[-idparsopt], brts, soc = 2,
                                  pars.transform = 0){
 
-  #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like optim or subplex
+  #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like optim or simplex
   #idparsopt are the ids of the parameters you want to analyze
   #trparsopt are the values for parameters you want to analyze
   #idparsfix are the ids of the parameters you want to fix
@@ -126,14 +126,14 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
 pmb_ML <- function(brts, initparsopt, soc = 2,
                  res = 10 * (1+length(brts)+missnumspec), tol = c(1E-3, 1E-4, 1E-6),
                  maxiter = 1000 * round((1.25)^length(idparsopt)),
-                 changeloglikifnoconv = FALSE, optimmethod = 'subplex',
+                 changeloglikifnoconv = FALSE, optimmethod = 'simplex',
                  pars.transform = 1)
 {# bracket#1
   # - tol = tolerance in optimization
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
-  # - optimmethod = 'subplex' (current default) or 'simplex' (default of previous versions)
+  # - optimmethod = 'simplex' (current default) or 'subplex' (default of previous versions)
   idparsfix <- 2
   parsfix   <- 0
   idparsopt <- c(1,3,4)
@@ -245,7 +245,7 @@ pmb_ML_cluster = function(s,initparsopt=c(0.5,0.15,0.1)){
                       tol = c(1E-3, 1E-4, 1E-6),
                       maxiter = 1000 * round((1.25)^length(idparsopt)),
                       changeloglikifnoconv = FALSE,
-                      optimmethod = 'subplex')
+                      optimmethod = 'simplex')
 
   #additional tree info
   how_many_multiple <- percent_multiple <- -1;

@@ -26,14 +26,14 @@ hyperA_HannoX <- function(N, k, q) {# HG function: fast O(N), updated after Moul
 #' @title Internal MBD function
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
-create_A0 <- function(max_number_of_species, lambda, mu, q, k, matrix_builder = hyperA_HannoX){
+create_A0 <- function(max_number_of_species, lambda, mu, q, k, matrix_builder = MBD:::hyperA_HannoX){
   nvec = 0:max_number_of_species
-  M = lambda * matrix_builder(N = max_number_of_species,k = k,q = q)
+  M = lambda * matrix_builder(N = max_number_of_species, k = k, q = q)
 
   # diag(M) = (-lambda)*c( (1-(1-q)^(k+( nvec[1:max_number_of_species] ) )),0 ) - mu*(nvec+k)
-  diag(M) = (-lambda) * ( 1-(1-q)^(k + nvec) ) - mu * (nvec + k) #new version to avoid the dumpster problem at the end of the matrix
+  diag(M) = (-lambda) * ( 1 - (1 - q)^(k + nvec) ) - mu * (nvec + k) #new version to avoid the dumpster problem at the end of the matrix
 
-  M[row(M) == col(M) - 1] = mu*nvec[2:(max_number_of_species+1)]
+  M[row(M) == col(M) - 1] = mu * nvec[2:(max_number_of_species + 1)]
   return(M)
 }
 
@@ -102,59 +102,119 @@ create_B.no_mbd = function(lambda,nu,q,k,b,max_number_of_species,minimum_multipl
 #' @export
 A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
                        A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo"){
-
-  precision_limit <- 3000
-
+  
+  precision_limit <- 2000
+  precision_step1 <- 70
+  precision_step2 <- 50
+  max_repetitions <- 10
+  result <- rep(-1, length(Q))
+  bad_expo_result <- bad_sexpm_result <- 0
+  
   if (methode == "sexpm")
   {
     exp_matrix <- rsexpm:::sexpm(transition_matrix * time_interval)
     result     <- exp_matrix %*% Q
-  }else if (methode == "expo")
+  }
+  
+  if (methode == "expo")
   {
-    result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
-    while ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && precision < precision_limit )
+    result.nan <- result.negative <- 1
+    repetition <- 1
+    while ((result.nan == 1| result.negative == 1) & repetition < max_repetitions)
     {
-      precision <- precision + 200
-      result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)}
-    if (!any(is.nan(result)))
-    {
-      while (any(result < 0) && precision < precision_limit)
+      result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = TRUE)
+      
+      result.nan <- (any(!is.numeric(result)) || any(is.nan(result)))
+      if (result.nan) 
       {
-        precision <- precision + 200
-        result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
+        precision <- precision - precision_step1
+      }else
+      {
+        result.negative <- (any(result < 0))
+        if (result.negative) 
+        {
+          precision <- precision + precision_step2
+          if (precision > precision_limit) 
+          {
+            break
+          }
+        }
       }
+      repetition <- repetition + 1
     }
-  }else if (methode=="lsoda")
+  }
+  bad_expo_result <- (any(!is.numeric(result)) || any(is.nan(result)))
+  if (!bad_expo_result) {bad_expo_result <- (any(result < 0))}
+  
+  if (methode == "lsoda" | bad_expo_result | bad_sexpm_result)
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol = A_abstol,rtol = A_reltol)[2,-1], timeout = 1000)
   }
-
-  if (any(!is.numeric(result)) || any(is.nan(result))) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
-  {
-    times <- c(0, time_interval)
-    ode_matrix <- transition_matrix
-    # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
-  }
-  else if (any(result < 0)) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
-  {
-    times <- c(0, time_interval)
-    ode_matrix <- transition_matrix
-    # result=deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
-  }
-
-  # if ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && methode!="sexpm"){
-  #     # to run this you actually need sexpm to be installed which, on the cluster, might not be the case.
-  #     exp_matrix = rsexpm:::sexpm(transition_matrix*time_interval)
-  #     result = exp_matrix %*% Q
-  # }
-
+  
   return(result)
 }
+
+#' #' @title Internal MBD function
+#' #' @description Internal MBD function.
+#' #' @details This is not to be called by the user.
+#' #' @export
+#' A_operator_old <- function(Q, transition_matrix, time_interval, precision = 50L,
+#'                        A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo"){
+#' 
+#'   precision_limit <- 3000
+#' 
+#'   if (methode == "sexpm")
+#'   {
+#'     exp_matrix <- rsexpm:::sexpm(transition_matrix * time_interval)
+#'     result     <- exp_matrix %*% Q
+#'   }else if (methode == "expo")
+#'   {
+#'     result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
+#'     while ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && precision < precision_limit )
+#'     {
+#'       precision <- precision + 200
+#'       result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)}
+#'     if (!any(is.nan(result)))
+#'     {
+#'       while (any(result < 0) && precision < precision_limit)
+#'       {
+#'         precision <- precision + 200
+#'         result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
+#'       }
+#'     }
+#'   }else if (methode=="lsoda")
+#'   {
+#'     times <- c(0, time_interval)
+#'     ode_matrix <- transition_matrix
+#'     # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
+#'     R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+#'   }
+#' 
+#'   if (any(!is.numeric(result)) || any(is.nan(result))) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
+#'   {
+#'     times <- c(0, time_interval)
+#'     ode_matrix <- transition_matrix
+#'     # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
+#'     R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+#'   }
+#'   else if (any(result < 0)) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
+#'   {
+#'     times <- c(0, time_interval)
+#'     ode_matrix <- transition_matrix
+#'     # result=deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
+#'     R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+#'   }
+#' 
+#'   # if ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && methode!="sexpm"){
+#'   #     # to run this you actually need sexpm to be installed which, on the cluster, might not be the case.
+#'   #     exp_matrix = rsexpm:::sexpm(transition_matrix*time_interval)
+#'   #     result = exp_matrix %*% Q
+#'   # }
+#' 
+#'   return(result)
+#' }
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
@@ -172,6 +232,64 @@ mbd_loglik_rhs <- function (t, x, pars){
     return(list(out))
   })
 }
+
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+determine_k_limit <- function(pars, brts, lx, soc, methode, abstol = 1e-16, reltol = 1e-10) {
+  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]
+  mvec <- 0:lx
+  Qi <- c(1, rep(0, lx))
+  total_time <- max(abs(brts));
+  T0 <- MBD:::create_A(lambda = lambda, mu = 0, nu = nu, q = q, k = soc,
+                       max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
+  Pm <- MBD:::A_operator(Q = Qi, transition_matrix = T0, time_interval = total_time,
+                         precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+  # plot((Pm/sum(Pm)))
+  k_limit <- soc + max(mvec[(mvec %in% which((cumsum(Pm/sum(Pm))) <= 0.95))]); k_limit
+  return(k_limit)
+}
+
+#' @title Internal MBD function
+#' @description Internal MBD function.
+#' @details This is not to be called by the user.
+#' @export
+calculate_conditional_probability <- function (brts,
+                                               pars,
+                                               lx = 1000,
+                                               soc = 2,
+                                               tips_interval = c(0, Inf),
+                                               methode = 'expo',
+                                               abstol = 1e-16,
+                                               reltol = 1e-10){
+  
+  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
+  total_time <- max(abs(brts));
+  
+  m <- 0:lx; length(m)
+  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
+  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
+  # Qi <- c(1, rep(0, lx)); length(Qi)
+  Qi <- rep(0, lx + 1);  Qi[3] <- 1 #starting with k = 0 and m = 2 missing species
+  k <- 0 #assuming 0 species
+  
+  TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
+                       max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
+  
+  A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+                            precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol); A2_v1
+  
+  # A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+  
+  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+  tips_components <- 1 + 0:1 #these are the components I want to exclude (the one corresponding to 0 and 1 tips)
+  Pc <- 1 - sum(total_product[tips_components]); Pc
+  # Pc <- sum(total_product)
+  
+  return(Pc)
+}
+
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
@@ -212,44 +330,6 @@ calculate_conditional_probability0 <- function (brts,
   return(Pc)
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
-#' @details This is not to be called by the user.
-#' @export
-calculate_conditional_probability02 <- function (brts,
-                                                 pars,
-                                                 lx = 1000,
-                                                 soc = 2,
-                                                 tips_interval = c(0, Inf),
-                                                 methode = 'expo',
-                                                 abstol = 1e-16,
-                                                 reltol = 1e-10){
-  
-  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
-  total_time <- max(abs(brts));
-  
-  m <- 0:lx; length(m)
-  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
-  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
-  # Qi <- c(1, rep(0, lx)); length(Qi)
-  Qi <- rep(0, lx + 1);  Qi[3] <- 1 #starting with k = 0 and m = 2 missing species
-  k <- 0 #assuming 0 species
-  
-  TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
-                       max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
-  
-  A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
-                            precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol); A2_v1
-  
-  # A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
-  
-  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
-  tips_components <- 1 + 0:1 #these are the components I want to exclude (the one corresponding to 0 and 1 tips)
-  Pc <- 1 - sum(total_product[tips_components]); Pc
-  # Pc <- sum(total_product)
-  
-  return(Pc)
-}
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
@@ -360,7 +440,7 @@ find_best_lx_for_Pc <- function(brts,
 #' @description Internal MBD function.
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability <- function (brts,
+calculate_conditional_probability1 <- function (brts,
                                                pars,
                                                soc = 2,
                                                tips_interval = c(0, Inf),

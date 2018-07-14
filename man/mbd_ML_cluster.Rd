@@ -4,7 +4,7 @@
 \alias{mbd_ML_cluster}
 \title{Maximization of the loglikelihood under a multiple birth-death diversification model, wrapped for cluster usage.}
 \usage{
-mbd_ML_cluster(s, initparsopt = c(0.5, 0.1, 1.7, 0.15))
+mbd_ML_cluster(s, initparsopt = c(0.6, 0.1, 1.3, 0.16))
 }
 \arguments{
 \item{s}{The number of the simulation you want to evaluate.}

@@ -77,7 +77,7 @@ res <- parLapply(cl = cl, #cluster
                  tol = c(1E-3, 1E-4, 1E-6),
                  maxiter = 1000 * round((1.25)^length(idparsopt)),
                  changeloglikifnoconv = FALSE,
-                 optimmethod = 'subplex',
+                 optimmethod = 'simplex',
                  minimum_multiple_births = minimum_multiple_births)
 
 # Save Output

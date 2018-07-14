@@ -4,9 +4,9 @@
 \alias{mbd_loglik}
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
-mbd_loglik(pars, brts, soc = 2, cond = 1, lx = 700, tips_interval = c(0,
-  Inf), missnumspec = 0, safety_threshold = 0.001, methode = "expo",
-  alpha = 10, minimum_multiple_births = 0, print_errors = TRUE)
+mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 600,
+  tips_interval = c(0, Inf), missnumspec = 0, safety_threshold = 0.001,
+  methode = "expo", minimum_multiple_births = 0, print_errors = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -23,8 +23,6 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx = 700, tips_interval = c(0,
 
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
-\item{lx}{It is the number of ODEs considered for the computation.}
-
 \item{tips_interval}{It takes into account tips boundaries constrain on simulated dataset.}
 
 \item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
@@ -32,6 +30,8 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx = 700, tips_interval = c(0,
 \item{safety_threshold}{It determines the precision on the parameters.}
 
 \item{methode}{Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.}
+
+\item{lx}{It is the number of ODEs considered for the computation.}
 }
 \value{
 The function returns the natural logarithm of the likelihood for the process.

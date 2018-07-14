@@ -8,9 +8,8 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], parsfix,
   missnumspec = 0, cond = 1, soc = 2, tips_interval = c(0, Inf),
   res = 10 * (1 + length(brts) + missnumspec), tol = c(0.001, 1e-04, 1e-06),
   maxiter = 1000 * round((1.25)^length(idparsopt)),
-  changeloglikifnoconv = FALSE, optimmethod = "subplex", methode = "expo",
-  alpha = 10, minimum_multiple_births = 0, pars.transform = 1,
-  print_errors = 0)
+  changeloglikifnoconv = FALSE, optimmethod = "simplex", methode = "expo",
+  minimum_multiple_births = 0, pars.transform = 1, print_errors = 0)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
@@ -48,7 +47,7 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], parsfix,
 
 \item{changeloglikifnoconv}{If TRUE the loglik will be set to -Inf if ML does not converge.}
 
-\item{optimmethod}{Method used in optimization of the likelihood. Current default is 'subplex'. Alternative is 'simplex' (default of previous versions).}
+\item{optimmethod}{Method used in optimization of the likelihood. Current default is 'simplex'. Alternative is 'subplex' (default of previous versions).}
 
 \item{methode}{Set "sexpm" if you want to use sexpm. Set "expo" if you want to use expoRkit. Set "lsoda" if you want to use "lsoda".}
 
