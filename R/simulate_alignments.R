@@ -124,6 +124,9 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   #setting
   soc <- 2 #it has to start with a crown to use pirouette
   
+  #set filename to save results
+  j <- 1; while ((file_name <- paste0("nLTT", j)) %in% list.files(folder_name)) {j <- j + 1}
+  
   #sim dataset
   MBD.estimates   <- MBD.trees <- MBD.alignment <- MBD.nLTT <- vector("list", max_sims)
   BD.simulations  <- BD.estimates  <- BD.trees  <- BD.alignment  <- BD.nLTT  <- vector("list", max_sims)
@@ -216,8 +219,6 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   folder_name <- paste0(dir_name, sim_pars_string)
   suppressWarnings(dir.create(folder_name))
   
-  j <- 1
-  while ((file_name <- paste0("nLTT", j)) %in% list.files(folder_name)) {j <- j + 1}
   save(MBD.nLTT = df.MBD.nLTT,
        MBD.alignment = MBD.alignment,
        MBD.trees = MBD.trees,

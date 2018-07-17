@@ -1,13 +1,13 @@
 rm(list = ls())
 
-analyze_data1 <- function(max_sims = 1000, quantiles_choice = c(.25, .50, .75)){
+analyze_data1 <- function(max_sims = 1000, quantiles_choice = c(.25, .50, .75), results_folder = "new_results"){
 
   home_dir = substring(getwd(),1,21)
-  folder_name = paste0(home_dir,"/Progress/RQ1-multiple-birth-death/results/new_results/")
+  folder_name = paste0(home_dir,"/Progress/RQ1-multiple-birth-death/results/",results_folder,"/")
   datasets <- list.files(folder_name, pattern = "^[0]")
   # datasets <- list.files( folder_name <- "F://Dropbox//University//Progress//RQ1 - Multiple Births//Results + Reports//final results2",pattern = "^[0]")
 
-  dataset_pars <- vector("list",Nd<-length(datasets))
+  dataset_pars <- vector("list",Nd <- length(datasets))
   for (d in 1:Nd)
   {
     dataset_pars[[d]] <- as.numeric(  unlist( strsplit(x = datasets[d],split = "-") )  )
