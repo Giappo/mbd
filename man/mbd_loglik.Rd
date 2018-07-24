@@ -4,7 +4,7 @@
 \alias{mbd_loglik}
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
-mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900,
+mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
   tips_interval = c(0, Inf), missnumspec = 0, safety_threshold = 0.001,
   methode = "expo", minimum_multiple_births = 0, print_errors = TRUE)
 }

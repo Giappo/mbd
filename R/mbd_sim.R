@@ -277,10 +277,11 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
   }
 
   #simulate trees
-  sim_data <- sim_tes <- sim_tas <- vector("list",max_sims)
+  sim_data <- sim_tes <- sim_tas <- vector("list", max_sims)
   ext_species <- rep(NA, max_sims)
   for (s in 1:max_sims)
   {
+    set.seed(s)
     simulation <- MBD:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond,
                                 tips_interval = tips_interval, minimum_multiple_births = minimum_multiple_births)
     sim_data[[s]]  <- simulation$brts
@@ -299,7 +300,8 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
   max_b <- max(unlist(all_the_births))
 
   additional_species <- tips <- rep(0, max_sims)
-  for (s in 1:max_sims){
+  for (s in 1:max_sims)
+  {
     additional_species[s] <- sum(duplicated(sim_data[[s]]))
     tips[s] <- length(sim_data[[s]]) + 1
   }

@@ -30,6 +30,7 @@ mbd_loglik <- function(pars,
                        soc = 2, 
                        cond = 1, 
                        lx0 = 900,
+                       alpha = 10,
                        tips_interval = c(0, Inf),
                        missnumspec = 0, 
                        safety_threshold = 1e-3,
@@ -44,7 +45,6 @@ mbd_loglik <- function(pars,
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]
   abstol <- 1e-16; reltol <- 1e-10
   if (cond == 0) {tips_interval <- c(0, Inf)}
-  # min_tips <- tips_interval[1]; max_tips <- tips_interval[2]
   
   condition1 <- (any(is.nan(pars)) != 0 | any(is.infinite(pars)) != 0)
   condition2 <- (lambda < 0 | mu < 0 | nu < 0 |
@@ -77,12 +77,30 @@ mbd_loglik <- function(pars,
     N0 <- soc #number of starting species
     k_interval <- N0 + cumsum(births)
     max_k <- max(k_interval)
-    lx <- MBD:::determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc, 
-                                  methode = methode, abstol = abstol, reltol = reltol)
-    alpha <- lx/10
+    
+    #DETERMINE PC AND ALPHA (OR LX)
+    Pc_and_Alpha <- MBD::alpha_analysis(brts = brts,
+                                        pars = pars,
+                                        tips_interval = tips_interval,
+                                        cond = cond,
+                                        soc = soc,
+                                        alpha0 = alpha,
+                                        max_k = max_k,
+                                        methode = methode,
+                                        abstol = abstol,
+                                        reltol = reltol,
+                                        minimum_multiple_births = minimum_multiple_births)
+    
+    Pc    <- Pc_and_Alpha$Pc
+    alpha <- Pc_and_Alpha$alpha
+    
+    # lx <- MBD:::determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc, 
+    #                               methode = methode, abstol = abstol, reltol = reltol)
+    # alpha <- lx/10
+    lx <- max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
     Pc <- 1
     if (cond == 1){
-      Pc <- MBD::calculate_conditional_probability(brts = brts, 
+      Pc <- MBD::calculate_conditional_probability(brts = brts,
                                                    pars = pars,
                                                    soc = soc,
                                                    lx = lx,
@@ -98,8 +116,8 @@ mbd_loglik <- function(pars,
     while (start_over_again == 1 & iterations < max_iterations)
     {
       #MATRIX DIMENSION SETUP
-      # max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
-      lx <- 10 * alpha; #bonus line to simplify
+      lx <- max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
+      # lx <- 10 * alpha; #bonus line to simplify
       nvec <- 0:lx
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)

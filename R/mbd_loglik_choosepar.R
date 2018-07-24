@@ -14,7 +14,7 @@ mbd_loglik_choosepar  <- function(trparsopt,
                                   methode = "expo",
                                   minimum_multiple_births = 0, 
                                   pars.transform = 0, 
-                                  print_errors = 0){
+                                  print_errors = 0, ...){
   #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like simplex, optim or subplex
   #idparsopt are the ids of the parameters you want to analyze
   #trparsopt are the values for parameters you want to analyze
@@ -41,7 +41,7 @@ mbd_loglik_choosepar  <- function(trparsopt,
     }
     loglik <- MBD:::mbd_loglik(pars = pars1, brts = brts, cond = cond, soc = soc,
                                tips_interval = tips_interval, methode = methode,
-                               minimum_multiple_births = minimum_multiple_births, print_errors = print_errors)
+                               minimum_multiple_births = minimum_multiple_births, print_errors = print_errors, ...)
   }
   if (is.nan(loglik) || is.na(loglik))
   {

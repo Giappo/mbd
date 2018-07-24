@@ -131,7 +131,7 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   MBD.estimates   <- MBD.trees <- MBD.alignment <- MBD.nLTT <- vector("list", max_sims)
   BD.simulations  <- BD.estimates  <- BD.trees  <- BD.alignment  <- BD.nLTT  <- vector("list", max_sims)
   Nsubstitutions  <- rep(NA, (max_sims2 <- 100 * max_sims))
-  for (s in 1:max_sims2)
+  for (s in 1:max_sims)
   {
     MBD.simulation <- MBD:::mbd_sim(pars = sim_pars,
                                     soc = soc,
@@ -141,35 +141,32 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
     
     full_tree           <- MBD.simulation$tas#; plot(full_tree)
     total_branch_length <- sum(full_tree$edge.length) # total branch length
-    # reconstructed_tree <- MBD.simulation$tes
-    # mutation_rate = 1/max(abs(ape::branching.times(reconstructed_tree))) #mutation rate
     Nsubstitutions[s] <- sequence_length * mutation_rate * total_branch_length
-    if (s <= max_sims)
-    {
-      MBD.out <- alignments_comparison_single(sim_phylo = MBD.simulation$tes,
-                                              chain_length = chain_length,
-                                              sample_interval = sample_interval,
-                                              sequence_length = sequence_length,
-                                              mutation_rate = mutation_rate)
-      
-      MBD.nLTT[[s]]      <- MBD.out$nLTT
-      MBD.alignment[[s]] <- MBD.out$alignment
-      MBD.trees[[s]]     <- MBD.out$trees
-      MBD.estimates[[s]] <- MBD.out$estimates
-    }
-  }
+
+    MBD.out <- alignments_comparison_single(sim_phylo = MBD.simulation$tes,
+                                            chain_length = chain_length,
+                                            sample_interval = sample_interval,
+                                            sequence_length = sequence_length,
+                                            mutation_rate = mutation_rate)
+    
+    MBD.nLTT[[s]]      <- MBD.out$nLTT
+    MBD.alignment[[s]] <- MBD.out$alignment
+    MBD.trees[[s]]     <- MBD.out$trees
+    MBD.estimates[[s]] <- MBD.out$estimates
+  # }
   
-  BD.lambda <- BD.infer.lambda.from.mutations(Nsubs = mean(Nsubstitutions),
-                                              MBD.lambda = sim_pars[1],
-                                              mu = sim_pars[2],
-                                              age = age,
-                                              N0 = soc,
-                                              sequence_length = sequence_length,
-                                              mutation_rate = mutation_rate,
-                                              Nsteps = 40)
+  # BD.lambda <- BD.infer.lambda.from.mutations(Nsubs = mean(Nsubstitutions),
+    BD.lambda <- BD.infer.lambda.from.mutations(Nsubs = Nsubstitutions[s],
+                                                MBD.lambda = sim_pars[1],
+                                                mu = sim_pars[2],
+                                                age = age,
+                                                N0 = soc,
+                                                sequence_length = sequence_length,
+                                                mutation_rate = mutation_rate,
+                                                Nsteps = 40)
   
-  for (s in 1:max_sims)
-  {
+  # for (s in 1:max_sims)
+  # {
     BD.simulations[[s]] <- MBD:::mbd_sim(pars = c(BD.lambda, sim_pars[2], 0, 0),
                                          soc = soc,
                                          age = age,

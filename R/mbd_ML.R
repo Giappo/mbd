@@ -46,7 +46,7 @@ mbd_ML <- function(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], 
                    res = 10 * (1 + length(brts) + missnumspec), tol = c(1E-3, 1E-4, 1E-6),
                    maxiter = 1000 * round((1.25)^length(idparsopt)),
                    changeloglikifnoconv = FALSE, optimmethod = 'simplex', methode = "expo",
-                   minimum_multiple_births = 0, pars.transform = 1, print_errors = 0)
+                   minimum_multiple_births = 0, pars.transform = 1, print_errors = 0, ...)
   {# bracket#1
   # - tol = tolerance in optimization
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
@@ -99,7 +99,7 @@ mbd_ML <- function(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], 
                                                methode = methode,
                                                minimum_multiple_births = minimum_multiple_births,
                                                pars.transform = pars.transform,
-                                               print_errors = print_errors) #there's no pars2 here and instead 3 more args at the end
+                                               print_errors = print_errors, ...) #there's no pars2 here and instead 3 more args at the end
       cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
       flush.console()
       if (initloglik == -Inf)
@@ -115,7 +115,7 @@ mbd_ML <- function(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], 
                                brts = brts, missnumspec = missnumspec, cond = cond,
                                soc = soc, tips_interval = tips_interval, methode = methode,
                                minimum_multiple_births = minimum_multiple_births,
-                               pars.transform = pars.transform, print_errors = print_errors)
+                               pars.transform = pars.transform, print_errors = print_errors, ...)
         if (out$conv != 0)
         {# bracket#5
           cat("Optimization has not converged. Try again with different initial values.\n")
