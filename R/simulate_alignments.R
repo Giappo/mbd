@@ -125,6 +125,10 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   soc <- 2 #it has to start with a crown to use pirouette
   
   #set filename to save results
+  dir_name <- paste0(dirname(getwd()),"//results//nLTT//"); suppressWarnings(dir.create(dir_name))
+  sim_pars_string <- gsub(", ", "-", toString(sim_pars))
+  folder_name <- paste0(dir_name, sim_pars_string)
+  suppressWarnings(dir.create(folder_name))
   j <- 1; while ((file_name <- paste0("nLTT", j)) %in% list.files(folder_name)) {j <- j + 1}
   
   #sim dataset
@@ -141,7 +145,7 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
     
     full_tree           <- MBD.simulation$tas#; plot(full_tree)
     total_branch_length <- sum(full_tree$edge.length) # total branch length
-    Nsubstitutions[s] <- sequence_length * mutation_rate * total_branch_length
+    Nsubstitutions[s]   <- sequence_length * mutation_rate * total_branch_length
 
     MBD.out <- alignments_comparison_single(sim_phylo = MBD.simulation$tes,
                                             chain_length = chain_length,
@@ -211,11 +215,6 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   plot(BD.nLTT.plot)
   
   #save results
-  dir_name <- paste0(dirname(getwd()),"//results//nLTT//"); suppressWarnings(dir.create(dir_name))
-  sim_pars_string <- gsub(", ", "-", toString(sim_pars))
-  folder_name <- paste0(dir_name, sim_pars_string)
-  suppressWarnings(dir.create(folder_name))
-  
   save(MBD.nLTT = df.MBD.nLTT,
        MBD.alignment = MBD.alignment,
        MBD.trees = MBD.trees,
