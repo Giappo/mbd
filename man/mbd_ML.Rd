@@ -9,7 +9,8 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], parsfix,
   res = 10 * (1 + length(brts) + missnumspec), tol = c(0.001, 1e-04, 1e-06),
   maxiter = 1000 * round((1.25)^length(idparsopt)),
   changeloglikifnoconv = FALSE, optimmethod = "simplex", methode = "expo",
-  minimum_multiple_births = 0, pars.transform = 1, print_errors = 0, ...)
+  minimum_multiple_births = 0, pars.transform = 1, print_errors = 0,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}

@@ -122,7 +122,7 @@ mbd_loglik <- function(pars,
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
       Qi <- c(1, rep(0, lx))
-      Qt <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals))
+      Qt <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals)) #do I need a +1 in nrow?
       Qt[1,] <- Qi
       dimnames(Qt)[[2]] <- paste0("Q", 0:lx)
       k <- N0 #N0 is the number of species at t=1
