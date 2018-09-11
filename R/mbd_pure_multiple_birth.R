@@ -15,7 +15,7 @@ condition1 <- ( any(is.nan(test_pars)) != 0 | any(is.infinite(test_pars)) != 0 )
 condition2 <- ( lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
 if (condition1 | condition2){th_loglik = -Inf}else
 {
-  data <- MBD:::brts2time_intervals_and_births(test_brts)
+  data <- brts2time_intervals_and_births(test_brts)
   time_intervals <- data$time_intervals
   births <- data$births
   k <- N0 + cumsum(c(0, births))
@@ -57,7 +57,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
   condition2 <- ( lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
   if (condition1 | condition2){th_loglik = -Inf}else
   {
-    data <- MBD:::brts2time_intervals_and_births(test_brts)
+    data <- brts2time_intervals_and_births(test_brts)
     time_intervals <- data$time_intervals
     births <- data$births
     k <- N0 + cumsum(c(0, births))

@@ -298,7 +298,7 @@ matrix_check=function(Mlist,sign_check=0){
 
 #Install the missing packages
 require(ape)
-require(abind)
+#require(abind)
 require(mvbutils)
 
 append_multiple=function(x, values, after){

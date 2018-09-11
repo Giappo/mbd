@@ -245,7 +245,7 @@ determine_k_limit <- function(pars, brts, lx, soc, methode, abstol = 1e-16, relt
   total_time <- max(abs(brts));
   T0 <- MBD:::create_A(lambda = lambda, mu = 0, nu = nu, q = q, k = soc,
                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
-  Pm <- MBD:::A_operator(Q = Qi, transition_matrix = T0, time_interval = total_time,
+  Pm <- A_operator(Q = Qi, transition_matrix = T0, time_interval = total_time,
                          precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
   # plot((Pm/sum(Pm)))
   k_limit <- soc + max(mvec[(mvec %in% which((cumsum(Pm/sum(Pm))) <= 0.95))]); k_limit
@@ -278,7 +278,7 @@ calculate_conditional_probability <- function (brts,
   TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
   
-  A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+  A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
                             precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol); A2_v1
   
   # A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
@@ -316,7 +316,7 @@ calculate_conditional_probability0 <- function (brts,
   TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
 
-  A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+  A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
   precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
 
   # A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
@@ -357,7 +357,7 @@ calculate_conditional_probability0PB <- function (brts,
   TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
   
-  A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+  A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
                             precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
   
   # A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
@@ -489,7 +489,7 @@ alpha_conditional_probability <- function (brts, pars, alpha, tips_interval = c(
   min_tips <- max(min_tips, soc * cond) #check this
   N0 <- soc
   total_time <- max(abs(brts));
-  births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
+  births <- c(0, brts2time_intervals_and_births(brts)$births)
   k_interval <- N0 + cumsum(births)
   max_k <- max(k_interval)
   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
@@ -508,14 +508,14 @@ alpha_conditional_probability <- function (brts, pars, alpha, tips_interval = c(
     Qi <- c(1, rep(0, max_number_of_species))
     Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                             max_number_of_species = max_number_of_species)
-    A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+    A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
                               precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
     if (methode != "sexpm"){A2_v1 <- MBD:::negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
     
     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
     {
       Mk_N0.no_mbd <- MBD:::create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-      A2_v1.no_mbd <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+      A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
       A2_v1 <- A2_v1 - A2_v1.no_mbd
     }
     
@@ -544,7 +544,7 @@ alpha_analysis <- function(brts,
   alpha <- alpha0
   while (Pc.notanumber)
   {
-    Pc1 <- MBD:::alpha_conditional_probability(brts = brts,
+    Pc1 <- alpha_conditional_probability(brts = brts,
                                                pars = pars,
                                                tips_interval = tips_interval,
                                                cond = cond,
@@ -560,7 +560,7 @@ alpha_analysis <- function(brts,
   }
   while (deltaAlpha != 0 && count < 100 && same_result_count < 5)
   {
-    Pc2 <- MBD:::alpha_conditional_probability(brts = brts,
+    Pc2 <- alpha_conditional_probability(brts = brts,
                                                pars = pars,
                                                tips_interval = tips_interval,
                                                cond = cond,
@@ -594,7 +594,7 @@ alpha_analysis <- function(brts,
   if (max_k * alpha >= 2000)
   {#check to see whether alpha is too big to be handled without memory issues
     alpha <- floor(1500/max_k);
-    Pc1 <- MBD:::alpha_conditional_probability(brts = brts,
+    Pc1 <- alpha_conditional_probability(brts = brts,
                                                pars = pars,
                                                tips_interval = tips_interval,
                                                cond = cond,
@@ -626,7 +626,7 @@ alpha_analysis <- function(brts,
 #'   min_tips <- max(min_tips, soc * cond) #check this
 #'   N0 <- soc
 #'   total_time <- max(abs(brts));
-#'   births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
+#'   births <- c(0, brts2time_intervals_and_births(brts)$births)
 #'   k_interval <- N0 + cumsum(births)
 #'   max_k <- max(k_interval)
 #'   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
@@ -645,14 +645,14 @@ alpha_analysis <- function(brts,
 #'     Qi <- c(1, rep(0, max_number_of_species))
 #'     Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                             max_number_of_species = max_number_of_species)
-#'     A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+#'     A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
 #'                               precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
 #'     if (methode != "sexpm"){A2_v1 <- MBD:::negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
 #'     
 #'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
 #'     {
 #'       Mk_N0.no_mbd <- MBD:::create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-#'       A2_v1.no_mbd <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
 #'       A2_v1 <- A2_v1 - A2_v1.no_mbd
 #'     }
 #'     
@@ -675,7 +675,7 @@ alpha_analysis <- function(brts,
 #'   min_tips <- missing_tips_interval[1]; max_tips <- missing_tips_interval[2];
 #'   N0 <- soc
 #'   total_time <- max(abs(brts))
-#'   births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
+#'   births <- c(0, brts2time_intervals_and_births(brts)$births)
 #'   k_interval <- N0 + cumsum(births)
 #'   max_k <- max(k_interval)
 #'   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
@@ -688,7 +688,7 @@ alpha_analysis <- function(brts,
 #'   Qi    <- c(1, rep(0, max_number_of_species))
 #'   Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                           max_number_of_species = max_number_of_species)
-#'   A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+#'   A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
 #'                             precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
 #'   
 #'   # MBD::mbd_loglik(pars = pars, brts = c(total_time), soc = soc, cond = 0, missnumspec = 0)
@@ -701,7 +701,7 @@ alpha_analysis <- function(brts,
 #'     min_tips <- max(min_tips, soc * cond) #check this
 #'   N0 <- soc
 #'   total_time <- max(abs(brts));
-#'   births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
+#'   births <- c(0, brts2time_intervals_and_births(brts)$births)
 #'   k_interval <- N0 + cumsum(births)
 #'   max_k <- max(k_interval)
 #'   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
@@ -720,14 +720,14 @@ alpha_analysis <- function(brts,
 #'     Qi <- c(1, rep(0, max_number_of_species))
 #'     Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                             max_number_of_species = max_number_of_species)
-#'     A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+#'     A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
 #'                               precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
 #'     if (methode != "sexpm"){A2_v1 <- MBD:::negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
 #'     
 #'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
 #'     {
 #'       Mk_N0.no_mbd <- MBD:::create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-#'       A2_v1.no_mbd <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
 #'       A2_v1 <- A2_v1 - A2_v1.no_mbd
 #'     }
 #'     
@@ -757,7 +757,7 @@ alpha_analysis <- function(brts,
 #'   TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                        max_number_of_species = lx); dim(TM); max(is.na(TM)); max(is.infinite(TM))
 #'   
-#'   # A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
+#'   # A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
 #'   # precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
 #'   
 #'   A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)

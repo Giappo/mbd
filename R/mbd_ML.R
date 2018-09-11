@@ -202,8 +202,9 @@ mbd_ML <- function(
 #' }
 #'
 #' @examples
+#' # @Giappo: does not work yet
 #' #You will need two files to make it work: "general_settings","sim_data".
-#' MBD:::mbd_ML_cluster(1)
+#' # MBD:::mbd_ML_cluster(1)
 #'
 #' @export
 mbd_ML_cluster <- function(s, initparsopt = c(0.6, 0.1, 1.3, 0.16)){

@@ -5,11 +5,9 @@ Version: 0.0.0.9000
 Author: Giovanni Laudanno <glaudanno@gmail.com>
 Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
 Depends: 
-  R (>= 3.2.0),
-  R.utils, 
-  RCurl,  
-  raket 
+  R (>= 3.2.0)
 Imports: 
+  abind,
   ape, 
   beastier, 
   beautier,
@@ -20,6 +18,9 @@ Imports:
   methods,
   nLTT,
   pirouette,
+  R.utils, 
+  RCurl,  
+  raket,
   subplex, 
   testit, 
   maps, 

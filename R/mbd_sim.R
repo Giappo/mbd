@@ -293,9 +293,9 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
   max_k <- (N0 - 1) + (is.list(sim_data)) * max(sapply(sim_data, length)) + (1 - is.list(sim_data)) * length(sim_data)
   if (is.list(sim_data))
   {
-    all_the_births=sapply(sim_data, FUN = function(brts){return(MBD:::brts2time_intervals_and_births(brts)$births)})
+    all_the_births=sapply(sim_data, FUN = function(brts){return(brts2time_intervals_and_births(brts)$births)})
   }else{
-    all_the_births=MBD:::brts2time_intervals_and_births(sim_data)$births
+    all_the_births=brts2time_intervals_and_births(sim_data)$births
   }
   max_b <- max(unlist(all_the_births))
 
@@ -374,9 +374,9 @@ mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age 
   max_k=(N0-1)+(is.list(sim_data))*max(sapply(sim_data, length))+(1-is.list(sim_data))*length(sim_data)
   if (is.list(sim_data))
   {
-    all_the_births=sapply(sim_data, FUN = function(brts){return(MBD:::brts2time_intervals_and_births(brts)$births)})
+    all_the_births=sapply(sim_data, FUN = function(brts){return(brts2time_intervals_and_births(brts)$births)})
   }else{
-    all_the_births=MBD:::brts2time_intervals_and_births(sim_data)$births
+    all_the_births=brts2time_intervals_and_births(sim_data)$births
   }
   max_b=max(unlist(all_the_births))
 

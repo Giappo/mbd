@@ -15,7 +15,7 @@ test_that("PureBirth theoretical check", {
     #     data=brts2time_intervals_and_births(brts)
     #     time_intervals=data$time_intervals
     #     births=data$births
-    data=MBD:::brts2time_intervals_and_births(brts)
+    data=brts2time_intervals_and_births(brts)
     time_intervals=data$time_intervals
     births=data$births
     
