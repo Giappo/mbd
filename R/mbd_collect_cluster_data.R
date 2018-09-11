@@ -4,6 +4,8 @@
 # chmod 700 ~/.ssh
 # cat id_rsa.pub >> ~/.ssh/authorized_keys
 
+# @Giappo: add doc
+#' Does something
 #' @export
 get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
 
@@ -42,6 +44,8 @@ get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
 }
 # out=get_data_from_cluster(s=15);out
 
+# @Giappo: add doc
+#' Does something
 #' @export
 get_all_data_from_cluster = function (sim_pars, max_sims = 1000, account_name = "p274829"){
 

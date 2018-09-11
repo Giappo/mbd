@@ -22,10 +22,11 @@ Imports:
   RCurl,  
   raket,
   subplex, 
-  testit, 
+  testit,
+  tracerer,
   maps, 
   msm
-Description: Multiple Birth fun.
+Description: Multiple Birth Death Diversification
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
