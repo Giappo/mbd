@@ -7,6 +7,19 @@
 create_A0(max_number_of_species, lambda, mu, q, k,
   matrix_builder = hyperA_HannoX)
 }
+\arguments{
+\item{max_number_of_species}{something}
+
+\item{lambda}{something}
+
+\item{mu}{something}
+
+\item{q}{something}
+
+\item{k}{something}
+
+\item{matrix_builder}{something}
+}
 \description{
 Internal MBD function.
 }

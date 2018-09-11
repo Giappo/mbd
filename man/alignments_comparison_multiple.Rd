@@ -10,11 +10,23 @@ alignments_comparison_multiple(sim_pars = c(0.2, 0.15, 2, 0.15),
   Inf), mutation_rate = 1/age)
 }
 \arguments{
+\item{sim_pars}{something}
+
+\item{max_sims}{something}
+
+\item{chain_length}{something}
+
+\item{sample_interval}{something}
+
+\item{sequence_length}{something}
+
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{age}{The age of the tree.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+
+\item{mutation_rate}{something}
 }
 \description{
 Does something F

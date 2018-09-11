@@ -6,6 +6,17 @@
 \usage{
 create_B0(max_number_of_species, q, k, b, matrix_builder = hyperA_HannoX)
 }
+\arguments{
+\item{max_number_of_species}{something}
+
+\item{q}{something}
+
+\item{k}{something}
+
+\item{b}{something}
+
+\item{matrix_builder}{something}
+}
 \description{
 Internal MBD function.
 }

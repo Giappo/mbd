@@ -6,6 +6,13 @@
 \usage{
 hyperA_HannoX(N, k, q)
 }
+\arguments{
+\item{N}{something}
+
+\item{k}{something}
+
+\item{q}{something}
+}
 \description{
 Internal MBD function.
 }

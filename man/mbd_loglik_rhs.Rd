@@ -7,6 +7,10 @@
 mbd_loglik_rhs(t, x, pars)
 }
 \arguments{
+\item{t}{something}
+
+\item{x}{something}
+
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;

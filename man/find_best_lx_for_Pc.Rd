@@ -9,6 +9,8 @@ find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo",
   interval.min = 500, interval.max = 1400)
 }
 \arguments{
+\item{brts}{something}
+
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
@@ -18,6 +20,18 @@ find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo",
 }}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{methode}{something}
+
+\item{abstol}{something}
+
+\item{reltol}{something}
+
+\item{iterations}{something}
+
+\item{interval.min}{something}
+
+\item{interval.max}{something}
 }
 \description{
 Internal MBD function.

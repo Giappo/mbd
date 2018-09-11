@@ -6,6 +6,13 @@
 \usage{
 get_data_from_cluster(sim_pars, s, account_name = "p274829")
 }
+\arguments{
+\item{sim_pars}{something}
+
+\item{s}{something}
+
+\item{account_name}{something}
+}
 \description{
 Does something G
 }

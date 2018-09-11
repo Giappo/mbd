@@ -46,11 +46,21 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
 \item abstolx = absolute tolerance of parameter values in optimization
 }}
 
+\item{maxiter}{something}
+
 \item{changeloglikifnoconv}{If TRUE the loglik will be set to -Inf if ML does not converge.}
 
 \item{optimmethod}{Method used in optimization of the likelihood. Current default is 'simplex'. Alternative is 'subplex' (default of previous versions).}
 
 \item{methode}{Set "sexpm" if you want to use sexpm. Set "expo" if you want to use expoRkit. Set "lsoda" if you want to use "lsoda".}
+
+\item{minimum_multiple_births}{something}
+
+\item{pars.transform}{something}
+
+\item{print_errors}{something}
+
+\item{verbose}{something}
 
 \item{max_iter}{Sets the maximum number of iterations in the optimization.}
 }

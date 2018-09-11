@@ -6,6 +6,15 @@
 \usage{
 P_t1_t2(lambda, mu, t1, t2)
 }
+\arguments{
+\item{lambda}{something}
+
+\item{mu}{something}
+
+\item{t1}{something}
+
+\item{t2}{something}
+}
 \description{
 Does something A
 }

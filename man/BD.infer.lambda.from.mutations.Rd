@@ -8,7 +8,21 @@ BD.infer.lambda.from.mutations(Nsubs, MBD.lambda, mu, age, N0 = 2,
   sequence_length = 1000, mutation_rate = 1/age, Nsteps = 40)
 }
 \arguments{
+\item{Nsubs}{something}
+
+\item{MBD.lambda}{something}
+
+\item{mu}{something}
+
 \item{age}{The age of the tree.}
+
+\item{N0}{something}
+
+\item{sequence_length}{something}
+
+\item{mutation_rate}{something}
+
+\item{Nsteps}{something}
 }
 \description{
 Does something D

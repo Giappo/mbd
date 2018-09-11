@@ -5,14 +5,168 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
-default_params_doc(age, cond, soc, pars, tips_interval)
+default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
+  b, brts, chain_length, changeloglikifnoconv, colormap, idparsfix,
+  idparsopt, initparsopt, interval.max, interval.min, iterations, k,
+  lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
+  max_number_of_species, max_repetitions, max_sims, maxiter, MBD.lambda,
+  methode, minimum_multiple_births, missnumspec, mu, mutation_rate, N, N0,
+  Nsteps, Nsubs, nu, optimmethod, pars.transform, parsfix, precision,
+  print_errors, Q, q, reltol, res, s, sample_interval, sequence_length,
+  sim_pars, sim_phylo, soc, t, t1, t2, time_interval, tol,
+  transition_matrix, trparsfix, trparsopt, verbose, x, x.name, x.splits, y,
+  y.name, y.splits, z, z.name, age, cond, pars, tips_interval)
 }
 \arguments{
+\item{A_abstol}{something}
+
+\item{A_reltol}{something}
+
+\item{abstol}{something}
+
+\item{account_name}{something}
+
+\item{alpha}{something}
+
+\item{alpha0}{something}
+
+\item{b}{something}
+
+\item{brts}{something}
+
+\item{chain_length}{something}
+
+\item{changeloglikifnoconv}{something}
+
+\item{colormap}{something}
+
+\item{idparsfix}{something}
+
+\item{idparsopt}{something}
+
+\item{initparsopt}{something}
+
+\item{interval.max}{something}
+
+\item{interval.min}{something}
+
+\item{iterations}{something}
+
+\item{k}{something}
+
+\item{lambda}{something}
+
+\item{logs}{something}
+
+\item{lx}{something}
+
+\item{lx0}{something}
+
+\item{matrix}{something}
+
+\item{matrix_builder}{something}
+
+\item{max_iter}{something}
+
+\item{max_k}{something}
+
+\item{max_number_of_species}{something}
+
+\item{max_repetitions}{something}
+
+\item{max_sims}{something}
+
+\item{maxiter}{something}
+
+\item{MBD.lambda}{something}
+
+\item{methode}{something}
+
+\item{minimum_multiple_births}{something}
+
+\item{missnumspec}{something}
+
+\item{mu}{something}
+
+\item{mutation_rate}{something}
+
+\item{N}{something}
+
+\item{N0}{something}
+
+\item{Nsteps}{something}
+
+\item{Nsubs}{something}
+
+\item{nu}{something}
+
+\item{optimmethod}{something}
+
+\item{pars.transform}{something}
+
+\item{parsfix}{something}
+
+\item{precision}{something}
+
+\item{print_errors}{something}
+
+\item{Q}{something}
+
+\item{q}{something}
+
+\item{reltol}{something}
+
+\item{res}{something}
+
+\item{s}{something}
+
+\item{sample_interval}{something}
+
+\item{sequence_length}{something}
+
+\item{sim_pars}{something}
+
+\item{sim_phylo}{something}
+
+\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{t}{something}
+
+\item{t1}{something}
+
+\item{t2}{something}
+
+\item{time_interval}{something}
+
+\item{tol}{something}
+
+\item{transition_matrix}{something}
+
+\item{trparsfix}{something}
+
+\item{trparsopt}{something}
+
+\item{verbose}{something}
+
+\item{x}{something}
+
+\item{x.name}{something}
+
+\item{x.splits}{something}
+
+\item{y}{something}
+
+\item{y.name}{something}
+
+\item{y.splits}{something}
+
+\item{z}{something}
+
+\item{z.name}{something}
+
 \item{age}{The age of the tree.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
-
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{pars}{vector of parameters:
 \itemize{

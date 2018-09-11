@@ -7,6 +7,21 @@
 create_A.no_mbd(lambda, mu, nu, q, k, max_number_of_species,
   minimum_multiple_births)
 }
+\arguments{
+\item{lambda}{something}
+
+\item{mu}{something}
+
+\item{nu}{something}
+
+\item{q}{something}
+
+\item{k}{something}
+
+\item{max_number_of_species}{something}
+
+\item{minimum_multiple_births}{something}
+}
 \description{
 Internal MBD function.
 }

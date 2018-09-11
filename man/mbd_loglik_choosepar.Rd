@@ -11,11 +11,31 @@ mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
   ...)
 }
 \arguments{
+\item{trparsopt}{something}
+
+\item{trparsfix}{something}
+
+\item{idparsopt}{something}
+
+\item{idparsfix}{something}
+
+\item{brts}{something}
+
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+
+\item{missnumspec}{something}
+
+\item{methode}{something}
+
+\item{minimum_multiple_births}{something}
+
+\item{pars.transform}{something}
+
+\item{print_errors}{something}
 }
 \description{
 Internal MBD function.

@@ -9,6 +9,19 @@ alignments_comparison_single(sim_phylo, chain_length = 1e+07,
   max_repetitions = 10,
   mutation_rate = 1/max(abs(ape::branching.times(sim_phylo))))
 }
+\arguments{
+\item{sim_phylo}{something}
+
+\item{chain_length}{something}
+
+\item{sample_interval}{something}
+
+\item{sequence_length}{something}
+
+\item{max_repetitions}{something}
+
+\item{mutation_rate}{something}
+}
 \description{
 Does something E
 }

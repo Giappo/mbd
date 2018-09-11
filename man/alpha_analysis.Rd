@@ -8,6 +8,8 @@ alpha_analysis(brts, pars, tips_interval, cond, soc, alpha0, max_k,
   methode = "expo", abstol, reltol, minimum_multiple_births)
 }
 \arguments{
+\item{brts}{something}
+
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
@@ -21,6 +23,18 @@ alpha_analysis(brts, pars, tips_interval, cond, soc, alpha0, max_k,
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{alpha0}{something}
+
+\item{max_k}{something}
+
+\item{methode}{something}
+
+\item{abstol}{something}
+
+\item{reltol}{something}
+
+\item{minimum_multiple_births}{something}
 }
 \description{
 Internal MBD function.

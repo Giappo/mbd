@@ -8,7 +8,17 @@ BD.Nmutations(lambda, mu, age, N0 = 2, sequence_length = 1000,
   mutation_rate = 1/age)
 }
 \arguments{
+\item{lambda}{something}
+
+\item{mu}{something}
+
 \item{age}{The age of the tree.}
+
+\item{N0}{something}
+
+\item{sequence_length}{something}
+
+\item{mutation_rate}{something}
 }
 \description{
 Does something C

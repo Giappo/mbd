@@ -9,6 +9,8 @@ alpha_conditional_probability(brts, pars, alpha, tips_interval = c(0,
   reltol = 1e-10, minimum_multiple_births = 0)
 }
 \arguments{
+\item{brts}{something}
+
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
@@ -17,11 +19,21 @@ alpha_conditional_probability(brts, pars, alpha, tips_interval = c(0,
   \item pars[4] is q, the single-lineage speciation probability.
 }}
 
+\item{alpha}{something}
+
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{methode}{something}
+
+\item{abstol}{something}
+
+\item{reltol}{something}
+
+\item{minimum_multiple_births}{something}
 }
 \description{
 Internal MBD function.

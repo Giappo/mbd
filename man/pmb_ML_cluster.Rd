@@ -8,6 +8,11 @@ pmb_ML_cluster(s, initparsopt = c(0.5, 0.15, 0.1))
 
 pmb_ML_cluster(s, initparsopt = c(0.5, 0.15, 0.1))
 }
+\arguments{
+\item{s}{something}
+
+\item{initparsopt}{something}
+}
 \description{
 Does something I
 

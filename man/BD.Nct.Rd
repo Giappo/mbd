@@ -7,6 +7,14 @@
 BD.Nct(lambda, mu, t, N0 = 2, age)
 }
 \arguments{
+\item{lambda}{something}
+
+\item{mu}{something}
+
+\item{t}{something}
+
+\item{N0}{something}
+
 \item{age}{The age of the tree.}
 }
 \description{

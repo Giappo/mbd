@@ -7,6 +7,13 @@
 get_all_data_from_cluster(sim_pars, max_sims = 1000,
   account_name = "p274829")
 }
+\arguments{
+\item{sim_pars}{something}
+
+\item{max_sims}{something}
+
+\item{account_name}{something}
+}
 \description{
 Does something H
 }

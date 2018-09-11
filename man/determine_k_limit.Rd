@@ -16,7 +16,17 @@ determine_k_limit(pars, brts, lx, soc, methode, abstol = 1e-16,
   \item pars[4] is q, the single-lineage speciation probability.
 }}
 
+\item{brts}{something}
+
+\item{lx}{something}
+
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{methode}{something}
+
+\item{abstol}{something}
+
+\item{reltol}{something}
 }
 \description{
 Internal MBD function.

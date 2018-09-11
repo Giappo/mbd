@@ -24,6 +24,10 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
 
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
+\item{lx0}{something}
+
+\item{alpha}{something}
+
 \item{tips_interval}{It takes into account tips boundaries constrain on simulated dataset.}
 
 \item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
@@ -31,6 +35,10 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
 \item{safety_threshold}{It determines the precision on the parameters.}
 
 \item{methode}{Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.}
+
+\item{minimum_multiple_births}{something}
+
+\item{print_errors}{something}
 
 \item{lx}{It is the number of ODEs considered for the computation.}
 }

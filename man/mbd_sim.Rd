@@ -23,6 +23,8 @@ mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0,
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+
+\item{minimum_multiple_births}{something}
 }
 \value{
 The function returns a list of L table, branching times and number of extinct species.

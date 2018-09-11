@@ -9,6 +9,8 @@ calculate_conditional_probability0PB(brts, pars, lx = 200, soc = 2,
   reltol = 1e-10)
 }
 \arguments{
+\item{brts}{something}
+
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
@@ -17,9 +19,17 @@ calculate_conditional_probability0PB(brts, pars, lx = 200, soc = 2,
   \item pars[4] is q, the single-lineage speciation probability.
 }}
 
+\item{lx}{something}
+
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+
+\item{methode}{something}
+
+\item{abstol}{something}
+
+\item{reltol}{something}
 }
 \description{
 Internal MBD function.
