@@ -3,4 +3,7 @@
 ^\.travis\.yml$
 ^pics$
 ^scripts$
-^cluster scripts$
+^cluster_scripts$
+^errors$
+^libs$
+^account_name$
