@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_pure_multiple_birth.R
 \name{pmb_ML}
 \alias{pmb_ML}
-\title{Does something}
+\title{Does something N}
 \usage{
 pmb_ML(brts, initparsopt, soc = 2, res = 10 * (1 + length(brts) +
   missnumspec), tol = c(0.001, 1e-04, 1e-06), maxiter = 1000 *
@@ -10,5 +10,5 @@ pmb_ML(brts, initparsopt, soc = 2, res = 10 * (1 + length(brts) +
   optimmethod = "simplex", pars.transform = 1)
 }
 \description{
-Does something
+Does something N
 }

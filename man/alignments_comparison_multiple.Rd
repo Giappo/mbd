@@ -2,7 +2,7 @@
 % Please edit documentation in R/simulate_alignments.R
 \name{alignments_comparison_multiple}
 \alias{alignments_comparison_multiple}
-\title{Does something}
+\title{Does something F}
 \usage{
 alignments_comparison_multiple(sim_pars = c(0.2, 0.15, 2, 0.15),
   max_sims = 10, chain_length = 1e+06, sample_interval = 1000,
@@ -10,5 +10,5 @@ alignments_comparison_multiple(sim_pars = c(0.2, 0.15, 2, 0.15),
   Inf), mutation_rate = 1/age)
 }
 \description{
-Does something
+Does something F
 }

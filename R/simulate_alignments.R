@@ -1,5 +1,5 @@
 # @Giappo: add doc
-#' Does something
+#' Does something A
 #' @export
 P_t1_t2 <- function(lambda, mu, t1, t2) {
   P_t1_t2 <- (1 - mu/lambda)/(1 - (mu/lambda) * exp(-(lambda - mu) *(t2 - t1)) )
@@ -7,7 +7,7 @@ P_t1_t2 <- function(lambda, mu, t1, t2) {
 }
 
 # @Giappo: add doc
-#' Does something
+#' Does something B
 #' @export
 BD.Nct <- function(lambda, mu, t, N0 = 2, age) {
   #average amount of species for a conditioned BD process
@@ -22,7 +22,7 @@ BD.Nct <- function(lambda, mu, t, N0 = 2, age) {
 }
 
 # @Giappo: add doc
-#' Does something
+#' Does something C
 #' @export
 BD.Nmutations <- function(lambda, mu, age, N0 = 2, sequence_length = 1000, mutation_rate = 1/age) {
   
@@ -33,7 +33,7 @@ BD.Nmutations <- function(lambda, mu, age, N0 = 2, sequence_length = 1000, mutat
 }
 
 # @Giappo: add doc
-#' Does something
+#' Does something D
 #' @export
 BD.infer.lambda.from.mutations <- function(Nsubs, 
                                            MBD.lambda, 
@@ -59,7 +59,7 @@ BD.infer.lambda.from.mutations <- function(Nsubs,
 }
 
 # @Giappo: add doc
-#' Does something
+#' Does something E
 #' @export
 alignments_comparison_single <- function(sim_phylo,
                                          chain_length = 1e+07,
@@ -121,7 +121,7 @@ alignments_comparison_single <- function(sim_phylo,
 }
 
 # @Giappo: add doc
-#' Does something
+#' Does something F
 #' @export
 alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
                                            max_sims = 1e+01,

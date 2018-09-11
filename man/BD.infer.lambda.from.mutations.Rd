@@ -2,11 +2,11 @@
 % Please edit documentation in R/simulate_alignments.R
 \name{BD.infer.lambda.from.mutations}
 \alias{BD.infer.lambda.from.mutations}
-\title{Does something}
+\title{Does something D}
 \usage{
 BD.infer.lambda.from.mutations(Nsubs, MBD.lambda, mu, age, N0 = 2,
   sequence_length = 1000, mutation_rate = 1/age, Nsteps = 40)
 }
 \description{
-Does something
+Does something D
 }

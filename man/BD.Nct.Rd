@@ -2,10 +2,10 @@
 % Please edit documentation in R/simulate_alignments.R
 \name{BD.Nct}
 \alias{BD.Nct}
-\title{Does something}
+\title{Does something B}
 \usage{
 BD.Nct(lambda, mu, t, N0 = 2, age)
 }
 \description{
-Does something
+Does something B
 }

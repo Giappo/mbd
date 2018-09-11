@@ -2,11 +2,11 @@
 % Please edit documentation in R/simulate_alignments.R
 \name{BD.Nmutations}
 \alias{BD.Nmutations}
-\title{Does something}
+\title{Does something C}
 \usage{
 BD.Nmutations(lambda, mu, age, N0 = 2, sequence_length = 1000,
   mutation_rate = 1/age)
 }
 \description{
-Does something
+Does something C
 }

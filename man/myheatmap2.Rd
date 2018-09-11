@@ -2,10 +2,10 @@
 % Please edit documentation in R/mbd_utils.R
 \name{myheatmap2}
 \alias{myheatmap2}
-\title{Does something}
+\title{Does something J}
 \usage{
 myheatmap2(x, y, z, x.name, y.name, z.name, x.splits, y.splits)
 }
 \description{
-Does something
+Does something J
 }

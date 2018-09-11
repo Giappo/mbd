@@ -2,10 +2,10 @@
 % Please edit documentation in R/simulate_alignments.R
 \name{P_t1_t2}
 \alias{P_t1_t2}
-\title{Does something}
+\title{Does something A}
 \usage{
 P_t1_t2(lambda, mu, t1, t2)
 }
 \description{
-Does something
+Does something A
 }

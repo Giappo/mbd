@@ -2,10 +2,10 @@
 % Please edit documentation in R/mbd_pure_multiple_birth.R
 \name{pmb_loglik}
 \alias{pmb_loglik}
-\title{Does something}
+\title{Does something K}
 \usage{
 pmb_loglik(pars, brts, soc = 2)
 }
 \description{
-Does something
+Does something K
 }

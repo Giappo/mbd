@@ -2,10 +2,10 @@
 % Please edit documentation in R/mbd_collect_cluster_data.R
 \name{get_data_from_cluster}
 \alias{get_data_from_cluster}
-\title{Does something}
+\title{Does something G}
 \usage{
 get_data_from_cluster(sim_pars, s, account_name = "p274829")
 }
 \description{
-Does something
+Does something G
 }

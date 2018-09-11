@@ -1,5 +1,5 @@
 # @Giappo: add doc
-#' Does something
+#' Does something K
 #' @export
 pmb_loglik <- function(pars, brts, soc = 2){
 
@@ -42,7 +42,7 @@ return(th_loglik)
 }
 
 # @Giappo: add doc
-#' Does something
+#' Does something L
 #' @export
 pmb_loglik_Qvector <- function(pars, brts, soc = 2){
   #I would like to get the entire Q vector out of this...
@@ -86,7 +86,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
 }
 
 # @Giappo: add doc
-#' Does something
+#' Does something M
 #' @export
 pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
                                  idparsfix = (1:4)[-idparsopt], brts, soc = 2,
@@ -129,7 +129,7 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
 }
 
 # @Giappo: add doc
-#' Does something
+#' Does something N
 #' @export
 pmb_ML <- function(brts, initparsopt, soc = 2,
                  res = 10 * (1+length(brts)+missnumspec), tol = c(1E-3, 1E-4, 1E-6),
@@ -231,7 +231,7 @@ pmb_ML <- function(brts, initparsopt, soc = 2,
 }# bracket#1
 
 # @Giappo: add doc
-#' Does something
+#' Does something O
 #' @export
 pmb_ML_cluster = function(s,initparsopt=c(0.5,0.15,0.1)){
   # initparsopt=c(1.8,0.3,0.15);

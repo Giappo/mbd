@@ -2,10 +2,10 @@
 % Please edit documentation in R/mbd_pure_multiple_birth.R
 \name{pmb_loglik_Qvector}
 \alias{pmb_loglik_Qvector}
-\title{Does something}
+\title{Does something L}
 \usage{
 pmb_loglik_Qvector(pars, brts, soc = 2)
 }
 \description{
-Does something
+Does something L
 }

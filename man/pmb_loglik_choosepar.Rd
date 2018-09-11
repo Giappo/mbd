@@ -2,11 +2,11 @@
 % Please edit documentation in R/mbd_pure_multiple_birth.R
 \name{pmb_loglik_choosepar}
 \alias{pmb_loglik_choosepar}
-\title{Does something}
+\title{Does something M}
 \usage{
 pmb_loglik_choosepar(trparsopt, trparsfix = 0, idparsopt = c(1, 3, 4),
   idparsfix = (1:4)[-idparsopt], brts, soc = 2, pars.transform = 0)
 }
 \description{
-Does something
+Does something M
 }

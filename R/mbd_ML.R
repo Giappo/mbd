@@ -272,9 +272,9 @@ mbd_ML_cluster <- function(s, initparsopt = c(0.6, 0.1, 1.3, 0.16)){
 }
 
 # pmb_ML_cluster----------------
-#' @export
 # @Giappo: add doc
-#' Does something
+#' Does something I
+#' @export
 pmb_ML_cluster <- function(s, initparsopt = c(0.5, 0, 1.7, 0.15)){
   print(s)
   parnames <- c("lambda","mu","nu","q"); Npars <- length(parnames)

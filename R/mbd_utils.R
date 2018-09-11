@@ -160,8 +160,7 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
 }
 
 # @Giappo: add doc
-#' Does something
-#' Gets heatmap of my matrices
+#' Gets heatmap of my matrices.
 #' @export
 myheatmap = function(matrix,logs=1,colormap=heat.colors(15),...){
   if (is.matrix(matrix)==F){matrix=as.matrix(matrix)}
@@ -173,8 +172,8 @@ myheatmap = function(matrix,logs=1,colormap=heat.colors(15),...){
 }
 
 # @Giappo: add doc
-#' Does something
-myheatmap2 = function(x,y,z,x.name,y.name,z.name,x.splits,y.splits){
+#' Does something J
+myheatmap2 <- function(x,y,z,x.name,y.name,z.name,x.splits,y.splits){
 
   if (missing(x.splits)){x.splits=round( (length(x))/10 )}
   if (missing(y.splits)){y.splits=round( (length(y))/10 )}

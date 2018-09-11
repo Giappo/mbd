@@ -2,12 +2,10 @@
 % Please edit documentation in R/mbd_utils.R
 \name{myheatmap}
 \alias{myheatmap}
-\title{Does something
-Gets heatmap of my matrices}
+\title{Gets heatmap of my matrices.}
 \usage{
 myheatmap(matrix, logs = 1, colormap = heat.colors(15), ...)
 }
 \description{
-Does something
-Gets heatmap of my matrices
+Gets heatmap of my matrices.
 }
