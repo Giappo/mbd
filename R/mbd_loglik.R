@@ -22,7 +22,8 @@
 #' set.seed(11)
 #' simulated_data = MBD:::mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
 #' plot(simulated_data$tas)
-#' mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
+#' # @Giappo: too big too run
+#' # MBD::mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
 #'
 #' @export
 mbd_loglik <- function(pars, 
