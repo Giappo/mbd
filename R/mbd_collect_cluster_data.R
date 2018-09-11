@@ -25,7 +25,7 @@ get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
   remote_file = paste(remote_path,folder_name,"/",file_name,sep = '')
 
   out = tryCatch(
-  RCurl:::scp(host = host_address,path = remote_file,user = account_name,verbose = F,
+  RCurl::scp(host = host_address,path = remote_file,user = account_name,verbose = F,
                 key = sprintf(c(
                   ssh.public.keyfile  = paste(key_path,"id_rsa.pub",sep = ''),
                   ssh.private.keyfile = paste(key_path,"id_rsa",sep = ''),

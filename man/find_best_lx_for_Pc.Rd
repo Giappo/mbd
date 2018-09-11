@@ -4,9 +4,9 @@
 \alias{find_best_lx_for_Pc}
 \title{Internal MBD function}
 \usage{
-find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo", abstol = 1e-16,
-  reltol = 1e-10, iterations = 20, interval.min = 500,
-  interval.max = 1400)
+find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo",
+  abstol = 1e-16, reltol = 1e-10, iterations = 20,
+  interval.min = 500, interval.max = 1400)
 }
 \description{
 Internal MBD function.

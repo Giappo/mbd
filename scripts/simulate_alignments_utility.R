@@ -99,7 +99,7 @@
 #                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
 #   
 #   # tm <- seq(0, total_time, by = total_time/100)
-#   A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = tm, m = 50L), silent = T)
+#   A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = tm, m = 50L), silent = T)
 #   
 #   total_product <- A2_v1 %*% (one_over_Cm * one_over_qm_binom)
 #   test <- apply(t(A2_v1), MARGIN = 1, FUN = function(x) x * (one_over_Cm * one_over_qm_binom))

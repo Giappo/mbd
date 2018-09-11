@@ -122,7 +122,7 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
     repetition <- 1
     while ((result.nan == 1| result.negative == 1) & repetition < max_repetitions)
     {
-      result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = TRUE)
+      result <- try(expoRkit::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = TRUE)
       
       result.nan <- (any(!is.numeric(result)) || any(is.nan(result)))
       if (result.nan) 
@@ -151,7 +151,7 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix, atol = A_abstol, rtol = A_reltol)[2,-1], timeout = 1001)
+    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix, atol = A_abstol, rtol = A_reltol)[2,-1], timeout = 1001)
   }
   
   return(result)
@@ -172,17 +172,17 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 #'     result     <- exp_matrix %*% Q
 #'   }else if (methode == "expo")
 #'   {
-#'     result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
+#'     result <- try(expoRkit::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
 #'     while ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && precision < precision_limit )
 #'     {
 #'       precision <- precision + 200
-#'       result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)}
+#'       result <- try(expoRkit::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)}
 #'     if (!any(is.nan(result)))
 #'     {
 #'       while (any(result < 0) && precision < precision_limit)
 #'       {
 #'         precision <- precision + 200
-#'         result <- try(expoRkit:::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
+#'         result <- try(expoRkit::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = T)
 #'       }
 #'     }
 #'   }else if (methode=="lsoda")
@@ -190,7 +190,7 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 #'     times <- c(0, time_interval)
 #'     ode_matrix <- transition_matrix
 #'     # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-#'     R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
 #'   }
 #' 
 #'   if (any(!is.numeric(result)) || any(is.nan(result))) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
@@ -198,14 +198,14 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 #'     times <- c(0, time_interval)
 #'     ode_matrix <- transition_matrix
 #'     # result<-deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-#'     R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
 #'   }
 #'   else if (any(result < 0)) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
 #'   {
 #'     times <- c(0, time_interval)
 #'     ode_matrix <- transition_matrix
 #'     # result=deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-#'     R.utils:::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
 #'   }
 #' 
 #'   # if ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && methode!="sexpm"){
@@ -281,7 +281,7 @@ calculate_conditional_probability <- function (brts,
   A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
                             precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol); A2_v1
   
-  # A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+  # A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
   
   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
   tips_components <- 1 + 0:1 #these are the components I want to exclude (the one corresponding to 0 and 1 tips)
@@ -319,7 +319,7 @@ calculate_conditional_probability0 <- function (brts,
   A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
   precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
 
-  # A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+  # A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
 
   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
@@ -360,7 +360,7 @@ calculate_conditional_probability0PB <- function (brts,
   A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
                             precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
   
-  # A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+  # A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
   
   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
@@ -462,14 +462,16 @@ calculate_conditional_probability1 <- function (brts,
                                                     reltol = reltol)  
   }else
   {
-    Pc <- MBD::calculate_conditional_probability02(brts = brts,
-                                                   pars = pars,
-                                                   lx = lx,
-                                                   soc = soc,
-                                                   tips_interval = tips_interval,
-                                                   methode = methode,
-                                                   abstol = abstol,
-                                                   reltol = reltol)
+    # @Giappo: this function does not exist any more
+    # Pc <- MBD::calculate_conditional_probability02(brts = brts,
+    #                                                pars = pars,
+    #                                                lx = lx,
+    #                                                soc = soc,
+    #                                                tips_interval = tips_interval,
+    #                                                methode = methode,
+    #                                                abstol = abstol,
+    #                                                reltol = reltol)
+    stop("Function 'MBD::calculate_conditional_probability02' is absent")
   }
   return(list(Pc = Pc, lx = lx))
 }
@@ -758,7 +760,7 @@ alpha_analysis <- function(brts,
 #'   # A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
 #'   # precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
 #'   
-#'   A2_v1 <- try(expoRkit:::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
+#'   A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
 #'   
 #'   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
 #'   Pc <- sum(total_product)

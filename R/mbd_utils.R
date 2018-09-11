@@ -148,7 +148,7 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
   nvec=0:max_number_of_species
   v0=rep(0,(max_number_of_species+1));v0[N0+1]=1
   transition_matrix = create_mbd_P_matrix(pars=test_parameters, max_number_of_species = max_number_of_species)
-  vf=expoRkit:::expv(v=v0,x=transition_matrix,t=age,m = precision)
+  vf=expoRkit::expv(v=v0,x=transition_matrix,t=age,m = precision)
 
   nmedio=sum(nvec*vf)
   std=sqrt( sum(nvec^2*vf)-nmedio^2 )

@@ -4,9 +4,9 @@
 \alias{alpha_conditional_probability}
 \title{Internal MBD function}
 \usage{
-alpha_conditional_probability(brts, pars, alpha, tips_interval = c(0, Inf),
-  cond = 1, soc = 2, methode = "expo", abstol = 1e-16, reltol = 1e-10,
-  minimum_multiple_births = 0)
+alpha_conditional_probability(brts, pars, alpha, tips_interval = c(0,
+  Inf), cond = 1, soc = 2, methode = "expo", abstol = 1e-16,
+  reltol = 1e-10, minimum_multiple_births = 0)
 }
 \description{
 Internal MBD function.

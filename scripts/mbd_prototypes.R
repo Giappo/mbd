@@ -300,7 +300,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
         cat("The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n")
         out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
       } else {
-        out <- DDD:::optimizer(optimmethod = optimmethod, optimpars = optimpars,
+        out <- DDD::optimizer(optimmethod = optimmethod, optimpars = optimpars,
                                fun = MBD:::mbd_loglik_choosepar0, trparsopt = trparsopt,
                                trparsfix = trparsfix, idparsopt = idparsopt,
                                idparsfix = idparsfix, brts = brts, missnumspec = missnumspec,

@@ -125,7 +125,7 @@ mbd_ML <- function(
   if (verbose == TRUE) {
     sink(file = tempfile()) # Sink output here
   }
-  out <- DDD:::optimizer(optimmethod = optimmethod, optimpars = optimpars,
+  out <- DDD::optimizer(optimmethod = optimmethod, optimpars = optimpars,
                          fun = MBD:::mbd_loglik_choosepar,
                          trparsopt = trparsopt, trparsfix = trparsfix,
                          idparsopt = idparsopt, idparsfix = idparsfix,
