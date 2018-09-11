@@ -474,8 +474,7 @@ summarize_beast_posterior=function(
   }
 
 
-  branch_info_out=abind:::abind(branch_info_tot,along=3)
-
+  branch_info_out <- abind::abind(branch_info_tot, along = 3)
 
   return(list(branch_info=branch_infos, trees=tree_tot))
 }
