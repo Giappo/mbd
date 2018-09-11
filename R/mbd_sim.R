@@ -29,7 +29,7 @@
 #' }
 #'
 #' @examples
-#' out = MBD:::mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
+#' out = mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
 #' plot(out$tas)
 #' plot(out$tes)
 #' out$L
@@ -152,7 +152,7 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 #' }
 #'
 #' @examples
-#' out = MBD:::mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
+#' out = mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
 #' plot(out$tas)
 #' plot(out$tes)
 #' out$L
@@ -256,7 +256,8 @@ mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
 #' N.B.: At each call of the function you overwrite the previous files.
 #'
 #' @examples
-#' out = MBD:::mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
+#' # @Giappo: does not work
+#' # out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
 #'
 #' @export
 mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
@@ -270,7 +271,7 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
   # if (cond == 1){tips_interval[1] = max(N0, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
   if (edge != Inf && tips_interval == c(0, Inf))
   {
-    estimation <- MBD:::mbd_P_eq(test_parameters = sim_pars, age = age, max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
+    estimation <- mbd_P_eq(test_parameters = sim_pars, age = age, max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
     max_tips <- round(estimation$avg_n*(1 + edge));
     min_tips <- max(0,round(estimation$avg_n * (1 - edge)));
     tips_interval <- c(min_tips, max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
@@ -282,7 +283,7 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
   for (s in 1:max_sims)
   {
     set.seed(s)
-    simulation <- MBD:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond,
+    simulation <- mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond,
                                 tips_interval = tips_interval, minimum_multiple_births = minimum_multiple_births)
     sim_data[[s]]  <- simulation$brts
     ext_species[s] <- simulation$extinct_species
@@ -341,7 +342,8 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
 #' N.B.: At each call of the function you overwrite the previous files.
 #'
 #' @examples
-#' out = MBD:::mbd_sim_dataset0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,edge=Inf )
+#' # @Giappo: does not work
+#' # out <- mbd_sim_dataset0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,edge=Inf )
 #'
 #' @export
 mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age = 10,
@@ -353,7 +355,7 @@ mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age 
   N0 <- soc
   if (cond == 1){tips_interval[1]=max(N0,tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
   if (edge!=Inf && tips_interval == c(0,Inf) ){
-    estimation=MBD:::mbd_P_eq(test_parameters=sim_pars,age=age,max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
+    estimation=mbd_P_eq(test_parameters=sim_pars,age=age,max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
     max_tips=round(estimation$avg_n*(1+edge));
     min_tips=max(0,round(estimation$avg_n*(1-edge)));
     tips_interval=c(min_tips,max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
@@ -363,7 +365,7 @@ mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age 
   sim_data=sim_tes=sim_tas=vector("list",max_sims)
   ext_species=rep(NA,max_sims)
   for (s in 1:max_sims){
-    simulation <- MBD:::mbd_sim0(pars = sim_pars, soc = soc, age = age, cond = cond,
+    simulation <- mbd_sim0(pars = sim_pars, soc = soc, age = age, cond = cond,
                               tips_interval = tips_interval, minimum_multiple_births = minimum_multiple_births)
     sim_data[[s]]=simulation$brts
     ext_species[s]=simulation$extinct_species

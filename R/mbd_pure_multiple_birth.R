@@ -6,7 +6,7 @@ pmb_loglik <- function(pars, brts, soc = 2){
 test_pars=pars  # test_pars=c(0.4,0,0.1,0.2)
 test_brts=brts  # test_brts=c(-10,-5,-5,-3,-3,-3,-2,-1,-1,-1)
 #numerical loglik
-# loglik=MBD:::mbd_loglik(pars = test_pars, brts = test_brts, soc = soc, cond = 0, tips_interval = c(0,Inf))
+# loglik=mbd_loglik(pars = test_pars, brts = test_brts, soc = soc, cond = 0, tips_interval = c(0,Inf))
 
 #theoretical loglik
 N0 <- soc
@@ -48,7 +48,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
   test_pars=pars  # test_pars=c(0.4,0,0.1,0.2)
   test_brts=brts  # test_brts=c(-10,-5,-5,-3,-3,-3,-2,-1,-1,-1)
   #numerical loglik
-  # loglik=MBD:::mbd_loglik(pars = test_pars, brts = test_brts, soc = soc, cond = 0, tips_interval = c(0,Inf))
+  # loglik=mbd_loglik(pars = test_pars, brts = test_brts, soc = soc, cond = 0, tips_interval = c(0,Inf))
 
   #theoretical loglik
   N0 <- soc
@@ -112,7 +112,7 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
     {
       pars1 <- trpars1
     }
-    loglik <- MBD:::pmb_loglik(pars = pars1, brts = brts)
+    loglik <- pmb_loglik(pars = pars1, brts = brts)
   }
   if(is.nan(loglik) || is.na(loglik))
   {
@@ -171,7 +171,7 @@ pmb_ML <- function(brts, initparsopt, soc = 2,
         trparsfix <- parsfix
       }
       optimpars = c(tol, maxiter)
-      initloglik <- MBD:::pmb_loglik_choosepar(trparsopt = trparsopt, trparsfix = trparsfix, idparsopt = idparsopt,
+      initloglik <- pmb_loglik_choosepar(trparsopt = trparsopt, trparsfix = trparsfix, idparsopt = idparsopt,
                                                idparsfix = idparsfix, brts = brts, soc = soc,
                                                pars.transform = pars.transform) #there's no pars2 here and instead 3 more args at the end
       cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
@@ -182,7 +182,7 @@ pmb_ML <- function(brts, initparsopt, soc = 2,
         out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
       } else {
         out <- DDD::optimizer(optimmethod = optimmethod, optimpars = optimpars,
-                               fun = MBD:::pmb_loglik_choosepar, trparsopt = trparsopt,
+                               fun = pmb_loglik_choosepar, trparsopt = trparsopt,
                                trparsfix = trparsfix, idparsopt = idparsopt,
                                idparsfix = idparsfix, brts = brts, soc = soc,
                                pars.transform = pars.transform)
@@ -239,7 +239,7 @@ pmb_ML_cluster = function(s,initparsopt=c(0.5,0.15,0.1)){
   if ( !file.exists(paste(simpath,"/errors",sep = '')) ){dir.create(paste(simpath,"/errors",sep = ''))}
   sink(file = paste0(simpath,"/errors/mbd_MLE_errors",s,".txt"), append = T)
 
-  res <- MBD:::pmb_ML(brts = sim_data[[s]],
+  res <- pmb_ML(brts = sim_data[[s]],
                       initparsopt = initparsopt,
                       res = 10 * (1 + length(brts) + 0), #this 0 used to be missnumspec
                       tol = c(1E-3, 1E-4, 1E-6),

@@ -36,10 +36,10 @@
 #' @examples
 #' set.seed(10)
 #' test_pars <- c(0.3, 0.1, 0.1, 0.15)
-#' simulated_data = MBD:::mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
+#' simulated_data = mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
 #' plot(simulated_data$tes)
 #' # @Giappo: does not work
-#' # MBD:::mbd_ML(
+#' # mbd_ML(
 #' #   brts = simulated_data$brts, initparsopt = 0.11 ,idparsopt = 4,
 #' #   idparsfix = c(1,2,3), parsfix = test_pars[idparsfix], 
 #' #   missnumspec = 0, cond = 1, soc = 2
@@ -108,7 +108,7 @@ mbd_ML <- function(
     trparsfix  <- parsfix
   }
   optimpars  <- c(tol, maxiter)
-  initloglik <- MBD:::mbd_loglik_choosepar(trparsopt = trparsopt, trparsfix = trparsfix,
+  initloglik <- mbd_loglik_choosepar(trparsopt = trparsopt, trparsfix = trparsfix,
                                            idparsopt = idparsopt, idparsfix = idparsfix,
                                            brts = brts, missnumspec = missnumspec,
                                            cond = cond, soc = soc, tips_interval = tips_interval,
@@ -130,7 +130,7 @@ mbd_ML <- function(
     sink(file = tempfile()) # Sink output here
   }
   out <- DDD::optimizer(optimmethod = optimmethod, optimpars = optimpars,
-                         fun = MBD:::mbd_loglik_choosepar,
+                         fun = mbd_loglik_choosepar,
                          trparsopt = trparsopt, trparsfix = trparsfix,
                          idparsopt = idparsopt, idparsfix = idparsfix,
                          brts = brts, missnumspec = missnumspec, cond = cond,
@@ -204,7 +204,7 @@ mbd_ML <- function(
 #' @examples
 #' # @Giappo: does not work yet
 #' #You will need two files to make it work: "general_settings","sim_data".
-#' # MBD:::mbd_ML_cluster(1)
+#' # mbd_ML_cluster(1)
 #'
 #' @export
 mbd_ML_cluster <- function(s, initparsopt = c(0.6, 0.1, 1.3, 0.16)){
@@ -306,7 +306,7 @@ pmb_ML_cluster <- function(s, initparsopt = c(0.5, 0, 1.7, 0.15)){
   if (!file.exists(paste0(simpath,"/errors"))){dir.create(paste0(simpath,"/errors"))}
   sink(file = paste0(simpath,"/errors/mbd_MLE_errors",s,".txt"), append = T)
   
-  res <- MBD:::mbd_ML(brts = sim_data[[s]],
+  res <- mbd_ML(brts = sim_data[[s]],
                       initparsopt = initparsopt,
                       idparsopt = idparsopt,
                       idparsfix = (1:Npars)[-idparsopt],

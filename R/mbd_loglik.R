@@ -20,7 +20,7 @@
 #'
 #' @examples
 #' set.seed(11)
-#' simulated_data = MBD:::mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
+#' simulated_data = mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
 #' plot(simulated_data$tas)
 #' # @Giappo: too big too run
 #' # MBD::mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
@@ -67,7 +67,7 @@ mbd_loglik <- function(pars,
     loglik <- -Inf
   }else if (mu == 0 && all(tips_interval == c(0, Inf)) && missnumspec == 0 && minimum_multiple_births == 0)
   {
-    loglik <- MBD:::pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
+    loglik <- pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
   }else
   {#MAIN
     
@@ -95,7 +95,7 @@ mbd_loglik <- function(pars,
     Pc    <- Pc_and_Alpha$Pc
     alpha <- Pc_and_Alpha$alpha
     
-    # lx <- MBD:::determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc, 
+    # lx <- determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc, 
     #                               methode = methode, abstol = abstol, reltol = reltol)
     # alpha <- lx/10
     lx <- max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
@@ -134,9 +134,9 @@ mbd_loglik <- function(pars,
       while (t <= length(time_intervals))
       {
         #Applying A operator
-        transition_matrix <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
+        transition_matrix <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
         Qt[t,] <- A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
-        if (methode != "sexpm"){Qt[t,] <- MBD:::negatives_correction(Qt[t,], pars)} #it removes some small negative values that can occurr as bugs from the integration process
+        if (methode != "sexpm"){Qt[t,] <- negatives_correction(Qt[t,], pars)} #it removes some small negative values that can occurr as bugs from the integration process
         if (any(is.nan(Qt[t,])))
         {
           if (Sys.info()[['sysname']] == "Windows")
@@ -153,10 +153,10 @@ mbd_loglik <- function(pars,
         if (t < length(time_intervals))
         {
           #Applying B operator
-          B <- MBD:::create_B(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
+          B <- create_B(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
                               max_number_of_species = lx)
           Qt[t,] <- (B %*% Qt[t,])
-          if (methode != "sexpm"){Qt[t,] <- MBD:::negatives_correction(Qt[t,], pars)}
+          if (methode != "sexpm"){Qt[t,] <- negatives_correction(Qt[t,], pars)}
           if (any(is.nan(Qt[t,])))
           {
             if (Sys.info()[['sysname']] == "Windows")

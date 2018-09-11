@@ -66,10 +66,10 @@ mbd_ML computes the maximum likelihood estimates of the parameters of a multiple
 \examples{
 set.seed(10)
 test_pars <- c(0.3, 0.1, 0.1, 0.15)
-simulated_data = MBD:::mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
+simulated_data = mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
 plot(simulated_data$tes)
 # @Giappo: does not work
-# MBD:::mbd_ML(
+# mbd_ML(
 #   brts = simulated_data$brts, initparsopt = 0.11 ,idparsopt = 4,
 #   idparsfix = c(1,2,3), parsfix = test_pars[idparsfix], 
 #   missnumspec = 0, cond = 1, soc = 2

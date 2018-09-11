@@ -37,7 +37,7 @@ mbd_ML_cluster computes the maximum likelihood estimates of the parameters of a 
 \examples{
 # @Giappo: does not work yet
 #You will need two files to make it work: "general_settings","sim_data".
-# MBD:::mbd_ML_cluster(1)
+# mbd_ML_cluster(1)
 
 }
 \author{

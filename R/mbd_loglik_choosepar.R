@@ -39,7 +39,7 @@ mbd_loglik_choosepar  <- function(trparsopt,
     {
       pars1 <- trpars1
     }
-    loglik <- MBD:::mbd_loglik(pars = pars1, brts = brts, cond = cond, soc = soc,
+    loglik <- mbd_loglik(pars = pars1, brts = brts, cond = cond, soc = soc,
                                tips_interval = tips_interval, methode = methode,
                                minimum_multiple_births = minimum_multiple_births, print_errors = print_errors, ...)
   }

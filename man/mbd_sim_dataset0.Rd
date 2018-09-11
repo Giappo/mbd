@@ -35,7 +35,8 @@ N.B.: At each call of the function you overwrite the previous files.
 mbd_sim_dataset0 produces a full dataset of max_sims simulated trees including multiple speciations at the same time.
 }
 \examples{
-out = MBD:::mbd_sim_dataset0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,edge=Inf )
+# @Giappo: does not work
+# out <- mbd_sim_dataset0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,edge=Inf )
 
 }
 \author{

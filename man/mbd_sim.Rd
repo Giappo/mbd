@@ -44,7 +44,7 @@ The function returns a list of L table, branching times and number of extinct sp
 mbd_sim produces simulated trees allowing for three kind of events: sympatric speciation, multiple allopatric speciations and extinction.
 }
 \examples{
-out = MBD:::mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
+out = mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
 plot(out$tas)
 plot(out$tes)
 out$L

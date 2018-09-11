@@ -5,7 +5,7 @@
 \title{Internal MBD function}
 \usage{
 create_A0(max_number_of_species, lambda, mu, q, k,
-  matrix_builder = MBD:::hyperA_HannoX)
+  matrix_builder = hyperA_HannoX)
 }
 \description{
 Internal MBD function.

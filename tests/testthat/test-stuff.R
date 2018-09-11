@@ -19,7 +19,7 @@
 # # load(file.choose(), envir=globalenv()) #use it for "data"
 # # load(file.choose(), envir=globalenv()) #use it for "general settings"
 # #You can also generate your own dataset with:
-# #MBD:::mbd_sim_dataset0(sim_pars=c(2.5,0.1,0.10),soc=2,cond=1,age=10,max_sims=1000,edge=Inf)
+# #mbd_sim_dataset0(sim_pars=c(2.5,0.1,0.10),soc=2,cond=1,age=10,max_sims=1000,edge=Inf)
 # #NB: If you use it, it will delete the previous one.
 #
 # #select an method of optimization
@@ -37,11 +37,11 @@
 # check_pars=rep(0,length(idparsfix)+length(idparsopt));check_pars[idparsfix]=trparsfix; check_pars[idparsopt]=trparsopt;check_pars
 #
 # #test the functions
-# MBD:::mbd_sim0(pars=sim_pars,soc=2,age=10,cond=1,tips_interval=c(0,Inf))
-# MBD:::mbd_loglik0(pars=sim_pars,brts = brts,soc=2,cond=1,tips_interval=c(0,Inf) )
-# MBD:::mbd_loglik_choosepar0(trparsfix = trparsfix, trparsopt = trparsopt, idparsopt = idparsopt,idparsfix = idparsfix, brts = brts)
-# MBD:::mbd_ML0(brts = brts,initparsopt = initparsopt, idparsopt = idparsopt, parsfix = parsfix, idparsfix = idparsfix, soc = soc, cond = cond,optimmethod = optimmethod)
-# MBD:::mbd_theoretical_pure_birth(pars=c(sim_pars[1],0,sim_pars[3]),brts=brts,soc=2,cond=0)
+# mbd_sim0(pars=sim_pars,soc=2,age=10,cond=1,tips_interval=c(0,Inf))
+# mbd_loglik0(pars=sim_pars,brts = brts,soc=2,cond=1,tips_interval=c(0,Inf) )
+# mbd_loglik_choosepar0(trparsfix = trparsfix, trparsopt = trparsopt, idparsopt = idparsopt,idparsfix = idparsfix, brts = brts)
+# mbd_ML0(brts = brts,initparsopt = initparsopt, idparsopt = idparsopt, parsfix = parsfix, idparsfix = idparsfix, soc = soc, cond = cond,optimmethod = optimmethod)
+# mbd_theoretical_pure_birth(pars=c(sim_pars[1],0,sim_pars[3]),brts=brts,soc=2,cond=0)
 #
 #
 #

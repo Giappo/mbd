@@ -36,7 +36,8 @@ N.B.: At each call of the function you overwrite the previous files.
 mbd_sim_dataset produces a full dataset of max_sims simulated trees including multiple speciations at the same time. This second version takes into account the possibility both of allopatric and sympatric speciation.
 }
 \examples{
-out = MBD:::mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
+# @Giappo: does not work
+# out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
 
 }
 \author{
