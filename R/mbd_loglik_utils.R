@@ -1,5 +1,6 @@
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 hyperA_HannoX <- function(N, k, q) {# HG function: fast O(N), updated after Moulis meeting
   #this is the matrix builder: helps to create A and B operators
@@ -25,6 +26,7 @@ hyperA_HannoX <- function(N, k, q) {# HG function: fast O(N), updated after Moul
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 create_A0 <- function(max_number_of_species, lambda, mu, q, k, matrix_builder = hyperA_HannoX){
   nvec = 0:max_number_of_species
@@ -39,6 +41,7 @@ create_A0 <- function(max_number_of_species, lambda, mu, q, k, matrix_builder = 
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 create_B0 <- function(max_number_of_species, q, k, b, matrix_builder = hyperA_HannoX){#lambda * choose(k,b) * q^b  is going to be added in logB in the main script
   k2 <- k - b
@@ -48,6 +51,7 @@ create_B0 <- function(max_number_of_species, q, k, b, matrix_builder = hyperA_Ha
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 create_A <- function(lambda, mu, nu, q, k, max_number_of_species){
@@ -74,6 +78,7 @@ create_B <- function(lambda, nu, q, k, b, max_number_of_species){
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 create_A.no_mbd = function(lambda,mu,nu,q,k,max_number_of_species,minimum_multiple_births){
@@ -87,6 +92,7 @@ create_A.no_mbd = function(lambda,mu,nu,q,k,max_number_of_species,minimum_multip
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 create_B.no_mbd = function(lambda,nu,q,k,b,max_number_of_species,minimum_multiple_births){
@@ -98,6 +104,7 @@ create_B.no_mbd = function(lambda,nu,q,k,b,max_number_of_species,minimum_multipl
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
@@ -219,6 +226,7 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 mbd_loglik_rhs <- function (t, x, pars){
@@ -236,6 +244,7 @@ mbd_loglik_rhs <- function (t, x, pars){
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 determine_k_limit <- function(pars, brts, lx, soc, methode, abstol = 1e-16, reltol = 1e-10) {
@@ -254,6 +263,7 @@ determine_k_limit <- function(pars, brts, lx, soc, methode, abstol = 1e-16, relt
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 calculate_conditional_probability <- function (brts,
@@ -294,6 +304,7 @@ calculate_conditional_probability <- function (brts,
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 calculate_conditional_probability0 <- function (brts,
@@ -334,6 +345,7 @@ calculate_conditional_probability0 <- function (brts,
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 calculate_conditional_probability0PB <- function (brts,
@@ -378,6 +390,7 @@ calculate_conditional_probability0PB <- function (brts,
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 find_best_lx_for_Pc <- function(brts, 
@@ -439,6 +452,7 @@ find_best_lx_for_Pc <- function(brts,
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 calculate_conditional_probability1 <- function (brts,
@@ -478,6 +492,7 @@ calculate_conditional_probability1 <- function (brts,
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 alpha_conditional_probability <- function (brts, pars, alpha, tips_interval = c(0, Inf),
                                            cond = 1, soc = 2, methode = "expo",
@@ -527,6 +542,7 @@ alpha_conditional_probability <- function (brts, pars, alpha, tips_interval = c(
 
 #' @title Internal MBD function
 #' @description Internal MBD function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 alpha_analysis <- function(brts,

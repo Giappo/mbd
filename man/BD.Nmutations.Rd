@@ -7,6 +7,9 @@
 BD.Nmutations(lambda, mu, age, N0 = 2, sequence_length = 1000,
   mutation_rate = 1/age)
 }
+\arguments{
+\item{age}{The age of the tree.}
+}
 \description{
 Does something C
 }

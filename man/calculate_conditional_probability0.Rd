@@ -8,6 +8,19 @@ calculate_conditional_probability0(brts, pars, lx = 1000, soc = 2,
   tips_interval = c(0, Inf), methode = "expo", abstol = 1e-16,
   reltol = 1e-10)
 }
+\arguments{
+\item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability.
+}}
+
+\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+}
 \description{
 Internal MBD function.
 }

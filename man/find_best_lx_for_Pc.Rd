@@ -8,6 +8,17 @@ find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo",
   abstol = 1e-16, reltol = 1e-10, iterations = 20,
   interval.min = 500, interval.max = 1400)
 }
+\arguments{
+\item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability.
+}}
+
+\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+}
 \description{
 Internal MBD function.
 }

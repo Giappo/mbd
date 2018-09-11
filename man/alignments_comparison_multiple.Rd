@@ -9,6 +9,13 @@ alignments_comparison_multiple(sim_pars = c(0.2, 0.15, 2, 0.15),
   sequence_length = 1000, cond = 1, age = 10, tips_interval = c(0,
   Inf), mutation_rate = 1/age)
 }
+\arguments{
+\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+
+\item{age}{The age of the tree.}
+
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+}
 \description{
 Does something F
 }

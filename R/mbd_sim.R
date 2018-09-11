@@ -2,6 +2,7 @@
 #' @author Giovanni Laudanno
 #' @title Creates simulated trees under the multiple birth death process, including both sympatric and allopatric speciation
 #' @description mbd_sim produces simulated trees allowing for three kind of events: sympatric speciation, multiple allopatric speciations and extinction.
+#' @inheritParams default_params_doc
 #' @param pars vector of parameters:
 #' \itemize{
 #'   \item pars[1] is lambda, the sympatric speciation rate;

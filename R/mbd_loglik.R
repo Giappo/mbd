@@ -1,6 +1,7 @@
 #' @author Giovanni Laudanno
 #' @title Calculates the likelihood for a multiple birth-death process
 #' @description mbd_loglik provides the likelihood for a process in which multiple births (from different parents) at the same time are possible, along with usual sympatric speciation and extinction events.
+#' @inheritParams default_params_doc
 #' @param pars vector of parameters:
 #' \itemize{
 #'   \item pars[1] is lambda, the sympatric speciation rate;

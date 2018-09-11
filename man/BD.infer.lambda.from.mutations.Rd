@@ -7,6 +7,9 @@
 BD.infer.lambda.from.mutations(Nsubs, MBD.lambda, mu, age, N0 = 2,
   sequence_length = 1000, mutation_rate = 1/age, Nsteps = 40)
 }
+\arguments{
+\item{age}{The age of the tree.}
+}
 \description{
 Does something D
 }

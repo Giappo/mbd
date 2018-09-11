@@ -6,6 +6,8 @@
 
 # @Giappo: add doc
 #' Does something G
+#' @inheritParams default_params_doc
+#' @inheritParams default_params_doc
 #' @export
 get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
 
@@ -46,6 +48,7 @@ get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
 
 # @Giappo: add doc
 #' Does something H
+#' @inheritParams default_params_doc
 #' @export
 get_all_data_from_cluster = function (sim_pars, max_sims = 1000, account_name = "p274829"){
 
