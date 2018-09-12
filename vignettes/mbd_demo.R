@@ -24,3 +24,17 @@ sim$brts
 test_pars <- c(0.3, 0.05, 1.0, 0.08)
 MBD::mbd_loglik(pars = test_pars, brts = sim$brts, soc = soc, cond = cond, missnumspec = 0)
 
+## ------------------------------------------------------------------------
+# # Uncomment if you are keen to wait.
+# idparsopt <- 4
+# ids <- 1:4; idparsfix <- ids[-idparsopt];
+# parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
+# MBD:::mbd_ML(brts = sim$brts, 
+#              initparsopt = initparsopt, 
+#              idparsopt = idparsopt, 
+#              parsfix = parsfix, 
+#              idparsfix = idparsfix, 
+#              soc = soc, 
+#              cond = cond)
+
+

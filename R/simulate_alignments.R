@@ -137,6 +137,7 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   Nsubstitutions  <- rep(NA, (max_sims2 <- 100 * max_sims))
   for (s in 1:max_sims)
   {
+    set.seed(s)
     MBD.simulation <- MBD:::mbd_sim(pars = sim_pars,
                                     soc = soc,
                                     age = age,
@@ -235,7 +236,6 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   
   return(list(MBD.nLTT = df.MBD.nLTT, BD.nLTT = df.BD.nLTT))
 }
-
 
 #test <- MBD::alignments_comparison_multiple(sim_pars = (sim_pars <- c(0.2, 0.15, 2, 0.15)), max_sims = 100)
 

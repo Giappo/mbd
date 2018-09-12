@@ -55,8 +55,8 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
       L <- matrix(0, nrow = 1e6, 4)
       L[,4] <- -1
       L[,3] <- 0
-      L[1,1:4] <- c(t,0,-1,-1)
-      L[2,1:4] <- c(t,-1,2,-1)
+      L[1,1:4] <- c(t, 0,-1, -1)
+      L[2,1:4] <- c(t,-1, 2, -1)
       while (t > 0)
       {
         N <- length(pool)
