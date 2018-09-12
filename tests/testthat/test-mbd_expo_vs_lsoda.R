@@ -1,7 +1,10 @@
 context("ExpovsLsoda")
 
 test_that("PureBirth theoretical check", {
-  skip("Fix @Giappo: takes too long")
+  if (!ribir::is_on_travis())
+  {
+    skip("PureBirth theoretical check takes too long")
+  }
   test_size <- 10;
   
   soc <- 2; cond <- 1
