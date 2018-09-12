@@ -25,7 +25,7 @@ analyze_data1 <- function(max_sims = 1000, quantiles_choice = c(.25, .50, .75), 
     {
       for (s in 1:length(res_files))
       {
-        fileData <- read.table(file=res_files[s], header = FALSE, sep=",")
+        fileData <- utils::read.table(file=res_files[s], header = FALSE, sep=",")
         ifelse(exists("targetTable"),targetTable <- rbind(targetTable, fileData), targetTable <- fileData)
       }
 

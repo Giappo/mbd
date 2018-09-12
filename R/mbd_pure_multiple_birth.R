@@ -73,7 +73,9 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
     i <- 0:1e6
     for (t in 1:length(time_intervals))
     {
-      poisson_term <- stats::dpois(i, nu * time_intervals[t], log = FALSE)[dpois(i, nu * time_intervals[t], log = FALSE) != 0] #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
+      poisson_term <- stats::dpois(
+          i, nu * time_intervals[t], log = FALSE
+        )[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0] #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
       ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
       A_term[t] <- sum( (1 - q)^(ii * k[t]) * poisson_term ) *  # nu contribution: (1-q)^(k*i) * (nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
                    exp(- k[t] * lambda * (time_intervals[t]))   # lambda contribution: exp(-k*lambda*(t_k-t_k-1))
@@ -290,7 +292,7 @@ pmb_ML_cluster = function(s,initparsopt=c(0.5,0.15,0.1)){
   sink()
   print(out2)
 
-  write.table(matrix(out,ncol = length(out)), file = paste0(simpath,"/mbd_MLE",s,".txt"),
+  utils::write.table(matrix(out,ncol = length(out)), file = paste0(simpath,"/mbd_MLE",s,".txt"),
               append = T, row.names = F, col.names = F, sep = ",")
   if (res[1:4] != rep(-1, Npars)){suppressWarnings(  file.remove( paste0(simpath,"/errors/mbd_MLE_errors",s,".txt") )  )}
 }

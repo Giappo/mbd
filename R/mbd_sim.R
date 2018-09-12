@@ -64,9 +64,9 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
         total_rate <- N * (lambda + mu) + nu
         if (total_rate > 0)
         {
-          deltaT <- rexp(1, rate = total_rate)
+          deltaT <- stats::rexp(1, rate = total_rate)
           outcome <- sample(c(-1,1,2), size = 1, prob = c(N * mu, N * lambda, nu))
-          deltaN <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * rbinom(n = 1, size = N, prob = q)
+          deltaN <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * stats::rbinom(n = 1, size = N, prob = q)
           t <- t - deltaT
   
           if (deltaN > 0 & t > 0)
@@ -185,9 +185,9 @@ mbd_sim0 <- function(
       while (t>0)
       {
         N=length(pool)
-        deltaT=rexp(1,rate=(lambda+N*mu))
+        deltaT <- stats::rexp(1,rate=(lambda+N*mu))
         outcome=sample(c(-1,1),size=1,prob = c(N*mu,lambda))
-        deltaN=rbinom(n=1,size=N,prob=q)*(outcome==1)-1*(outcome==-1)
+        deltaN <- stats::rbinom(n=1,size=N,prob=q)*(outcome==1)-1*(outcome==-1)
         t=t-deltaT
         if (deltaN>0 & t>0)
         {

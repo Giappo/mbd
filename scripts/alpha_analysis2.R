@@ -66,7 +66,7 @@ myheatmap2 = function(x,y,z,x.name,y.name,z.name,x.splits,y.splits,plot.title){
                    graphics::axis(1,at=seq(0,1,length.out = length(pretty.X.lab) ),labels=pretty.X.lab)
                    graphics::axis(2,at=seq(0,1,length.out = length(pretty.Y.lab) ),labels=pretty.Y.lab)
                  },
-                 key.title = title(main=z.name)
+                 key.title = graphics::title(main=z.name)
   )
 }
 

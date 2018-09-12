@@ -427,6 +427,6 @@ mbd_ML_cluster0 <- function(s, initparsopt = c(1.8,0.3,0.15)){
   sink()
   print(out2)
   
-  write.table(matrix(out,ncol = length(out)),file = paste(simpath,"/mbd_MLE",s,".txt",sep = ''),append = T,row.names = F,col.names = F, sep = ",")
+  utils::write.table(matrix(out,ncol = length(out)),file = paste(simpath,"/mbd_MLE",s,".txt",sep = ''),append = T,row.names = F,col.names = F, sep = ",")
   if (res[1:4]!=c(-1,-1,-1,-1)){suppressWarnings(  file.remove( paste(simpath,"/errors/mbd_MLE_errors",s,".txt",sep = '') )  )}
 }

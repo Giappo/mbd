@@ -8,7 +8,7 @@ if( !exists("path")  ){ #&& interactive()
 }
 res_files = list.files(pattern=paste('[.]txt',sep = ''),path=path, full.names=TRUE)
 for(i in 1:length(res_files)){
-  fileData<-read.table(file=res_files[i],header=FALSE,sep=",")
+  fileData <- utils::read.table(file=res_files[i],header=FALSE,sep=",")
   ifelse(exists("targetTable"),targetTable<-rbind(targetTable,fileData),targetTable<-fileData)
 }
 all_results = targetTable
@@ -65,7 +65,7 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
       graphics::points(x=medians[j],y=medians[i],col=medians_color,pch=10,cex=1.5)
     }
   }}
-  title(main=(titolo.pdf<-(paste("\n\n",titolo,"\n",medians_string,"\n",truevalues_string,sep = ''))),outer=T)
+  graphics::title(main=(titolo.pdf<-(paste("\n\n",titolo,"\n",medians_string,"\n",truevalues_string,sep = ''))),outer=T)
   grDevices::dev.off()
 
   if (openit==1){
@@ -90,7 +90,7 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
         graphics::points(x=medians[j],y=medians[i],col=medians_color,pch=10,cex=1.5)
       }
     }}
-    title(main=titolo.pdf,outer = T)
+    graphics::title(main=titolo.pdf,outer = T)
     grDevices::dev.off()
     }
 
@@ -129,7 +129,7 @@ brts2time_intervals_and_births = function (brts){
   branching_times = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
   births=c(0,unname(table(branching_times))[-1])
   unique_branching_times=as.numeric(names(table(branching_times)))
-  time_intervals=c((diff(unique_branching_times)),(abs(tail(unique_branching_times,1))) )
+  time_intervals=c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times,1))) )
   births=births[-1]
   out=list(time_intervals=time_intervals,births=births)
   return(out)
@@ -209,7 +209,7 @@ myheatmap2 <- function(x,y,z,x.name,y.name,z.name,x.splits,y.splits){
                    graphics::axis(1,at=seq(0,1,length.out = length(pretty.X.lab) ),labels=pretty.X.lab)
                    graphics::axis(2,at=seq(0,1,length.out = length(pretty.Y.lab) ),labels=pretty.Y.lab)
                  },
-                 key.title = title(main=z.name)
+                 key.title = graphics::title(main=z.name)
   )
 }
 
@@ -264,7 +264,7 @@ called_functions <- function(function.name, recursive = FALSE, checked.functions
         # split = not alphanumeric, not '_', and not '.'
         words <- c(unlist(strsplit(x, split="[^[:alnum:]_.]")))
 
-        last.word <- tail(words, 1)
+        last.word <- utils::tail(words, 1)
         last.word.is.function <- tryCatch(is.function(get(last.word)),
                                       error=function(e) return(FALSE))
         return(last.word[last.word.is.function])
@@ -374,7 +374,7 @@ summarize_beast_posterior=function(
   if(!is.null(INPUT.XML)){
     subst.xml=scan(INPUT.XML,what="raw")
     where.starting.tree=which(subst.xml=="id=\"startingTree\">")+1
-    start.tr=read.tree(text=subst.xml[where.starting.tree])
+    start.tr <- ape::read.tree(text=subst.xml[where.starting.tree])
     node_names_xml=start.tr$node.label
   }
 
@@ -471,7 +471,7 @@ summarize_beast_posterior=function(
       #Re-paste the new tree into a single character string
       tree.text=paste(tree_sub2[-remove],collapse="")
 
-      tr=read.tree(text=tree.text)
+      tr <- ape::read.tree(text=tree.text)
       tr$tip.label=taxa[as.numeric(tr$tip.label)]
 
       #trees[[i]]=tr

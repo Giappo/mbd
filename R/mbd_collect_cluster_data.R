@@ -79,7 +79,7 @@ get_all_data_from_cluster = function (sim_pars, max_sims = 1000, account_name = 
   local_results = NULL
   if (length(res_files)>0){ #loading data from local
     for(i in 1:length(res_files)){
-      fileData<-read.table(file=res_files[i],header=FALSE,sep=",")
+      fileData <- utils::read.table(file=res_files[i],header=FALSE,sep=",")
       ifelse(exists("targetTable"),targetTable<-rbind(targetTable,fileData),targetTable<-fileData)
     }
     local_results = targetTable;
@@ -96,7 +96,7 @@ get_all_data_from_cluster = function (sim_pars, max_sims = 1000, account_name = 
     out=get_data_from_cluster(s = s, sim_pars = sim_pars, account_name = account_name)
     if (!is.null(out)){
     at_least_one_result_from_cluster == 1
-    write.table(matrix(out,ncol = length(out)),file = paste(local_path,"/mbd_MLE",s,".txt",sep = ''),append = F,row.names = F,col.names = F, sep = ",")
+    utils::write.table(matrix(out,ncol = length(out)),file = paste(local_path,"/mbd_MLE",s,".txt",sep = ''),append = F,row.names = F,col.names = F, sep = ",")
     ifelse(exists("targetTable"),targetTable<-rbind(targetTable,out),targetTable<-out)
     }
   }
