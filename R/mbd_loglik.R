@@ -21,7 +21,7 @@
 #' @examples
 #' set.seed(11)
 #' simulated_data = mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
-#' plot(simulated_data$tas)
+#' graphics::plot(simulated_data$tas)
 #' # @Giappo: too big too run
 #' # mbd::mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
 #'

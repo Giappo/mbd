@@ -122,6 +122,6 @@
 #   out[i] <- Nct(lambda = lavec[i], mu = mu, t = abs(age))
 # }
 # 
-# md <- lm(log(out) ~ lavec)
+# md <- stats::lm(log(out) ~ lavec)
 # coef(md)
 # plot(log(out)~lavec); abline(a = coef(md)[1], b = coef(md)[2])

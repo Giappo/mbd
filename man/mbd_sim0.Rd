@@ -46,8 +46,8 @@ mbd_sim0 produces simulated trees including multiple speciations at the same tim
 }
 \examples{
 out = mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
-plot(out$tas)
-plot(out$tes)
+graphics::plot(out$tas)
+graphics::plot(out$tes)
 out$L
 
 }

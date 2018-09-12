@@ -56,13 +56,13 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
       abline(v=sim_pars[i],col = truevalues_color)
       abline(v=medians[i],col = medians_color)
     }
-    else{plot(good.results[,i]~good.results[,j],xlab=par_names[j],ylab=par_names[i],cex=0.3,col=points_color);
+    else{graphics::plot(good.results[,i]~good.results[,j],xlab=par_names[j],ylab=par_names[i],cex=0.3,col=points_color);
       points(x=sim_pars[j],y=sim_pars[i],col=truevalues_color,pch=10,cex=1.5)
       points(x=medians[j],y=medians[i],col=medians_color,pch=10,cex=1.5)
     }
   }}
   title(main=(titolo.pdf<-(paste("\n\n",titolo,"\n",medians_string,"\n",truevalues_string,sep = ''))),outer=T)
-  dev.off()
+  grDevices::dev.off()
 
   if (openit==1){
     file.show(normalizePath(paste(path,"/",pdfname,".pdf",sep='')))
@@ -80,13 +80,13 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
         abline(v=sim_pars[i],col = truevalues_color)
         abline(v=medians[i],col = medians_color)
       }
-      else{plot(good.results[,i]~good.results[,j],xlab=par_names[j],ylab=par_names[i],cex=0.3,col=points_color);
+      else{graphics::plot(good.results[,i]~good.results[,j],xlab=par_names[j],ylab=par_names[i],cex=0.3,col=points_color);
         points(x=sim_pars[j],y=sim_pars[i],col=truevalues_color,pch=10,cex=1.5)
         points(x=medians[j],y=medians[i],col=medians_color,pch=10,cex=1.5)
       }
     }}
     title(main=titolo.pdf,outer = T)
-    dev.off()
+    grDevices::dev.off()
     }
 
 }
@@ -153,7 +153,7 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
   nmedio=sum(nvec*vf)
   std=sqrt( sum(nvec^2*vf)-nmedio^2 )
   if (output==1){
-    plot(log(vf))
+    graphics::plot(log(vf))
     print(paste("Sim pars are:",test_parameters[1],test_parameters[2],test_parameters[3],". Average n is",nmedio,"with std:",std))
   }
   return(list(avg_n=nmedio,std_n=std))
@@ -1250,7 +1250,7 @@ extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",max
 #   printa.la.figura(results=results,par_names=par_names,ranges=ranges,titolo=titolo,
 #                    medians_string=medians_string,truevalues_string=truevalues_string,
 #                    medians_color=medians_color,truevalues_color=truevalues_color)
-#   dev.off()
+#   grDevices::dev.off()
 #
 #   #high_resolution_image for ppt
 #   tiff(file = paste(path,"/poster_",pdfname,".tiff",sep=''), height = 17, width = 17, units = 'cm',
@@ -1258,14 +1258,14 @@ extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",max
 #   printa.la.figura(results=results,par_names=par_names,ranges=ranges,titolo=titolo,
 #                    medians_string=medians_string,truevalues_string=truevalues_string,
 #                    medians_color=medians_color,truevalues_color=truevalues_color)
-#   dev.off()
+#   grDevices::dev.off()
 #
 #   #png
 #   png(file = paste(path,"/poster_",pdfname,".png",sep=''));#plot.new();
 #   printa.la.figura(results=results,par_names=par_names,ranges=ranges,titolo=titolo,
 #                    medians_string=medians_string,truevalues_string=truevalues_string,
 #                    medians_color=medians_color,truevalues_color=truevalues_color)
-#   dev.off()
+#   grDevices::dev.off()
 # }
 
 # #poster output

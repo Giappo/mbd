@@ -31,8 +31,8 @@
 #'
 #' @examples
 #' out = mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
-#' plot(out$tas)
-#' plot(out$tes)
+#' graphics::plot(out$tas)
+#' graphics::plot(out$tes)
 #' out$L
 #'
 #' @export
@@ -116,8 +116,8 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
   brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   tes <- DDD::L2phylo(L, dropextinct = TRUE)
   tas <- DDD::L2phylo(L, dropextinct = FALSE)
-  #   plot(tas)
-  #   plot(tes)
+  #   graphics::plot(tas)
+  #   graphics::plot(tes)
   out <- list(brts = brts, tes = tes, tas = tas, extinct_species = extinct_species, L = L, 
               minimum_multiple_births = multiple_births.full_tree)
   return(out)
@@ -155,8 +155,8 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 #'
 #' @examples
 #' out = mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
-#' plot(out$tas)
-#' plot(out$tes)
+#' graphics::plot(out$tas)
+#' graphics::plot(out$tes)
 #' out$L
 #'
 #' @export
@@ -232,8 +232,8 @@ mbd_sim0 <- function(
   brts = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
   tes = DDD::L2phylo(L,dropextinct = T)
   tas = DDD::L2phylo(L,dropextinct = F)
-  #   plot(tas)
-  #   plot(tes)
+  #   graphics::plot(tas)
+  #   graphics::plot(tes)
   out = list(brts=brts,tes = tes, tas = tas, extinct_species=extinct_species,L = L, minimum_multiple_births = minimum_multiple_births)
   return(out)
 }
@@ -472,8 +472,8 @@ mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age 
 #'   brts = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
 #'   tes = DDD::L2phylo(L,dropextinct = T)
 #'   tas = DDD::L2phylo(L,dropextinct = F)
-#'   #   plot(tas)
-#'   #   plot(tes)
+#'   #   graphics::plot(tas)
+#'   #   graphics::plot(tes)
 #'   out = list(brts=brts,tes = tes, tas = tas, extinct_species=extinct_species,L = L)
 #'   return(out)
 #' }

@@ -29,8 +29,8 @@ for ( ii in 1:dim(Ldiff)[1] ){
   first.to.reach.threshold[ii] = min( which ( Ldiff[ii,] < 10^-2 ) )
 }
 df = data.frame(x = q_grid, y = first.to.reach.threshold)
-model2 <- nls( data = df, formula = y~(a/(1+exp(b*(x-c)))+d), start = c(a=-20,b=25,c=0.2,d=max(first.to.reach.threshold)) )
-coeff = coef(model2)
+model2 <- stats::nls(data = df, formula = y~(a/(1+exp(b*(x-c)))+d), start = c(a=-20,b=25,c=0.2,d=max(first.to.reach.threshold)) )
+coeff = stats::coef(model2)
 
 plot.new()
 plot(first.to.reach.threshold~q_grid,ylab = "alpha", xlab = "q",main = "alpha to use to keep the error below 1%\n",xlim = range(q_grid),ylim = range(first.to.reach.threshold))
@@ -73,7 +73,7 @@ myheatmap2 = function(x,y,z,x.name,y.name,z.name,x.splits,y.splits,plot.title){
 # myheatmap2(x=1:maxalpha,y=q_grid,z=res,x.name="alpha",y.name="q",z.name="LL",plot.title = paste("LL evaluated for a tree simulated under pars:\n","lambda = ",sim_pars2[1],",","mu = ",sim_pars2[2],",","nu = ",sim_pars2[3],",","q = ",sim_pars2[4],sep = ""))
 # pdf(file = paste(path,"/LL_surface_q_vs_alpha.pdf",sep=''))
 # myheatmap2(x=1:maxalpha,y=q_grid,z=res,x.name="alpha",y.name="q",z.name="LL",plot.title = paste("LL evaluated for a tree simulated under pars:\n","lambda = ",sim_pars2[1],",","mu = ",sim_pars2[2],",","nu = ",sim_pars2[3],",","q = ",sim_pars2[4],sep = ""))
-# dev.off()
+# grDevices::dev.off()
 # myheatmap2(x=1:maxalpha,y=q_grid[1:6],z=exp(Ldiff[,1:6]),x.name="alpha",y.name="q",y.splits = 5)
 # myheatmap2(x=1:maxalpha,y=q_grid,z=(abs(Ldiff)),x.name="alpha",y.name="q",z.name="LL\nn difference")
 

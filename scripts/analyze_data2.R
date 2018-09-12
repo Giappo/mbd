@@ -135,10 +135,10 @@ analyze_data2 <- function(result.table, error_bars = 0){
 
   png(filename = "results_mu=0.png")
   pippo_draw(pippo4)
-  dev.off()
+  grDevices::dev.off()
   png(filename = "results_mu=0_15.png")
   pippo_draw(pippo5)
-  dev.off()
+  grDevices::dev.off()
 }
 
 result.table <- analyze_data1(quantiles_choice = c(0.40, 0.50, 0.60))

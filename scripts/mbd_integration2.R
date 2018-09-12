@@ -74,7 +74,7 @@ if (1) {#functions
     file_path <- paste0(dir_name, file_name); file_path
     png(filename = file_path)
     plot(plot.integration)
-    dev.off()
+    grDevices::dev.off()
     
     return(MB_percentage = df)
   }

@@ -47,8 +47,8 @@ mbd_sim produces simulated trees allowing for three kind of events: sympatric sp
 }
 \examples{
 out = mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
-plot(out$tas)
-plot(out$tes)
+graphics::plot(out$tas)
+graphics::plot(out$tes)
 out$L
 
 }
