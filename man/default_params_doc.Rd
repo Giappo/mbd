@@ -72,7 +72,7 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{matrix_builder}{something}
 
-\item{max_iter}{something}
+\item{max_iter}{Sets the maximum number of iterations in the optimization}
 
 \item{max_k}{something}
 
@@ -189,8 +189,6 @@ or
 }}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
-
-\item{max_iter}{Sets the maximum number of iterations in the optimization}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

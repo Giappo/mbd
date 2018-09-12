@@ -65,7 +65,7 @@ for (i in 1:length(sim_data2))
 # Do the thing
 res <- parLapply(cl = cl, #cluster
                  X = sim_data2, #dataset
-                 fun = MBD::mbd_ML, #function you want to apply
+                 fun = mbd::mbd_ML, #function you want to apply
                  initparsopt = initparsopt,
                  idparsopt = idparsopt,
                  idparsfix = (1:Npars)[-idparsopt],

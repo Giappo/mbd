@@ -26,11 +26,14 @@ Imports:
   tracerer,
   maps, 
   msm
+Suggests: 
+  knitr, 
+  rmarkdown, 
+  testthat
 Description: Multiple Birth Death Diversification
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: no
 RoxygenNote: 6.1.0
-Suggests: knitr, rmarkdown
 VignetteBuilder: knitr

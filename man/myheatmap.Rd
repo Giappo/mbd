@@ -12,6 +12,8 @@ myheatmap(matrix, logs = 1, colormap = heat.colors(15), ...)
 \item{logs}{something}
 
 \item{colormap}{something}
+
+\item{...}{something}
 }
 \description{
 Gets heatmap of my matrices.

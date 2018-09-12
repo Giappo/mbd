@@ -20,7 +20,7 @@
 #'
 #' @examples
 #' set.seed(11)
-#' simulated_data = MBD:::mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1 )
+#' simulated_data = mbd:::mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1 )
 #' plot(simulated_data$tas)
 #' mbd_loglik0( pars=c(1.2,0.05,0.1),brts=simulated_data$brts,soc=2,cond=1,missnumspec=0 )
 #'
@@ -73,7 +73,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         #Applying A operator
         transition_matrix=create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
         Qt[t,]=A_operator(Q = Qt[(t-1),],transition_matrix = transition_matrix,time_interval = time_intervals[t],precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
-        if (methode!="sexpm"){Qt[t,]=MBD:::negatives_correction(Qt[t,],pars)} #it removes some small negative values that can occurr as bugs from the integration process
+        if (methode!="sexpm"){Qt[t,]=mbd:::negatives_correction(Qt[t,],pars)} #it removes some small negative values that can occurr as bugs from the integration process
         
         #Applying C operator (this is a trick to avoid precision issues)
         if (debug_check==1){print(head(Qt[t,]))}
@@ -85,7 +85,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         # B[(row(B)>(2*col(B)+k-births[t])) | col(B)>row(B) ]=0 #this is a constrain due to maximum number of speciations being (2*n+k-b); probably it is redundant
         # if (max(is.nan(B))>0){print(paste("NaN were produced in the B matrix at time=",t))}
         Qt[t,]=(B %*% Qt[t,])
-        if (methode!="sexpm"){Qt[t,]=MBD:::negatives_correction(Qt[t,],pars)}
+        if (methode!="sexpm"){Qt[t,]=mbd:::negatives_correction(Qt[t,],pars)}
         logB = logB + log(lambda) + lchoose(k,births[t]) + births[t]*log(q)
         
         #Applying D operator (this works exactly like C)
@@ -101,7 +101,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       #Applying A operator from the last branching time to the present
       transition_matrix=create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
       Qt[t,]=A_operator(Q = Qt[(t-1),],transition_matrix = transition_matrix,time_interval = time_intervals[t],precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
-      if (methode!="sexpm"){Qt[t,]=MBD:::negatives_correction(Qt[t,],pars)}
+      if (methode!="sexpm"){Qt[t,]=mbd:::negatives_correction(Qt[t,],pars)}
       if (debug_check==1){print(head(Qt[t,]))}
       
       #Selecting the state I am interested in
@@ -125,9 +125,9 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         one_over_qm_binom=1/choose((m+N0),N0)
         tips_components=(1+min_tips):(1+min(max_tips,max_number_of_species)) #applying tips constrain
         
-        Mk_N0=MBD:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = N0)
+        Mk_N0=mbd:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = N0)
         A2_v1=A_operator(Q = Qt[1,],transition_matrix = Mk_N0,time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
-        if (methode != "sexpm"){A2_v1=MBD:::negatives_correction(A2_v1,pars)} #it removes some small negative values that can occurr as bugs from the integration process
+        if (methode != "sexpm"){A2_v1=mbd:::negatives_correction(A2_v1,pars)} #it removes some small negative values that can occurr as bugs from the integration process
         if (debug_check == 1){print(head(A2_v1, max_tips))}
         total_product=A2_v1 * one_over_Cm * one_over_qm_binom
         Pc=sum(total_product[tips_components])
@@ -136,7 +136,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
           # ode_matrix=as.matrix(Mk_N0) #use this only if you use sparsematrices
           ode_matrix=MK_N0
           times=c(0,total_time)
-          A2_v1=deSolve::ode(y = Qt[1,], times = times, func = MBD:::mbd_loglik_rhs, parms = ode_matrix,atol=abstol,rtol=reltol)[2,-1] #evolving crown species to the present
+          A2_v1=deSolve::ode(y = Qt[1,], times = times, func = mbd:::mbd_loglik_rhs, parms = ode_matrix,atol=abstol,rtol=reltol)[2,-1] #evolving crown species to the present
           total_product=A2_v1*one_over_Cm*one_over_qm_binom
           Pc=sum(total_product[tips_components])
         }
@@ -152,8 +152,8 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
 }
 
 # mbd_loglik_choosepar0----------------
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @details This is not to be called by the user.
 #' @export
 mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
@@ -184,7 +184,7 @@ mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
     {
       pars1 <- trpars1
     }
-    loglik <- MBD:::mbd_loglik0(pars = pars1, brts = brts, cond = cond, soc = soc,
+    loglik <- mbd:::mbd_loglik0(pars = pars1, brts = brts, cond = cond, soc = soc,
                                 tips_interval = tips_interval, methode = methode,
                                 alpha = alpha)
   }
@@ -235,9 +235,9 @@ mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
 #' @examples
 #' set.seed(11)
 #' test_pars = c(1.6,0.1,0.08)
-#' simulated_data = MBD:::mbd_sim0( pars=test_pars,soc=2,age=10,cond=1 )
+#' simulated_data = mbd:::mbd_sim0( pars=test_pars,soc=2,age=10,cond=1 )
 #' plot(simulated_data$tas)
-#' MBD:::mbd_ML0(brts=simulated_data$brts, initparsopt = 0.11 ,idparsopt = 3,
+#' mbd:::mbd_ML0(brts=simulated_data$brts, initparsopt = 0.11 ,idparsopt = 3,
 #' idparsfix = 1:2 ,parsfix = test_pars[1:2],missnumspec=0,cond=1, soc = 2)
 #' @export
 mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
@@ -287,7 +287,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
         trparsfix  <- parsfix
       }
       optimpars  <- c(tol, maxiter)
-      initloglik <- MBD:::mbd_loglik_choosepar0(trparsopt = trparsopt, trparsfix = trparsfix,
+      initloglik <- mbd:::mbd_loglik_choosepar0(trparsopt = trparsopt, trparsfix = trparsfix,
                                                 idparsopt = idparsopt, idparsfix = idparsfix,
                                                 brts = brts, missnumspec = missnumspec,
                                                 cond = cond, soc = soc,
@@ -301,7 +301,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
         out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
       } else {
         out <- DDD::optimizer(optimmethod = optimmethod, optimpars = optimpars,
-                               fun = MBD:::mbd_loglik_choosepar0, trparsopt = trparsopt,
+                               fun = mbd:::mbd_loglik_choosepar0, trparsopt = trparsopt,
                                trparsfix = trparsfix, idparsopt = idparsopt,
                                idparsfix = idparsfix, brts = brts, missnumspec = missnumspec,
                                cond = cond, soc = soc, tips_interval = tips_interval,
@@ -366,7 +366,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
 #'
 #' @examples
 #' #You will need two files to make it work: "general_settings","sim_data".
-#' MBD:::mbd_ML_cluster0(1)
+#' mbd:::mbd_ML_cluster0(1)
 #'
 #' @export
 mbd_ML_cluster0 <- function(s, initparsopt = c(1.8,0.3,0.15)){
@@ -385,7 +385,7 @@ mbd_ML_cluster0 <- function(s, initparsopt = c(1.8,0.3,0.15)){
   if ( !file.exists(paste(simpath,"/errors",sep = '')) ){dir.create(paste(simpath,"/errors",sep = ''))}
   sink(file = paste(simpath,"/errors/mbd_MLE_errors",s,".txt",sep = ''), append = T)
   
-  res <- MBD:::mbd_ML0(brts=sim_data[[s]],
+  res <- mbd:::mbd_ML0(brts=sim_data[[s]],
                        initparsopt=initparsopt,
                        idparsopt=idparsopt,
                        idparsfix = (1:Npars)[-idparsopt],

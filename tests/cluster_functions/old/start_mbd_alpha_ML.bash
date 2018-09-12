@@ -4,9 +4,9 @@ max_sims=2000
 
 echo "sbatch install_packages.bash"
 echo "library(expoRkit)" > zzz_alpha_MLE.R
-echo "library(MBD)" >> zzz_alpha_MLE.R
+echo "library(mbd)" >> zzz_alpha_MLE.R
 echo "args = as.numeric(commandArgs(TRUE))" >> zzz_alpha_MLE.R
-echo "MBD:::mbd_alpha_ML(s=args)" >> zzz_alpha_MLE.R
+echo "mbd:::mbd_alpha_ML(s=args)" >> zzz_alpha_MLE.R
 
 for((s = 1; s <= max_sims; s++))
 do

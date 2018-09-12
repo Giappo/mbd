@@ -162,6 +162,7 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
 # @Giappo: add doc
 #' Gets heatmap of my matrices.
 #' @inheritParams default_params_doc
+#' @param ... something
 #' @export
 myheatmap <- function(matrix,logs=1,colormap=heat.colors(15),...){
   if (is.matrix(matrix)==F){matrix=as.matrix(matrix)}

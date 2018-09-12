@@ -25,9 +25,9 @@ else
   sleep 1
   cd sims/$lambda-$mu-$nu-$q/
   
-  echo "library(MBD)" > zzz_sim.R
+  echo "library(mbd)" > zzz_sim.R
   echo "args = as.numeric(commandArgs(TRUE))" >> zzz_sim.R
-  echo "MBD:::mbd_sim_dataset(sim_pars=c(args[1],args[2],args[3],args[4]),max_sims=args[5],tips_interval=c(0,70),cond=1)" >> zzz_sim.R
+  echo "mbd:::mbd_sim_dataset(sim_pars=c(args[1],args[2],args[3],args[4]),max_sims=args[5],tips_interval=c(0,70),cond=1)" >> zzz_sim.R
   #module load R/3.3.1-foss-2016a
   module load R/3.4.4-foss-2018a-X11-20180131
   Rscript zzz_sim.R $lambda $mu $nu $q $max_sims

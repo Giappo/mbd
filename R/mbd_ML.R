@@ -28,6 +28,7 @@
 #' @param changeloglikifnoconv If TRUE the loglik will be set to -Inf if ML does not converge.
 #' @param optimmethod Method used in optimization of the likelihood. Current default is 'simplex'. Alternative is 'subplex' (default of previous versions).
 #' @param methode Set "sexpm" if you want to use sexpm. Set "expo" if you want to use expoRkit. Set "lsoda" if you want to use "lsoda".
+#' @param ... Something
 #' @return The output is a dataframe containing estimated parameters and maximum
 #' loglikelihood. The computed loglikelihood contains the factor q! m! / (q + m)!
 #' where q is the number of species in the phylogeny and m is the number of

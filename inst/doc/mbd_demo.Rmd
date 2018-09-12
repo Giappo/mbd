@@ -1,10 +1,10 @@
 ---
-title: "MBD demo"
+title: "mbd demo"
 author: "Giovanni Laudanno"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{MBD demo}
+  %\VignetteIndexEntry{mbd demo}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -12,13 +12,13 @@ vignette: >
 <!-- We are beuifbpeg -->
 
 <!-- ```{r} -->
-<!-- library(MBD) -->
+<!-- library(mbd) -->
 <!-- ``` -->
 
 <!-- First sim: -->
 
 <!-- ```{r} -->
-<!-- p <- MBD:::mbd_sim(pars = c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf)) -->
+<!-- p <- mbd:::mbd_sim(pars = c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf)) -->
 
 <!-- ``` -->
 

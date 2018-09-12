@@ -243,7 +243,7 @@ mbd_sim0 <- function(
 #' @title Creates a full simulated dataset of trees under the multiple birth death process
 #' @description mbd_sim_dataset produces a full dataset of max_sims simulated trees including multiple speciations at the same time. This second version takes into account the possibility both of allopatric and sympatric speciation.
 #' @inheritParams default_params_doc
-#' @param pars vector of parameters:
+#' @param sim_pars vector of parameters:
 #' \itemize{
 #' \item id == 1 corresponds to lambda (speciation rate)
 #' \item id == 2 corresponds to mu (extinction rate)
@@ -264,7 +264,8 @@ mbd_sim0 <- function(
 #' # out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
 #'
 #' @export
-mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
+mbd_sim_dataset <- function(
+  sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
                            tips_interval = c(0, 100), edge = Inf, minimum_multiple_births = 0){
   # mbd_sim_dataset creates a full simulated dataset of "max_sims" trees
   #"edge" gives the extent of fluctuations around the mean that i want to consider

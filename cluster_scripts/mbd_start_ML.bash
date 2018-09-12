@@ -7,10 +7,10 @@ echo "rm -rfv errors/*"
 #sbatch /home/$USER/mbd_like/install_packages.bash & sleep 60
 
 echo "library(expoRkit)" > zzz_ML.R
-echo "library(MBD)" >> zzz_ML.R
+echo "library(mbd)" >> zzz_ML.R
 echo "library(DDD)" >> zzz_ML.R
 echo "args = as.numeric(commandArgs(TRUE))" >> zzz_ML.R
-echo "MBD:::mbd_ML_cluster(s=args)" >> zzz_ML.R
+echo "mbd:::mbd_ML_cluster(s=args)" >> zzz_ML.R
 
 for((s = 1; s <= max_sims; s++))
 do

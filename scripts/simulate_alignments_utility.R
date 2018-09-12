@@ -30,12 +30,12 @@
 #     stop("wrong pars")
 #   }else if (mu == 0)
 #   {
-#     loglik <- MBD:::pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
+#     loglik <- mbd:::pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
 #   }else
 #   {#MAIN
 #     
 #   #ADJUSTING DATA
-#   data <- MBD:::brts2time_intervals_and_births(brts)
+#   data <- mbd:::brts2time_intervals_and_births(brts)
 #   time_intervals <- c(0, data$time_intervals)
 #   births <- c(0, data$births)
 #   N0 <- soc #number of starting species
@@ -57,13 +57,13 @@
 #   while (t <= length(time_intervals))
 #   {
 #     #Applying A operator
-#     transition_matrix <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
-#     Qt[t,] <- MBD:::A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#     transition_matrix <- mbd:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
+#     Qt[t,] <- mbd:::A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
 #     
 #     if (t < length(time_intervals))
 #     {
 #       #Applying B operator
-#       B <- MBD:::create_B(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
+#       B <- mbd:::create_B(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
 #                           max_number_of_species = lx)
 #       Qt[t,] <- (B %*% Qt[t,])
 #       
@@ -95,7 +95,7 @@
 #   Qi <- rep(0, lx + 1);  Qi[3] <- 1 #starting with k = 0 and m = 2 missing species
 #   k <- 0 #assuming 0 species
 #   
-#   TM <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
+#   TM <- mbd:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
 #                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
 #   
 #   # tm <- seq(0, total_time, by = total_time/100)

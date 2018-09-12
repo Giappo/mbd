@@ -9,7 +9,13 @@ mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
   minimum_multiple_births = 0)
 }
 \arguments{
-\item{sim_pars}{something}
+\item{sim_pars}{vector of parameters:
+\itemize{
+\item id == 1 corresponds to lambda (speciation rate)
+\item id == 2 corresponds to mu (extinction rate)
+\item id == 3 corresponds to nu (multiple speciation trigger rate)
+\item id == 4 corresponds to q (single-lineage speciation probability)
+}}
 
 \item{soc}{stands for stem or crown. Set 1 for stem or 2 for crown.}
 
@@ -24,14 +30,6 @@ mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
 \item{edge}{the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.}
 
 \item{minimum_multiple_births}{something}
-
-\item{pars}{vector of parameters:
-\itemize{
-\item id == 1 corresponds to lambda (speciation rate)
-\item id == 2 corresponds to mu (extinction rate)
-\item id == 3 corresponds to nu (multiple speciation trigger rate)
-\item id == 4 corresponds to q (single-lineage speciation probability)
-}}
 }
 \value{
 The function returns a list of brts vectors, one for each of the max_sims simulations.

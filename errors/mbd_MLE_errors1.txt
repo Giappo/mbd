@@ -5817,8 +5817,8 @@ function ()
 .Internal(getwd())
 <bytecode: 0x000000000a829238>
 <environment: namespace:base>
-[1] "F:/Dropbox/University/Progress/RQ1-multiple-birth-death/MBD"
-[1] "F:/Dropbox/University/Progress/RQ1-multiple-birth-death/MBD"
+[1] "F:/Dropbox/University/Progress/RQ1-multiple-birth-death/mbd"
+[1] "F:/Dropbox/University/Progress/RQ1-multiple-birth-death/mbd"
 [1] FALSE
 You are optimizing lambda mu nu q 
 You are fixing nothing 

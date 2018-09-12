@@ -30,13 +30,12 @@
 #' @param lx0 something
 #' @param matrix something
 #' @param matrix_builder something
-#' @param max_iter something
+#' @param max_iter Sets the maximum number of iterations in the optimization
 #' @param max_k something
 #' @param max_number_of_species something
 #' @param max_repetitions something
 #' @param max_sims something
 #' @param maxiter something
-#' @param max_iter Sets the maximum number of iterations in the optimization
 #' @param mbd.lambda something
 #' @param methode something
 #' @param minimum_multiple_births something
