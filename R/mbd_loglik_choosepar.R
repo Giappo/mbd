@@ -1,6 +1,7 @@
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
+#' @param ... something
 #' @details This is not to be called by the user.
 #' @export
 mbd_loglik_choosepar  <- function(trparsopt, 

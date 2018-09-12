@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{calculate_conditional_probability1}
 \alias{calculate_conditional_probability1}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 calculate_conditional_probability1(brts, pars, soc = 2,
   tips_interval = c(0, Inf), methode = "expo", abstol = 1e-16,
@@ -12,6 +12,12 @@ calculate_conditional_probability1(brts, pars, soc = 2,
 \item{brts}{something}
 
 \item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is the multiple speciation trigger rate;
+  \item pars[2] is the extinction rate;
+  \item pars[3] is the single-lineage speciation probability.
+}
+or
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
@@ -30,7 +36,7 @@ calculate_conditional_probability1(brts, pars, soc = 2,
 \item{reltol}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

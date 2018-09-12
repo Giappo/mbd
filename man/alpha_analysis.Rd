@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{alpha_analysis}
 \alias{alpha_analysis}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 alpha_analysis(brts, pars, tips_interval, cond, soc, alpha0, max_k,
   methode = "expo", abstol, reltol, minimum_multiple_births)
@@ -11,6 +11,12 @@ alpha_analysis(brts, pars, tips_interval, cond, soc, alpha0, max_k,
 \item{brts}{something}
 
 \item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is the multiple speciation trigger rate;
+  \item pars[2] is the extinction rate;
+  \item pars[3] is the single-lineage speciation probability.
+}
+or
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
@@ -37,7 +43,7 @@ alpha_analysis(brts, pars, tips_interval, cond, soc, alpha0, max_k,
 \item{minimum_multiple_births}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

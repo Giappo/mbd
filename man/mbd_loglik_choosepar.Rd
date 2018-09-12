@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_loglik_choosepar.R
 \name{mbd_loglik_choosepar}
 \alias{mbd_loglik_choosepar}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
   idparsfix = (1:4)[-idparsopt], brts, cond = 1, soc = 2,
@@ -15,7 +15,13 @@ mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
 
 \item{trparsfix}{something}
 
-\item{idparsopt}{something}
+\item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:
+\itemize{
+\item id == 1 corresponds to lambda (speciation rate)
+\item id == 2 corresponds to mu (extinction rate)
+\item id == 3 corresponds to nu (multiple speciation trigger rate)
+\item id == 4 corresponds to q (single-lineage speciation probability)
+}}
 
 \item{idparsfix}{something}
 
@@ -36,9 +42,11 @@ mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
 \item{pars.transform}{something}
 
 \item{print_errors}{something}
+
+\item{...}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

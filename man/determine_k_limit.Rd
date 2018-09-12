@@ -2,13 +2,19 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{determine_k_limit}
 \alias{determine_k_limit}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 determine_k_limit(pars, brts, lx, soc, methode, abstol = 1e-16,
   reltol = 1e-10)
 }
 \arguments{
 \item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is the multiple speciation trigger rate;
+  \item pars[2] is the extinction rate;
+  \item pars[3] is the single-lineage speciation probability.
+}
+or
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
@@ -18,7 +24,7 @@ determine_k_limit(pars, brts, lx, soc, methode, abstol = 1e-16,
 
 \item{brts}{something}
 
-\item{lx}{something}
+\item{lx}{It is the number of ODEs considered for the computation.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
@@ -29,7 +35,7 @@ determine_k_limit(pars, brts, lx, soc, methode, abstol = 1e-16,
 \item{reltol}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

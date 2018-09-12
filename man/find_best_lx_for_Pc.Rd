@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{find_best_lx_for_Pc}
 \alias{find_best_lx_for_Pc}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo",
   abstol = 1e-16, reltol = 1e-10, iterations = 20,
@@ -12,6 +12,12 @@ find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo",
 \item{brts}{something}
 
 \item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is the multiple speciation trigger rate;
+  \item pars[2] is the extinction rate;
+  \item pars[3] is the single-lineage speciation probability.
+}
+or
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
@@ -34,7 +40,7 @@ find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo",
 \item{interval.max}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

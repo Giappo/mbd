@@ -1,4 +1,4 @@
-# #Here you can find and test all the major functions in the package MBD.
+# #Here you can find and test all the major functions in the package mbd.
 # #Run it line by line.
 # #Problem1: There's a problem with "mbd_theoretical_pure_birth". Results are very close but not equal. I guess this is due to the inaccuracy of the matrix builder. We have to try again with the new version that Hanno will provide us.
 # #Problem2: I can't maximize the likelihood using either "simplex" or "subplex". With the new matrix builder that Hanno is going to provide us we should (hopefully) get rid of this problem.
@@ -8,10 +8,10 @@
 #
 # #load data and settings
 # data_path <- system.file(
-#   "data", "sim_data", package = "MBD"
+#   "data", "sim_data", package = "mbd"
 # )
 # settings_path <- system.file(
-#   "data", "general_settings", package = "MBD"
+#   "data", "general_settings", package = "mbd"
 # )
 # load(data_path     , envir=globalenv())
 # load(settings_path , envir=globalenv())

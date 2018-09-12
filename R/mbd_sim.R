@@ -126,6 +126,7 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 # mbd_sim0---------------------------------
 #' @author Giovanni Laudanno
 #' @title Creates simulated trees under the multiple birth death process
+#' @inheritParams default_params_doc
 #' @description mbd_sim0 produces simulated trees including multiple speciations at the same time.
 #' @param pars vector of parameters:
 #' \itemize{
@@ -159,8 +160,9 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 #' out$L
 #'
 #' @export
-mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
-                     tips_interval = c(soc * (cond == 1), Inf), minimum_multiple_births = 0)
+mbd_sim0 <- function(
+  pars, soc = 2, age = 10, cond = 1,
+  tips_interval = c(soc * (cond == 1), Inf), minimum_multiple_births = 0)
 {
   if (tips_interval[2]<tips_interval[1]){stop("ERROR! Check again your settings.")}
   lambda=pars[1]; mu=pars[2]; q=pars[3]; N0=soc
@@ -240,6 +242,7 @@ mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
 #' @author Giovanni Laudanno
 #' @title Creates a full simulated dataset of trees under the multiple birth death process
 #' @description mbd_sim_dataset produces a full dataset of max_sims simulated trees including multiple speciations at the same time. This second version takes into account the possibility both of allopatric and sympatric speciation.
+#' @inheritParams default_params_doc
 #' @param pars vector of parameters:
 #' \itemize{
 #' \item id == 1 corresponds to lambda (speciation rate)
@@ -327,12 +330,7 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
 #' @author Giovanni Laudanno
 #' @title Creates a full simulated dataset of trees under the multiple birth death process
 #' @description mbd_sim_dataset0 produces a full dataset of max_sims simulated trees including multiple speciations at the same time.
-#' @param pars vector of parameters:
-#' \itemize{
-#'   \item pars[1] is the multiple speciation trigger rate;
-#'   \item pars[2] is the extinction rate;
-#'   \item pars[3] is the single-lineage speciation probability.
-#' }
+#' @inheritParams default_params_doc
 #' @param soc stands for stem or crown. Set 1 for stem or 2 for crown.
 #' @param age is the age of the tree.
 #' @param cond conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.

@@ -10,16 +10,6 @@ mbd_ML_cluster(s, initparsopt = c(0.6, 0.1, 1.3, 0.16))
 \item{s}{The number of the simulation you want to evaluate.}
 
 \item{initparsopt}{The initial values of the parameters that must be optimized}
-
-\item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:
-\itemize{
-\item id == 1 corresponds to lambda (speciation rate)
-\item id == 2 corresponds to mu (extinction rate)
-\item id == 3 corresponds to nu (multiple speciation trigger rate)
-\item id == 4 corresponds to q (single-lineage speciation probability)
-}}
-
-\item{parsfix}{The values of the parameters that should not be optimized.}
 }
 \value{
 The output is saved on the document "mbd_MLE.txt".

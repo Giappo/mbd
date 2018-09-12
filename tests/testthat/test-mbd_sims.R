@@ -9,7 +9,7 @@ test_that("Sims are ok", {
   q=sample(size = test_size,x = (1:16)*0.01,replace = T)
   
   for (j in 1:test_size){
-    test_sim[[j]]=MBD::mbd_sim0(pars = c(lambda[j],mu[j],q[j]),soc = soc,age = 10,cond = 1)$L
+    test_sim[[j]]=mbd::mbd_sim0(pars = c(lambda[j],mu[j],q[j]),soc = soc,age = 10,cond = 1)$L
   }
   
   #check if all the species are born before their parents die

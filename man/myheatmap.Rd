@@ -6,6 +6,13 @@
 \usage{
 myheatmap(matrix, logs = 1, colormap = heat.colors(15), ...)
 }
+\arguments{
+\item{matrix}{something}
+
+\item{logs}{something}
+
+\item{colormap}{something}
+}
 \description{
 Gets heatmap of my matrices.
 }

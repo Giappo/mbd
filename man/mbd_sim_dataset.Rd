@@ -9,15 +9,21 @@ mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
   minimum_multiple_births = 0)
 }
 \arguments{
+\item{sim_pars}{something}
+
 \item{soc}{stands for stem or crown. Set 1 for stem or 2 for crown.}
 
 \item{cond}{conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.}
 
 \item{age}{is the age of the tree.}
 
+\item{max_sims}{something}
+
 \item{tips_interval}{You can also define the tips_interval as you can usually do with a standard usage of mbd_sim.}
 
 \item{edge}{the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.}
+
+\item{minimum_multiple_births}{something}
 
 \item{pars}{vector of parameters:
 \itemize{

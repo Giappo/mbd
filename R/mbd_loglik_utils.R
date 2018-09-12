@@ -1,5 +1,5 @@
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 hyperA_HannoX <- function(N, k, q) {# HG function: fast O(N), updated after Moulis meeting
@@ -24,8 +24,8 @@ hyperA_HannoX <- function(N, k, q) {# HG function: fast O(N), updated after Moul
 # if (.Platform$OS.type=="windows"){matrix_builder = hyperA:::hyperA}
 # if (.Platform$OS.type=="unix")   {matrix_builder = hyperA_HannoX} #this is set to work with home directory of the cluster
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 create_A0 <- function(max_number_of_species, lambda, mu, q, k, matrix_builder = hyperA_HannoX){
@@ -39,8 +39,8 @@ create_A0 <- function(max_number_of_species, lambda, mu, q, k, matrix_builder = 
   return(M)
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 create_B0 <- function(max_number_of_species, q, k, b, matrix_builder = hyperA_HannoX){#lambda * choose(k,b) * q^b  is going to be added in logB in the main script
@@ -49,8 +49,8 @@ create_B0 <- function(max_number_of_species, q, k, b, matrix_builder = hyperA_Ha
   return(B)
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -66,8 +66,9 @@ create_A <- function(lambda, mu, nu, q, k, max_number_of_species){
   return(M)
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
+#' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
 create_B <- function(lambda, nu, q, k, b, max_number_of_species){
@@ -76,8 +77,8 @@ create_B <- function(lambda, nu, q, k, b, max_number_of_species){
   return(B)
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -90,8 +91,8 @@ create_A.no_mbd = function(lambda,mu,nu,q,k,max_number_of_species,minimum_multip
   return(M)
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -102,8 +103,8 @@ create_B.no_mbd = function(lambda,nu,q,k,b,max_number_of_species,minimum_multipl
   return(B)
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -164,8 +165,8 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
   return(result)
 }
 
-#' #' @title Internal MBD function
-#' #' @description Internal MBD function.
+#' #' @title Internal mbd function
+#' #' @description Internal mbd function.
 #' #' @details This is not to be called by the user.
 #' #' @export
 #' A_operator_old <- function(Q, transition_matrix, time_interval, precision = 50L,
@@ -224,8 +225,8 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 #'   return(result)
 #' }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -242,8 +243,8 @@ mbd_loglik_rhs <- function (t, x, pars){
   })
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -261,8 +262,8 @@ determine_k_limit <- function(pars, brts, lx, soc, methode, abstol = 1e-16, relt
   return(k_limit)
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -302,8 +303,8 @@ calculate_conditional_probability <- function (brts,
 }
 
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -343,8 +344,8 @@ calculate_conditional_probability0 <- function (brts,
 }
 
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -388,8 +389,8 @@ calculate_conditional_probability0PB <- function (brts,
 
 
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -410,7 +411,7 @@ find_best_lx_for_Pc <- function(brts,
   lx.test <- rep(NA, length(lxvec <- seq(interval.min + step1, interval.max - step1, step1))); i <- 1; right.lx.coord <- 0
   for (lx2 in lxvec)
   {
-    lx.test[i] <- MBD::calculate_conditional_probability0(brts = brts,
+    lx.test[i] <- mbd::calculate_conditional_probability0(brts = brts,
                                                           pars = c(pars[1], 0, pars[3], pars[4]),
                                                           lx = lx2, 
                                                           soc = soc,
@@ -430,7 +431,7 @@ find_best_lx_for_Pc <- function(brts,
   lx.test2 <- rep(NA, length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2 * step1/a)))); j <- 1; right.lx.coord2 <- 0
   for (lx2 in lxvec)
   {
-    lx.test2[j] <- MBD::calculate_conditional_probability0(brts = brts,
+    lx.test2[j] <- mbd::calculate_conditional_probability0(brts = brts,
                                                            pars = c(pars[1], 0, pars[3], pars[4]),
                                                            lx = lx2, 
                                                            soc = soc,
@@ -450,8 +451,8 @@ find_best_lx_for_Pc <- function(brts,
   return(lx)
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -466,7 +467,7 @@ calculate_conditional_probability1 <- function (brts,
   lx <- find_best_lx_for_Pc(brts = brts, pars = pars, soc = soc)
   if (pars[2] == 0)
   {
-    Pc <- MBD::calculate_conditional_probability0PB(brts = brts,
+    Pc <- mbd::calculate_conditional_probability0PB(brts = brts,
                                                     pars = pars,
                                                     lx = lx,
                                                     soc = soc,
@@ -477,7 +478,7 @@ calculate_conditional_probability1 <- function (brts,
   }else
   {
     # @Giappo: this function does not exist any more
-    # Pc <- MBD::calculate_conditional_probability02(brts = brts,
+    # Pc <- mbd::calculate_conditional_probability02(brts = brts,
     #                                                pars = pars,
     #                                                lx = lx,
     #                                                soc = soc,
@@ -485,13 +486,13 @@ calculate_conditional_probability1 <- function (brts,
     #                                                methode = methode,
     #                                                abstol = abstol,
     #                                                reltol = reltol)
-    stop("Function 'MBD::calculate_conditional_probability02' is absent")
+    stop("Function 'mbd::calculate_conditional_probability02' is absent")
   }
   return(list(Pc = Pc, lx = lx))
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 alpha_conditional_probability <- function (brts, pars, alpha, tips_interval = c(0, Inf),
@@ -540,8 +541,8 @@ alpha_conditional_probability <- function (brts, pars, alpha, tips_interval = c(
   return(list(Pc = Pc, A2_v1 = A2_v1))
 }
 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
@@ -628,8 +629,8 @@ alpha_analysis <- function(brts,
   return(list(Pc = Pc, alpha = alpha))
 }
 
-#' ##' @title Internal MBD function
-#' #' @description Internal MBD function.
+#' ##' @title Internal mbd function
+#' #' @description Internal mbd function.
 #' #' @details This is not to be called by the user.
 #' #' @export
 #' calculate_conditional_probability <- function (brts, pars, tips_interval = c(0, Inf),
@@ -678,8 +679,8 @@ alpha_analysis <- function(brts,
 #'   return(list(Pc = Pc, A2_v1 = A2_v1))
 #' }
 #' 
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @details This is not to be called by the user.
 #' @export
 #' calculate_conditional_probability2 <- function (brts, pars, missing_tips_interval = c(0, Inf),
@@ -707,7 +708,7 @@ alpha_analysis <- function(brts,
 #'   A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
 #'                             precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
 #'   
-#'   # MBD::mbd_loglik(pars = pars, brts = c(total_time), soc = soc, cond = 0, missnumspec = 0)
+#'   # mbd::mbd_loglik(pars = pars, brts = c(total_time), soc = soc, cond = 0, missnumspec = 0)
 #'   
 #'   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
 #'   Pc <- sum(total_product[tips_components]); Pc
@@ -753,8 +754,8 @@ alpha_analysis <- function(brts,
 #'   return(list(Pc = Pc, A2_v1 = A2_v1))
 #' }
 #' 
-#' #' @title Internal MBD function
-#' #' @description Internal MBD function.
+#' #' @title Internal mbd function
+#' #' @description Internal mbd function.
 #' #' @details This is not to be called by the user.
 #' #' @export
 #' calculate_conditional_probability3 <- function (brts, 

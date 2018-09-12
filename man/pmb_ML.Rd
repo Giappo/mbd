@@ -9,6 +9,25 @@ pmb_ML(brts, initparsopt, soc = 2, res = 10 * (1 + length(brts) +
   round((1.25)^length(idparsopt)), changeloglikifnoconv = FALSE,
   optimmethod = "simplex", pars.transform = 1)
 }
+\arguments{
+\item{brts}{something}
+
+\item{initparsopt}{something}
+
+\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{res}{something}
+
+\item{tol}{something}
+
+\item{maxiter}{something}
+
+\item{changeloglikifnoconv}{something}
+
+\item{optimmethod}{something}
+
+\item{pars.transform}{something}
+}
 \description{
 Does something N
 }

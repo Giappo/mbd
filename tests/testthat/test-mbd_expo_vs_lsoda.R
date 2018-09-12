@@ -15,10 +15,10 @@ test_that("PureBirth theoretical check", {
   for (j in 1:test_size)
   {
     simpars <- c(lambda[j], mu[j], nu[j], q[j]);
-    brts <- MBD:::mbd_sim(pars = simpars, soc = soc, age = 10, cond = cond)$brts
+    brts <- mbd:::mbd_sim(pars = simpars, soc = soc, age = 10, cond = cond)$brts
     testpars <- c(lambda[test_size + j], mu[test_size + j], nu[test_size + j], q[test_size + j])
-    test_expo[j]  <- MBD::mbd_loglik(pars = testpars,brts = brts,soc = soc,cond = cond,methode = "expo")
-    test_lsoda[j] <- MBD::mbd_loglik(pars = testpars,brts = brts,soc = soc,cond = cond,methode = "lsoda")
+    test_expo[j]  <- mbd::mbd_loglik(pars = testpars,brts = brts,soc = soc,cond = cond,methode = "expo")
+    test_lsoda[j] <- mbd::mbd_loglik(pars = testpars,brts = brts,soc = soc,cond = cond,methode = "lsoda")
   }
   # print(prod(test_lsoda))
   # print(prod(test_expo) )

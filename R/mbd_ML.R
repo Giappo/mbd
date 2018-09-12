@@ -25,7 +25,6 @@
 #' \item reltolf = relative tolerance of function value in optimization
 #' \item abstolx = absolute tolerance of parameter values in optimization
 #' }
-#' @param max_iter Sets the maximum number of iterations in the optimization.
 #' @param changeloglikifnoconv If TRUE the loglik will be set to -Inf if ML does not converge.
 #' @param optimmethod Method used in optimization of the likelihood. Current default is 'simplex'. Alternative is 'subplex' (default of previous versions).
 #' @param methode Set "sexpm" if you want to use sexpm. Set "expo" if you want to use expoRkit. Set "lsoda" if you want to use "lsoda".
@@ -186,14 +185,6 @@ mbd_ML <- function(
 #' @inheritParams default_params_doc
 #' @param s The number of the simulation you want to evaluate.
 #' @param initparsopt The initial values of the parameters that must be optimized
-#' @param idparsopt The ids of the parameters that must be optimized. The ids are defined as follows:
-#' \itemize{
-#' \item id == 1 corresponds to lambda (speciation rate)
-#' \item id == 2 corresponds to mu (extinction rate)
-#' \item id == 3 corresponds to nu (multiple speciation trigger rate)
-#' \item id == 4 corresponds to q (single-lineage speciation probability)
-#' }
-#' @param parsfix The values of the parameters that should not be optimized.
 #' @return The output is saved on the document "mbd_MLE.txt".
 #' \itemize{
 #' \item First column contains ML estimates for lambda.
@@ -224,7 +215,7 @@ mbd_ML_cluster <- function(s, initparsopt = c(0.6, 0.1, 1.3, 0.16)){
   if (!file.exists(paste0(simpath,"/errors"))){dir.create(paste0(simpath,"/errors"))}
   sink(file = paste0(simpath,"/errors/mbd_MLE_errors",s,".txt"), append = TRUE)
 
-  res <- MBD::mbd_ML(brts = sim_data[[s]],
+  res <- mbd::mbd_ML(brts = sim_data[[s]],
                      initparsopt = initparsopt,
                      idparsopt = idparsopt,
                      idparsfix = (1:Npars)[-idparsopt],

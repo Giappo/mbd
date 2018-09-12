@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{create_B0}
 \alias{create_B0}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 create_B0(max_number_of_species, q, k, b, matrix_builder = hyperA_HannoX)
 }
@@ -18,7 +18,7 @@ create_B0(max_number_of_species, q, k, b, matrix_builder = hyperA_HannoX)
 \item{matrix_builder}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

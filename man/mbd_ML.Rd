@@ -61,8 +61,6 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
 \item{print_errors}{something}
 
 \item{verbose}{something}
-
-\item{max_iter}{Sets the maximum number of iterations in the optimization.}
 }
 \value{
 The output is a dataframe containing estimated parameters and maximum

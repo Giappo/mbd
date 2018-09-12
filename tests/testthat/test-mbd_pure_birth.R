@@ -70,7 +70,7 @@ test_that("PureBirth theoretical check", {
   
   for (j in 1:test_size){
     simpars = c(lambda[j],0,q[j]);
-    brts = MBD:::mbd_sim0( pars=simpars,soc=2,age=10,cond=0 )$brts
+    brts = mbd:::mbd_sim0( pars=simpars,soc=2,age=10,cond=0 )$brts
     testpars=c(lambda[test_size+j],0,q[test_size+j])
     test_PB = mbd_test_pure_birth(testpars,brts,soc=2,cond=0,methode=methode)
     theorethical_test[j]=test_PB$theorethicalLL

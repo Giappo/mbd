@@ -9,22 +9,21 @@ mbd_sim_dataset0(sim_pars = c(2.5, 0.1, 0.1), soc = 2, cond = 1,
   minimum_multiple_births = 0)
 }
 \arguments{
+\item{sim_pars}{something}
+
 \item{soc}{stands for stem or crown. Set 1 for stem or 2 for crown.}
 
 \item{cond}{conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.}
 
 \item{age}{is the age of the tree.}
 
+\item{max_sims}{something}
+
 \item{tips_interval}{You can also define the tips_interval as you can usually do with a standard usage of mbd_sim0.}
 
 \item{edge}{the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.}
 
-\item{pars}{vector of parameters:
-\itemize{
-  \item pars[1] is the multiple speciation trigger rate;
-  \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability.
-}}
+\item{minimum_multiple_births}{something}
 }
 \value{
 The function returns a list of brts vectors, one for each of the max_sims simulations.

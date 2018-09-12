@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{mbd_loglik_rhs}
 \alias{mbd_loglik_rhs}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 mbd_loglik_rhs(t, x, pars)
 }
@@ -13,6 +13,12 @@ mbd_loglik_rhs(t, x, pars)
 
 \item{pars}{vector of parameters:
 \itemize{
+  \item pars[1] is the multiple speciation trigger rate;
+  \item pars[2] is the extinction rate;
+  \item pars[3] is the single-lineage speciation probability.
+}
+or
+\itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
@@ -20,11 +26,11 @@ mbd_loglik_rhs(t, x, pars)
 }}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
-#' @title Internal MBD function
-#' @description Internal MBD function.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @details This is not to be called by the user.
 #' @export
 A_operator_old <- function(Q, transition_matrix, time_interval, precision = 50L,

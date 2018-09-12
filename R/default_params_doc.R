@@ -12,7 +12,13 @@
 #' @param changeloglikifnoconv something
 #' @param colormap something
 #' @param idparsfix something
-#' @param idparsopt something
+#' @param idparsopt The ids of the parameters that must be optimized. The ids are defined as follows:
+#' \itemize{
+#' \item id == 1 corresponds to lambda (speciation rate)
+#' \item id == 2 corresponds to mu (extinction rate)
+#' \item id == 3 corresponds to nu (multiple speciation trigger rate)
+#' \item id == 4 corresponds to q (single-lineage speciation probability)
+#' }
 #' @param initparsopt something
 #' @param interval.max something
 #' @param interval.min something
@@ -20,7 +26,7 @@
 #' @param k something
 #' @param lambda something
 #' @param logs something
-#' @param lx something
+#' @param lx It is the number of ODEs considered for the computation.
 #' @param lx0 something
 #' @param matrix something
 #' @param matrix_builder something
@@ -30,7 +36,8 @@
 #' @param max_repetitions something
 #' @param max_sims something
 #' @param maxiter something
-#' @param MBD.lambda something
+#' @param max_iter Sets the maximum number of iterations in the optimization
+#' @param mbd.lambda something
 #' @param methode something
 #' @param minimum_multiple_births something
 #' @param missnumspec something
@@ -42,8 +49,21 @@
 #' @param Nsubs something
 #' @param nu something
 #' @param optimmethod something
+#' @param pars vector of parameters:
+#' \itemize{
+#'   \item pars[1] is the multiple speciation trigger rate;
+#'   \item pars[2] is the extinction rate;
+#'   \item pars[3] is the single-lineage speciation probability.
+#' }
+#' or
+#' \itemize{
+#'   \item pars[1] is lambda, the sympatric speciation rate;
+#'   \item pars[2] is mu, the extinction rate;
+#'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+#'   \item pars[4] is q, the single-lineage speciation probability.
+#' }
 #' @param pars.transform something
-#' @param parsfix something
+#' @param parsfix The values of the parameters that should not be optimized.
 #' @param precision something
 #' @param print_errors something
 #' @param Q something
@@ -75,13 +95,6 @@
 #' @param age The age of the tree.
 #' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
 #' @param soc Sets whether stem or crown age should be used (1 or 2).
-#' @param pars vector of parameters:
-#' \itemize{
-#'   \item pars[1] is lambda, the sympatric speciation rate;
-#'   \item pars[2] is mu, the extinction rate;
-#'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-#'   \item pars[4] is q, the single-lineage speciation probability.
-#' }
 #' @param tips_interval Sets tips boundaries constrain on simulated dataset.
 #' @author Documentation by Giovanni Laudanno, use of this function by Richel J.C. Bilderbeek
 #' @note This is an internal function, so it should be marked with
@@ -118,7 +131,7 @@ default_params_doc <- function(
   max_repetitions,
   max_sims,
   maxiter,
-  MBD.lambda,
+  mbd.lambda,
   methode,
   minimum_multiple_births,
   missnumspec,

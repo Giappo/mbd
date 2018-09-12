@@ -6,6 +6,23 @@
 \usage{
 myheatmap2(x, y, z, x.name, y.name, z.name, x.splits, y.splits)
 }
+\arguments{
+\item{x}{something}
+
+\item{y}{something}
+
+\item{z}{something}
+
+\item{x.name}{something}
+
+\item{y.name}{something}
+
+\item{z.name}{something}
+
+\item{x.splits}{something}
+
+\item{y.splits}{something}
+}
 \description{
 Does something J
 }

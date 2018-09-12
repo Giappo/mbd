@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{hyperA_HannoX}
 \alias{hyperA_HannoX}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 hyperA_HannoX(N, k, q)
 }
@@ -14,7 +14,7 @@ hyperA_HannoX(N, k, q)
 \item{q}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

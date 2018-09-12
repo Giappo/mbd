@@ -1,9 +1,10 @@
 # @Giappo: add doc
 #' Does something K
+#' @inheritParams default_params_doc
 #' @export
 pmb_loglik <- function(pars, brts, soc = 2){
 
-#BOTH LAMBDA AND NU
+#BOTH LAmbdA AND NU
 #setup
 test_pars=pars  # test_pars=c(0.4,0,0.1,0.2)
 test_brts=brts  # test_brts=c(-10,-5,-5,-3,-3,-3,-2,-1,-1,-1)
@@ -43,11 +44,12 @@ return(th_loglik)
 
 # @Giappo: add doc
 #' Does something L
+#' @inheritParams default_params_doc
 #' @export
 pmb_loglik_Qvector <- function(pars, brts, soc = 2){
   #I would like to get the entire Q vector out of this...
 
-  #BOTH LAMBDA AND NU
+  #BOTH LAmbdA AND NU
   #setup
   test_pars=pars  # test_pars=c(0.4,0,0.1,0.2)
   test_brts=brts  # test_brts=c(-10,-5,-5,-3,-3,-3,-2,-1,-1,-1)
@@ -87,6 +89,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
 
 # @Giappo: add doc
 #' Does something M
+#' @inheritParams default_params_doc
 #' @export
 pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
                                  idparsfix = (1:4)[-idparsopt], brts, soc = 2,
@@ -130,6 +133,7 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
 
 # @Giappo: add doc
 #' Does something N
+#' @inheritParams default_params_doc
 #' @export
 pmb_ML <- function(brts, initparsopt, soc = 2,
                  res = 10 * (1+length(brts)+missnumspec), tol = c(1E-3, 1E-4, 1E-6),

@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{calculate_conditional_probability0}
 \alias{calculate_conditional_probability0}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 calculate_conditional_probability0(brts, pars, lx = 1000, soc = 2,
   tips_interval = c(0, Inf), methode = "expo", abstol = 1e-16,
@@ -13,13 +13,19 @@ calculate_conditional_probability0(brts, pars, lx = 1000, soc = 2,
 
 \item{pars}{vector of parameters:
 \itemize{
+  \item pars[1] is the multiple speciation trigger rate;
+  \item pars[2] is the extinction rate;
+  \item pars[3] is the single-lineage speciation probability.
+}
+or
+\itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
   \item pars[4] is q, the single-lineage speciation probability.
 }}
 
-\item{lx}{something}
+\item{lx}{It is the number of ODEs considered for the computation.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
@@ -32,7 +38,7 @@ calculate_conditional_probability0(brts, pars, lx = 1000, soc = 2,
 \item{reltol}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.
