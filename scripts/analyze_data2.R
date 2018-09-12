@@ -133,10 +133,10 @@ analyze_data2 <- function(result.table, error_bars = 0){
   pippo4 <- pippo3[pippo3[,2]==0   ,]; pippo_draw(pippo4)
   pippo5 <- pippo3[pippo3[,2]==0.15,]; pippo_draw(pippo5)
 
-  png(filename = "results_mu=0.png")
+  grDevices::png(filename = "results_mu=0.png")
   pippo_draw(pippo4)
   grDevices::dev.off()
-  png(filename = "results_mu=0_15.png")
+  grDevices::png(filename = "results_mu=0_15.png")
   pippo_draw(pippo5)
   grDevices::dev.off()
 }

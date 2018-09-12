@@ -89,7 +89,7 @@ get_all_data_from_cluster = function (sim_pars, max_sims = 1000, account_name = 
   suppressWarnings(rm(targetTable))
   ifelse ( exists("ids"),missing_ids <- (1:max_sims)[-ids],missing_ids <- (1:max_sims) )
 
-  flush.console()
+  utils::flush.console()
   at_least_one_result_from_cluster = 0
   for (s in missing_ids){ #loading data from cluster
     print(s)

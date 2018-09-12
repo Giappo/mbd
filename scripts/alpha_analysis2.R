@@ -1,6 +1,6 @@
 sim_pars2=c(0.2,0.1,0.08,0.2);sim_tree=mbd:::mbd_sim(pars = sim_pars2,soc = 2,age = 10,cond = 1);sim_tree$brts;#plot(sim_tree$tes)
 q_grid=seq(from=0.02,to=0.5,by = 0.02)
-maxalpha=40;flush.console();
+maxalpha=40; utils::flush.console();
 res2 <- matrix(NA, nrow = length(q_grid), ncol = maxalpha);
 for (alpha in 1:maxalpha){
   print(alpha);
@@ -34,7 +34,7 @@ coeff = stats::coef(model2)
 
 plot.new()
 plot(first.to.reach.threshold~q_grid,ylab = "alpha", xlab = "q",main = "alpha to use to keep the error below 1%\n",xlim = range(q_grid),ylim = range(first.to.reach.threshold))
-par(new=T)
+graphics::par(new=T)
 curve(coeff[1]/(1+exp(coeff[2]*(x-coeff[3])))+coeff[4],xlim = range(q_grid),ylim = range(first.to.reach.threshold),main=paste("\ncoefficients: a=",signif(coeff[1],2),", b=",signif(coeff[2],2),", c=",signif(coeff[3],2),",d=",signif(coeff[4],2),sep = ''),ylab = "",xlab="")
 ############################################################################
 
@@ -57,14 +57,14 @@ myheatmap2 = function(x,y,z,x.name,y.name,z.name,x.splits,y.splits,plot.title){
   pretty.Y.at	<-	pretty(range(lY),n=y.splits)
   pretty.Y.lab	<-	round(pretty.Y.at,2)
 
-  jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan","#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-  filled.contour(t(z), color = jet.colors, nlevels=100,#asp = 1, #frame.plot = T, axes=F,
+  jet.colors <- grDevices::colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan","#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+  graphics::filled.contour(t(z), color = jet.colors, nlevels=100,#asp = 1, #frame.plot = T, axes=F,
                  ylab = y.name, xlab = x.name, main = plot.title,
                  plot.axes={
                    # axis(1,at=seq(0,1,length.out = x.splits+1),labels=pretty.X.lab)
                    # axis(2,at=seq(0,1,length.out = y.splits+1),labels=pretty.Y.lab)
-                   axis(1,at=seq(0,1,length.out = length(pretty.X.lab) ),labels=pretty.X.lab)
-                   axis(2,at=seq(0,1,length.out = length(pretty.Y.lab) ),labels=pretty.Y.lab)
+                   graphics::axis(1,at=seq(0,1,length.out = length(pretty.X.lab) ),labels=pretty.X.lab)
+                   graphics::axis(2,at=seq(0,1,length.out = length(pretty.Y.lab) ),labels=pretty.Y.lab)
                  },
                  key.title = title(main=z.name)
   )

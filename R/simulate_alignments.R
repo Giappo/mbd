@@ -31,7 +31,7 @@ BD.Nmutations <- function(lambda, mu, age, N0 = 2, sequence_length = 1000, mutat
   
   age <- abs(age)
   ft  <- function(t) {mbd::BD.Nct(t, lambda = lambda, mu = mu, N0 = N0, age = age)}
-  Nmutations <- mutation_rate * sequence_length * integrate(f = ft, lower = 0, upper = age)[[1]]
+  Nmutations <- mutation_rate * sequence_length * stats::integrate(f = ft, lower = 0, upper = age)[[1]]
   return(Nmutations)
 }
 
@@ -146,6 +146,8 @@ alignments_comparison_multiple <- function(
   tips_interval = c(0, Inf),
   mutation_rate = 1/age
 ) {
+  ..count.. <- NULL; rm(..count..) # nolint, fixes warning: no visible binding for global variable
+  
   
   #setting
   soc <- 2 #it has to start with a crown to use pirouette
@@ -251,11 +253,11 @@ alignments_comparison_multiple <- function(
        BD.estimates = BD.estimates,
        file = paste0(folder_name,"//" ,file_name))
   
-  png(filename = paste0(folder_name, "//" ,file_name, "_mbd_plot.png"))
+  grDevices::png(filename = paste0(folder_name, "//" ,file_name, "_mbd_plot.png"))
   graphics::plot(mbd.nLTT.plot)
   grDevices::dev.off()
         
-  png(filename = paste0(folder_name, "//" ,file_name, "_BD_plot.png"))
+  grDevices::png(filename = paste0(folder_name, "//" ,file_name, "_BD_plot.png"))
   graphics::plot(BD.nLTT.plot)
   grDevices::dev.off()
   

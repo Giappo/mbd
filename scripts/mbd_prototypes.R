@@ -273,7 +273,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
       if(length(namepars[idparsfix]) == 0) { fixstr = "nothing" } else { fixstr = namepars[idparsfix] }
       cat("You are fixing",fixstr,"\n")
       cat("Optimizing the likelihood - this may take a while.","\n")
-      flush.console()
+      utils::flush.console()
       if (pars.transform == 1)
       {
         #Rampal's transformation
@@ -294,7 +294,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
                                                 tips_interval = tips_interval, methode = methode,
                                                 alpha = alpha, pars.transform = pars.transform) #there's no pars2 here and instead 3 more args at the end
       cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
-      flush.console()
+      utils::flush.console()
       if(initloglik == -Inf)
       {# bracket#4
         cat("The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n")

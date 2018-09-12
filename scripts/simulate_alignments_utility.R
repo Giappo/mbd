@@ -124,4 +124,4 @@
 # 
 # md <- stats::lm(log(out) ~ lavec)
 # coef(md)
-# plot(log(out)~lavec); abline(a = coef(md)[1], b = coef(md)[2])
+# plot(log(out)~lavec); graphics::abline(a = coef(md)[1], b = coef(md)[2])

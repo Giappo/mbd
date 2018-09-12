@@ -28,8 +28,8 @@ if (condition1 | condition2){th_loglik = -Inf}else
   i <- 0:1e6
   for (t in 1:length(time_intervals))
   {
-    poisson_term <- dpois(i, nu*time_intervals[t], log = FALSE)[dpois(i, nu*time_intervals[t], log = FALSE) != 0] #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/k!
-    ii <- i[dpois(i, nu*time_intervals[t], log = FALSE) !=0 ]
+    poisson_term <- stats::dpois(i, nu*time_intervals[t], log = FALSE)[dpois(i, nu*time_intervals[t], log = FALSE) != 0] #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/k!
+    ii <- i[stats::dpois(i, nu*time_intervals[t], log = FALSE) !=0 ]
     A_term[t] <- sum( (1 - q)^(ii * k[t]) * poisson_term ) *    # nu contribution: (1-q)^(k*i) * (nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/k!
                  exp(- k[t] * lambda * (time_intervals[t])) # lambda contribution: exp(-k*lambda*(t_k-t_k-1))
   }
@@ -73,8 +73,8 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
     i <- 0:1e6
     for (t in 1:length(time_intervals))
     {
-      poisson_term <- dpois(i, nu * time_intervals[t], log = FALSE)[dpois(i, nu * time_intervals[t], log = FALSE) != 0] #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
-      ii <- i[dpois(i, nu * time_intervals[t], log = FALSE) != 0]
+      poisson_term <- stats::dpois(i, nu * time_intervals[t], log = FALSE)[dpois(i, nu * time_intervals[t], log = FALSE) != 0] #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
+      ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
       A_term[t] <- sum( (1 - q)^(ii * k[t]) * poisson_term ) *  # nu contribution: (1-q)^(k*i) * (nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
                    exp(- k[t] * lambda * (time_intervals[t]))   # lambda contribution: exp(-k*lambda*(t_k-t_k-1))
     }
@@ -170,7 +170,7 @@ pmb_ML <- function(brts, initparsopt, soc = 2,
       if (length(namepars[idparsfix]) == 0) { fixstr <- "nothing" } else { fixstr <- namepars[idparsfix] }
       cat("You are fixing",fixstr,"\n")
       cat("Optimizing the likelihood - this may take a while.","\n")
-      flush.console()
+      utils::flush.console()
       if (pars.transform == 1)
       {
         trparsopt = initparsopt/(1 + initparsopt)
@@ -187,7 +187,7 @@ pmb_ML <- function(brts, initparsopt, soc = 2,
                                                idparsfix = idparsfix, brts = brts, soc = soc,
                                                pars.transform = pars.transform) #there's no pars2 here and instead 3 more args at the end
       cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
-      flush.console()
+      utils::flush.console()
       if(initloglik == -Inf)
       {# bracket#4
         cat("The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n")

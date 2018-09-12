@@ -94,7 +94,7 @@ mbd_ML <- function(
   if (verbose == TRUE) {
     cat("You are fixing",fixstr,"\n")
     cat("Optimizing the likelihood - this may take a while.","\n")
-    flush.console()
+    utils::flush.console()
   }
   if (pars.transform == 1)
   {
@@ -119,7 +119,7 @@ mbd_ML <- function(
                                            print_errors = print_errors, ...) #there's no pars2 here and instead 3 more args at the end
   if (verbose == TRUE) {
     cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
-    flush.console()
+    utils::flush.console()
   }
   if (initloglik == -Inf)
   {# bracket#4
