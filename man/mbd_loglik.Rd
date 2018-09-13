@@ -5,8 +5,9 @@
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
 mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
-  tips_interval = c(0, Inf), missnumspec = 0, safety_threshold = 0.001,
-  methode = "expo", minimum_multiple_births = 0, print_errors = TRUE)
+  tips_interval = c(0, Inf), missnumspec = 0,
+  safety_threshold = 0.001, methode = "expo",
+  minimum_multiple_births = 0, print_errors = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -23,6 +24,10 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
 
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
+\item{lx0}{something}
+
+\item{alpha}{something}
+
 \item{tips_interval}{It takes into account tips boundaries constrain on simulated dataset.}
 
 \item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
@@ -31,7 +36,9 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
 
 \item{methode}{Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.}
 
-\item{lx}{It is the number of ODEs considered for the computation.}
+\item{minimum_multiple_births}{something}
+
+\item{print_errors}{something}
 }
 \value{
 The function returns the natural logarithm of the likelihood for the process.
@@ -41,9 +48,10 @@ mbd_loglik provides the likelihood for a process in which multiple births (from 
 }
 \examples{
 set.seed(11)
-simulated_data = MBD:::mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
+simulated_data = mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
 plot(simulated_data$tas)
-mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
+# @Giappo: too big too run
+# mbd::mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
 
 }
 \author{

@@ -2,13 +2,28 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{create_B.no_mbd}
 \alias{create_B.no_mbd}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 create_B.no_mbd(lambda, nu, q, k, b, max_number_of_species,
   minimum_multiple_births)
 }
+\arguments{
+\item{lambda}{something}
+
+\item{nu}{something}
+
+\item{q}{something}
+
+\item{k}{something}
+
+\item{b}{something}
+
+\item{max_number_of_species}{something}
+
+\item{minimum_multiple_births}{something}
+}
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

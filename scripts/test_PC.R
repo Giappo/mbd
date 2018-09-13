@@ -15,14 +15,14 @@
 # A_reltol <- 1e-10
 # alpha <- 200
 # 
-# # MBD::calculate_conditional_probability(brts = brts, pars = pars, cond = 1, soc = 2, alpha = 5)
+# # mbd::calculate_conditional_probability(brts = brts, pars = pars, cond = 1, soc = 2, alpha = 5)
 # 
 # lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
 # min_tips <- tips_interval[1]; max_tips <- tips_interval[2];
 # min_tips <- max(min_tips, soc * cond) #check this
 # N0 <- soc
 # total_time <- max(abs(brts));
-# births <- c(0, MBD:::brts2time_intervals_and_births(brts)$births)
+# births <- c(0, mbd:::brts2time_intervals_and_births(brts)$births)
 # k_interval <- N0 + cumsum(births)
 # max_k <- max(k_interval)
 # # max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
@@ -33,13 +33,13 @@
 # tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
 # if (cond == 1){tips_components <- tips_components - N0}
 # Qi <- c(1, rep(0, max_number_of_species))
-# Mk_N0 <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+# Mk_N0 <- mbd:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #                         max_number_of_species = max_number_of_species); #image(log(Mk_N0))
 # test[i] <- max(is.na(Mk_N0))
 # i <- i + 1
 # };test
 # 
-# # A2_v1 <- MBD:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+# # A2_v1 <- mbd:::A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
 # #                           precision = 50L, methode = methode, A_abstol = A_abstol, A_reltol = A_reltol)
 # 
 # length(A2_v1)

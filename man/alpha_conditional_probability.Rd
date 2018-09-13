@@ -2,14 +2,47 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{alpha_conditional_probability}
 \alias{alpha_conditional_probability}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
-alpha_conditional_probability(brts, pars, alpha, tips_interval = c(0, Inf),
-  cond = 1, soc = 2, methode = "expo", abstol = 1e-16, reltol = 1e-10,
-  minimum_multiple_births = 0)
+alpha_conditional_probability(brts, pars, alpha, tips_interval = c(0,
+  Inf), cond = 1, soc = 2, methode = "expo", abstol = 1e-16,
+  reltol = 1e-10, minimum_multiple_births = 0)
+}
+\arguments{
+\item{brts}{something}
+
+\item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is the multiple speciation trigger rate;
+  \item pars[2] is the extinction rate;
+  \item pars[3] is the single-lineage speciation probability.
+}
+or
+\itemize{
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability.
+}}
+
+\item{alpha}{something}
+
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+
+\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+
+\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{methode}{something}
+
+\item{abstol}{something}
+
+\item{reltol}{something}
+
+\item{minimum_multiple_births}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

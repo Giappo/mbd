@@ -2,6 +2,7 @@
 #' @author Giovanni Laudanno
 #' @title Creates simulated trees under the multiple birth death process, including both sympatric and allopatric speciation
 #' @description mbd_sim produces simulated trees allowing for three kind of events: sympatric speciation, multiple allopatric speciations and extinction.
+#' @inheritParams default_params_doc
 #' @param pars vector of parameters:
 #' \itemize{
 #'   \item pars[1] is lambda, the sympatric speciation rate;
@@ -29,7 +30,7 @@
 #' }
 #'
 #' @examples
-#' out = MBD:::mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
+#' out = mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
 #' plot(out$tas)
 #' plot(out$tes)
 #' out$L
@@ -101,8 +102,8 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
     alive <- matrix(alive, ncol = 4)
     crown_species_dead <- ( length( unique(sign(alive[,3])) ) != 2 ) * cond #if cond == 0 they will always look like they're alive, because I don't care
     #multiple births check
-    births.reconstructed_tree <- unlist(unname(sort(DDD:::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
-    births.full_tree <- unlist(unname(sort(DDD:::L2brts(L, dropextinct = FALSE), decreasing = TRUE)) )
+    births.reconstructed_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
+    births.full_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = FALSE), decreasing = TRUE)) )
     multiple_births.reconstructed_tree <- sum( duplicated(births.reconstructed_tree) )
     multiple_births.full_tree <- sum( duplicated(births.full_tree) )
     #should i consider the full tree or the reconstructed one???
@@ -111,10 +112,10 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
     
     keep_the_sim <- (!crown_species_dead) & (tips >= tips_interval[1] & tips <= tips_interval[2]) #should i keep this simulation?
   }
-  time_points <- unlist(unname(sort(DDD:::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
+  time_points <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
   brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
-  tes <- DDD:::L2phylo(L, dropextinct = TRUE)
-  tas <- DDD:::L2phylo(L, dropextinct = FALSE)
+  tes <- DDD::L2phylo(L, dropextinct = TRUE)
+  tas <- DDD::L2phylo(L, dropextinct = FALSE)
   #   plot(tas)
   #   plot(tes)
   out <- list(brts = brts, tes = tes, tas = tas, extinct_species = extinct_species, L = L, 
@@ -125,6 +126,7 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 # mbd_sim0---------------------------------
 #' @author Giovanni Laudanno
 #' @title Creates simulated trees under the multiple birth death process
+#' @inheritParams default_params_doc
 #' @description mbd_sim0 produces simulated trees including multiple speciations at the same time.
 #' @param pars vector of parameters:
 #' \itemize{
@@ -152,14 +154,15 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 #' }
 #'
 #' @examples
-#' out = MBD:::mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
+#' out = mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
 #' plot(out$tas)
 #' plot(out$tes)
 #' out$L
 #'
 #' @export
-mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
-                     tips_interval = c(soc * (cond == 1), Inf), minimum_multiple_births = 0)
+mbd_sim0 <- function(
+  pars, soc = 2, age = 10, cond = 1,
+  tips_interval = c(soc * (cond == 1), Inf), minimum_multiple_births = 0)
 {
   if (tips_interval[2]<tips_interval[1]){stop("ERROR! Check again your settings.")}
   lambda=pars[1]; mu=pars[2]; q=pars[3]; N0=soc
@@ -217,18 +220,18 @@ mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
     conditioning_on_survival = ( length( unique(sign(alive[,3])) )!=2 )*cond
     #multiple births check
     #multiple births check
-    births.reconstructed_tree=unlist(unname(sort(DDD:::L2brts(L,dropextinct = T),decreasing = T)) )
-    births.full_tree=unlist(unname(sort(DDD:::L2brts(L,dropextinct = F),decreasing = T)) )
+    births.reconstructed_tree=unlist(unname(sort(DDD::L2brts(L,dropextinct = T),decreasing = T)) )
+    births.full_tree=unlist(unname(sort(DDD::L2brts(L,dropextinct = F),decreasing = T)) )
     multiple_births.reconstructed_tree = sum( duplicated(births.reconstructed_tree) )
     multiple_births.full_tree = sum( duplicated(births.full_tree) )
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multiple_births.full_tree>=minimum_multiple_births)
     multiple_births_check = (multiple_births.reconstructed_tree>=minimum_multiple_births)
   }
-  time_points=unlist(unname(sort(DDD:::L2brts(L,dropextinct = T),decreasing = T)) )
+  time_points=unlist(unname(sort(DDD::L2brts(L,dropextinct = T),decreasing = T)) )
   brts = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
-  tes = DDD:::L2phylo(L,dropextinct = T)
-  tas = DDD:::L2phylo(L,dropextinct = F)
+  tes = DDD::L2phylo(L,dropextinct = T)
+  tas = DDD::L2phylo(L,dropextinct = F)
   #   plot(tas)
   #   plot(tes)
   out = list(brts=brts,tes = tes, tas = tas, extinct_species=extinct_species,L = L, minimum_multiple_births = minimum_multiple_births)
@@ -239,7 +242,8 @@ mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
 #' @author Giovanni Laudanno
 #' @title Creates a full simulated dataset of trees under the multiple birth death process
 #' @description mbd_sim_dataset produces a full dataset of max_sims simulated trees including multiple speciations at the same time. This second version takes into account the possibility both of allopatric and sympatric speciation.
-#' @param pars vector of parameters:
+#' @inheritParams default_params_doc
+#' @param sim_pars vector of parameters:
 #' \itemize{
 #' \item id == 1 corresponds to lambda (speciation rate)
 #' \item id == 2 corresponds to mu (extinction rate)
@@ -256,10 +260,12 @@ mbd_sim0 <- function(pars, soc = 2, age = 10, cond = 1,
 #' N.B.: At each call of the function you overwrite the previous files.
 #'
 #' @examples
-#' out = MBD:::mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
+#' # @Giappo: does not work
+#' # out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
 #'
 #' @export
-mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
+mbd_sim_dataset <- function(
+  sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
                            tips_interval = c(0, 100), edge = Inf, minimum_multiple_births = 0){
   # mbd_sim_dataset creates a full simulated dataset of "max_sims" trees
   #"edge" gives the extent of fluctuations around the mean that i want to consider
@@ -270,7 +276,7 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
   # if (cond == 1){tips_interval[1] = max(N0, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
   if (edge != Inf && tips_interval == c(0, Inf))
   {
-    estimation <- MBD:::mbd_P_eq(test_parameters = sim_pars, age = age, max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
+    estimation <- mbd_P_eq(test_parameters = sim_pars, age = age, max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
     max_tips <- round(estimation$avg_n*(1 + edge));
     min_tips <- max(0,round(estimation$avg_n * (1 - edge)));
     tips_interval <- c(min_tips, max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
@@ -282,7 +288,7 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
   for (s in 1:max_sims)
   {
     set.seed(s)
-    simulation <- MBD:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond,
+    simulation <- mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond,
                                 tips_interval = tips_interval, minimum_multiple_births = minimum_multiple_births)
     sim_data[[s]]  <- simulation$brts
     ext_species[s] <- simulation$extinct_species
@@ -293,9 +299,9 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
   max_k <- (N0 - 1) + (is.list(sim_data)) * max(sapply(sim_data, length)) + (1 - is.list(sim_data)) * length(sim_data)
   if (is.list(sim_data))
   {
-    all_the_births=sapply(sim_data, FUN = function(brts){return(MBD:::brts2time_intervals_and_births(brts)$births)})
+    all_the_births=sapply(sim_data, FUN = function(brts){return(brts2time_intervals_and_births(brts)$births)})
   }else{
-    all_the_births=MBD:::brts2time_intervals_and_births(sim_data)$births
+    all_the_births=brts2time_intervals_and_births(sim_data)$births
   }
   max_b <- max(unlist(all_the_births))
 
@@ -325,12 +331,7 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
 #' @author Giovanni Laudanno
 #' @title Creates a full simulated dataset of trees under the multiple birth death process
 #' @description mbd_sim_dataset0 produces a full dataset of max_sims simulated trees including multiple speciations at the same time.
-#' @param pars vector of parameters:
-#' \itemize{
-#'   \item pars[1] is the multiple speciation trigger rate;
-#'   \item pars[2] is the extinction rate;
-#'   \item pars[3] is the single-lineage speciation probability.
-#' }
+#' @inheritParams default_params_doc
 #' @param soc stands for stem or crown. Set 1 for stem or 2 for crown.
 #' @param age is the age of the tree.
 #' @param cond conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.
@@ -341,7 +342,8 @@ mbd_sim_dataset <- function(sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, a
 #' N.B.: At each call of the function you overwrite the previous files.
 #'
 #' @examples
-#' out = MBD:::mbd_sim_dataset0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,edge=Inf )
+#' # @Giappo: does not work
+#' # out <- mbd_sim_dataset0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,edge=Inf )
 #'
 #' @export
 mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age = 10,
@@ -353,7 +355,7 @@ mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age 
   N0 <- soc
   if (cond == 1){tips_interval[1]=max(N0,tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
   if (edge!=Inf && tips_interval == c(0,Inf) ){
-    estimation=MBD:::mbd_P_eq(test_parameters=sim_pars,age=age,max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
+    estimation=mbd_P_eq(test_parameters=sim_pars,age=age,max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
     max_tips=round(estimation$avg_n*(1+edge));
     min_tips=max(0,round(estimation$avg_n*(1-edge)));
     tips_interval=c(min_tips,max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
@@ -363,7 +365,7 @@ mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age 
   sim_data=sim_tes=sim_tas=vector("list",max_sims)
   ext_species=rep(NA,max_sims)
   for (s in 1:max_sims){
-    simulation <- MBD:::mbd_sim0(pars = sim_pars, soc = soc, age = age, cond = cond,
+    simulation <- mbd_sim0(pars = sim_pars, soc = soc, age = age, cond = cond,
                               tips_interval = tips_interval, minimum_multiple_births = minimum_multiple_births)
     sim_data[[s]]=simulation$brts
     ext_species[s]=simulation$extinct_species
@@ -374,9 +376,9 @@ mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age 
   max_k=(N0-1)+(is.list(sim_data))*max(sapply(sim_data, length))+(1-is.list(sim_data))*length(sim_data)
   if (is.list(sim_data))
   {
-    all_the_births=sapply(sim_data, FUN = function(brts){return(MBD:::brts2time_intervals_and_births(brts)$births)})
+    all_the_births=sapply(sim_data, FUN = function(brts){return(brts2time_intervals_and_births(brts)$births)})
   }else{
-    all_the_births=MBD:::brts2time_intervals_and_births(sim_data)$births
+    all_the_births=brts2time_intervals_and_births(sim_data)$births
   }
   max_b=max(unlist(all_the_births))
 
@@ -466,10 +468,10 @@ mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age 
 #'     alive=matrix(alive,ncol=4)
 #'     conditioning_on_survival = ( length( unique(sign(alive[,3])) )!=2 )*cond
 #'   }
-#'   time_points=unlist(unname(sort(DDD:::L2brts(L,dropextinct = T),decreasing = T)) )
+#'   time_points=unlist(unname(sort(DDD::L2brts(L,dropextinct = T),decreasing = T)) )
 #'   brts = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
-#'   tes = DDD:::L2phylo(L,dropextinct = T)
-#'   tas = DDD:::L2phylo(L,dropextinct = F)
+#'   tes = DDD::L2phylo(L,dropextinct = T)
+#'   tas = DDD::L2phylo(L,dropextinct = F)
 #'   #   plot(tas)
 #'   #   plot(tes)
 #'   out = list(brts=brts,tes = tes, tas = tas, extinct_species=extinct_species,L = L)

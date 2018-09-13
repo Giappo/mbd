@@ -11,8 +11,8 @@ echo "library(devtools)" >> Rsetup.R
 echo "devtools::install_github('richelbilderbeek/raket')" >> Rsetup.R
 echo "library(raket)" >> Rsetup.R
 echo "library(pirouette)" >> Rsetup.R
-echo "devtools::install_github('Giappo/MBD')" >> Rsetup.R
-echo "library(MBD)" >> Rsetup.R
+echo "devtools::install_github('Giappo/mbd')" >> Rsetup.R
+echo "library(mbd)" >> Rsetup.R
 #echo "devtools::install_github('richelbilderbeek/babette')" >> Rsetup.R
 #echo "install.packages(lib_files, repos = NULL, lib = mylibrary, dependencies = TRUE)" >> Rsetup.R
 

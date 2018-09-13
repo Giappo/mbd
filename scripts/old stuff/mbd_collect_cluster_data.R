@@ -4,6 +4,10 @@
 # chmod 700 ~/.ssh
 # cat id_rsa.pub >> ~/.ssh/authorized_keys
 
+# @Giappo: add doc
+#' Does something G
+#' @inheritParams default_params_doc
+#' @inheritParams default_params_doc
 #' @export
 get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
 
@@ -25,7 +29,7 @@ get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
   remote_file = paste(remote_path,folder_name,"/",file_name,sep = '')
 
   out = tryCatch(
-  RCurl:::scp(host = host_address,path = remote_file,user = account_name,verbose = F,
+  RCurl::scp(host = host_address,path = remote_file,user = account_name,verbose = F,
                 key = sprintf(c(
                   ssh.public.keyfile  = paste(key_path,"id_rsa.pub",sep = ''),
                   ssh.private.keyfile = paste(key_path,"id_rsa",sep = ''),
@@ -42,6 +46,9 @@ get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
 }
 # out=get_data_from_cluster(s=15);out
 
+# @Giappo: add doc
+#' Does something H
+#' @inheritParams default_params_doc
 #' @export
 get_all_data_from_cluster = function (sim_pars, max_sims = 1000, account_name = "p274829"){
 

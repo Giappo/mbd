@@ -9,23 +9,27 @@ mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
   minimum_multiple_births = 0)
 }
 \arguments{
-\item{soc}{stands for stem or crown. Set 1 for stem or 2 for crown.}
-
-\item{cond}{conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.}
-
-\item{age}{is the age of the tree.}
-
-\item{tips_interval}{You can also define the tips_interval as you can usually do with a standard usage of mbd_sim.}
-
-\item{edge}{the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.}
-
-\item{pars}{vector of parameters:
+\item{sim_pars}{vector of parameters:
 \itemize{
 \item id == 1 corresponds to lambda (speciation rate)
 \item id == 2 corresponds to mu (extinction rate)
 \item id == 3 corresponds to nu (multiple speciation trigger rate)
 \item id == 4 corresponds to q (single-lineage speciation probability)
 }}
+
+\item{soc}{stands for stem or crown. Set 1 for stem or 2 for crown.}
+
+\item{cond}{conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.}
+
+\item{age}{is the age of the tree.}
+
+\item{max_sims}{something}
+
+\item{tips_interval}{You can also define the tips_interval as you can usually do with a standard usage of mbd_sim.}
+
+\item{edge}{the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.}
+
+\item{minimum_multiple_births}{something}
 }
 \value{
 The function returns a list of brts vectors, one for each of the max_sims simulations.
@@ -36,7 +40,8 @@ N.B.: At each call of the function you overwrite the previous files.
 mbd_sim_dataset produces a full dataset of max_sims simulated trees including multiple speciations at the same time. This second version takes into account the possibility both of allopatric and sympatric speciation.
 }
 \examples{
-out = MBD:::mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
+# @Giappo: does not work
+# out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
 
 }
 \author{

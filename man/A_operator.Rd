@@ -2,13 +2,28 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{A_operator}
 \alias{A_operator}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 A_operator(Q, transition_matrix, time_interval, precision = 50L,
   A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo")
 }
+\arguments{
+\item{Q}{something}
+
+\item{transition_matrix}{something}
+
+\item{time_interval}{something}
+
+\item{precision}{something}
+
+\item{A_abstol}{something}
+
+\item{A_reltol}{something}
+
+\item{methode}{something}
+}
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

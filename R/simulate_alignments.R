@@ -1,9 +1,15 @@
+# @Giappo: add doc
+#' Does something A
+#' @inheritParams default_params_doc
 #' @export
 P_t1_t2 <- function(lambda, mu, t1, t2) {
   P_t1_t2 <- (1 - mu/lambda)/(1 - (mu/lambda) * exp(-(lambda - mu) *(t2 - t1)) )
   return(P_t1_t2)
 }
 
+# @Giappo: add doc
+#' Does something B
+#' @inheritParams default_params_doc
 #' @export
 BD.Nct <- function(lambda, mu, t, N0 = 2, age) {
   #average amount of species for a conditioned BD process
@@ -17,29 +23,35 @@ BD.Nct <- function(lambda, mu, t, N0 = 2, age) {
   return(Nct)
 }
 
+# @Giappo: add doc
+#' Does something C
+#' @inheritParams default_params_doc
 #' @export
 BD.Nmutations <- function(lambda, mu, age, N0 = 2, sequence_length = 1000, mutation_rate = 1/age) {
   
   age <- abs(age)
-  ft  <- function(t) {MBD::BD.Nct(t, lambda = lambda, mu = mu, N0 = N0, age = age)}
+  ft  <- function(t) {mbd::BD.Nct(t, lambda = lambda, mu = mu, N0 = N0, age = age)}
   Nmutations <- mutation_rate * sequence_length * integrate(f = ft, lower = 0, upper = age)[[1]]
   return(Nmutations)
 }
 
+# @Giappo: add doc
+#' Does something D
+#' @inheritParams default_params_doc
 #' @export
 BD.infer.lambda.from.mutations <- function(Nsubs, 
-                                           MBD.lambda, 
+                                           mbd.lambda, 
                                            mu, 
                                            age, 
                                            N0 = 2, 
                                            sequence_length = 1000, 
                                            mutation_rate = 1/age, 
                                            Nsteps = 40) {
-  lavec <- seq((min.lambda <- 0.5 * MBD.lambda), (max.lambda <- 6 * MBD.lambda), by = abs(max.lambda - min.lambda)/(Nsteps))
+  lavec <- seq((min.lambda <- 0.5 * mbd.lambda), (max.lambda <- 6 * mbd.lambda), by = abs(max.lambda - min.lambda)/(Nsteps))
   NN <- rep(NA, length(lavec))
   for (i in 1:length(lavec))
   {
-    NN[i] <- MBD::BD.Nmutations(lambda = lavec[i], mu = mu, age = age,
+    NN[i] <- mbd::BD.Nmutations(lambda = lavec[i], mu = mu, age = age,
                            N0 = N0, sequence_length = sequence_length, mutation_rate = mutation_rate)
   }
   md <- lm(log(NN) ~ lavec)
@@ -50,6 +62,9 @@ BD.infer.lambda.from.mutations <- function(Nsubs,
   return(best.lambda)
 }
 
+# @Giappo: add doc
+#' Does something E
+#' @inheritParams default_params_doc
 #' @export
 alignments_comparison_single <- function(sim_phylo,
                                          chain_length = 1e+07,
@@ -110,6 +125,9 @@ alignments_comparison_single <- function(sim_phylo,
               nLTT = df.nLTT))
 }
 
+# @Giappo: add doc
+#' Does something F
+#' @inheritParams default_params_doc
 #' @export
 alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
                                            max_sims = 1e+01,
@@ -132,37 +150,41 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   j <- 1; while ((file_name <- paste0("nLTT", j)) %in% list.files(folder_name)) {j <- j + 1}
   
   #sim dataset
-  MBD.estimates   <- MBD.trees <- MBD.alignment <- MBD.nLTT <- vector("list", max_sims)
+  mbd.estimates   <- mbd.trees <- mbd.alignment <- mbd.nLTT <- vector("list", max_sims)
   BD.simulations  <- BD.estimates  <- BD.trees  <- BD.alignment  <- BD.nLTT  <- vector("list", max_sims)
   Nsubstitutions  <- rep(NA, (max_sims2 <- 100 * max_sims))
   for (s in 1:max_sims)
   {
+<<<<<<< HEAD
     set.seed(s)
     MBD.simulation <- MBD:::mbd_sim(pars = sim_pars,
+=======
+    mbd.simulation <- mbd_sim(pars = sim_pars,
+>>>>>>> 9131f48ca45714f7158462335d0b99eef8f546a1
                                     soc = soc,
                                     age = age,
                                     cond = cond,
                                     tips_interval = tips_interval)
     
-    full_tree           <- MBD.simulation$tas#; plot(full_tree)
+    full_tree           <- mbd.simulation$tas#; plot(full_tree)
     total_branch_length <- sum(full_tree$edge.length) # total branch length
     Nsubstitutions[s]   <- sequence_length * mutation_rate * total_branch_length
 
-    MBD.out <- alignments_comparison_single(sim_phylo = MBD.simulation$tes,
+    mbd.out <- alignments_comparison_single(sim_phylo = mbd.simulation$tes,
                                             chain_length = chain_length,
                                             sample_interval = sample_interval,
                                             sequence_length = sequence_length,
                                             mutation_rate = mutation_rate)
     
-    MBD.nLTT[[s]]      <- MBD.out$nLTT
-    MBD.alignment[[s]] <- MBD.out$alignment
-    MBD.trees[[s]]     <- MBD.out$trees
-    MBD.estimates[[s]] <- MBD.out$estimates
+    mbd.nLTT[[s]]      <- mbd.out$nLTT
+    mbd.alignment[[s]] <- mbd.out$alignment
+    mbd.trees[[s]]     <- mbd.out$trees
+    mbd.estimates[[s]] <- mbd.out$estimates
   # }
   
   # BD.lambda <- BD.infer.lambda.from.mutations(Nsubs = mean(Nsubstitutions),
     BD.lambda <- BD.infer.lambda.from.mutations(Nsubs = Nsubstitutions[s],
-                                                MBD.lambda = sim_pars[1],
+                                                mbd.lambda = sim_pars[1],
                                                 mu = sim_pars[2],
                                                 age = age,
                                                 N0 = soc,
@@ -172,7 +194,7 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   
   # for (s in 1:max_sims)
   # {
-    BD.simulations[[s]] <- MBD:::mbd_sim(pars = c(BD.lambda, sim_pars[2], 0, 0),
+    BD.simulations[[s]] <- mbd_sim(pars = c(BD.lambda, sim_pars[2], 0, 0),
                                          soc = soc,
                                          age = age,
                                          cond = cond,
@@ -190,23 +212,23 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   }
   
   #roba
-  MBD.nLTT.total <- unname(unlist(MBD.nLTT))
+  mbd.nLTT.total <- unname(unlist(mbd.nLTT))
   BD.nLTT.total  <- unname(unlist(BD.nLTT))
-  df.MBD.nLTT <- data.frame(MBD.nLTT = MBD.nLTT.total)
+  df.mbd.nLTT <- data.frame(mbd.nLTT = mbd.nLTT.total)
   df.BD.nLTT  <- data.frame(BD.nLTT  = BD.nLTT.total)
   
-  MBD.mean <- mean(df.MBD.nLTT$MBD.nLTT)
-  MBD.std  <- sqrt(var(df.MBD.nLTT$MBD.nLTT))
+  mbd.mean <- mean(df.mbd.nLTT$mbd.nLTT)
+  mbd.std  <- sqrt(var(df.mbd.nLTT$mbd.nLTT))
   BD.mean  <- mean(df.BD.nLTT$BD.nLTT)
   BD.std   <- sqrt(var(df.BD.nLTT$BD.nLTT))
   
   #show results
-  MBD.nLTT.plot <- ggplot2::ggplot(df.MBD.nLTT, ggplot2::aes(x = MBD.nLTT)) + 
+  mbd.nLTT.plot <- ggplot2::ggplot(df.mbd.nLTT, ggplot2::aes(x = mbd.nLTT)) + 
     ggplot2::geom_histogram(ggplot2::aes(y = ..count..), colour = "darkblue", fill = "lightblue", bins = 40) + 
-    ggplot2::geom_vline(ggplot2::aes(xintercept = mean(MBD.nLTT)), color = "red", linetype = "dashed", size = 1) +
-    ggplot2::ggtitle(paste0("nLTT statistics for a MBD tree compared \nwith tree posterior generated from alignments and BD prior \nmean = ", signif(MBD.mean, digits = 2), ", std = ", signif(MBD.std, digits = 2))) +
+    ggplot2::geom_vline(ggplot2::aes(xintercept = mean(mbd.nLTT)), color = "red", linetype = "dashed", size = 1) +
+    ggplot2::ggtitle(paste0("nLTT statistics for a mbd tree compared \nwith tree posterior generated from alignments and BD prior \nmean = ", signif(mbd.mean, digits = 2), ", std = ", signif(mbd.std, digits = 2))) +
     ggplot2::xlab("nLTT value")
-  plot(MBD.nLTT.plot)
+  plot(mbd.nLTT.plot)
   
   BD.nLTT.plot <- ggplot2::ggplot(df.BD.nLTT, ggplot2::aes(x = BD.nLTT)) + 
     ggplot2::geom_histogram(ggplot2::aes(y = ..count..), colour = "darkblue", fill = "lightblue", bins = 40) + 
@@ -216,28 +238,33 @@ alignments_comparison_multiple <- function(sim_pars = c(0.2, 0.15, 2, 0.15),
   plot(BD.nLTT.plot)
   
   #save results
-  save(MBD.nLTT = df.MBD.nLTT,
-       MBD.alignment = MBD.alignment,
-       MBD.trees = MBD.trees,
-       MBD.estimates = MBD.estimates,
+  save(mbd.nLTT = df.mbd.nLTT,
+       mbd.alignment = mbd.alignment,
+       mbd.trees = mbd.trees,
+       mbd.estimates = mbd.estimates,
        BD.nLTT = df.BD.nLTT,
        BD.alignment = BD.alignment,
        BD.trees = BD.trees,
        BD.estimates = BD.estimates,
        file = paste0(folder_name,"//" ,file_name))
   
-  png(filename = paste0(folder_name, "//" ,file_name, "_MBD_plot.png"))
-  plot(MBD.nLTT.plot)
+  png(filename = paste0(folder_name, "//" ,file_name, "_mbd_plot.png"))
+  plot(mbd.nLTT.plot)
   dev.off()
         
   png(filename = paste0(folder_name, "//" ,file_name, "_BD_plot.png"))
   plot(BD.nLTT.plot)
   dev.off()
   
-  return(list(MBD.nLTT = df.MBD.nLTT, BD.nLTT = df.BD.nLTT))
+  return(list(mbd.nLTT = df.mbd.nLTT, BD.nLTT = df.BD.nLTT))
 }
 
+<<<<<<< HEAD
 #test <- MBD::alignments_comparison_multiple(sim_pars = (sim_pars <- c(0.2, 0.15, 2, 0.15)), max_sims = 100)
+=======
+
+#test <- mbd::alignments_comparison_multiple(sim_pars = (sim_pars <- c(0.2, 0.15, 2, 0.15)), max_sims = 100)
+>>>>>>> 9131f48ca45714f7158462335d0b99eef8f546a1
 
 ##### DUMPSTER
 # devtools::install_github("richelbilderbeek/tracerer", dependencies = TRUE)

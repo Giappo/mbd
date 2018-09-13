@@ -4,8 +4,8 @@
 \alias{mbd_sim}
 \title{Creates simulated trees under the multiple birth death process, including both sympatric and allopatric speciation}
 \usage{
-mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0, Inf),
-  minimum_multiple_births = 0)
+mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0,
+  Inf), minimum_multiple_births = 0)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -23,6 +23,8 @@ mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0, Inf),
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+
+\item{minimum_multiple_births}{something}
 }
 \value{
 The function returns a list of L table, branching times and number of extinct species.
@@ -44,7 +46,7 @@ The function returns a list of L table, branching times and number of extinct sp
 mbd_sim produces simulated trees allowing for three kind of events: sympatric speciation, multiple allopatric speciations and extinction.
 }
 \examples{
-out = MBD:::mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
+out = mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
 plot(out$tas)
 plot(out$tes)
 out$L

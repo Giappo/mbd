@@ -4,13 +4,13 @@
 \alias{mbd_ML}
 \title{Maximization of the loglikelihood under a multiple birth-death diversification model}
 \usage{
-mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], parsfix,
-  missnumspec = 0, cond = 1, soc = 2, tips_interval = c(0, Inf),
-  res = 10 * (1 + length(brts) + missnumspec), tol = c(0.001, 1e-04, 1e-06),
-  maxiter = 1000 * round((1.25)^length(idparsopt)),
-  changeloglikifnoconv = FALSE, optimmethod = "simplex", methode = "expo",
-  minimum_multiple_births = 0, pars.transform = 1, print_errors = 0,
-  verbose = TRUE, ...)
+mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
+  parsfix, missnumspec = 0, cond = 1, soc = 2, tips_interval = c(0,
+  Inf), res = 10 * (1 + length(brts) + missnumspec), tol = c(0.001,
+  1e-04, 1e-06), maxiter = 1000 * round((1.25)^length(idparsopt)),
+  changeloglikifnoconv = FALSE, optimmethod = "simplex",
+  methode = "expo", minimum_multiple_births = 0, pars.transform = 1,
+  print_errors = 0, verbose = TRUE, ...)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
@@ -46,13 +46,23 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], parsfix,
 \item abstolx = absolute tolerance of parameter values in optimization
 }}
 
+\item{maxiter}{something}
+
 \item{changeloglikifnoconv}{If TRUE the loglik will be set to -Inf if ML does not converge.}
 
 \item{optimmethod}{Method used in optimization of the likelihood. Current default is 'simplex'. Alternative is 'subplex' (default of previous versions).}
 
 \item{methode}{Set "sexpm" if you want to use sexpm. Set "expo" if you want to use expoRkit. Set "lsoda" if you want to use "lsoda".}
 
-\item{max_iter}{Sets the maximum number of iterations in the optimization.}
+\item{minimum_multiple_births}{something}
+
+\item{pars.transform}{something}
+
+\item{print_errors}{something}
+
+\item{verbose}{something}
+
+\item{...}{Something}
 }
 \value{
 The output is a dataframe containing estimated parameters and maximum
@@ -66,10 +76,14 @@ mbd_ML computes the maximum likelihood estimates of the parameters of a multiple
 \examples{
 set.seed(10)
 test_pars <- c(0.3, 0.1, 0.1, 0.15)
-simulated_data = MBD:::mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
+simulated_data = mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
 plot(simulated_data$tes)
-MBD:::mbd_ML(brts = simulated_data$brts, initparsopt = 0.11 ,idparsopt = 4,
-idparsfix = c(1,2,3), parsfix = test_pars[idparsfix], missnumspec = 0, cond = 1, soc = 2)
+# @Giappo: does not work
+# mbd_ML(
+#   brts = simulated_data$brts, initparsopt = 0.11 ,idparsopt = 4,
+#   idparsfix = c(1,2,3), parsfix = test_pars[idparsfix], 
+#   missnumspec = 0, cond = 1, soc = 2
+# )
 }
 \author{
 Giovanni Laudanno

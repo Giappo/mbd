@@ -35,10 +35,10 @@ analyze_data1 <- function(max_sims = 1000, quantiles_choice = c(.25, .50, .75), 
       Nsims[d] <- dim(results)[1]
       if ( max(results[,1:Npars]==-1) ){print("You are considering results that are = -1. Be careful!")}
 
-      quantiles[[d]] <- MBD:::percentiles_function(results = results,sim_pars = sim_pars, printit = 0, quantiles_choice = quantiles_choice)
+      quantiles[[d]] <- mbd:::percentiles_function(results = results,sim_pars = sim_pars, printit = 0, quantiles_choice = quantiles_choice)
       titolo <- paste("Correlation analysis with ", Nsims[d],"/",max_sims," trees.",sep = '')
       pdfname <- paste("Correlation ", datasets[d], sep = '')
-      MBD:::correlation_analysis(results = results,sim_pars = sim_pars,titolo = titolo,
+      mbd:::correlation_analysis(results = results,sim_pars = sim_pars,titolo = titolo,
                                  pdfname = pdfname,path = local_path,openit = 0,mother_folder = folder_name)
     }
 }

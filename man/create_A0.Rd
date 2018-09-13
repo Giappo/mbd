@@ -2,13 +2,26 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{create_A0}
 \alias{create_A0}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 create_A0(max_number_of_species, lambda, mu, q, k,
-  matrix_builder = MBD:::hyperA_HannoX)
+  matrix_builder = hyperA_HannoX)
+}
+\arguments{
+\item{max_number_of_species}{something}
+
+\item{lambda}{something}
+
+\item{mu}{something}
+
+\item{q}{something}
+
+\item{k}{something}
+
+\item{matrix_builder}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

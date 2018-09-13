@@ -2,15 +2,51 @@
 % Please edit documentation in R/mbd_loglik_choosepar.R
 \name{mbd_loglik_choosepar}
 \alias{mbd_loglik_choosepar}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
   idparsfix = (1:4)[-idparsopt], brts, cond = 1, soc = 2,
   tips_interval = c(0, Inf), missnumspec = 0, methode = "expo",
-  minimum_multiple_births = 0, pars.transform = 0, print_errors = 0, ...)
+  minimum_multiple_births = 0, pars.transform = 0, print_errors = 0,
+  ...)
+}
+\arguments{
+\item{trparsopt}{something}
+
+\item{trparsfix}{something}
+
+\item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:
+\itemize{
+\item id == 1 corresponds to lambda (speciation rate)
+\item id == 2 corresponds to mu (extinction rate)
+\item id == 3 corresponds to nu (multiple speciation trigger rate)
+\item id == 4 corresponds to q (single-lineage speciation probability)
+}}
+
+\item{idparsfix}{something}
+
+\item{brts}{something}
+
+\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+
+\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+
+\item{missnumspec}{something}
+
+\item{methode}{something}
+
+\item{minimum_multiple_births}{something}
+
+\item{pars.transform}{something}
+
+\item{print_errors}{something}
+
+\item{...}{something}
 }
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

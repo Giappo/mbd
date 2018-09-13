@@ -2,12 +2,25 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{create_A}
 \alias{create_A}
-\title{Internal MBD function}
+\title{Internal mbd function}
 \usage{
 create_A(lambda, mu, nu, q, k, max_number_of_species)
 }
+\arguments{
+\item{lambda}{something}
+
+\item{mu}{something}
+
+\item{nu}{something}
+
+\item{q}{something}
+
+\item{k}{something}
+
+\item{max_number_of_species}{something}
+}
 \description{
-Internal MBD function.
+Internal mbd function.
 }
 \details{
 This is not to be called by the user.

@@ -1,4 +1,4 @@
-sim_pars2=c(0.2,0.1,0.08,0.2);sim_tree=MBD:::mbd_sim(pars = sim_pars2,soc = 2,age = 10,cond = 1);sim_tree$brts;#plot(sim_tree$tes)
+sim_pars2=c(0.2,0.1,0.08,0.2);sim_tree=mbd:::mbd_sim(pars = sim_pars2,soc = 2,age = 10,cond = 1);sim_tree$brts;#plot(sim_tree$tes)
 q_grid=seq(from=0.02,to=0.5,by = 0.02)
 maxalpha=40;flush.console();
 res2 <- matrix(NA, nrow = length(q_grid), ncol = maxalpha);
@@ -9,7 +9,7 @@ for (alpha in 1:maxalpha){
     {
     if(is.na(res2[q_index,alpha]))
     {
-      res2[q_index,alpha] <- try(MBD:::mbd_loglik(pars = c(sim_pars2[1:3],q),brts = sim_tree$brts,soc = 2,cond = 1,alpha = alpha),silent = T)
+      res2[q_index,alpha] <- try(mbd:::mbd_loglik(pars = c(sim_pars2[1:3],q),brts = sim_tree$brts,soc = 2,cond = 1,alpha = alpha),silent = T)
     }
     q_index <- q_index + 1;
   }

@@ -1,17 +1,17 @@
 ---
-title: "Using MBD"
+title: "Using mbd"
 author: "Giovanni Laudanno"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{"Using MBD"}
+  %\VignetteIndexEntry{"Using mbd"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-## MBD introduction
+## mbd introduction
 
-MBD is a package to support multiple birth model. This model accounts for a diversification process in which multiple birth (at different nodes) are allowed to occur at the same time.
+mbd is a package to support multiple birth model. This model accounts for a diversification process in which multiple birth (at different nodes) are allowed to occur at the same time.
 The basic framework is described in Etienne et al. 2012^[Etienne, R.S., Haegeman, B., Stadler, T., Aze, T., Pearson, P.N., Purvis, A., Phillimore, A.B.: Diversity-dependence brings molecular phylogenies closer to agreement with the
 fossil record. Proceedings of the Royal Society of London B: Biological Sciences
 279(1732), 1300–1309 (2012) ].
@@ -28,13 +28,13 @@ Here:
 
 Those parameters may be inferred through a maximum likelihood approach using the function mbd_ML.
 
-## MBD usage
+## mbd usage
 
 First clear memory and load the package:
 
 ```{r}
 rm(list = ls()); options(warn = -1);
-suppressWarnings( suppressPackageStartupMessages( library(MBD) ) )
+suppressWarnings( suppressPackageStartupMessages( library(mbd) ) )
 ```
 
 Then we set some basic parameters to create a simulated tree:
@@ -42,7 +42,7 @@ Then we set some basic parameters to create a simulated tree:
 ```{r}
 set.seed(14) #set.seed(42)
 sim_pars <- c(0.2, 0.15, 2, 0.1); soc <- 2; cond <- 1; age <- 10;#sim_pars <- c(0.2, 0.1, 1.5, 0.1); soc = 2; cond = 1; age = 10;
-sim <- MBD:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond, tips_interval = c(0, Inf))
+sim <- mbd:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond, tips_interval = c(0, Inf))
 
 ```
 
@@ -88,12 +88,13 @@ Since we are not interested in the topology of the tree, this vector alone can b
 
 ```{r}
 test_pars <- c(0.3, 0.05, 1.0, 0.08)
-MBD::mbd_loglik(pars = test_pars, brts = sim$brts, soc = soc, cond = cond, missnumspec = 0)
+mbd::mbd_loglik(pars = test_pars, brts = sim$brts, soc = soc, cond = cond, missnumspec = 0)
 ```
 
 You can also ask for an optimization of the likelihood function using the function "mbd_ML" either considering a variation of all the parameters ($\lambda, \mu, \nu, q$) or any their subset of your choice. If you want for example to maximize the likelihood only for the parameter q:
 
 ```{r}
+<<<<<<< HEAD
 # # Uncomment if you are keen to wait.
 # idparsopt <- 4
 # ids <- 1:4; idparsfix <- ids[-idparsopt];
@@ -105,5 +106,18 @@ You can also ask for an optimization of the likelihood function using the functi
 #              idparsfix = idparsfix, 
 #              soc = soc, 
 #              cond = cond)
+=======
+# Uncomment if you are keen to wait.
+idparsopt <- 4
+ids <- 1:4; idparsfix <- ids[-idparsopt];
+parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
+mbd:::mbd_ML(brts = sim$brts, 
+             initparsopt = initparsopt, 
+             idparsopt = idparsopt, 
+             parsfix = parsfix, 
+             idparsfix = idparsfix, 
+             soc = soc, 
+             cond = cond)
+>>>>>>> 9131f48ca45714f7158462335d0b99eef8f546a1
 
 ```

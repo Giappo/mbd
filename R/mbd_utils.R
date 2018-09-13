@@ -148,7 +148,7 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
   nvec=0:max_number_of_species
   v0=rep(0,(max_number_of_species+1));v0[N0+1]=1
   transition_matrix = create_mbd_P_matrix(pars=test_parameters, max_number_of_species = max_number_of_species)
-  vf=expoRkit:::expv(v=v0,x=transition_matrix,t=age,m = precision)
+  vf=expoRkit::expv(v=v0,x=transition_matrix,t=age,m = precision)
 
   nmedio=sum(nvec*vf)
   std=sqrt( sum(nvec^2*vf)-nmedio^2 )
@@ -159,9 +159,12 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
   return(list(avg_n=nmedio,std_n=std))
 }
 
-#gets heatmap of my matrices
+# @Giappo: add doc
+#' Gets heatmap of my matrices.
+#' @inheritParams default_params_doc
+#' @param ... something
 #' @export
-myheatmap = function(matrix,logs=1,colormap=heat.colors(15),...){
+myheatmap <- function(matrix,logs=1,colormap=heat.colors(15),...){
   if (is.matrix(matrix)==F){matrix=as.matrix(matrix)}
   T=t(matrix[nrow(matrix):1,1:ncol(matrix)])
   if (logs==1){
@@ -170,7 +173,10 @@ myheatmap = function(matrix,logs=1,colormap=heat.colors(15),...){
   }else{image(T)}
 }
 
-myheatmap2 = function(x,y,z,x.name,y.name,z.name,x.splits,y.splits){
+# @Giappo: add doc
+#' Does something J
+#' @inheritParams default_params_doc
+myheatmap2 <- function(x,y,z,x.name,y.name,z.name,x.splits,y.splits){
 
   if (missing(x.splits)){x.splits=round( (length(x))/10 )}
   if (missing(y.splits)){y.splits=round( (length(y))/10 )}
@@ -298,7 +304,7 @@ matrix_check=function(Mlist,sign_check=0){
 
 #Install the missing packages
 require(ape)
-require(abind)
+#require(abind)
 require(mvbutils)
 
 append_multiple=function(x, values, after){
@@ -474,8 +480,7 @@ summarize_beast_posterior=function(
   }
 
 
-  branch_info_out=abind:::abind(branch_info_tot,along=3)
-
+  branch_info_out <- abind::abind(branch_info_tot, along = 3)
 
   return(list(branch_info=branch_infos, trees=tree_tot))
 }

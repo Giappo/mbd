@@ -9,7 +9,7 @@ echo "mylibrary = paste0(home_dir,'/R/x86_64-pc-linux-gnu-library/3.3/')" >> Rse
 #echo "install.packages('testit', lib = mylibrary,repos='http://cran-mirror.cs.uu.nl/')" >> Rsetup.R
 #echo "install.packages('DDD', lib = mylibrary,repos='http://cran-mirror.cs.uu.nl/')" >> Rsetup.R
 echo "install.packages(lib_files, repos = NULL, lib = mylibrary, dependencies = T)" >> Rsetup.R
-#echo "install.packages('MBD', contriburl=paste('file:///',pkg_path2,sep = ''),dependencies = TRUE) >> Rsetup.R"
+#echo "install.packages('mbd', contriburl=paste('file:///',pkg_path2,sep = ''),dependencies = TRUE) >> Rsetup.R"
 
 echo "#!/bin/bash" > Rsetup2
 echo "#SBATCH --time=00:59:00" >> Rsetup2

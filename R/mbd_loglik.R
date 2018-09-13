@@ -1,6 +1,7 @@
 #' @author Giovanni Laudanno
 #' @title Calculates the likelihood for a multiple birth-death process
 #' @description mbd_loglik provides the likelihood for a process in which multiple births (from different parents) at the same time are possible, along with usual sympatric speciation and extinction events.
+#' @inheritParams default_params_doc
 #' @param pars vector of parameters:
 #' \itemize{
 #'   \item pars[1] is lambda, the sympatric speciation rate;
@@ -11,7 +12,6 @@
 #' @param brts A set of branching times of a phylogeny.
 #' @param soc Sets whether stem or crown age should be used (1 or 2)
 #' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param lx It is the number of ODEs considered for the computation.
 #' @param tips_interval It takes into account tips boundaries constrain on simulated dataset.
 #' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
 #' @param methode Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.
@@ -20,9 +20,10 @@
 #'
 #' @examples
 #' set.seed(11)
-#' simulated_data = MBD:::mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
+#' simulated_data = mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
 #' plot(simulated_data$tas)
-#' mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
+#' # @Giappo: too big too run
+#' # mbd::mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
 #'
 #' @export
 mbd_loglik <- function(pars, 
@@ -66,12 +67,12 @@ mbd_loglik <- function(pars,
     loglik <- -Inf
   }else if (mu == 0 && all(tips_interval == c(0, Inf)) && missnumspec == 0 && minimum_multiple_births == 0)
   {
-    loglik <- MBD:::pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
+    loglik <- pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
   }else
   {#MAIN
     
     #ADJUSTING DATA
-    data <- MBD:::brts2time_intervals_and_births(brts)
+    data <- brts2time_intervals_and_births(brts)
     time_intervals <- c(0, data$time_intervals)
     births <- c(0, data$births)
     N0 <- soc #number of starting species
@@ -79,7 +80,7 @@ mbd_loglik <- function(pars,
     max_k <- max(k_interval)
     
     #DETERMINE PC AND ALPHA (OR LX)
-    Pc_and_Alpha <- MBD::alpha_analysis(brts = brts,
+    Pc_and_Alpha <- mbd::alpha_analysis(brts = brts,
                                         pars = pars,
                                         tips_interval = tips_interval,
                                         cond = cond,
@@ -94,13 +95,13 @@ mbd_loglik <- function(pars,
     Pc    <- Pc_and_Alpha$Pc
     alpha <- Pc_and_Alpha$alpha
     
-    # lx <- MBD:::determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc, 
+    # lx <- determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc, 
     #                               methode = methode, abstol = abstol, reltol = reltol)
     # alpha <- lx/10
     lx <- max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
     Pc <- 1
     if (cond == 1){
-      Pc <- MBD::calculate_conditional_probability(brts = brts,
+      Pc <- mbd::calculate_conditional_probability(brts = brts,
                                                    pars = pars,
                                                    soc = soc,
                                                    lx = lx,
@@ -133,9 +134,9 @@ mbd_loglik <- function(pars,
       while (t <= length(time_intervals))
       {
         #Applying A operator
-        transition_matrix <- MBD:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
-        Qt[t,] <- MBD:::A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
-        if (methode != "sexpm"){Qt[t,] <- MBD:::negatives_correction(Qt[t,], pars)} #it removes some small negative values that can occurr as bugs from the integration process
+        transition_matrix <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
+        Qt[t,] <- A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+        if (methode != "sexpm"){Qt[t,] <- negatives_correction(Qt[t,], pars)} #it removes some small negative values that can occurr as bugs from the integration process
         if (any(is.nan(Qt[t,])))
         {
           if (Sys.info()[['sysname']] == "Windows")
@@ -152,10 +153,10 @@ mbd_loglik <- function(pars,
         if (t < length(time_intervals))
         {
           #Applying B operator
-          B <- MBD:::create_B(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
+          B <- create_B(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
                               max_number_of_species = lx)
           Qt[t,] <- (B %*% Qt[t,])
-          if (methode != "sexpm"){Qt[t,] <- MBD:::negatives_correction(Qt[t,], pars)}
+          if (methode != "sexpm"){Qt[t,] <- negatives_correction(Qt[t,], pars)}
           if (any(is.nan(Qt[t,])))
           {
             if (Sys.info()[['sysname']] == "Windows")

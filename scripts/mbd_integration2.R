@@ -56,7 +56,7 @@ if (1) {#functions
       for (r in 1:repetitions)
       {
         test <- sample.brts(tm = tm2, brts = brts, brts.bars = brts.bars)
-        births <- MBD:::brts2time_intervals_and_births(test)$births
+        births <- brts2time_intervals_and_births(test)$births
         res[i] <- res[i] + sum(births > 1)
         len_birth[r] <- length(births)
       }

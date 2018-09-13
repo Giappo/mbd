@@ -2,10 +2,10 @@
 #setup
 rm(list=ls());
 mbd_data_analysis = function (sim_pars, max_sims = 1000, account_name = "274829"){
-  # results = MBD:::mbd_import_data()
+  # results = mbd:::mbd_import_data()
   # sim_pars = c(0.2,0.15,2,0.05); max_sims = 1000; account_name = "cyrus"
   Npars = length(sim_pars);
-  system.time( data <- MBD:::get_all_data_from_cluster(sim_pars = sim_pars, max_sims = max_sims, account_name = account_name) )
+  system.time( data <- mbd:::get_all_data_from_cluster(sim_pars = sim_pars, max_sims = max_sims, account_name = account_name) )
   results = data$results
   path = data$path
   working_account = data$working_account
@@ -13,16 +13,16 @@ mbd_data_analysis = function (sim_pars, max_sims = 1000, account_name = "274829"
   #all data
   all_data_title = paste("\n CORRELATION ANALYSIS (All trees)\n", N ," trees (",max_sims-N," failed)",sep = '')
   all_data_pdfname = "correlation_analysis_all_data"
-  quantiles <- MBD:::percentiles_function(results = results,sim_pars = sim_pars)
-  MBD:::correlation_analysis(results = results,sim_pars = sim_pars,titolo=all_data_title,pdfname=all_data_pdfname,path=path,openit = 1)
+  quantiles <- mbd:::percentiles_function(results = results,sim_pars = sim_pars)
+  mbd:::correlation_analysis(results = results,sim_pars = sim_pars,titolo=all_data_title,pdfname=all_data_pdfname,path=path,openit = 1)
 
   #multiple births vs single births analysis
   # sbd_res=results[results[,(Npars+2)]==0,];print(how_many_single_births<-dim(sbd_res)[1])
   # mbd_res=results[results[,(Npars+2)]!=0,];print(how_many_multiple_births<-dim(mbd_res)[1])
-  # MBD:::percentiles_function(results = sbd_res,sim_pars = sim_pars)
-  # MBD:::correlation_analysis(results = sbd_res,path=path,titolo = "Single Birth Only",pdfname = "correlation_analysis_single_birth_only",sim_pars = sim_pars)
-  # MBD:::percentiles_function(results = mbd_res,sim_pars = sim_pars)
-  # MBD:::correlation_analysis(results = mbd_res,path=path,titolo = "At least one multiple birth",pdfname = "correlation_analysis_at_least_one_multiple_birth",sim_pars = sim_pars)
+  # mbd:::percentiles_function(results = sbd_res,sim_pars = sim_pars)
+  # mbd:::correlation_analysis(results = sbd_res,path=path,titolo = "Single Birth Only",pdfname = "correlation_analysis_single_birth_only",sim_pars = sim_pars)
+  # mbd:::percentiles_function(results = mbd_res,sim_pars = sim_pars)
+  # mbd:::correlation_analysis(results = mbd_res,path=path,titolo = "At least one multiple birth",pdfname = "correlation_analysis_at_least_one_multiple_birth",sim_pars = sim_pars)
   address = paste(path, "/account_name", sep = '')
   save(working_account, file= "account_name")
   return(list(results = results, quantiles = quantiles))

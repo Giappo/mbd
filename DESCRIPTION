@@ -1,16 +1,39 @@
-Package: MBD
+Package: mbd
 Type: Package
 Title: Multiple Birth Death Diversification
 Version: 0.0.0.9000
 Author: Giovanni Laudanno <glaudanno@gmail.com>
 Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
-Depends: R (>= 3.2.0), DDD (>= 3.4), ape, deSolve, expoRkit, methods, R.utils, RCurl, nLTT, raket, pirouette
-Imports: testit, subplex, maps, msm
-Description: Multiple Birth fun.
+Depends: 
+  R (>= 3.2.0)
+Imports: 
+  abind,
+  ape, 
+  beastier, 
+  beautier,
+  DDD,
+  deSolve,
+  expoRkit,
+  ggplot2, 
+  methods,
+  nLTT,
+  pirouette,
+  R.utils, 
+  RCurl,  
+  raket,
+  subplex, 
+  testit,
+  tracerer,
+  maps, 
+  msm
+Suggests: 
+  knitr, 
+  rmarkdown, 
+  testthat
+Description: Multiple Birth Death Diversification
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: no
-RoxygenNote: 6.0.1
-Suggests: knitr, rmarkdown
+RoxygenNote: 6.1.0
 VignetteBuilder: knitr

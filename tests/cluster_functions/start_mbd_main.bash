@@ -24,9 +24,9 @@ else
   mkdir -p ./sims/$lambda-$mu-$q/data/
   cd sims/$lambda-$mu-$q/
   
-  echo "library(MBD)" > zzz_sim.R
+  echo "library(mbd)" > zzz_sim.R
   echo "args = as.numeric(commandArgs(TRUE))" >> zzz_sim.R
-  echo "MBD:::mbd_sim_dataset(sim_pars=c(args[1],args[2],args[3]),max_sims=args[4])" >> zzz_sim.R
+  echo "mbd:::mbd_sim_dataset(sim_pars=c(args[1],args[2],args[3]),max_sims=args[4])" >> zzz_sim.R
   module load R/3.3.1-foss-2016a
   Rscript zzz_sim.R $lambda $mu $q $max_sims
   
