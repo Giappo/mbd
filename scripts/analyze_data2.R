@@ -25,7 +25,7 @@ analyze_data1 <- function(max_sims = 1000, quantiles_choice = c(.25, .50, .75), 
     {
       for (s in 1:length(res_files))
       {
-        fileData <- read.table(file=res_files[s], header = FALSE, sep=",")
+        fileData <- utils::read.table(file=res_files[s], header = FALSE, sep=",")
         ifelse(exists("targetTable"),targetTable <- rbind(targetTable, fileData), targetTable <- fileData)
       }
 
@@ -133,12 +133,12 @@ analyze_data2 <- function(result.table, error_bars = 0){
   pippo4 <- pippo3[pippo3[,2]==0   ,]; pippo_draw(pippo4)
   pippo5 <- pippo3[pippo3[,2]==0.15,]; pippo_draw(pippo5)
 
-  png(filename = "results_mu=0.png")
+  grDevices::png(filename = "results_mu=0.png")
   pippo_draw(pippo4)
-  dev.off()
-  png(filename = "results_mu=0_15.png")
+  grDevices::dev.off()
+  grDevices::png(filename = "results_mu=0_15.png")
   pippo_draw(pippo5)
-  dev.off()
+  grDevices::dev.off()
 }
 
 result.table <- analyze_data1(quantiles_choice = c(0.40, 0.50, 0.60))

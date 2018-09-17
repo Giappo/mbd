@@ -4,7 +4,7 @@
 \alias{myheatmap}
 \title{Gets heatmap of my matrices.}
 \usage{
-myheatmap(matrix, logs = 1, colormap = heat.colors(15), ...)
+myheatmap(matrix, logs = 1, colormap = grDevices::heat.colors(15), ...)
 }
 \arguments{
 \item{matrix}{something}
