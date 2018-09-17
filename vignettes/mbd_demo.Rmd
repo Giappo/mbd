@@ -52,13 +52,13 @@ The "sim" list contain different objects.
 You can visualize the full tree and keep track of species that die before present time (missing species):
 
 ```{r, fig.show='hold'}
-plot(sim$tas)
+graphics::plot(sim$tas)
 ```
 
 If you want you can also show the reconstrucred tree, obtained cutting the kinks from the previous tree:
 
 ```{r, fig.show='hold'}
-plot(sim$tes)
+graphics::plot(sim$tes)
 ```
 
 The dataframe containing all the information related to this tree is labeled as L (or L-table). You can access it by typing:
