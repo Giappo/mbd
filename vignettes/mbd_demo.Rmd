@@ -94,30 +94,15 @@ mbd::mbd_loglik(pars = test_pars, brts = sim$brts, soc = soc, cond = cond, missn
 You can also ask for an optimization of the likelihood function using the function "mbd_ML" either considering a variation of all the parameters ($\lambda, \mu, \nu, q$) or any their subset of your choice. If you want for example to maximize the likelihood only for the parameter q:
 
 ```{r}
-<<<<<<< HEAD
-# # Uncomment if you are keen to wait.
-# idparsopt <- 4
-# ids <- 1:4; idparsfix <- ids[-idparsopt];
-# parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
-# MBD:::mbd_ML(brts = sim$brts, 
-#              initparsopt = initparsopt, 
-#              idparsopt = idparsopt, 
-#              parsfix = parsfix, 
-#              idparsfix = idparsfix, 
-#              soc = soc, 
-#              cond = cond)
-=======
 # Uncomment if you are keen to wait.
-idparsopt <- 4
-ids <- 1:4; idparsfix <- ids[-idparsopt];
-parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
-mbd:::mbd_ML(brts = sim$brts, 
-             initparsopt = initparsopt, 
-             idparsopt = idparsopt, 
-             parsfix = parsfix, 
-             idparsfix = idparsfix, 
-             soc = soc, 
-             cond = cond)
->>>>>>> 9131f48ca45714f7158462335d0b99eef8f546a1
-
+#idparsopt <- 4
+#ids <- 1:4; idparsfix <- ids[-idparsopt];
+#parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
+#mbd:::mbd_ML(brts = sim$brts, 
+#             initparsopt = initparsopt, 
+#             idparsopt = idparsopt, 
+#             parsfix = parsfix, 
+#             idparsfix = idparsfix, 
+#             soc = soc, 
+#             cond = cond)
 ```

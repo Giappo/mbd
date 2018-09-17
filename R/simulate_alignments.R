@@ -165,12 +165,8 @@ alignments_comparison_multiple <- function(
   Nsubstitutions  <- rep(NA, (max_sims2 <- 100 * max_sims))
   for (s in 1:max_sims)
   {
-<<<<<<< HEAD
     set.seed(s)
-    MBD.simulation <- MBD:::mbd_sim(pars = sim_pars,
-=======
     mbd.simulation <- mbd_sim(pars = sim_pars,
->>>>>>> 9131f48ca45714f7158462335d0b99eef8f546a1
                                     soc = soc,
                                     age = age,
                                     cond = cond,
@@ -269,12 +265,7 @@ alignments_comparison_multiple <- function(
   return(list(mbd.nLTT = df.mbd.nLTT, BD.nLTT = df.BD.nLTT))
 }
 
-<<<<<<< HEAD
-#test <- MBD::alignments_comparison_multiple(sim_pars = (sim_pars <- c(0.2, 0.15, 2, 0.15)), max_sims = 100)
-=======
-
 #test <- mbd::alignments_comparison_multiple(sim_pars = (sim_pars <- c(0.2, 0.15, 2, 0.15)), max_sims = 100)
->>>>>>> 9131f48ca45714f7158462335d0b99eef8f546a1
 
 ##### DUMPSTER
 # devtools::install_github("richelbilderbeek/tracerer", dependencies = TRUE)
