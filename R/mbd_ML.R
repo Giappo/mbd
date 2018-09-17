@@ -38,7 +38,7 @@
 #' set.seed(10)
 #' test_pars <- c(0.3, 0.1, 0.1, 0.15)
 #' simulated_data = mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
-#' plot(simulated_data$tes)
+#' graphics::plot(simulated_data$tes)
 #' # @Giappo: does not work
 #' # mbd_ML(
 #' #   brts = simulated_data$brts, initparsopt = 0.11 ,idparsopt = 4,
@@ -94,7 +94,7 @@ mbd_ML <- function(
   if (verbose == TRUE) {
     cat("You are fixing",fixstr,"\n")
     cat("Optimizing the likelihood - this may take a while.","\n")
-    flush.console()
+    utils::flush.console()
   }
   if (pars.transform == 1)
   {
@@ -119,7 +119,7 @@ mbd_ML <- function(
                                            print_errors = print_errors, ...) #there's no pars2 here and instead 3 more args at the end
   if (verbose == TRUE) {
     cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
-    flush.console()
+    utils::flush.console()
   }
   if (initloglik == -Inf)
   {# bracket#4
@@ -261,7 +261,7 @@ mbd_ML_cluster <- function(s, initparsopt = c(0.6, 0.1, 1.3, 0.16)){
   sink()
   print(out2)
 
-  write.table(matrix(out,ncol = length(out)),file = paste(simpath,"/mbd_MLE",s,".txt",sep = ''),append = T,row.names = F,col.names = F, sep = ",")
+  utils::write.table(matrix(out,ncol = length(out)),file = paste(simpath,"/mbd_MLE",s,".txt",sep = ''),append = T,row.names = F,col.names = F, sep = ",")
   if (res[1:4] != rep(-1, Npars)){suppressWarnings(  file.remove( paste0(simpath,"/errors/mbd_MLE_errors",s,".txt") )  )}
 }
 
@@ -348,6 +348,6 @@ pmb_ML_cluster <- function(s, initparsopt = c(0.5, 0, 1.7, 0.15)){
   sink()
   print(out2)
   
-  write.table(matrix(out,ncol = length(out)),file = paste(simpath,"/mbd_MLE",s,".txt",sep = ''),append = T,row.names = F,col.names = F, sep = ",")
+  utils::write.table(matrix(out,ncol = length(out)),file = paste(simpath,"/mbd_MLE",s,".txt",sep = ''),append = T,row.names = F,col.names = F, sep = ",")
   if (res[1:4] != rep(-1, Npars)){suppressWarnings(  file.remove( paste(simpath,"/errors/mbd_MLE_errors",s,".txt",sep = '') )  )}
 }

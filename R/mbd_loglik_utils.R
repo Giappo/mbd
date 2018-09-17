@@ -257,7 +257,7 @@ determine_k_limit <- function(pars, brts, lx, soc, methode, abstol = 1e-16, relt
                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
   Pm <- A_operator(Q = Qi, transition_matrix = T0, time_interval = total_time,
                          precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
-  # plot((Pm/sum(Pm)))
+  # graphics::plot((Pm/sum(Pm)))
   k_limit <- soc + max(mvec[(mvec %in% which((cumsum(Pm/sum(Pm))) <= 0.95))]); k_limit
   return(k_limit)
 }

@@ -30,7 +30,11 @@ Suggests:
   knitr, 
   rmarkdown, 
   testthat
-Description: Multiple Birth Death Diversification
+Description: 
+    Multiple Birth Death Diversification.
+    Multiple Birth Death Diversification.
+    Multiple Birth Death Diversification.
+    Multiple Birth Death Diversification.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
