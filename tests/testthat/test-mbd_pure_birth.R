@@ -26,7 +26,7 @@ test_that("PureBirth theoretical check", {
     A_term=1
     i=0:1e6
     for (t in 1:length(time_intervals)){
-      poisson_term = dpois(i, lambda*time_intervals[t], log = FALSE)
+      poisson_term <- stats::dpois(i, lambda*time_intervals[t], log = FALSE)
       ii = i[poisson_term!=0]
       pois_not_zero = which(poisson_term!=0)
       A_term=A_term*sum( ((1-q)^(ii*k[t]))*poisson_term[pois_not_zero] )

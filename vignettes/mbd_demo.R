@@ -9,10 +9,10 @@ sim <- mbd:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond, tips_in
 
 
 ## ---- fig.show='hold'----------------------------------------------------
-plot(sim$tas)
+graphics::plot(sim$tas)
 
 ## ---- fig.show='hold'----------------------------------------------------
-plot(sim$tes)
+graphics::plot(sim$tes)
 
 ## ------------------------------------------------------------------------
 sim$L
