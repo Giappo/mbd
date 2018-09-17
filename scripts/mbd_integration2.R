@@ -72,9 +72,9 @@ if (1) {#functions
     
     j <- 1; while ((file_name <- paste0("MB_percentage_vs_Nbins-N=", N, "-bars.sd=", bars.sd, "-", j,".png")) %in% list.files(folder_name)) {j <- j + 1}; file_name
     file_path <- paste0(dir_name, file_name); file_path
-    png(filename = file_path)
+    grDevices::png(filename = file_path)
     plot(plot.integration)
-    dev.off()
+    grDevices::dev.off()
     
     return(MB_percentage = df)
   }
