@@ -31,8 +31,8 @@
 #'
 #' @examples
 #' out = mbd_sim( pars=c(0.6,0.1,0.4,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
-#' plot(out$tas)
-#' plot(out$tes)
+#' graphics::plot(out$tas)
+#' graphics::plot(out$tes)
 #' out$L
 #'
 #' @export
@@ -64,9 +64,9 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
         total_rate <- N * (lambda + mu) + nu
         if (total_rate > 0)
         {
-          deltaT <- rexp(1, rate = total_rate)
+          deltaT <- stats::rexp(1, rate = total_rate)
           outcome <- sample(c(-1,1,2), size = 1, prob = c(N * mu, N * lambda, nu))
-          deltaN <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * rbinom(n = 1, size = N, prob = q)
+          deltaN <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * stats::rbinom(n = 1, size = N, prob = q)
           t <- t - deltaT
   
           if (deltaN > 0 & t > 0)
@@ -116,8 +116,8 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
   brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   tes <- DDD::L2phylo(L, dropextinct = TRUE)
   tas <- DDD::L2phylo(L, dropextinct = FALSE)
-  #   plot(tas)
-  #   plot(tes)
+  #   graphics::plot(tas)
+  #   graphics::plot(tes)
   out <- list(brts = brts, tes = tes, tas = tas, extinct_species = extinct_species, L = L, 
               minimum_multiple_births = multiple_births.full_tree)
   return(out)
@@ -155,8 +155,8 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 #'
 #' @examples
 #' out = mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
-#' plot(out$tas)
-#' plot(out$tes)
+#' graphics::plot(out$tas)
+#' graphics::plot(out$tes)
 #' out$L
 #'
 #' @export
@@ -185,9 +185,9 @@ mbd_sim0 <- function(
       while (t>0)
       {
         N=length(pool)
-        deltaT=rexp(1,rate=(lambda+N*mu))
+        deltaT <- stats::rexp(1,rate=(lambda+N*mu))
         outcome=sample(c(-1,1),size=1,prob = c(N*mu,lambda))
-        deltaN=rbinom(n=1,size=N,prob=q)*(outcome==1)-1*(outcome==-1)
+        deltaN <- stats::rbinom(n=1,size=N,prob=q)*(outcome==1)-1*(outcome==-1)
         t=t-deltaT
         if (deltaN>0 & t>0)
         {
@@ -232,8 +232,8 @@ mbd_sim0 <- function(
   brts = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
   tes = DDD::L2phylo(L,dropextinct = T)
   tas = DDD::L2phylo(L,dropextinct = F)
-  #   plot(tas)
-  #   plot(tes)
+  #   graphics::plot(tas)
+  #   graphics::plot(tes)
   out = list(brts=brts,tes = tes, tas = tas, extinct_species=extinct_species,L = L, minimum_multiple_births = minimum_multiple_births)
   return(out)
 }
@@ -472,8 +472,8 @@ mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age 
 #'   brts = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
 #'   tes = DDD::L2phylo(L,dropextinct = T)
 #'   tas = DDD::L2phylo(L,dropextinct = F)
-#'   #   plot(tas)
-#'   #   plot(tes)
+#'   #   graphics::plot(tas)
+#'   #   graphics::plot(tes)
 #'   out = list(brts=brts,tes = tes, tas = tas, extinct_species=extinct_species,L = L)
 #'   return(out)
 #' }

@@ -5,11 +5,11 @@ library(mbd)
 p <- mbd:::mbd_sim(pars = c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf))
 
 ## ------------------------------------------------------------------------
-plot(L2phylo(p$L))
+graphics::plot(L2phylo(p$L))
 
 ## ---- fig.show='hold'----------------------------------------------------
-plot(1:10)
-plot(10:1)
+graphics::plot(1:10)
+graphics::plot(10:1)
 
 ## ---- echo=FALSE, results='asis'-----------------------------------------
 knitr::kable(head(mtcars, 10))

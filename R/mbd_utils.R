@@ -8,7 +8,7 @@ if( !exists("path")  ){ #&& interactive()
 }
 res_files = list.files(pattern=paste('[.]txt',sep = ''),path=path, full.names=TRUE)
 for(i in 1:length(res_files)){
-  fileData<-read.table(file=res_files[i],header=FALSE,sep=",")
+  fileData <- utils::read.table(file=res_files[i],header=FALSE,sep=",")
   ifelse(exists("targetTable"),targetTable<-rbind(targetTable,fileData),targetTable<-fileData)
 }
 all_results = targetTable
@@ -22,7 +22,7 @@ print(paste("There are ",N<<-dim(results)[1]," good results.",sep = ''))
 
 load( as.character(paste(path,"/data/general_settings",sep = '')), envir = e <- globalenv() )
 load( as.character(paste(path,"/data/sim_data",sep = '')), envir = e <- globalenv()  )
-suppressWarnings( rm(targetTable,all_results1,all_results,fileData,i) )
+suppressWarnings( rm(targetTable,all_results,fileData,i) )
 return(results)
 }
 
@@ -37,32 +37,36 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
   truevalues_color="red"; points_color = "azure4"; medians_color = "blue3"#"chartreuse3";
   medians_color_name = "blue"; truevalues_color_name = "red";
 
-  medians=rep(0,Npars);for (idpar in 1:Npars){medians[idpar]=median(results[,idpar])}
+  medians=rep(0,Npars);for (idpar in 1:Npars){medians[idpar]=stats::median(results[,idpar])}
   medians_string=paste0( "MLE Medians (",medians_color_name,") = (",paste(signif(medians,2),sep = "''",collapse = ", "),")")
   truevalues_string=paste0( "True Values (",truevalues_color_name,") = (",paste(signif(sim_pars,2),sep = "''",collapse = ", "),")")
   axislimits=rep(NA,Npars)
   for (i in 1:Npars){
-    axislimits[i]=quantile(results[,i],probs = 1-percentage_hidden_outliers)
+    axislimits[i] <- stats::quantile(
+      results[,i],
+      probs = 1 - percentage_hidden_outliers
+    )
   }
 
   #pdf
-  pdf(file = paste(path,"/",pdfname,".pdf",sep=''));#plot.new();
-  par(mfrow=c(length(estimated_pars),length(estimated_pars)));par(oma=c(0,0,2,0));
+  grDevices::pdf(file = paste(path,"/",pdfname,".pdf",sep=''));#plot.new();
+  graphics::par(mfrow=c(length(estimated_pars),length(estimated_pars)))
+  graphics::par(oma=c(0,0,2,0));
   for (i in estimated_pars){for (j in estimated_pars){
     good.lines = results[,i]<axislimits[i] & results[,j]<axislimits[j]
     ifelse(any(good.lines)>0,good.results <- results[good.lines,],good.results <- results)
 
-    if (i==j){hist((good.results[,i]),main=NULL,xlab = paste(par_names[i]),breaks = 15); #,breaks = 15
-      abline(v=sim_pars[i],col = truevalues_color)
-      abline(v=medians[i],col = medians_color)
+    if (i==j){graphics::hist((good.results[,i]),main=NULL,xlab = paste(par_names[i]),breaks = 15); #,breaks = 15
+      graphics::abline(v=sim_pars[i],col = truevalues_color)
+      graphics::abline(v=medians[i],col = medians_color)
     }
-    else{plot(good.results[,i]~good.results[,j],xlab=par_names[j],ylab=par_names[i],cex=0.3,col=points_color);
-      points(x=sim_pars[j],y=sim_pars[i],col=truevalues_color,pch=10,cex=1.5)
-      points(x=medians[j],y=medians[i],col=medians_color,pch=10,cex=1.5)
+    else{graphics::plot(good.results[,i]~good.results[,j],xlab=par_names[j],ylab=par_names[i],cex=0.3,col=points_color);
+      graphics::points(x=sim_pars[j],y=sim_pars[i],col=truevalues_color,pch=10,cex=1.5)
+      graphics::points(x=medians[j],y=medians[i],col=medians_color,pch=10,cex=1.5)
     }
   }}
-  title(main=(titolo.pdf<-(paste("\n\n",titolo,"\n",medians_string,"\n",truevalues_string,sep = ''))),outer=T)
-  dev.off()
+  graphics::title(main=(titolo.pdf<-(paste("\n\n",titolo,"\n",medians_string,"\n",truevalues_string,sep = ''))),outer=T)
+  grDevices::dev.off()
 
   if (openit==1){
     file.show(normalizePath(paste(path,"/",pdfname,".pdf",sep='')))
@@ -70,23 +74,24 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
 
   if (!missing(mother_folder))
     {
-    pdf(file = paste(mother_folder,"/",pdfname,".pdf",sep=''));#plot.new();
-    par(mfrow=c(length(estimated_pars),length(estimated_pars)));par(oma=c(0,0,2,0));
+    grDevices::pdf(file = paste(mother_folder,"/",pdfname,".pdf",sep=''));#plot.new();
+    graphics::par(mfrow=c(length(estimated_pars),length(estimated_pars)))
+    graphics::par(oma=c(0,0,2,0));
     for (i in estimated_pars){for (j in estimated_pars){
       good.lines = results[,i]<axislimits[i] & results[,j]<axislimits[j]
       ifelse(any(good.lines)>0,good.results <- results[good.lines,],good.results <- results)
 
-      if (i==j){hist((good.results[,i]),main=NULL,xlab = paste(par_names[i]),breaks = 15); #,breaks = 15
-        abline(v=sim_pars[i],col = truevalues_color)
-        abline(v=medians[i],col = medians_color)
+      if (i==j){graphics::hist((good.results[,i]),main=NULL,xlab = paste(par_names[i]),breaks = 15); #,breaks = 15
+        graphics::abline(v=sim_pars[i],col = truevalues_color)
+        graphics::abline(v=medians[i],col = medians_color)
       }
-      else{plot(good.results[,i]~good.results[,j],xlab=par_names[j],ylab=par_names[i],cex=0.3,col=points_color);
-        points(x=sim_pars[j],y=sim_pars[i],col=truevalues_color,pch=10,cex=1.5)
-        points(x=medians[j],y=medians[i],col=medians_color,pch=10,cex=1.5)
+      else{graphics::plot(good.results[,i]~good.results[,j],xlab=par_names[j],ylab=par_names[i],cex=0.3,col=points_color);
+        graphics::points(x=sim_pars[j],y=sim_pars[i],col=truevalues_color,pch=10,cex=1.5)
+        graphics::points(x=medians[j],y=medians[i],col=medians_color,pch=10,cex=1.5)
       }
     }}
-    title(main=titolo.pdf,outer = T)
-    dev.off()
+    graphics::title(main=titolo.pdf,outer = T)
+    grDevices::dev.off()
     }
 
 }
@@ -94,10 +99,10 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
 #percentiles function
 percentiles_function = function(results, sim_pars, printit = 1, quantiles_choice = c(.25, .50, .75)){
   quantiles_names <- format(round(quantiles_choice,2),nsmall = 2)
-  Npars <- length(sim_pars);#pars_interval=list(c(0,quantile(results[,1],.95)),c(0,quantile(results[,2],.95)),c(0,quantile(results[,3],.95)))
+  Npars <- length(sim_pars);#pars_interval=list(c(0, stats::quantile(results[,1],.95)),c(0,quantile(results[,2],.95)),c(0,quantile(results[,3],.95)))
   parnames <-  colnames(results)[1:Npars]
   percentiles <- vector("list",3)
-  for (idpar in 1:Npars){percentiles[[idpar]] <- quantile(results[,idpar], quantiles_choice)}
+  for (idpar in 1:Npars){percentiles[[idpar]] <- stats::quantile(results[,idpar], quantiles_choice)}
   percentiles <- t(matrix(unlist(percentiles), nrow = 3, ncol = Npars));
   colnames(percentiles) <- quantiles_names; rownames(percentiles) <- parnames
   if (printit==1)
@@ -124,7 +129,7 @@ brts2time_intervals_and_births = function (brts){
   branching_times = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
   births=c(0,unname(table(branching_times))[-1])
   unique_branching_times=as.numeric(names(table(branching_times)))
-  time_intervals=c((diff(unique_branching_times)),(abs(tail(unique_branching_times,1))) )
+  time_intervals=c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times,1))) )
   births=births[-1]
   out=list(time_intervals=time_intervals,births=births)
   return(out)
@@ -153,7 +158,7 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
   nmedio=sum(nvec*vf)
   std=sqrt( sum(nvec^2*vf)-nmedio^2 )
   if (output==1){
-    plot(log(vf))
+    graphics::plot(log(vf))
     print(paste("Sim pars are:",test_parameters[1],test_parameters[2],test_parameters[3],". Average n is",nmedio,"with std:",std))
   }
   return(list(avg_n=nmedio,std_n=std))
@@ -164,13 +169,18 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
 #' @inheritParams default_params_doc
 #' @param ... something
 #' @export
-myheatmap <- function(matrix,logs=1,colormap=heat.colors(15),...){
+myheatmap <- function(
+  matrix,
+  logs=1,
+  colormap = grDevices::heat.colors(15),
+  ...
+){
   if (is.matrix(matrix)==F){matrix=as.matrix(matrix)}
   T=t(matrix[nrow(matrix):1,1:ncol(matrix)])
-  if (logs==1){
+  if (logs ==1 ) {
   # image(log(T))
-    image(log(T),col=rev(colormap),...)
-  }else{image(T)}
+    graphics::image(log(T),col=rev(colormap),...)
+  }else{graphics::image(T)}
 }
 
 # @Giappo: add doc
@@ -190,16 +200,16 @@ myheatmap2 <- function(x,y,z,x.name,y.name,z.name,x.splits,y.splits){
   pretty.Y.at	<-	pretty(range(lY),n=y.splits)
   pretty.Y.lab	<-	round(pretty.Y.at,2)
 
-  jet.colors <- colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan","#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-  filled.contour(t(z), color = jet.colors, nlevels=100,#asp = 1, #frame.plot = T, axes=F,
+  jet.colors <- grDevices::colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan","#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+  graphics::filled.contour(t(z), color = jet.colors, nlevels=100,#asp = 1, #frame.plot = T, axes=F,
                  ylab = y.name, xlab = x.name,
                  plot.axes={
                    # axis(1,at=seq(0,1,length.out = x.splits+1),labels=pretty.X.lab)
                    # axis(2,at=seq(0,1,length.out = y.splits+1),labels=pretty.Y.lab)
-                   axis(1,at=seq(0,1,length.out = length(pretty.X.lab) ),labels=pretty.X.lab)
-                   axis(2,at=seq(0,1,length.out = length(pretty.Y.lab) ),labels=pretty.Y.lab)
+                   graphics::axis(1,at=seq(0,1,length.out = length(pretty.X.lab) ),labels=pretty.X.lab)
+                   graphics::axis(2,at=seq(0,1,length.out = length(pretty.Y.lab) ),labels=pretty.Y.lab)
                  },
-                 key.title = title(main=z.name)
+                 key.title = graphics::title(main=z.name)
   )
 }
 
@@ -254,7 +264,7 @@ called_functions <- function(function.name, recursive = FALSE, checked.functions
         # split = not alphanumeric, not '_', and not '.'
         words <- c(unlist(strsplit(x, split="[^[:alnum:]_.]")))
 
-        last.word <- tail(words, 1)
+        last.word <- utils::tail(words, 1)
         last.word.is.function <- tryCatch(is.function(get(last.word)),
                                       error=function(e) return(FALSE))
         return(last.word[last.word.is.function])
@@ -323,8 +333,15 @@ branchLengths=function(tr)
   if(length(tr$node)>0) {type='NAMED'} else{type='UNNAMED'}
   if(length(tr$root)>0) {root.length=tr$root} else{root.length=0}
 
-  node.numbers=sort(unique(tr$edge[,1]))
-  BL1=as.numeric(na.omit(c(root.length,tr$edge.length[match(node.numbers,tr$edge[,2])])))
+  node.numbers <- sort(unique(tr$edge[,1]))
+  BL1 <- as.numeric(
+    stats::na.omit(
+      c(
+        root.length,
+        tr$edge.length[match(node.numbers,tr$edge[,2])]
+      )
+    )
+  )
 
   tip.numbers=1:length(tr$tip)
   BL2=tr$edge.length[match(tip.numbers,tr$edge[,2])]
@@ -357,7 +374,7 @@ summarize_beast_posterior=function(
   if(!is.null(INPUT.XML)){
     subst.xml=scan(INPUT.XML,what="raw")
     where.starting.tree=which(subst.xml=="id=\"startingTree\">")+1
-    start.tr=read.tree(text=subst.xml[where.starting.tree])
+    start.tr <- ape::read.tree(text=subst.xml[where.starting.tree])
     node_names_xml=start.tr$node.label
   }
 
@@ -454,7 +471,7 @@ summarize_beast_posterior=function(
       #Re-paste the new tree into a single character string
       tree.text=paste(tree_sub2[-remove],collapse="")
 
-      tr=read.tree(text=tree.text)
+      tr <- ape::read.tree(text=tree.text)
       tr$tip.label=taxa[as.numeric(tr$tip.label)]
 
       #trees[[i]]=tr
@@ -499,7 +516,7 @@ extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",max
   # beast_posterior$branch_info # a list of branch lengths and associated information
   brts=list()
   for (i in 1:maxtree){
-    brts[[i]]=unname( branching.times(beast_posterior$trees[[i]]) )
+    brts[[i]]=unname(ape::branching.times(beast_posterior$trees[[i]]) )
   }
 
   dist=vector("list")
@@ -1233,15 +1250,15 @@ extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",max
 #     line_thickness=5
 #
 #     # for (i in 1:Npars)
-#     # { hist((results[,i]),main=NULL,xlab = par_names[i], breaks = 15,xlim = c(0,ranges[i])); #,breaks = 15
+#     # { graphics::hist((results[,i]),main=NULL,xlab = par_names[i], breaks = 15,xlim = c(0,ranges[i])); #,breaks = 15
 #     #   abline(v=sim_pars[i],col = truevalues_color,lwd=line_thickness)
 #     #   abline(v=medians[i],col = medians_color,lwd=line_thickness)
 #     # }
 #     # title(main=paste("\n",titolo,"\n     ",medians_string,"\n",truevalues_string,sep = ''),outer=T)
 #     for (i in 1:Npars)
-#     { hist((results[,i]),main=NULL,xlab = NULL, breaks = 15,xlim = c(0,ranges[i])); #,breaks = 15
-#       abline(v=sim_pars[i],col = truevalues_color,lwd=line_thickness)
-#       abline(v=medians[i],col = medians_color,lwd=line_thickness)
+#     { graphics::hist((results[,i]),main=NULL,xlab = NULL, breaks = 15,xlim = c(0,ranges[i])); #,breaks = 15
+#       graphics::abline(v=sim_pars[i],col = truevalues_color,lwd=line_thickness)
+#       graphics::abline(v=medians[i],col = medians_color,lwd=line_thickness)
 #     }
 #   }
 #
@@ -1250,7 +1267,7 @@ extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",max
 #   printa.la.figura(results=results,par_names=par_names,ranges=ranges,titolo=titolo,
 #                    medians_string=medians_string,truevalues_string=truevalues_string,
 #                    medians_color=medians_color,truevalues_color=truevalues_color)
-#   dev.off()
+#   grDevices::dev.off()
 #
 #   #high_resolution_image for ppt
 #   tiff(file = paste(path,"/poster_",pdfname,".tiff",sep=''), height = 17, width = 17, units = 'cm',
@@ -1258,14 +1275,14 @@ extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",max
 #   printa.la.figura(results=results,par_names=par_names,ranges=ranges,titolo=titolo,
 #                    medians_string=medians_string,truevalues_string=truevalues_string,
 #                    medians_color=medians_color,truevalues_color=truevalues_color)
-#   dev.off()
+#   grDevices::dev.off()
 #
 #   #png
 #   png(file = paste(path,"/poster_",pdfname,".png",sep=''));#plot.new();
 #   printa.la.figura(results=results,par_names=par_names,ranges=ranges,titolo=titolo,
 #                    medians_string=medians_string,truevalues_string=truevalues_string,
 #                    medians_color=medians_color,truevalues_color=truevalues_color)
-#   dev.off()
+#   grDevices::dev.off()
 # }
 
 # #poster output
@@ -1279,9 +1296,9 @@ extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",max
 # # dim(mbd_res_cleaned)
 # #
 # # i=1; par(mfrow=c(1,1));ranges=c(1,1,5,1);
-# # hist((mbd_res_cleaned[,i]),main=NULL,xlab = pippo[i],xlim = c(0,ranges[i]));i=i+1
-# # hist((mbd_res_cleaned[,i]),main=NULL,xlab = pippo[i],xlim = c(0,ranges[i]));i=i+1
-# # hist((mbd_res_cleaned[,i]),main=NULL,xlab = pippo[i],xlim = c(0,ranges[i]));i=i+1
-# # hist((mbd_res_cleaned[,i]),main=NULL,xlab = pippo[i],xlim = c(0,ranges[i]));i=i+1
+# # graphics::hist((mbd_res_cleaned[,i]),main=NULL,xlab = pippo[i],xlim = c(0,ranges[i]));i=i+1
+# # graphics::hist((mbd_res_cleaned[,i]),main=NULL,xlab = pippo[i],xlim = c(0,ranges[i]));i=i+1
+# # graphics::hist((mbd_res_cleaned[,i]),main=NULL,xlab = pippo[i],xlim = c(0,ranges[i]));i=i+1
+# # graphics::hist((mbd_res_cleaned[,i]),main=NULL,xlab = pippo[i],xlim = c(0,ranges[i]));i=i+1
 # #
 # # pippo=c(expression(lambda),expression(mu),expression(nu),expression(q))
