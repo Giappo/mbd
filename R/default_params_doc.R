@@ -12,7 +12,8 @@
 #' @param chain_length something
 #' @param changeloglikifnoconv something
 #' @param colormap something
-#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
+#' @param cond Set 1 if you want to condition on stem or crown age 
+#'   and non-extinction of the phylogeny. Set 0 otherwise.
 #' @param idparsfix something
 #' @param idparsopt The ids of the parameters that must be optimized. The ids are defined as follows:
 #' \itemize{
@@ -22,7 +23,7 @@
 #' \item id == 4 corresponds to q (single-lineage speciation probability)
 #' }
 #' @param initparsopt something
-#' @param INPUT.TREES something
+#' @param INPUT.TREES Path to \code{.trees} file
 #' @param INPUT.XML something
 #' @param interval.max something
 #' @param interval.min something
@@ -43,7 +44,7 @@
 #' @param mbd.lambda something
 #' @param methode something
 #' @param minimum_multiple_births something
-#' @param missnumspec something
+#' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
 #' @param mu something
 #' @param mutation_rate something
 #' @param N something
@@ -79,7 +80,13 @@
 #' @param s something
 #' @param sample_interval something
 #' @param sequence_length something
-#' @param sim_pars something
+#' @param sim_pars vector of parameters:
+#' \itemize{
+#'   \item id == 1 corresponds to lambda (speciation rate)
+#'   \item id == 2 corresponds to mu (extinction rate)
+#'   \item id == 3 corresponds to nu (multiple speciation trigger rate)
+#'   \item id == 4 corresponds to q (single-lineage speciation probability)
+#' }
 #' @param sim_phylo something
 #' @param soc Sets whether stem or crown age should be used (1 or 2).
 #' @param subsamp something

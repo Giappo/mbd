@@ -11,17 +11,18 @@ mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
 \arguments{
 \item{sim_pars}{vector of parameters:
 \itemize{
-\item id == 1 corresponds to lambda (speciation rate)
-\item id == 2 corresponds to mu (extinction rate)
-\item id == 3 corresponds to nu (multiple speciation trigger rate)
-\item id == 4 corresponds to q (single-lineage speciation probability)
+  \item id == 1 corresponds to lambda (speciation rate)
+  \item id == 2 corresponds to mu (extinction rate)
+  \item id == 3 corresponds to nu (multiple speciation trigger rate)
+  \item id == 4 corresponds to q (single-lineage speciation probability)
 }}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{cond}{conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.}
+\item{cond}{Set 1 if you want to condition on stem or crown age 
+and non-extinction of the phylogeny. Set 0 otherwise.}
 
-\item{age}{is the age of the tree.}
+\item{age}{The age of the tree.}
 
 \item{max_sims}{something}
 

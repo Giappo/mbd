@@ -1,7 +1,7 @@
 #MD_DATA_ANALYSIS
 #setup
 rm(list=ls());
-mbd_data_analysis = function (sim_pars, max_sims = 1000, account_name = "274829"){
+mbd_data_analysis <- function(sim_pars, max_sims = 1000, account_name = "274829"){
   # results = mbd:::mbd_import_data()
   # sim_pars = c(0.2,0.15,2,0.05); max_sims = 1000; account_name = "cyrus"
   Npars = length(sim_pars);

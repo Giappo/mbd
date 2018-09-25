@@ -13,8 +13,6 @@
 #' }
 #' @param idparsfix The ids of the parameters that should not be optimized. The default is to fix all parameters not specified in idparsopt.
 #' @param parsfix The values of the parameters that should not be optimized.
-#' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
-#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
 #' @param res Sets the maximum number of species for which a probability must be computed, must be larger than 1 + length(brts).
 #' @param tol Sets the tolerances in the optimization. Consists of:
 #' \itemize{
@@ -44,12 +42,24 @@
 #' # )
 #' @export
 mbd_ML <- function(
-  brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], parsfix,
-  missnumspec = 0, cond = 1, soc = 2, tips_interval = c(0, Inf),
-  res = 10 * (1 + length(brts) + missnumspec), tol = c(1E-3, 1E-4, 1E-6),
+  brts, 
+  initparsopt, 
+  idparsopt, 
+  idparsfix = (1:4)[-idparsopt], 
+  parsfix,
+  missnumspec = 0, 
+  cond = 1, 
+  soc = 2, 
+  tips_interval = c(0, Inf),
+  res = 10 * (1 + length(brts) + missnumspec), 
+  tol = c(1E-3, 1E-4, 1E-6),
   maxiter = 1000 * round((1.25)^length(idparsopt)),
-  changeloglikifnoconv = FALSE, optimmethod = 'simplex', methode = "expo",
-  minimum_multiple_births = 0, pars.transform = 1, print_errors = 0, 
+  changeloglikifnoconv = FALSE, 
+  optimmethod = 'simplex', 
+  methode = "expo",
+  minimum_multiple_births = 0, 
+  pars.transform = 1, 
+  print_errors = 0, 
   verbose = TRUE, 
   ...
 )
@@ -127,14 +137,17 @@ mbd_ML <- function(
   if (verbose == TRUE) {
     sink(file = tempfile()) # Sink output here
   }
-  out <- DDD::optimizer(optimmethod = optimmethod, optimpars = optimpars,
-                         fun = mbd_loglik_choosepar,
-                         trparsopt = trparsopt, trparsfix = trparsfix,
-                         idparsopt = idparsopt, idparsfix = idparsfix,
-                         brts = brts, missnumspec = missnumspec, cond = cond,
-                         soc = soc, tips_interval = tips_interval, methode = methode,
-                         minimum_multiple_births = minimum_multiple_births,
-                         pars.transform = pars.transform, print_errors = print_errors, ...)
+  out <- DDD::optimizer(
+    optimmethod = optimmethod, optimpars = optimpars,
+    fun = mbd_loglik_choosepar,
+    trparsopt = trparsopt, trparsfix = trparsfix,
+    idparsopt = idparsopt, idparsfix = idparsfix,
+    brts = brts, missnumspec = missnumspec, cond = cond,
+    soc = soc, tips_interval = tips_interval, methode = methode,
+    minimum_multiple_births = minimum_multiple_births,
+    pars.transform = pars.transform, print_errors = print_errors, 
+    ...
+  )
   if (verbose == TRUE) {
     sink() # Give back the output
   }
@@ -213,21 +226,23 @@ mbd_ML_cluster <- function(s, initparsopt = c(0.6, 0.1, 1.3, 0.16)){
   if (!file.exists(paste0(simpath,"/errors"))){dir.create(paste0(simpath,"/errors"))}
   sink(file = paste0(simpath,"/errors/mbd_MLE_errors",s,".txt"), append = TRUE)
 
-  res <- mbd::mbd_ML(brts = sim_data[[s]],
-                     initparsopt = initparsopt,
-                     idparsopt = idparsopt,
-                     idparsfix = (1:Npars)[-idparsopt],
-                     parsfix = parsfix,
-                     missnumspec = 0,
-                     cond = cond,
-                     soc = soc,
-                     tips_interval = tips_interval,
-                     res = 10 * (1 + length(brts) + missnumspec),
-                     tol = c(1E-3, 1E-4, 1E-6),
-                     maxiter = 1000 * round((1.25)^length(idparsopt)),
-                     changeloglikifnoconv = FALSE,
-                     optimmethod = 'simplex',
-                     minimum_multiple_births = minimum_multiple_births)
+  res <- mbd::mbd_ML(
+    brts = sim_data[[s]],
+    initparsopt = initparsopt,
+    idparsopt = idparsopt,
+    idparsfix = (1:Npars)[-idparsopt],
+    parsfix = parsfix,
+    missnumspec = 0,
+    cond = cond,
+    soc = soc,
+    tips_interval = tips_interval,
+    res = 10 * (1 + length(brts) + missnumspec),
+    tol = c(1E-3, 1E-4, 1E-6),
+    maxiter = 1000 * round((1.25)^length(idparsopt)),
+    changeloglikifnoconv = FALSE,
+    optimmethod = 'simplex',
+    minimum_multiple_births = minimum_multiple_births
+  )
 
   #additional tree info
   how_many_multiple <- percent_multiple <- -1;
@@ -267,7 +282,10 @@ mbd_ML_cluster <- function(s, initparsopt = c(0.6, 0.1, 1.3, 0.16)){
 #' Does something I
 #' @inheritParams default_params_doc
 #' @export
-pmb_ML_cluster <- function(s, initparsopt = c(0.5, 0, 1.7, 0.15)){
+pmb_ML_cluster <- function(
+  s, 
+  initparsopt = c(0.5, 0, 1.7, 0.15)
+) {
   print(s)
   parnames <- c("lambda","mu","nu","q"); Npars <- length(parnames)
   idparsopt <- 1:Npars; parsfix <- NULL;
@@ -278,8 +296,8 @@ pmb_ML_cluster <- function(s, initparsopt = c(0.5, 0, 1.7, 0.15)){
   datapath <- paste0(simpath,"/data")
   load(file = paste0(datapath,"/general_settings"))
   load(file = paste0(datapath,"/sim_data"))
-  if (sim_pars[2] == 0 && cond == 0 && tips_interval == c(0, Inf))
-  { # pure birth adjustments
+  if (sim_pars[2] == 0 && cond == 0 && tips_interval == c(0, Inf)) { 
+    # pure birth adjustments
     idparsopt2 <- idparsopt[idparsopt != 2]
     idparsfix2 <- (1:4)[-idparsopt2]
     parsfix2 <- initparsopt2 <- rep(NA,4);
@@ -300,21 +318,23 @@ pmb_ML_cluster <- function(s, initparsopt = c(0.5, 0, 1.7, 0.15)){
   if (!file.exists(paste0(simpath,"/errors"))){dir.create(paste0(simpath,"/errors"))}
   sink(file = paste0(simpath,"/errors/mbd_MLE_errors",s,".txt"), append = T)
   
-  res <- mbd_ML(brts = sim_data[[s]],
-                      initparsopt = initparsopt,
-                      idparsopt = idparsopt,
-                      idparsfix = (1:Npars)[-idparsopt],
-                      parsfix = parsfix,
-                      missnumspec = 0,
-                      cond = cond,
-                      soc = soc,
-                      tips_interval = tips_interval,
-                      res = 10 * (1 + length(brts) + missnumspec),
-                      tol = c(1E-3, 1E-4, 1E-6),
-                      maxiter = 1000 * round((1.25)^length(idparsopt)),
-                      changeloglikifnoconv = FALSE,
-                      optimmethod = 'simplex',
-                      minimum_multiple_births = minimum_multiple_births)
+  res <- mbd_ML(
+    brts = sim_data[[s]],
+    initparsopt = initparsopt,
+    idparsopt = idparsopt,
+    idparsfix = (1:Npars)[-idparsopt],
+    parsfix = parsfix,
+    missnumspec = 0,
+    cond = cond,
+    soc = soc,
+    tips_interval = tips_interval,
+    res = 10 * (1 + length(brts) + missnumspec),
+    tol = c(1E-3, 1E-4, 1E-6),
+    maxiter = 1000 * round((1.25)^length(idparsopt)),
+    changeloglikifnoconv = FALSE,
+    optimmethod = 'simplex',
+    minimum_multiple_births = minimum_multiple_births
+  )
   
   #additional tree info
   how_many_multiple <- percent_multiple <- -1;

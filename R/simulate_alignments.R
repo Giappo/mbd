@@ -166,11 +166,13 @@ alignments_comparison_multiple <- function(
   for (s in 1:max_sims)
   {
     set.seed(s)
-    mbd.simulation <- mbd_sim(pars = sim_pars,
-                                    soc = soc,
-                                    age = age,
-                                    cond = cond,
-                                    tips_interval = tips_interval)
+    mbd.simulation <- mbd_sim(
+      pars = sim_pars,
+      soc = soc,
+      age = age,
+      cond = cond,
+      tips_interval = tips_interval
+    )
     
     full_tree           <- mbd.simulation$tas #; graphics::plot(full_tree)
     total_branch_length <- sum(full_tree$edge.length) # total branch length
@@ -200,11 +202,13 @@ alignments_comparison_multiple <- function(
   
   # for (s in 1:max_sims)
   # {
-    BD.simulations[[s]] <- mbd_sim(pars = c(BD.lambda, sim_pars[2], 0, 0),
-                                         soc = soc,
-                                         age = age,
-                                         cond = cond,
-                                         tips_interval = tips_interval)
+    BD.simulations[[s]] <- mbd_sim(
+      pars = c(BD.lambda, sim_pars[2], 0, 0),
+      soc = soc,
+      age = age,
+      cond = cond,
+      tips_interval = tips_interval
+    )
     
     BD.out <- alignments_comparison_single(sim_phylo = BD.simulations[[s]]$tes,
                                            chain_length = chain_length,

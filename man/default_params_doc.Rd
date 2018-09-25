@@ -44,7 +44,8 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, age, alpha,
 
 \item{colormap}{something}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+\item{cond}{Set 1 if you want to condition on stem or crown age 
+and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{idparsfix}{something}
 
@@ -58,7 +59,7 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, age, alpha,
 
 \item{initparsopt}{something}
 
-\item{INPUT.TREES}{something}
+\item{INPUT.TREES}{Path to \code{.trees} file}
 
 \item{INPUT.XML}{something}
 
@@ -100,7 +101,7 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, age, alpha,
 
 \item{minimum_multiple_births}{something}
 
-\item{missnumspec}{something}
+\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
 
 \item{mu}{something}
 
@@ -160,7 +161,13 @@ or
 
 \item{sequence_length}{something}
 
-\item{sim_pars}{something}
+\item{sim_pars}{vector of parameters:
+\itemize{
+  \item id == 1 corresponds to lambda (speciation rate)
+  \item id == 2 corresponds to mu (extinction rate)
+  \item id == 3 corresponds to nu (multiple speciation trigger rate)
+  \item id == 4 corresponds to q (single-lineage speciation probability)
+}}
 
 \item{sim_phylo}{something}
 

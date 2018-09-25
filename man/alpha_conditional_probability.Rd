@@ -31,7 +31,8 @@ or
 You can also define the tips_interval as you can usually 
 do with a standard usage of mbd_sim.}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+\item{cond}{Set 1 if you want to condition on stem or crown age 
+and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 

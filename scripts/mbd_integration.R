@@ -62,7 +62,7 @@ if (1){
     out4 <- out3[-(lapply(out3, FUN = length) == 0)]
     return(out4)
   }
-  inside.borders <- function (x, brts){
+  inside.borders <- function(x, brts){
     cond1 <- (x < min(brts))
     cond2 <- (x > max(brts))
     x <- (1 - cond1 - cond2) * x + cond1 * min(brts) + cond2 * max(brts)

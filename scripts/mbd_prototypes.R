@@ -10,8 +10,6 @@
 #'   \item pars[2] is the extinction rate;
 #'   \item pars[3] is the single-lineage speciation probability.
 #' }
-#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
 #' @param methode Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.
 #' @param safety_threshold It determines the precision on the parameters.
 #' @return The function returns the natural logarithm of the likelihood for the process.
@@ -211,8 +209,6 @@ mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
 #' }
 #' @param idparsfix The ids of the parameters that should not be optimized. The default is to fix all parameters not specified in idparsopt.
 #' @param parsfix The values of the parameters that should not be optimized.
-#' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
-#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
 #' @param res Sets the maximum number of species for which a probability must be computed, must be larger than 1 + length(brts).
 #' @param tol Sets the tolerances in the optimization. Consists of:
 #' \itemize{

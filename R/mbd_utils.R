@@ -134,7 +134,8 @@ heatmap2dataframe = function(x,y,Matrix, x.name="x", y.name="y", heatmap.name="H
 
 #' Converts branching times to "time intervals between branching times" and "birth at nodes" vectors
 #' @inheritParams default_params_doc
-brts2time_intervals_and_births = function (brts){
+brts2time_intervals_and_births <- function(brts
+) {
   time_points=-unlist(unname(sort(abs(brts),decreasing = T)) )
   branching_times = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
   births=c(0,unname(table(branching_times))[-1])
@@ -147,8 +148,14 @@ brts2time_intervals_and_births = function (brts){
 
 #' Provides estimated number of species integrating the P-equation
 #' @inheritParams default_params_doc
-mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precision = 50L,soc=2,output=0){
-
+mbd_P_eq <- function(
+  test_parameters,
+  age=15,
+  max_number_of_species = 2000, 
+  precision = 50L,
+  soc = 2,
+  output = 0
+){
   N0=soc
   create_mbd_P_matrix = function(pars=sim_pars,max_number_of_species)
   {
@@ -276,7 +283,7 @@ called_functions <- function(
     # break code up into sections preceding left brackets:
     left.brackets <- c(unlist(strsplit(function.code, split="[[:space:]]*\\(")))
 
-    called.functions <- unique(c(unlist(sapply(left.brackets, function (x) {
+    called.functions <- unique(c(unlist(sapply(left.brackets, function(x) {
         # Split up according to anything that can't be in a function name.
         # split = not alphanumeric, not '_', and not '.'
         words <- c(unlist(strsplit(x, split="[^[:alnum:]_.]")))
@@ -529,13 +536,15 @@ summarize_beast_posterior <- function(
 
 #' Does something
 #' @inheritParams default_params_doc
-extract_posterior <- function (file_name="simcophylo_1_RUN1.(time).trees.txt",maxtree=10){
+extract_posterior <- function(
+  file_name="simcophylo_1_RUN1.(time).trees.txt",
+  maxtree=10
+){
 
   names_i=file_name
 
-  beast_posterior=
-    summarize_beast_posterior(
-      INPUT.TREES=names_i, #Path to tree file
+  beast_posterior <- summarize_beast_posterior(
+      INPUT.TREES = names_i, 
       subsamp=maxtree #Number of samples to keep
     )
 
@@ -1235,7 +1244,7 @@ extract_posterior <- function (file_name="simcophylo_1_RUN1.(time).trees.txt",ma
 
 # CORRELATION ANALYSIS EXTRA FUNCTIONS
 # #data with no outliers
-# fun_to_min = function (x,confidence_interval=0.95){
+# fun_to_min = function(x,confidence_interval=0.95){
 #   if (x<=0 || x>=1){return(Inf)}# x in [0,1]
 #   cresults=results[,1:3]
 #   cpars_interval=list(c(0,quantile(cresults[,1],x)),c(0,quantile(cresults[,2],x)),c(0,quantile(cresults[,3],x)))

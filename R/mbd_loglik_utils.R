@@ -82,7 +82,15 @@ create_B <- function(lambda, nu, q, k, b, max_number_of_species){
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_A.no_mbd = function(lambda,mu,nu,q,k,max_number_of_species,minimum_multiple_births){
+create_A.no_mbd = function(
+  lambda,
+  mu,
+  nu,
+  q,
+  k,
+  max_number_of_species,
+  minimum_multiple_births
+){
   nvec <- 0:max_number_of_species
   M <- create_A0(max_number_of_species = max_number_of_species,lambda = nu,mu = mu,q = q,k = k)
   M[row(M) == col(M) + 1] <- M[row(M) == col(M) + 1] + lambda * (nvec[1:(max_number_of_species)]+2*k)
@@ -231,7 +239,7 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-mbd_loglik_rhs <- function (t, x, pars){
+mbd_loglik_rhs <- function(t, x, pars){
   #builds right hand side of the ODE set for multiple birth model
   with(as.list(x), {
     starting_vector = x
@@ -268,15 +276,16 @@ determine_k_limit <- function(pars, brts, lx, soc, methode, abstol = 1e-16, relt
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability <- function (brts,
-                                               pars,
-                                               lx = 1000,
-                                               soc = 2,
-                                               tips_interval = c(0, Inf),
-                                               methode = 'expo',
-                                               abstol = 1e-16,
-                                               reltol = 1e-10){
-  
+calculate_conditional_probability <- function(
+  brts,
+  pars,
+  lx = 1000,
+  soc = 2,
+  tips_interval = c(0, Inf),
+  methode = 'expo',
+  abstol = 1e-16,
+  reltol = 1e-10
+) {
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
   total_time <- max(abs(brts));
   
@@ -309,15 +318,16 @@ calculate_conditional_probability <- function (brts,
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability0 <- function (brts,
-                                                pars,
-                                                lx = 1000,
-                                                soc = 2,
-                                                tips_interval = c(0, Inf),
-                                                methode = 'expo',
-                                                abstol = 1e-16,
-                                                reltol = 1e-10){
-
+calculate_conditional_probability0 <- function(
+  brts,
+  pars,
+  lx = 1000,
+  soc = 2,
+  tips_interval = c(0, Inf),
+  methode = 'expo',
+  abstol = 1e-16,
+  reltol = 1e-10
+) {
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
   total_time <- max(abs(brts));
 
@@ -350,15 +360,16 @@ calculate_conditional_probability0 <- function (brts,
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability0PB <- function (brts,
-                                                  pars,
-                                                  lx = 200,
-                                                  soc = 2,
-                                                  tips_interval = c(0, Inf),
-                                                  methode = 'expo',
-                                                  abstol = 1e-16,
-                                                  reltol = 1e-10){
-  
+calculate_conditional_probability0PB <- function(
+  brts,
+  pars,
+  lx = 200,
+  soc = 2,
+  tips_interval = c(0, Inf),
+  methode = 'expo',
+  abstol = 1e-16,
+  reltol = 1e-10
+) {
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
   total_time <- max(abs(brts))
   if (mu != 0){cat('mu is supposed to be equal zero to use this function'); return(Pc <- NA)}
@@ -412,14 +423,16 @@ find_best_lx_for_Pc <- function(brts,
   lx.test <- rep(NA, length(lxvec <- seq(interval.min + step1, interval.max - step1, step1))); i <- 1; right.lx.coord <- 0
   for (lx2 in lxvec)
   {
-    lx.test[i] <- mbd::calculate_conditional_probability0(brts = brts,
-                                                          pars = c(pars[1], 0, pars[3], pars[4]),
-                                                          lx = lx2, 
-                                                          soc = soc,
-                                                          tips_interval = c(0, Inf),
-                                                          methode = methode,
-                                                          abstol = abstol,
-                                                          reltol = reltol)
+    lx.test[i] <- mbd::calculate_conditional_probability0(
+      brts = brts,
+      pars = c(pars[1], 0, pars[3], pars[4]),
+      lx = lx2, 
+      soc = soc,
+      tips_interval = c(0, Inf),
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol
+    )
     if (!is.na(abs(lx.test[i]))) if (abs(lx.test[i] - 1) < 0.01) {right.lx.coord <- i; lx <- lxvec[right.lx.coord]; break}
     i <- i + 1
   }; lx.test
@@ -432,14 +445,16 @@ find_best_lx_for_Pc <- function(brts,
   lx.test2 <- rep(NA, length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2 * step1/a)))); j <- 1; right.lx.coord2 <- 0
   for (lx2 in lxvec)
   {
-    lx.test2[j] <- mbd::calculate_conditional_probability0(brts = brts,
-                                                           pars = c(pars[1], 0, pars[3], pars[4]),
-                                                           lx = lx2, 
-                                                           soc = soc,
-                                                           tips_interval = c(0, Inf),
-                                                           methode = methode,
-                                                           abstol = abstol,
-                                                           reltol = reltol)
+    lx.test2[j] <- mbd::calculate_conditional_probability0(
+      brts = brts,
+      pars = c(pars[1], 0, pars[3], pars[4]),
+      lx = lx2, 
+      soc = soc,
+      tips_interval = c(0, Inf),
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol
+    )
     if (!is.na(abs(lx.test2[i]))) if (abs(lx.test2[j] - 1) < 0.01) {right.lx.coord2 <- j; lx <- lxvec2[right.lx.coord2]; break}
     j <- j + 1
   }; lx.test2
@@ -457,27 +472,29 @@ find_best_lx_for_Pc <- function(brts,
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability1 <- function (brts,
-                                               pars,
-                                               soc = 2,
-                                               tips_interval = c(0, Inf),
-                                               methode = 'expo',
-                                               abstol = 1e-16,
-                                               reltol = 1e-10){
+calculate_conditional_probability1 <- function(
+  brts,
+  pars,
+  soc = 2,
+  tips_interval = c(0, Inf),
+  methode = 'expo',
+  abstol = 1e-16,
+  reltol = 1e-10
+){
   
   lx <- find_best_lx_for_Pc(brts = brts, pars = pars, soc = soc)
-  if (pars[2] == 0)
-  {
-    Pc <- mbd::calculate_conditional_probability0PB(brts = brts,
-                                                    pars = pars,
-                                                    lx = lx,
-                                                    soc = soc,
-                                                    tips_interval = tips_interval,
-                                                    methode = methode,
-                                                    abstol = abstol,
-                                                    reltol = reltol)  
-  }else
-  {
+  if (pars[2] == 0) {
+    Pc <- mbd::calculate_conditional_probability0PB(
+      brts = brts,
+      pars = pars,
+      lx = lx,
+      soc = soc,
+      tips_interval = tips_interval,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol
+    )  
+  } else {
     # @Giappo: this function does not exist any more
     # Pc <- mbd::calculate_conditional_probability02(brts = brts,
     #                                                pars = pars,
@@ -496,10 +513,12 @@ calculate_conditional_probability1 <- function (brts,
 #' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-alpha_conditional_probability <- function (brts, pars, alpha, tips_interval = c(0, Inf),
-                                           cond = 1, soc = 2, methode = "expo",
-                                           abstol = 1e-16, reltol = 1e-10,
-                                           minimum_multiple_births = 0){
+alpha_conditional_probability <- function(
+  brts, pars, alpha, tips_interval = c(0, Inf),
+  cond = 1, soc = 2, methode = "expo",
+  abstol = 1e-16, reltol = 1e-10,
+  minimum_multiple_births = 0
+){
   
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
   min_tips <- tips_interval[1]; max_tips <- tips_interval[2];
@@ -547,48 +566,52 @@ alpha_conditional_probability <- function (brts, pars, alpha, tips_interval = c(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-alpha_analysis <- function(brts,
-                           pars,
-                           tips_interval,
-                           cond,
-                           soc,
-                           alpha0,
-                           max_k,
-                           methode = 'expo',
-                           abstol,
-                           reltol,
-                           minimum_multiple_births){
+alpha_analysis <- function(
+  brts,
+  pars,
+  tips_interval,
+  cond,
+  soc,
+  alpha0,
+  max_k,
+  methode = 'expo',
+  abstol,
+  reltol,
+  minimum_multiple_births
+) {
   deltaAlpha <- 1; count <- 0; same_result_count <- 0; Pc.notanumber <- 1;
   alpha <- alpha0
-  while (Pc.notanumber)
-  {
-    Pc1 <- alpha_conditional_probability(brts = brts,
-                                               pars = pars,
-                                               tips_interval = tips_interval,
-                                               cond = cond,
-                                               soc = soc,
-                                               alpha = alpha,
-                                               methode = methode,
-                                               abstol = abstol,
-                                               reltol = reltol,
-                                               minimum_multiple_births = minimum_multiple_births)$Pc
+  while (Pc.notanumber) {
+    Pc1 <- alpha_conditional_probability(
+      brts = brts,
+      pars = pars,
+      tips_interval = tips_interval,
+      cond = cond,
+      soc = soc,
+      alpha = alpha,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol,
+      minimum_multiple_births = minimum_multiple_births
+    )$Pc
     # Pc1 <- calculate_conditional_probability(alpha = alpha, ...)$Pc
     Pc.notanumber <- is.nan(Pc1)
     alpha <- alpha - Pc.notanumber
   }
-  while (deltaAlpha != 0 && count < 100 && same_result_count < 5)
-  {
-    Pc2 <- alpha_conditional_probability(brts = brts,
-                                               pars = pars,
-                                               tips_interval = tips_interval,
-                                               cond = cond,
-                                               soc = soc,
-                                               alpha = alpha + deltaAlpha,
-                                               methode = methode,
-                                               abstol = abstol,
-                                               reltol = reltol,
-                                               minimum_multiple_births = minimum_multiple_births)$Pc
-    # Pc2 <- calculate_conditional_probability(alpha = alpha + deltaAlpha, ...)$Pc
+  while (deltaAlpha != 0 && count < 100 && same_result_count < 5) {
+    Pc2 <- alpha_conditional_probability(
+      brts = brts,
+      pars = pars,
+      tips_interval = tips_interval,
+      cond = cond,
+      soc = soc,
+      alpha = alpha + deltaAlpha,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol,
+      minimum_multiple_births = minimum_multiple_births
+    )$Pc
+  # Pc2 <- calculate_conditional_probability(alpha = alpha + deltaAlpha, ...)$Pc
     if (is.nan(Pc2))
     {
       deltaAlpha <- deltaAlpha - 1
@@ -609,19 +632,21 @@ alpha_analysis <- function(brts,
     count = count + 1
     # print(alpha)
   }
-  if (max_k * alpha >= 2000)
-  {#check to see whether alpha is too big to be handled without memory issues
+  if (max_k * alpha >= 2000) {
+    #check to see whether alpha is too big to be handled without memory issues
     alpha <- floor(1500/max_k);
-    Pc1 <- alpha_conditional_probability(brts = brts,
-                                               pars = pars,
-                                               tips_interval = tips_interval,
-                                               cond = cond,
-                                               soc = soc,
-                                               alpha = alpha,
-                                               methode = methode,
-                                               abstol = abstol,
-                                               reltol = reltol,
-                                               minimum_multiple_births = minimum_multiple_births)$Pc
+    Pc1 <- alpha_conditional_probability(
+      brts = brts,
+      pars = pars,
+      tips_interval = tips_interval,
+      cond = cond,
+      soc = soc,
+      alpha = alpha,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol,
+      minimum_multiple_births = minimum_multiple_births
+    )$Pc
     # Pc1 <- calculate_conditional_probability(alpha = alpha, ...)$Pc
   }
   Pc <- Pc1
@@ -634,7 +659,7 @@ alpha_analysis <- function(brts,
 #' #' @description Internal mbd function.
 #' #' @details This is not to be called by the user.
 #' #' @export
-#' calculate_conditional_probability <- function (brts, pars, tips_interval = c(0, Inf),
+#' calculate_conditional_probability <- function(brts, pars, tips_interval = c(0, Inf),
 #'                                                cond = 1, soc = 2, alpha, methode = "expo",
 #'                                                abstol = 1e-16, reltol = 1e-10,
 #'                                                minimum_multiple_births = 0){
@@ -684,7 +709,7 @@ alpha_analysis <- function(brts,
 #' @description Internal mbd function.
 #' @details This is not to be called by the user.
 #' @export
-#' calculate_conditional_probability2 <- function (brts, pars, missing_tips_interval = c(0, Inf),
+#' calculate_conditional_probability2 <- function(brts, pars, missing_tips_interval = c(0, Inf),
 #'                                                 soc = 2, alpha, methode = "expo",
 #'                                                 abstol = 1e-16, reltol = 1e-10,
 #'                                                 minimum_multiple_births = 0){
@@ -759,10 +784,11 @@ alpha_analysis <- function(brts,
 #' #' @description Internal mbd function.
 #' #' @details This is not to be called by the user.
 #' #' @export
-#' calculate_conditional_probability3 <- function (brts, 
-#'                                                 pars, 
-#'                                                 lx = 200,
-#'                                                 soc = 2){
+#' calculate_conditional_probability3 <- function(brts, 
+#'                                                pars, 
+#'                                                lx = 200,
+#'                                                soc = 2
+#' ){
 #'   
 #'   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
 #'   total_time <- max(abs(brts));

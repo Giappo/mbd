@@ -10,8 +10,6 @@
 #'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
 #'   \item pars[4] is q, the single-lineage speciation probability.
 #' }
-#' @param age The age of the tree.
-#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
 #' @return The function returns a list of L table, branching times and number of extinct species.
 #' \itemize{
 #'   \item brts are the branching times;
@@ -34,9 +32,14 @@
 #' out$L
 #'
 #' @export
-mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
-                    tips_interval = c(0, Inf), minimum_multiple_births = 0)
-{
+mbd_sim <- function(
+  pars, 
+  soc = 2, 
+  age = 10, 
+  cond = 1,
+  tips_interval = c(0, Inf), 
+  minimum_multiple_births = 0
+) {
   if (tips_interval[2] < tips_interval[1] || any(pars < 0)){stop("ERROR! Check again your settings.")}
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]; N0 <- soc
   tips <- -1; crown_species_dead <- cond; multiple_births_check <- 0;
@@ -116,9 +119,14 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
   tas <- DDD::L2phylo(L, dropextinct = FALSE)
   #   graphics::plot(tas)
   #   graphics::plot(tes)
-  out <- list(brts = brts, tes = tes, tas = tas, extinct_species = extinct_species, L = L, 
-              minimum_multiple_births = multiple_births.full_tree)
-  return(out)
+  list(
+    brts = brts, 
+    tes = tes, 
+    tas = tas, 
+    extinct_species = extinct_species, 
+    L = L, 
+    minimum_multiple_births = multiple_births.full_tree
+  )
 }
 
 # mbd_sim0---------------------------------
@@ -132,8 +140,6 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 #'   \item pars[2] is the extinction rate;
 #'   \item pars[3] is the single-lineage speciation probability.
 #' }
-#' @param age The age of the tree.
-#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
 #' @return The function returns a list of L table, branching times and number of extinct species.
 #' \itemize{
 #'   \item brts are the branching times;
@@ -157,9 +163,13 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 #'
 #' @export
 mbd_sim0 <- function(
-  pars, soc = 2, age = 10, cond = 1,
-  tips_interval = c(soc * (cond == 1), Inf), minimum_multiple_births = 0)
-{
+  pars, 
+  soc = 2, 
+  age = 10, 
+  cond = 1,
+  tips_interval = c(soc * (cond == 1), Inf), 
+  minimum_multiple_births = 0
+) {
   if (tips_interval[2]<tips_interval[1]){stop("ERROR! Check again your settings.")}
   lambda=pars[1]; mu=pars[2]; q=pars[3]; N0=soc
   tips=-1; conditioning_on_survival=cond; multiple_births_check = 0;
@@ -230,8 +240,14 @@ mbd_sim0 <- function(
   tas = DDD::L2phylo(L,dropextinct = F)
   #   graphics::plot(tas)
   #   graphics::plot(tes)
-  out = list(brts=brts,tes = tes, tas = tas, extinct_species=extinct_species,L = L, minimum_multiple_births = minimum_multiple_births)
-  return(out)
+  list(
+    brts = brts,
+    tes = tes, 
+    tas = tas, 
+    extinct_species = extinct_species,
+    L = L, 
+    minimum_multiple_births = minimum_multiple_births
+  )
 }
 
 # mbd_sim_dataset---------------------------------
@@ -239,15 +255,6 @@ mbd_sim0 <- function(
 #' @title Creates a full simulated dataset of trees under the multiple birth death process
 #' @description mbd_sim_dataset produces a full dataset of max_sims simulated trees including multiple speciations at the same time. This second version takes into account the possibility both of allopatric and sympatric speciation.
 #' @inheritParams default_params_doc
-#' @param sim_pars vector of parameters:
-#' \itemize{
-#' \item id == 1 corresponds to lambda (speciation rate)
-#' \item id == 2 corresponds to mu (extinction rate)
-#' \item id == 3 corresponds to nu (multiple speciation trigger rate)
-#' \item id == 4 corresponds to q (single-lineage speciation probability)
-#' }
-#' @param age is the age of the tree.
-#' @param cond conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.
 #' @param edge the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.
 #' @return The function returns a list of brts vectors, one for each of the max_sims simulations.
 #' It also saves those in a file called "sim_data" and saves all the settings in a "general_settings" file.
@@ -259,8 +266,15 @@ mbd_sim0 <- function(
 #'
 #' @export
 mbd_sim_dataset <- function(
-  sim_pars = c(0.5,0.1,0.3,0.15), soc = 2, cond = 1, age = 10, max_sims = 1000,
-                           tips_interval = c(0, 100), edge = Inf, minimum_multiple_births = 0){
+  sim_pars = c(0.5,0.1,0.3,0.15), 
+  soc = 2, 
+  cond = 1, 
+  age = 10, 
+  max_sims = 1000,
+  tips_interval = c(0, 100), 
+  edge = Inf, 
+  minimum_multiple_births = 0
+) {
   # mbd_sim_dataset creates a full simulated dataset of "max_sims" trees
   #"edge" gives the extent of fluctuations around the mean that i want to consider
 
@@ -326,8 +340,6 @@ mbd_sim_dataset <- function(
 #' @title Creates a full simulated dataset of trees under the multiple birth death process
 #' @description mbd_sim_dataset0 produces a full dataset of max_sims simulated trees including multiple speciations at the same time.
 #' @inheritParams default_params_doc
-#' @param age is the age of the tree.
-#' @param cond conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.
 #' @param edge the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.
 #' @return The function returns a list of brts vectors, one for each of the max_sims simulations.
 #' It also saves those in a file called "sim_data" and saves all the settings in a "general_settings" file.
@@ -338,9 +350,16 @@ mbd_sim_dataset <- function(
 #' # out <- mbd_sim_dataset0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,edge=Inf )
 #'
 #' @export
-mbd_sim_dataset0 <- function(sim_pars = c(2.5,0.1,0.10), soc = 2, cond = 1, age = 10,
-                             max_sims = 1000, tips_interval = c(0,Inf),edge = Inf,
-                             minimum_multiple_births = 0){
+mbd_sim_dataset0 <- function(
+  sim_pars = c(2.5,0.1,0.10), 
+  soc = 2, 
+  cond = 1, 
+  age = 10,
+  max_sims = 1000, 
+  tips_interval = c(0,Inf),
+  edge = Inf,
+  minimum_multiple_births = 0
+) {
   # mbd_sim_dataset0 creates a full simulated dataset of "max_sims" trees, using only three parameters.
   #"edge" gives the extent of fluctuations around the mean that i want to consider
 

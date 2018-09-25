@@ -22,7 +22,8 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+\item{cond}{Set 1 if you want to condition on stem or crown age 
+and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{lx0}{something}
 

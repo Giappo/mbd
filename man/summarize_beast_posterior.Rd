@@ -8,7 +8,7 @@ summarize_beast_posterior(INPUT.TREES, INPUT.XML = NULL,
   subsamp = NULL)
 }
 \arguments{
-\item{INPUT.TREES}{something}
+\item{INPUT.TREES}{Path to \code{.trees} file}
 
 \item{INPUT.XML}{something}
 

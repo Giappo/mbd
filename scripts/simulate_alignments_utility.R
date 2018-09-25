@@ -76,7 +76,7 @@
 #   return(loglik)
 # }
 # 
-# calculate_conditional_probability_in_time <- function (brts,
+# calculate_conditional_probability_in_time <- function(brts,
 #                                                        tm,
 #                                                        pars,
 #                                                        lx = 700,

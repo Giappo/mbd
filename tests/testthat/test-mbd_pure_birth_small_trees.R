@@ -5,7 +5,7 @@ test_that("PureBirth theoretical check", {
   skip("Fix @Giappo: cannot find function 'mbd_loglik0'")
   test_size <- 10; soc <- 2; cond <- 0; #methode = "both" #"lsoda" "expo"
   
-  mbd_theoretical_loglik <- function(pars,brts,soc=2){
+  mbd_theoretical_loglik <- function(pars, brts, soc = 2){
     #this works only for mu=0
     lambda=pars[1]; mu=pars[2]; q=pars[3]
     if (mu!=0 | lambda<=0 | q<=0 | q>=1){
