@@ -38,8 +38,8 @@
 #   data <- mbd:::brts2time_intervals_and_births(brts)
 #   time_intervals <- c(0, data$time_intervals)
 #   births <- c(0, data$births)
-#   N0 <- soc #number of starting species
-#   k_interval <- N0 + cumsum(births)
+#   init_n_species <- soc #number of starting species
+#   k_interval <- init_n_species + cumsum(births)
 #   max_k <- max(k_interval)
 #   nvec <- 0:lx
 #   
@@ -48,7 +48,7 @@
 #   Qt <- matrix(0, ncol = (lx + 1), nrow = length(tm))
 #   Qt[1,] <- Qi
 #   dimnames(Qt)[[2]] <- paste0("Q", 0:lx)
-#   k <- N0 #N0 is the number of species at t=1
+#   k <- init_n_species #init_n_species is the number of species at t=1
 #   t <- 2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
 #   D <- C <- rep(1, (length(time_intervals)))
 #   logB <- 0;

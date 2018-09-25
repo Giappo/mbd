@@ -53,8 +53,8 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       births <- c(0, data$births)
       
       #SET UP
-      N0 = soc #number of starting species
-      k_interval = N0 + cumsum(births)
+      init_n_species = soc #number of starting species
+      k_interval = init_n_species + cumsum(births)
       max_k = max(k_interval)
       max_number_of_species = alpha*max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
       #nvec <- 0:max_number_of_species
@@ -68,7 +68,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       )
       Qt[1, ] <- Qi
       dimnames(Qt)[[2]] <- paste("Q", 0:max_number_of_species, sep = "")
-      k <- N0 #N0 is the number of species at t=1
+      k <- init_n_species #init_n_species is the number of species at t=1
       t <- 2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
       C <- rep(1,(length(time_intervals))) 
       D <- C
@@ -160,19 +160,19 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         total_time=max(abs(brts));
         m=0:max_number_of_species
         one_over_Cm=(3*(m+1))/(m+3)
-        one_over_qm_binom=1/choose((m+N0),N0)
+        one_over_qm_binom=1/choose((m+init_n_species),init_n_species)
         tips_components=(1+min_tips):(1+min(max_tips,max_number_of_species)) #applying tips constrain
         
-        Mk_N0=mbd:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = N0)
-        A2_v1=A_operator(Q = Qt[1,],transition_matrix = Mk_N0,time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
+        mk_n_zero=mbd:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = init_n_species)
+        A2_v1=A_operator(Q = Qt[1,],transition_matrix = mk_n_zero,time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
         if (methode != "sexpm"){A2_v1=mbd:::negatives_correction(A2_v1,pars)} #it removes some small negative values that can occurr as bugs from the integration process
         if (debug_check == 1){print(head(A2_v1, max_tips))}
         total_product=A2_v1 * one_over_Cm * one_over_qm_binom
         Pc=sum(total_product[tips_components])
         
         if (Pc==0){#slowest and best accuracy
-          # ode_matrix=as.matrix(Mk_N0) #use this only if you use sparsematrices
-          ode_matrix=MK_N0
+          # ode_matrix=as.matrix(mk_n_zero) #use this only if you use sparsematrices
+          ode_matrix=mk_n_zero
           times=c(0,total_time)
           A2_v1=deSolve::ode(y = Qt[1,], times = times, func = mbd:::mbd_loglik_rhs, parms = ode_matrix,atol=abstol,rtol=reltol)[2,-1] #evolving crown species to the present
           total_product=A2_v1*one_over_Cm*one_over_qm_binom

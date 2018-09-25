@@ -546,9 +546,9 @@ alpha_conditional_probability <- function(
     }
 
     Qi <- c(1, rep(0, max_number_of_species))
-    Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+    mk_n_zero <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                             max_number_of_species = max_number_of_species)
-    A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+    A2_v1 <- A_operator(Q = Qi, transition_matrix = mk_n_zero, time_interval = total_time,
                               precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
     if (methode != "sexpm") {
       # it removes some small negative values 
@@ -558,8 +558,8 @@ alpha_conditional_probability <- function(
 
     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
     {
-      Mk_N0.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-      A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time, precision = 50L, methode=methode, a_abstol=abstol, a_reltol=reltol)
+      mk_n_zero.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
+      A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = mk_n_zero.no_mbd, time_interval = total_time, precision = 50L, methode=methode, a_abstol=abstol, a_reltol=reltol)
       A2_v1 <- A2_v1 - A2_v1.no_mbd
     }
 
@@ -694,16 +694,16 @@ alpha_analysis <- function(
 #'     if (cond == 1){tips_components <- tips_components - init_n_lineages} #I am already considering the starting species to survive. I must not double count them!
 #'
 #'     Qi <- c(1, rep(0, max_number_of_species))
-#'     Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+#'     mk_n_zero <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                             max_number_of_species = max_number_of_species)
-#'     A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+#'     A2_v1 <- A_operator(Q = Qi, transition_matrix = mk_n_zero, time_interval = total_time,
 #'                               precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 #'     if (methode != "sexpm"){A2_v1 <- negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
 #'
 #'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
 #'     {
-#'       Mk_N0.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time, precision = 50L, methode=methode, a_abstol=abstol, a_reltol=reltol)
+#'       mk_n_zero.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
+#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = mk_n_zero.no_mbd, time_interval = total_time, precision = 50L, methode=methode, a_abstol=abstol, a_reltol=reltol)
 #'       A2_v1 <- A2_v1 - A2_v1.no_mbd
 #'     }
 #'
@@ -737,9 +737,9 @@ alpha_analysis <- function(
 #'   tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
 #'
 #'   Qi    <- c(1, rep(0, max_number_of_species))
-#'   Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+#'   mk_n_zero <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                           max_number_of_species = max_number_of_species)
-#'   A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+#'   A2_v1 <- A_operator(Q = Qi, transition_matrix = mk_n_zero, time_interval = total_time,
 #'                             precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 #'
 #'   # mbd::mbd_loglik(pars = pars, brts = c(total_time), soc = soc, cond = 0, missnumspec = 0)
@@ -769,16 +769,16 @@ alpha_analysis <- function(
 #'     if (cond == 1){tips_components <- tips_components - init_n_lineages} #I am already considering the starting species to survive. I must not double count them!
 #'
 #'     Qi <- c(1, rep(0, max_number_of_species))
-#'     Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+#'     mk_n_zero <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                             max_number_of_species = max_number_of_species)
-#'     A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
+#'     A2_v1 <- A_operator(Q = Qi, transition_matrix = mk_n_zero, time_interval = total_time,
 #'                               precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 #'     if (methode != "sexpm"){A2_v1 <- negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
 #'
 #'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
 #'     {
-#'       Mk_N0.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time, precision = 50L, methode=methode, a_abstol=abstol, a_reltol=reltol)
+#'       mk_n_zero.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
+#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = mk_n_zero.no_mbd, time_interval = total_time, precision = 50L, methode=methode, a_abstol=abstol, a_reltol=reltol)
 #'       A2_v1 <- A2_v1 - A2_v1.no_mbd
 #'     }
 #'
