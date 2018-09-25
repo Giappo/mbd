@@ -5,7 +5,7 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
-default_params_doc(A_abstol, A_reltol, abstol, account_name, after, age,
+default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, chain_length, changeloglikifnoconv,
   checked.functions, colormap, cond, function.name, idparsfix, idparsopt,
   initparsopt, INPUT.TREES, INPUT.XML, interval.max, interval.min,
@@ -21,9 +21,9 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, after, age,
   z.name)
 }
 \arguments{
-\item{A_abstol}{something}
+\item{a_abstol}{something}
 
-\item{A_reltol}{something}
+\item{a_reltol}{something}
 
 \item{abstol}{something}
 

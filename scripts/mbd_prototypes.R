@@ -67,7 +67,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         
         #Applying A operator
         transition_matrix=create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
-        Qt[t,]=A_operator(Q = Qt[(t-1),],transition_matrix = transition_matrix,time_interval = time_intervals[t],precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+        Qt[t,]=A_operator(Q = Qt[(t-1),],transition_matrix = transition_matrix,time_interval = time_intervals[t],precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
         if (methode!="sexpm"){Qt[t,]=mbd:::negatives_correction(Qt[t,],pars)} #it removes some small negative values that can occurr as bugs from the integration process
         
         #Applying C operator (this is a trick to avoid precision issues)
@@ -95,7 +95,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       
       #Applying A operator from the last branching time to the present
       transition_matrix=create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
-      Qt[t,]=A_operator(Q = Qt[(t-1),],transition_matrix = transition_matrix,time_interval = time_intervals[t],precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+      Qt[t,]=A_operator(Q = Qt[(t-1),],transition_matrix = transition_matrix,time_interval = time_intervals[t],precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
       if (methode!="sexpm"){Qt[t,]=mbd:::negatives_correction(Qt[t,],pars)}
       if (debug_check==1){print(head(Qt[t,]))}
       
@@ -121,7 +121,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         tips_components=(1+min_tips):(1+min(max_tips,max_number_of_species)) #applying tips constrain
         
         Mk_N0=mbd:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = N0)
-        A2_v1=A_operator(Q = Qt[1,],transition_matrix = Mk_N0,time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+        A2_v1=A_operator(Q = Qt[1,],transition_matrix = Mk_N0,time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
         if (methode != "sexpm"){A2_v1=mbd:::negatives_correction(A2_v1,pars)} #it removes some small negative values that can occurr as bugs from the integration process
         if (debug_check == 1){print(head(A2_v1, max_tips))}
         total_product=A2_v1 * one_over_Cm * one_over_qm_binom

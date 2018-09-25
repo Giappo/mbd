@@ -117,7 +117,7 @@ create_B.no_mbd = function(lambda,nu,q,k,b,max_number_of_species,minimum_multipl
 #' @details This is not to be called by the user.
 #' @export
 A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
-                       A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo"){
+                       a_abstol = 1e-16, a_reltol = 1e-10, methode = "expo"){
   
   precision_limit <- 2000
   precision_step1 <- 40
@@ -168,7 +168,7 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol = A_abstol, rtol = A_reltol)[2,-1], timeout = 1001)
+    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol = a_abstol, rtol = a_reltol)[2,-1], timeout = 1001)
   }
   
   return(result)
@@ -179,7 +179,7 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 #' #' @details This is not to be called by the user.
 #' #' @export
 #' A_operator_old <- function(Q, transition_matrix, time_interval, precision = 50L,
-#'                        A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo"){
+#'                        a_abstol = 1e-16, a_reltol = 1e-10, methode = "expo"){
 #' 
 #'   precision_limit <- 3000
 #' 
@@ -206,23 +206,23 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 #'   {
 #'     times <- c(0, time_interval)
 #'     ode_matrix <- transition_matrix
-#'     # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+#'     # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1]
+#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1], timeout = 1000)
 #'   }
 #' 
 #'   if (any(!is.numeric(result)) || any(is.nan(result))) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
 #'   {
 #'     times <- c(0, time_interval)
 #'     ode_matrix <- transition_matrix
-#'     # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+#'     # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1]
+#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1], timeout = 1000)
 #'   }
 #'   else if (any(result < 0)) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
 #'   {
 #'     times <- c(0, time_interval)
 #'     ode_matrix <- transition_matrix
-#'     # result=deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+#'     # result=deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1]
+#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1], timeout = 1000)
 #'   }
 #' 
 #'   # if ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && methode!="sexpm"){
@@ -265,7 +265,7 @@ determine_k_limit <- function(pars, brts, lx, soc, methode, abstol = 1e-16, relt
   T0 <- create_A(lambda = lambda, mu = 0, nu = nu, q = q, k = soc,
                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
   Pm <- A_operator(Q = Qi, transition_matrix = T0, time_interval = total_time,
-                         precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+                         precision = 250L, methode = methode, a_abstol = abstol, a_reltol = reltol)
   # graphics::plot((Pm/sum(Pm)))
   k_limit <- soc + max(mvec[(mvec %in% which((cumsum(Pm/sum(Pm))) <= 0.95))]); k_limit
   return(k_limit)
@@ -300,7 +300,7 @@ calculate_conditional_probability <- function(
                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
   
   A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
-                            precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol); A2_v1
+                            precision = 250L, methode = methode, a_abstol = abstol, a_reltol = reltol); A2_v1
   
   # A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
   
@@ -340,7 +340,7 @@ calculate_conditional_probability0 <- function(
                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
 
   A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
-  precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+  precision = 250L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 
   # A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
 
@@ -383,7 +383,7 @@ calculate_conditional_probability0PB <- function(
                        max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
   
   A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
-                            precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+                            precision = 250L, methode = methode, a_abstol = abstol, a_reltol = reltol)
   
   # A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
   
@@ -545,13 +545,13 @@ alpha_conditional_probability <- function(
     Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                             max_number_of_species = max_number_of_species)
     A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
-                              precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+                              precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
     if (methode != "sexpm"){A2_v1 <- negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
     
     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
     {
       Mk_N0.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-      A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+      A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
       A2_v1 <- A2_v1 - A2_v1.no_mbd
     }
     
@@ -689,13 +689,13 @@ alpha_analysis <- function(
 #'     Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                             max_number_of_species = max_number_of_species)
 #'     A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
-#'                               precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#'                               precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 #'     if (methode != "sexpm"){A2_v1 <- negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
 #'     
 #'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
 #'     {
 #'       Mk_N0.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
 #'       A2_v1 <- A2_v1 - A2_v1.no_mbd
 #'     }
 #'     
@@ -732,7 +732,7 @@ alpha_analysis <- function(
 #'   Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                           max_number_of_species = max_number_of_species)
 #'   A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
-#'                             precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#'                             precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 #'   
 #'   # mbd::mbd_loglik(pars = pars, brts = c(total_time), soc = soc, cond = 0, missnumspec = 0)
 #'   
@@ -764,13 +764,13 @@ alpha_analysis <- function(
 #'     Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
 #'                             max_number_of_species = max_number_of_species)
 #'     A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
-#'                               precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#'                               precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 #'     if (methode != "sexpm"){A2_v1 <- negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
 #'     
 #'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
 #'     {
 #'       Mk_N0.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,A_abstol=abstol,A_reltol=reltol)
+#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
 #'       A2_v1 <- A2_v1 - A2_v1.no_mbd
 #'     }
 #'     
@@ -802,7 +802,7 @@ alpha_analysis <- function(
 #'                        max_number_of_species = lx); dim(TM); max(is.na(TM)); max(is.infinite(TM))
 #'   
 #'   # A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
-#'   # precision = 250L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#'   # precision = 250L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 #'   
 #'   A2_v1 <- try(expoRkit::expv(v = Qi, x = TM, t = total_time, m = 50L), silent = T)
 #'   

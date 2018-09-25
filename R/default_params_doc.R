@@ -1,7 +1,7 @@
 #' This function does nothing. It is intended to inherit is parameters'
 #' documentation.
-#' @param A_abstol something
-#' @param A_reltol something
+#' @param a_abstol something
+#' @param a_reltol something
 #' @param abstol something
 #' @param account_name something
 #' @param after something
@@ -129,8 +129,8 @@
 #'   \code{@noRd}. This is not done, as this will disallow all
 #'   functions to find the documentation parameters
 default_params_doc <- function(
-  A_abstol,
-  A_reltol,
+  a_abstol,
+  a_reltol,
   abstol,
   account_name,
   after,

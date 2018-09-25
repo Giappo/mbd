@@ -58,7 +58,7 @@
 #   {
 #     #Applying A operator
 #     transition_matrix <- mbd:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
-#     Qt[t,] <- mbd:::A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#     Qt[t,] <- mbd:::A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 #     
 #     if (t < length(time_intervals))
 #     {
