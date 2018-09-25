@@ -238,13 +238,13 @@ myheatmap <- function(
 # @Giappo: add doc
 #' Does something J
 #' @inheritParams default_params_doc
-myheatmap2 <- function(x,y,z,x_name,y_name,z.name,x_splits,y_splits){
+myheatmap2 <- function(x,y,z,x_name,y_name,z_name,x_splits,y_splits){
 
   if (missing(x_splits)){x_splits=round( (length(x))/10 )}
   if (missing(y_splits)){y_splits=round( (length(y))/10 )}
   if (missing(x_name)){x_name=NULL}
   if (missing(y_name)){y_name=NULL}
-  if (missing(z.name)){z.name=NULL}
+  if (missing(z_name)){z_name=NULL}
 
   lX=x; lY=y;
   pretty_X.at	<-	pretty(range(lX),n=x_splits)
@@ -261,7 +261,7 @@ myheatmap2 <- function(x,y,z,x_name,y_name,z.name,x_splits,y_splits){
                    graphics::axis(1,at=seq(0,1,length.out = length(pretty_X.lab) ),labels=pretty_X.lab)
                    graphics::axis(2,at=seq(0,1,length.out = length(pretty_Y.lab) ),labels=pretty_Y.lab)
                  },
-                 key_title = graphics::title(main=z.name)
+                 key_title = graphics::title(main=z_name)
   )
 }
 

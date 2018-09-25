@@ -122,7 +122,7 @@
 #' @param y_name something
 #' @param y_splits something
 #' @param z something
-#' @param z.name something
+#' @param z_name something
 #' @author Documentation by Giovanni Laudanno, 
 #'   use of this function by Richel J.C. Bilderbeek
 #' @note This is an internal function, so it should be marked with
@@ -217,7 +217,7 @@ default_params_doc <- function(
   y_name,
   y_splits,
   z,
-  z.name
+  z_name
 ) {
   # Nothing
 }

@@ -4,7 +4,7 @@
 \alias{myheatmap2}
 \title{Does something J}
 \usage{
-myheatmap2(x, y, z, x_name, y_name, z.name, x_splits, y_splits)
+myheatmap2(x, y, z, x_name, y_name, z_name, x_splits, y_splits)
 }
 \arguments{
 \item{x}{something}
@@ -17,7 +17,7 @@ myheatmap2(x, y, z, x_name, y_name, z.name, x_splits, y_splits)
 
 \item{y_name}{something}
 
-\item{z.name}{something}
+\item{z_name}{something}
 
 \item{x_splits}{something}
 

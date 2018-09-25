@@ -18,7 +18,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
   trparsopt, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
-  z.name)
+  z_name)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -230,7 +230,7 @@ do with a standard usage of mbd_sim.}
 
 \item{z}{something}
 
-\item{z.name}{something}
+\item{z_name}{something}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'
