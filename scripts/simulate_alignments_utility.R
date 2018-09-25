@@ -115,7 +115,7 @@
 
 
 # 
-# lavec <- seq((min.lambda <- lambda), (max.lambda <- 3*lambda), by = abs(max.lambda - min.lambda)/(n_steps <- 20))
+# lavec <- seq((min.lambda <- lambda), (max_lambda <- 3*lambda), by = abs(max_lambda - min.lambda)/(n_steps <- 20))
 # out <- rep(NA, length(lavec))
 # for (i in 1:length(lavec))
 # {

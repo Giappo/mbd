@@ -47,7 +47,7 @@ BD.infer.lambda.from.mutations <- function(n_subs,
                                            sequence_length = 1000, 
                                            mutation_rate = 1/age, 
                                            n_steps = 40) {
-  lavec <- seq((min.lambda <- 0.5 * mbd_lambda), (max.lambda <- 6 * mbd_lambda), by = abs(max.lambda - min.lambda)/(n_steps))
+  lavec <- seq((min.lambda <- 0.5 * mbd_lambda), (max_lambda <- 6 * mbd_lambda), by = abs(max_lambda - min.lambda)/(n_steps))
   NN <- rep(NA, length(lavec))
   for (i in 1:length(lavec))
   {

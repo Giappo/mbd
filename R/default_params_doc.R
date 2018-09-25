@@ -116,8 +116,8 @@
 #' @param values something
 #' @param verbose something
 #' @param x something
-#' @param x.name something
-#' @param x.splits something
+#' @param x_name something
+#' @param x_splits something
 #' @param y something
 #' @param y.name something
 #' @param y.splits something
@@ -211,8 +211,8 @@ default_params_doc <- function(
   values,
   verbose,
   x,
-  x.name,
-  x.splits,
+  x_name,
+  x_splits,
   y,
   y.name,
   y.splits,

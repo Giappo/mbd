@@ -17,7 +17,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   quantiles_choice, recursive, reltol, res, results, s, sample_interval,
   sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
-  trparsopt, values, verbose, x, x.name, x.splits, y, y.name, y.splits, z,
+  trparsopt, values, verbose, x, x_name, x_splits, y, y.name, y.splits, z,
   z.name)
 }
 \arguments{
@@ -218,9 +218,9 @@ do with a standard usage of mbd_sim.}
 
 \item{x}{something}
 
-\item{x.name}{something}
+\item{x_name}{something}
 
-\item{x.splits}{something}
+\item{x_splits}{something}
 
 \item{y}{something}
 

@@ -420,10 +420,10 @@ find_best_lx_for_Pc <- function(brts,
   interval_width <- interval_max - interval_min
   step1 <- floor(interval_width/a)
   
-  lx.test <- rep(NA, length(lxvec <- seq(interval_min + step1, interval_max - step1, step1))); i <- 1; right.lx.coord <- 0
+  lx_test <- rep(NA, length(lxvec <- seq(interval_min + step1, interval_max - step1, step1))); i <- 1; right.lx_coord <- 0
   for (lx2 in lxvec)
   {
-    lx.test[i] <- mbd::calculate_conditional_probability0(
+    lx_test[i] <- mbd::calculate_conditional_probability0(
       brts = brts,
       pars = c(pars[1], 0, pars[3], pars[4]),
       lx = lx2, 
@@ -433,19 +433,19 @@ find_best_lx_for_Pc <- function(brts,
       abstol = abstol,
       reltol = reltol
     )
-    if (!is.na(abs(lx.test[i]))) if (abs(lx.test[i] - 1) < 0.01) {right.lx.coord <- i; lx <- lxvec[right.lx.coord]; break}
+    if (!is.na(abs(lx_test[i]))) if (abs(lx_test[i] - 1) < 0.01) {right.lx_coord <- i; lx <- lxvec[right.lx_coord]; break}
     i <- i + 1
-  }; lx.test
-  if (right.lx.coord == 0)
+  }; lx_test
+  if (right.lx_coord == 0)
   {
-    right.lx.coord <- which(abs(lx.test - 1) == min(abs(lx.test - 1), na.rm = TRUE))
-    lx <- lxvec[right.lx.coord]
+    right.lx_coord <- which(abs(lx_test - 1) == min(abs(lx_test - 1), na.rm = TRUE))
+    lx <- lxvec[right.lx_coord]
   }
   
-  lx.test2 <- rep(NA, length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2 * step1/a)))); j <- 1; right.lx.coord2 <- 0
+  lx_test2 <- rep(NA, length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2 * step1/a)))); j <- 1; right.lx_coord2 <- 0
   for (lx2 in lxvec)
   {
-    lx.test2[j] <- mbd::calculate_conditional_probability0(
+    lx_test2[j] <- mbd::calculate_conditional_probability0(
       brts = brts,
       pars = c(pars[1], 0, pars[3], pars[4]),
       lx = lx2, 
@@ -455,13 +455,13 @@ find_best_lx_for_Pc <- function(brts,
       abstol = abstol,
       reltol = reltol
     )
-    if (!is.na(abs(lx.test2[i]))) if (abs(lx.test2[j] - 1) < 0.01) {right.lx.coord2 <- j; lx <- lxvec2[right.lx.coord2]; break}
+    if (!is.na(abs(lx_test2[i]))) if (abs(lx_test2[j] - 1) < 0.01) {right.lx_coord2 <- j; lx <- lxvec2[right.lx_coord2]; break}
     j <- j + 1
-  }; lx.test2
-  if (right.lx.coord2 == 0)
+  }; lx_test2
+  if (right.lx_coord2 == 0)
   {
-    right.lx.coord2 <- which(abs(lx.test2 - 1) == min(abs(lx.test2 - 1), na.rm = T))
-    lx <- lxvec2[right.lx.coord2]
+    right.lx_coord2 <- which(abs(lx_test2 - 1) == min(abs(lx_test2 - 1), na.rm = T))
+    lx <- lxvec2[right.lx_coord2]
   }
   
   return(lx)
