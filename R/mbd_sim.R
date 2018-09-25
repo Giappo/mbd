@@ -53,7 +53,27 @@ mbd_sim <- function(
   tips_interval = c(0, Inf),
   minimum_multiple_births = 0
 ) {
-  if (tips_interval[2] < tips_interval[1] || any(pars < 0)){stop("ERROR! Check again your settings.")}
+  if (length(pars) != 4) {
+    stop("'pars' must have four parameters")
+  }
+  if (pars[1] < 0.0) {
+    stop("The sympatric speciation rate 'pars[1]' must be positive")
+  }
+  if (pars[2] < 0.0) {
+    stop("The extinction rate 'pars[2]' must be positive")
+  }
+  if (pars[3] < 0.0) {
+    stop(
+      "The multiple allopatric speciation trigger rate ",
+      "'pars[3]' must be positive"
+    )
+  }
+  if (pars[4] < 0.0) {
+    stop("The single-lineage speciation probability 'pars[4]' must be positive")
+  }
+  if (tips_interval[2] < tips_interval[1]) {
+    stop("ERROR! Check again your settings.")
+  }
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]; N0 <- soc
   tips <- -1; crown_species_dead <- cond; multiple_births_check <- 0;
   keep_the_sim <- 0
