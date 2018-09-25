@@ -13,7 +13,7 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
   print_errors = 0, verbose = TRUE, ...)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny.}
+\item{brts}{A set of branching times of a phylogeny_}
 
 \item{initparsopt}{The initial values of the parameters that must be optimized}
 
@@ -23,17 +23,17 @@ The ids are defined as follows:
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{idparsfix}{The ids of the parameters that should not be optimized. The default is to fix all parameters not specified in idparsopt.}
 
 \item{parsfix}{The values of the parameters that should not be optimized.}
 
-\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
+\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny_}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age 
-and non-extinction of the phylogeny. Set 0 otherwise.}
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 

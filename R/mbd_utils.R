@@ -147,14 +147,14 @@ heatmap2dataframe = function(
   y,
   Matrix, 
   x_name="x", 
-  y.name="y", 
+  y_name="y", 
   heatmap.name="HeatMap"
 ){
   Matrix2=matrix(Matrix,nrow = length(x)*length(y))
   df=data.frame(expand.grid(x=x,y=y),HeatMap=Matrix2)
   #names(df$x)=names(x);names(df$y)=names(y);names(df$HeatMap)=names(Matrix);
   colnames(df)[1] <- x_name;
-  colnames(df)[2] <- y.name;
+  colnames(df)[2] <- y_name;
   colnames(df)[3] <- heatmap.name;
   return(df)
 }
@@ -238,30 +238,30 @@ myheatmap <- function(
 # @Giappo: add doc
 #' Does something J
 #' @inheritParams default_params_doc
-myheatmap2 <- function(x,y,z,x_name,y.name,z.name,x_splits,y.splits){
+myheatmap2 <- function(x,y,z,x_name,y_name,z.name,x_splits,y_splits){
 
   if (missing(x_splits)){x_splits=round( (length(x))/10 )}
-  if (missing(y.splits)){y.splits=round( (length(y))/10 )}
+  if (missing(y_splits)){y_splits=round( (length(y))/10 )}
   if (missing(x_name)){x_name=NULL}
-  if (missing(y.name)){y.name=NULL}
+  if (missing(y_name)){y_name=NULL}
   if (missing(z.name)){z.name=NULL}
 
   lX=x; lY=y;
-  pretty.X.at	<-	pretty(range(lX),n=x_splits)
-  pretty.X.lab	<-	round(pretty.X.at,2)
-  pretty.Y.at	<-	pretty(range(lY),n=y.splits)
-  pretty.Y.lab	<-	round(pretty.Y.at,2)
+  pretty_X.at	<-	pretty(range(lX),n=x_splits)
+  pretty_X.lab	<-	round(pretty_X.at,2)
+  pretty_Y.at	<-	pretty(range(lY),n=y_splits)
+  pretty_Y.lab	<-	round(pretty_Y.at,2)
 
   jet.colors <- grDevices::colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan","#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
   graphics::filled.contour(t(z), color = jet.colors, nlevels=100,#asp = 1, #frame.plot = T, axes=F,
-                 ylab = y.name, xlab = x_name,
+                 ylab = y_name, xlab = x_name,
                  plot.axes={
-                   # axis(1,at=seq(0,1,length.out = x_splits+1),labels=pretty.X.lab)
-                   # axis(2,at=seq(0,1,length.out = y.splits+1),labels=pretty.Y.lab)
-                   graphics::axis(1,at=seq(0,1,length.out = length(pretty.X.lab) ),labels=pretty.X.lab)
-                   graphics::axis(2,at=seq(0,1,length.out = length(pretty.Y.lab) ),labels=pretty.Y.lab)
+                   # axis(1,at=seq(0,1,length.out = x_splits+1),labels=pretty_X.lab)
+                   # axis(2,at=seq(0,1,length.out = y_splits+1),labels=pretty_Y.lab)
+                   graphics::axis(1,at=seq(0,1,length.out = length(pretty_X.lab) ),labels=pretty_X.lab)
+                   graphics::axis(2,at=seq(0,1,length.out = length(pretty_Y.lab) ),labels=pretty_Y.lab)
                  },
-                 key.title = graphics::title(main=z.name)
+                 key_title = graphics::title(main=z.name)
   )
 }
 
@@ -779,7 +779,7 @@ extract_posterior <- function(
 #   }
 #   if(itercount < maxiter)
 #   {
-#     cat("Optimization has terminated successfully.","\n")
+#     cat("Optimization has terminated successfully_","\n")
 #   } else {
 #     cat("Maximum number of iterations has been exceeded.","\n")
 #   }

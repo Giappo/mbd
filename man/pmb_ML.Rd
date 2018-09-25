@@ -10,7 +10,7 @@ pmb_ML(brts, initparsopt, soc = 2, res = 10 * (1 + length(brts) +
   optimmethod = "simplex", pars_transform = 1, missnumspec = 0)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny.}
+\item{brts}{A set of branching times of a phylogeny_}
 
 \item{initparsopt}{something}
 
@@ -28,7 +28,7 @@ pmb_ML(brts, initparsopt, soc = 2, res = 10 * (1 + length(brts) +
 
 \item{pars_transform}{something}
 
-\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
+\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny_}
 }
 \description{
 Does something N

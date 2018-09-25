@@ -9,13 +9,13 @@
 #' @param alpha something
 #' @param alpha0 something
 #' @param b something
-#' @param brts A set of branching times of a phylogeny.
+#' @param brts A set of branching times of a phylogeny_
 #' @param chain_length something
 #' @param changeloglikifnoconv something
 #' @param checked_functions something
 #' @param colormap something
 #' @param cond Set 1 if you want to condition on stem or crown age 
-#'   and non-extinction of the phylogeny. Set 0 otherwise.
+#'   and non-extinction of the phylogeny_ Set 0 otherwise.
 #' @param function_name something
 #' @param idparsfix something
 #' @param idparsopt The ids of the parameters that must be optimized. 
@@ -24,7 +24,7 @@
 #'     \item pars[1] is lambda, the sympatric speciation rate;
 #'     \item pars[2] is mu, the extinction rate;
 #'     \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-#'     \item pars[4] is q, the single-lineage speciation probability.
+#'     \item pars[4] is q, the single-lineage speciation probability_
 #'   }
 #' @param initparsopt something
 #' @param input_trees_path Path to \code{.trees} file
@@ -54,7 +54,7 @@
 #'     \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 #'   }
 #' @param minimum_multiple_births something
-#' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
+#' @param missnumspec The number of species that are in the clade but missing in the phylogeny_
 #' @param mu something
 #' @param mutation_rate something
 #' @param N something
@@ -67,14 +67,14 @@
 #' \itemize{
 #'   \item pars[1] is the multiple speciation trigger rate;
 #'   \item pars[2] is the extinction rate;
-#'   \item pars[3] is the single-lineage speciation probability.
+#'   \item pars[3] is the single-lineage speciation probability_
 #' }
 #' or
 #' \itemize{
 #'   \item pars[1] is lambda, the sympatric speciation rate;
 #'   \item pars[2] is mu, the extinction rate;
 #'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-#'   \item pars[4] is q, the single-lineage speciation probability.
+#'   \item pars[4] is q, the single-lineage speciation probability_
 #' }
 #' @param pars_transform something
 #' @param parsfix The values of the parameters that should not be optimized.
@@ -119,8 +119,8 @@
 #' @param x_name something
 #' @param x_splits something
 #' @param y something
-#' @param y.name something
-#' @param y.splits something
+#' @param y_name something
+#' @param y_splits something
 #' @param z something
 #' @param z.name something
 #' @author Documentation by Giovanni Laudanno, 
@@ -214,8 +214,8 @@ default_params_doc <- function(
   x_name,
   x_splits,
   y,
-  y.name,
-  y.splits,
+  y_name,
+  y_splits,
   z,
   z.name
 ) {

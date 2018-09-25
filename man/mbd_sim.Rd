@@ -14,7 +14,7 @@ mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0,
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
@@ -22,7 +22,7 @@ mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0,
 \item{age}{The age of the tree.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age 
-and non-extinction of the phylogeny. Set 0 otherwise.}
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually 

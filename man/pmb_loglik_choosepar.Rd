@@ -18,12 +18,12 @@ The ids are defined as follows:
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{idparsfix}{something}
 
-\item{brts}{A set of branching times of a phylogeny.}
+\item{brts}{A set of branching times of a phylogeny_}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 

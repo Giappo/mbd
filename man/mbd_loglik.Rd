@@ -15,15 +15,15 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{brts}{A set of branching times of a phylogeny.}
+\item{brts}{A set of branching times of a phylogeny_}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age 
-and non-extinction of the phylogeny. Set 0 otherwise.}
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{lx0}{something}
 
@@ -33,7 +33,7 @@ and non-extinction of the phylogeny. Set 0 otherwise.}
 You can also define the tips_interval as you can usually 
 do with a standard usage of mbd_sim.}
 
-\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
+\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny_}
 
 \item{safety_threshold}{It determines the precision on the parameters.}
 

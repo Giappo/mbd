@@ -17,7 +17,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   quantiles_choice, recursive, reltol, res, results, s, sample_interval,
   sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
-  trparsopt, values, verbose, x, x_name, x_splits, y, y.name, y.splits, z,
+  trparsopt, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
   z.name)
 }
 \arguments{
@@ -39,7 +39,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
 
 \item{b}{something}
 
-\item{brts}{A set of branching times of a phylogeny.}
+\item{brts}{A set of branching times of a phylogeny_}
 
 \item{chain_length}{something}
 
@@ -50,7 +50,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
 \item{colormap}{something}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age 
-and non-extinction of the phylogeny. Set 0 otherwise.}
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{function_name}{something}
 
@@ -62,7 +62,7 @@ The ids are defined as follows:
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{initparsopt}{something}
@@ -114,7 +114,7 @@ The ids are defined as follows:
 
 \item{minimum_multiple_births}{something}
 
-\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
+\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny_}
 
 \item{mu}{something}
 
@@ -136,14 +136,14 @@ The ids are defined as follows:
 \itemize{
   \item pars[1] is the multiple speciation trigger rate;
   \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability.
+  \item pars[3] is the single-lineage speciation probability_
 }
 or
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{pars_transform}{something}
@@ -224,9 +224,9 @@ do with a standard usage of mbd_sim.}
 
 \item{y}{something}
 
-\item{y.name}{something}
+\item{y_name}{something}
 
-\item{y.splits}{something}
+\item{y_splits}{something}
 
 \item{z}{something}
 

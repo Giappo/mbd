@@ -7,7 +7,7 @@
 brts2time_intervals_and_births(brts)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny.}
+\item{brts}{A set of branching times of a phylogeny_}
 }
 \description{
 Converts branching times to "time intervals between branching times" and "birth at nodes" vectors

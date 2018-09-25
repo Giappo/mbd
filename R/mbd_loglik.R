@@ -7,7 +7,7 @@
 #'   \item pars[1] is lambda, the sympatric speciation rate;
 #'   \item pars[2] is mu, the extinction rate;
 #'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-#'   \item pars[4] is q, the single-lineage speciation probability.
+#'   \item pars[4] is q, the single-lineage speciation probability_
 #' }
 #' @param safety_threshold It determines the precision on the parameters.
 #' @return The function returns the natural logarithm of the likelihood for the process.

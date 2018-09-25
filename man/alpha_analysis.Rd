@@ -8,20 +8,20 @@ alpha_analysis(brts, pars, tips_interval, cond, soc, alpha0, max_k,
   methode = "expo", abstol, reltol, minimum_multiple_births)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny.}
+\item{brts}{A set of branching times of a phylogeny_}
 
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is the multiple speciation trigger rate;
   \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability.
+  \item pars[3] is the single-lineage speciation probability_
 }
 or
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
@@ -29,7 +29,7 @@ You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age 
-and non-extinction of the phylogeny. Set 0 otherwise.}
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
