@@ -26,7 +26,7 @@ mbd_loglik_choosepar  <- function(
   #idparsfix are the ids of the parameters you want to fix
   #trparsfix are the values for parameters you want to fix
 
-  namepars <- c("lambda","mu","nu","q"); Npars <- length(namepars);
+  namepars <- c("lambda", "mu", "nu", "q"); Npars <- length(namepars);
   if (length(trparsopt) == 4 && missing(trparsfix)){trparsfix <- NULL}
   trpars1 = rep(0, Npars)
   trpars1[idparsopt] <- trparsopt
@@ -58,7 +58,7 @@ mbd_loglik_choosepar  <- function(
   }
   if (is.nan(loglik) || is.na(loglik))
   {
-    cat("There are parameter values used which cause numerical problems:",trpars1,"\n")
+    cat("There are parameter values used which cause numerical problems:", trpars1, "\n")
     loglik <- -Inf
   }
   return(loglik)

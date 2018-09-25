@@ -28,7 +28,7 @@
 #' graphics::plot(simulated_data$tes)
 #' # @Giappo: does not work
 #' # mbd_ML(
-#' #   brts = simulated_data$brts, initparsopt = 0.11 ,idparsopt = 4,
+#' #   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
 #' #   idparsfix = c(1,2,3), parsfix = test_pars[idparsfix],
 #' #   missnumspec = 0, cond = 1, soc = 2
 #' # )
@@ -87,12 +87,12 @@ mbd_ML <- function(
 
   if(length(namepars[idparsopt]) == 0) { optstr = "nothing" } else { optstr = namepars[idparsopt] }
   if (verbose == TRUE) {
-    cat("You are optimizing",optstr,"\n")
+    cat("You are optimizing", optstr, "\n")
   }
   if(length(namepars[idparsfix]) == 0) { fixstr = "nothing" } else { fixstr = namepars[idparsfix] }
   if (verbose == TRUE) {
-    cat("You are fixing",fixstr,"\n")
-    cat("Optimizing the likelihood - this may take a while.","\n")
+    cat("You are fixing", fixstr, "\n")
+    cat("Optimizing the likelihood - this may take a while.", "\n")
     utils::flush.console()
   }
   if (pars_transform == 1)
@@ -117,7 +117,7 @@ mbd_ML <- function(
                                            pars_transform = pars_transform,
                                            print_errors = print_errors, ...) #there's no pars2 here and instead 3 more args at the end
   if (verbose == TRUE) {
-    cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
+    cat("The loglikelihood for the initial parameter values is", initloglik, "\n")
     utils::flush.console()
   }
   if (initloglik == -Inf)
@@ -167,7 +167,7 @@ mbd_ML <- function(
   tobeprint <- "Maximum likelihood parameter estimates:"
   for (ii in 1:Npars)
   {
-    tobeprint <- paste(tobeprint,paste(names(MLpars1[ii]),":",sep = ""),MLpars1[ii])
+    tobeprint <- paste(tobeprint, paste(names(MLpars1[ii]), ":", sep = ""),MLpars1[ii])
   }
   if (verbose == TRUE) {
     s1 <- sprintf(tobeprint)
@@ -175,7 +175,7 @@ mbd_ML <- function(
   if(out2$conv != 0 & changeloglikifnoconv == T) {out2$loglik <- -Inf}
   if (verbose == TRUE) {
     s2 <- sprintf('Maximum loglikelihood: %f',ML)
-    cat("\n",s1,"\n",s2,"\n\n")
+    cat("\n", s1, "\n", s2, "\n\n")
   }
 
   invisible(out2)

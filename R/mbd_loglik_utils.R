@@ -4,7 +4,7 @@
 #' @details This is not to be called by the user.
 hyperA_HannoX <- function(N, k, q) {# HG function: fast O(N), updated after Moulis meeting
   #this is the matrix builder: helps to create A and B operators
-  #it produces the structure q^(m-n)*(1-q)^(k+2*n-m)*sum_j 2^j choose(k,j)*choose(n,m-n-j)
+  #it produces the structure q^(m-n)*(1-q)^(k+2*n-m)*sum_j 2^j choose(k, j)*choose(n, m-n-j)
   j <- 0:k
   A1 <- (1-q)^(k) * choose(k, j) * (2)^j
   N <- N + 1
@@ -13,9 +13,9 @@ hyperA_HannoX <- function(N, k, q) {# HG function: fast O(N), updated after Moul
   for (dst in 2:N) {
     src <- dst - 1
     s <- src:min(N,2*src+k-1)
-    A[s+2,dst] <- A[s,src] + A[s+1,src]
+    A[s+2, dst] <- A[s, src] + A[s+1, src]
     m <- s-1; n <- src-1;
-    A[s,src] <- A[s,src] * q^(m-n)*(1-q)^(2*n-m)
+    A[s, src] <- A[s, src] * q^(m-n)*(1-q)^(2*n-m)
   }
   A[N,N] = A[N,N] * (1-q)^(N-1);
   A[1:N,1:N]
@@ -43,7 +43,7 @@ create_A0 <- function(max_number_of_species, lambda, mu, q, k, matrix_builder = 
 #' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-create_B0 <- function(max_number_of_species, q, k, b, matrix_builder = hyperA_HannoX){#lambda * choose(k,b) * q^b  is going to be added in logB in the main script
+create_B0 <- function(max_number_of_species, q, k, b, matrix_builder = hyperA_HannoX){#lambda * choose(k, b) * q^b  is going to be added in logB in the main script
   k2 <- k - b
   B <- matrix_builder(N = max_number_of_species, k = k2, q = q)
   return(B)
@@ -92,7 +92,7 @@ create_A.no_mbd = function(
   minimum_multiple_births
 ){
   nvec <- 0:max_number_of_species
-  M <- create_A0(max_number_of_species = max_number_of_species,lambda = nu,mu = mu,q = q,k = k)
+  M <- create_A0(max_number_of_species = max_number_of_species, lambda = nu, mu = mu, q = q, k = k)
   M[row(M) == col(M) + 1] <- M[row(M) == col(M) + 1] + lambda * (nvec[1:(max_number_of_species)]+2*k)
   M[row(M) == col(M)]     <- M[row(M) == col(M)] - c(lambda * (nvec[-length(nvec)] + k), 0)
   M[row(M) > col(M) + minimum_multiple_births] <- 0
@@ -104,9 +104,9 @@ create_A.no_mbd = function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_B.no_mbd = function(lambda,nu,q,k,b,max_number_of_species,minimum_multiple_births){
+create_B.no_mbd = function(lambda, nu, q, k, b, max_number_of_species, minimum_multiple_births){
   M <- create_B0(max_number_of_species = max_number_of_species, q = q, k = k, b = b)
-  B <- lambda * k * diag(max_number_of_species + 1) * (b == 1) + nu * choose(k,b) * (q^b) * M
+  B <- lambda * k * diag(max_number_of_species + 1) * (b == 1) + nu * choose(k, b) * (q^b) * M
   B[row(B) > col(B) + minimum_multiple_births] = 0
   return(B)
 }
@@ -206,23 +206,23 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
 #'   {
 #'     times <- c(0, time_interval)
 #'     ode_matrix <- transition_matrix
-#'     # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1]
-#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1], timeout = 1000)
+#'     # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1]
+#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1], timeout = 1000)
 #'   }
 #'
 #'   if (any(!is.numeric(result)) || any(is.nan(result))) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
 #'   {
 #'     times <- c(0, time_interval)
 #'     ode_matrix <- transition_matrix
-#'     # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1]
-#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1], timeout = 1000)
+#'     # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1]
+#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1], timeout = 1000)
 #'   }
 #'   else if (any(result < 0)) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
 #'   {
 #'     times <- c(0, time_interval)
 #'     ode_matrix <- transition_matrix
-#'     # result=deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1]
-#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1], timeout = 1000)
+#'     # result=deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1]
+#'     R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1], timeout = 1000)
 #'   }
 #'
 #'   # if ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && methode!="sexpm"){
@@ -551,7 +551,7 @@ alpha_conditional_probability <- function(
     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
     {
       Mk_N0.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-      A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
+      A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time, precision = 50L, methode=methode, a_abstol=abstol, a_reltol=reltol)
       A2_v1 <- A2_v1 - A2_v1.no_mbd
     }
 
@@ -695,7 +695,7 @@ alpha_analysis <- function(
 #'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
 #'     {
 #'       Mk_N0.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
+#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time, precision = 50L, methode=methode, a_abstol=abstol, a_reltol=reltol)
 #'       A2_v1 <- A2_v1 - A2_v1.no_mbd
 #'     }
 #'
@@ -770,7 +770,7 @@ alpha_analysis <- function(
 #'     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
 #'     {
 #'       Mk_N0.no_mbd <- create_A.no_mbd(lambda = lambda, mu = mu, nu = nu, q = q, k = soc, max_number_of_species = max_number_of_species, minimum_multiple_births = minimum_multiple_births)
-#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
+#'       A2_v1.no_mbd <- A_operator(Q = Qi, transition_matrix = Mk_N0.no_mbd, time_interval = total_time, precision = 50L, methode=methode, a_abstol=abstol, a_reltol=reltol)
 #'       A2_v1 <- A2_v1 - A2_v1.no_mbd
 #'     }
 #'

@@ -136,7 +136,7 @@ mbd_loglik <- function(
       while (t <= length(time_intervals))
       {
         #Applying A operator
-        transition_matrix <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
+        transition_matrix <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k, max_number_of_species = lx)
         Qt[t,] <- A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
         if (methode != "sexpm"){Qt[t,] <- negatives_correction(Qt[t,], pars)} #it removes some small negative values that can occurr as bugs from the integration process
         if (any(is.nan(Qt[t,])))

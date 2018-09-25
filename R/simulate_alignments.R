@@ -153,7 +153,7 @@ alignments_comparison_multiple <- function(
   soc <- 2 #it has to start with a crown to use pirouette
 
   #set filename to save results
-  dir_name <- paste0(dirname(getwd()),"//results//nLTT//"); suppressWarnings(dir.create(dir_name))
+  dir_name <- paste0(dirname(getwd()), "//results//nLTT//"); suppressWarnings(dir.create(dir_name))
   sim_pars_string <- gsub(", ", "-", toString(sim_pars))
   folder_name <- paste0(dir_name, sim_pars_string)
   suppressWarnings(dir.create(folder_name))
@@ -256,13 +256,13 @@ alignments_comparison_multiple <- function(
        BD.alignment = BD.alignment,
        BD.trees = BD.trees,
        BD.estimates = BD.estimates,
-       file = paste0(folder_name,"//" ,file_name))
+       file = paste0(folder_name, "//" , file_name))
 
-  grDevices::png(filename = paste0(folder_name, "//" ,file_name, "_mbd_plot.png"))
+  grDevices::png(filename = paste0(folder_name, "//" , file_name, "_mbd_plot.png"))
   graphics::plot(mbd_nLTT.plot)
   grDevices::dev.off()
 
-  grDevices::png(filename = paste0(folder_name, "//" ,file_name, "_BD_plot.png"))
+  grDevices::png(filename = paste0(folder_name, "//" , file_name, "_BD_plot.png"))
   graphics::plot(BD.nLTT.plot)
   grDevices::dev.off()
 

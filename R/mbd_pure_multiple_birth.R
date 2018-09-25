@@ -35,7 +35,7 @@ if (condition1 | condition2){th_loglik = -Inf}else
                  exp(- k[t] * lambda * (time_intervals[t])) # lambda contribution: exp(-k*lambda*(t_k-t_k-1))
   }
   #calculating nodes contribution
-  B_term <- (nu * choose(k[-length(k)], births) * q^births * (1 - q)^(k[-length(k)] - births)) + # nu contribution: nu*(k,b)*q^b*(1-q)^(k-b)
+  B_term <- (nu * choose(k[-length(k)], births) * q^births * (1 - q)^(k[-length(k)] - births)) + # nu contribution: nu*(k, b)*q^b*(1-q)^(k-b)
             lambda * k[-length(k)] * (births == 1)                                               # lambda contribution: lambda*k (only if b==1)
 
   th_loglik <- sum(log(A_term)) + sum(log(B_term))
@@ -82,7 +82,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
                    exp(- k[t] * lambda * (time_intervals[t]))   # lambda contribution: exp(-k*lambda*(t_k-t_k-1))
     }
     #calculating nodes contribution
-    B_term <- (nu * choose(k[-length(k)], births) * q^births * (1 - q)^(k[-length(k)] - births)) + # nu contribution: nu*(k,b)*q^b*(1-q)^(k-b)
+    B_term <- (nu * choose(k[-length(k)], births) * q^births * (1 - q)^(k[-length(k)] - births)) + # nu contribution: nu*(k, b)*q^b*(1-q)^(k-b)
               lambda * k[-length(k)] * (births == 1)                                               # lambda contribution: lambda*k (only if b==1)
 
     th_loglik <- sum(log(A_term)) + sum(log(B_term))
@@ -105,7 +105,7 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
   #trparsfix are the values for parameters you want to fix
 
   cond <- 0
-  namepars <- c("lambda","mu","nu","q"); Npars <- length(namepars);
+  namepars <- c("lambda", "mu", "nu", "q"); Npars <- length(namepars);
   if (length(trparsopt) == 4 && missing(trparsfix)){trparsfix <- NULL}
   # idparsopt=(1:3)[-c(idparsfix)] #this argument is useless but I let the user specify it because Rampal also did it (for some reason)
   trpars1 <- rep(0, Npars)
@@ -128,7 +128,7 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
   }
   if(is.nan(loglik) || is.na(loglik))
   {
-    cat("There are parameter values used which cause numerical problems:",trpars1,"\n")
+    cat("There are parameter values used which cause numerical problems:", trpars1, "\n")
     loglik <- -Inf
   }
   return(loglik)
@@ -161,7 +161,7 @@ pmb_ML <- function(
   # if (missing(parsfix)&&(length(idparsfix)==0)){parsfix=NULL}
 
   options(warn=-1)
-  namepars <- c("lambda","mu","nu","q"); Npars <- length(namepars); #if you add more parameters to your model just change this
+  namepars <- c("lambda", "mu", "nu", "q"); Npars <- length(namepars); #if you add more parameters to your model just change this
   failpars <- rep(-1, Npars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
   if(is.numeric(brts) == FALSE)
   {# bracket#2
@@ -175,10 +175,10 @@ pmb_ML <- function(
       out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     } else {
       if (length(namepars[idparsopt]) == 0) { optstr <- "nothing" } else { optstr <- namepars[idparsopt] }
-      cat("You are optimizing",optstr,"\n")
+      cat("You are optimizing", optstr, "\n")
       if (length(namepars[idparsfix]) == 0) { fixstr <- "nothing" } else { fixstr <- namepars[idparsfix] }
-      cat("You are fixing",fixstr,"\n")
-      cat("Optimizing the likelihood - this may take a while.","\n")
+      cat("You are fixing", fixstr, "\n")
+      cat("Optimizing the likelihood - this may take a while.", "\n")
       utils::flush.console()
       if (pars_transform == 1)
       {
@@ -195,7 +195,7 @@ pmb_ML <- function(
       initloglik <- pmb_loglik_choosepar(trparsopt = trparsopt, trparsfix = trparsfix, idparsopt = idparsopt,
                                                idparsfix = idparsfix, brts = brts, soc = soc,
                                                pars_transform = pars_transform) #there's no pars2 here and instead 3 more args at the end
-      cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
+      cat("The loglikelihood for the initial parameter values is", initloglik, "\n")
       utils::flush.console()
       if(initloglik == -Inf)
       {# bracket#4
@@ -229,13 +229,13 @@ pmb_ML <- function(
           tobeprint <- "Maximum likelihood parameter estimates:"
           for (ii in 1:Npars)
           {
-            tobeprint <- paste(tobeprint,paste(names(MLpars1[ii]),":",sep = ""),MLpars1[ii])
+            tobeprint <- paste(tobeprint, paste(names(MLpars1[ii]), ":", sep = ""),MLpars1[ii])
           }
           s1 <- sprintf(tobeprint)
 
           if(out2$conv != 0 & changeloglikifnoconv == T) {out2$loglik <- -Inf}
           s2 <- sprintf('Maximum loglikelihood: %f',ML)
-          cat("\n",s1,"\n",s2,"\n\n")
+          cat("\n", s1, "\n", s2, "\n\n")
         }# bracket#5
       }# bracket#4
     }# bracket#3
