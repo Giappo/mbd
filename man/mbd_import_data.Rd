@@ -6,6 +6,9 @@
 \usage{
 mbd_import_data(parnames = c("lambda", "mu", "nu", "q"))
 }
+\arguments{
+\item{parnames}{sonething}
+}
 \description{
 Imports data
 }

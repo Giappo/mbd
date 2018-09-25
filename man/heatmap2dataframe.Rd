@@ -12,9 +12,13 @@ heatmap2dataframe(x, y, Matrix, x.name = "x", y.name = "y",
 
 \item{y}{something}
 
+\item{Matrix}{something}
+
 \item{x.name}{something}
 
 \item{y.name}{something}
+
+\item{heatmap.name}{heatmap name}
 }
 \description{
 Converts a matrix in a dataframe that can be used with ggplot

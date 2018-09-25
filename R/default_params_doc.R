@@ -4,6 +4,7 @@
 #' @param A_reltol something
 #' @param abstol something
 #' @param account_name something
+#' @param after something
 #' @param age The age of the tree.
 #' @param alpha something
 #' @param alpha0 something
@@ -11,9 +12,11 @@
 #' @param brts A set of branching times of a phylogeny.
 #' @param chain_length something
 #' @param changeloglikifnoconv something
+#' @param checked.functions something
 #' @param colormap something
 #' @param cond Set 1 if you want to condition on stem or crown age 
 #'   and non-extinction of the phylogeny. Set 0 otherwise.
+#' @param function.name something
 #' @param idparsfix something
 #' @param idparsopt The ids of the parameters that must be optimized. The ids are defined as follows:
 #' \itemize{
@@ -74,6 +77,7 @@
 #' @param Q something
 #' @param q something
 #' @param quantiles_choice something
+#' @param recursive something
 #' @param reltol something
 #' @param res something
 #' @param results something 
@@ -121,6 +125,7 @@ default_params_doc <- function(
   A_reltol,
   abstol,
   account_name,
+  after,
   age,
   alpha,
   alpha0,
@@ -128,8 +133,10 @@ default_params_doc <- function(
   brts,
   chain_length,
   changeloglikifnoconv,
+  checked.functions,
   colormap,
   cond,
+  function.name, 
   idparsfix,
   idparsopt,
   initparsopt,
@@ -172,6 +179,7 @@ default_params_doc <- function(
   Q,
   q,
   quantiles_choice,
+  recursive, 
   reltol,
   res,
   results, 

@@ -7,6 +7,8 @@
 negatives_correction(v, pars, display_output = 0)
 }
 \arguments{
+\item{v}{sometjing}
+
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is the multiple speciation trigger rate;
@@ -20,6 +22,8 @@ or
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
   \item pars[4] is q, the single-lineage speciation probability.
 }}
+
+\item{display_output}{something}
 }
 \description{
 Checks for NA, NaN or negative components in a vector (usually used for Qt)

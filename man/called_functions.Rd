@@ -7,6 +7,13 @@
 called_functions(function.name, recursive = FALSE,
   checked.functions = NULL)
 }
+\arguments{
+\item{function.name}{something}
+
+\item{recursive}{something}
+
+\item{checked.functions}{something}
+}
 \description{
 Checks function calls within a function
 }

@@ -8,6 +8,8 @@ mbd_P_eq(test_parameters, age = 15, max_number_of_species = 2000,
   precision = 50L, soc = 2, output = 0)
 }
 \arguments{
+\item{test_parameters}{something}
+
 \item{age}{The age of the tree.}
 
 \item{max_number_of_species}{something}
@@ -15,6 +17,8 @@ mbd_P_eq(test_parameters, age = 15, max_number_of_species = 2000,
 \item{precision}{something}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{output}{something}
 }
 \description{
 Provides estimated number of species integrating the P-equation

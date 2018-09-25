@@ -6,6 +6,11 @@
 \usage{
 matrix_check(Mlist, sign_check = 0)
 }
+\arguments{
+\item{Mlist}{something}
+
+\item{sign_check}{something}
+}
 \description{
 Checks if some matrix entries are infinite, NaN, NA or (only in the lower triangle) negative
 }

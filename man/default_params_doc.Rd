@@ -5,15 +5,16 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
-default_params_doc(A_abstol, A_reltol, abstol, account_name, age, alpha,
-  alpha0, b, brts, chain_length, changeloglikifnoconv, colormap, cond,
-  idparsfix, idparsopt, initparsopt, INPUT.TREES, INPUT.XML, interval.max,
-  interval.min, iterations, k, lambda, logs, lx, lx0, matrix,
-  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
-  max_sims, maxiter, mbd.lambda, methode, minimum_multiple_births,
-  missnumspec, mu, mutation_rate, N, N0, Nsteps, Nsubs, nu, optimmethod,
-  pars, pars.transform, parsfix, precision, print_errors, printit, Q, q,
-  quantiles_choice, reltol, res, results, s, sample_interval,
+default_params_doc(A_abstol, A_reltol, abstol, account_name, after, age,
+  alpha, alpha0, b, brts, chain_length, changeloglikifnoconv,
+  checked.functions, colormap, cond, function.name, idparsfix, idparsopt,
+  initparsopt, INPUT.TREES, INPUT.XML, interval.max, interval.min,
+  iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
+  max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
+  mbd.lambda, methode, minimum_multiple_births, missnumspec, mu,
+  mutation_rate, N, N0, Nsteps, Nsubs, nu, optimmethod, pars,
+  pars.transform, parsfix, precision, print_errors, printit, Q, q,
+  quantiles_choice, recursive, reltol, res, results, s, sample_interval,
   sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
   trparsopt, values, verbose, x, x.name, x.splits, y, y.name, y.splits, z,
@@ -27,6 +28,8 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, age, alpha,
 \item{abstol}{something}
 
 \item{account_name}{something}
+
+\item{after}{something}
 
 \item{age}{The age of the tree.}
 
@@ -42,10 +45,14 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, age, alpha,
 
 \item{changeloglikifnoconv}{something}
 
+\item{checked.functions}{something}
+
 \item{colormap}{something}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age 
 and non-extinction of the phylogeny. Set 0 otherwise.}
+
+\item{function.name}{something}
 
 \item{idparsfix}{something}
 
@@ -148,6 +155,8 @@ or
 \item{q}{something}
 
 \item{quantiles_choice}{something}
+
+\item{recursive}{something}
 
 \item{reltol}{something}
 

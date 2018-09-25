@@ -1,6 +1,9 @@
 #' Imports data
 #' @inheritParams default_params_doc
-mbd_import_data <- function(parnames=c("lambda","mu","nu","q")){
+#' @param parnames sonething
+mbd_import_data <- function(
+  parnames = c("lambda","mu","nu","q")
+) {
   parnames <<- parnames
   Npars <<- length(parnames);
   base_path=dirname(dirname(getwd()))
@@ -29,9 +32,22 @@ mbd_import_data <- function(parnames=c("lambda","mu","nu","q")){
 
 #' analysis function
 #' @inheritParams default_params_doc
-correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars,
-                              percentage_hidden_outliers=0.04,openit=0,idparsopt,mother_folder){
-
+#' @param path something
+#' @param titolo something
+#' @param pdfname something
+#' @param percentage_hidden_outliers something
+#' @param openit something 
+#' @param mother_folder something
+correlation_analysis <- function(
+  results,
+  path,
+  titolo = NULL,
+  pdfname,
+  sim_pars = sim_pars,
+  percentage_hidden_outliers = 0.04, openit = 0, 
+  idparsopt, 
+  mother_folder
+) {
   Npars=length(sim_pars);#pars_interval=list(c(0,quantile(results[,1],.95)),c(0,quantile(results[,2],.95)),c(0,quantile(results[,3],.95)))
   if (missing(idparsopt)){estimated_pars=1:Npars}else{estimated_pars=idparsopt}
   par_names = colnames(results)[1:Npars]
@@ -122,7 +138,16 @@ percentiles_function <- function(
 
 #' Converts a matrix in a dataframe that can be used with ggplot
 #' @inheritParams default_params_doc
-heatmap2dataframe = function(x,y,Matrix, x.name="x", y.name="y", heatmap.name="HeatMap"){
+#' @param Matrix something
+#' @param heatmap.name heatmap name
+heatmap2dataframe = function(
+  x,
+  y,
+  Matrix, 
+  x.name="x", 
+  y.name="y", 
+  heatmap.name="HeatMap"
+){
   Matrix2=matrix(Matrix,nrow = length(x)*length(y))
   df=data.frame(expand.grid(x=x,y=y),HeatMap=Matrix2)
   #names(df$x)=names(x);names(df$y)=names(y);names(df$HeatMap)=names(Matrix);
@@ -148,6 +173,8 @@ brts2time_intervals_and_births <- function(brts
 
 #' Provides estimated number of species integrating the P-equation
 #' @inheritParams default_params_doc
+#' @param test_parameters something
+#' @param output something
 mbd_P_eq <- function(
   test_parameters,
   age=15,
@@ -233,7 +260,13 @@ myheatmap2 <- function(x,y,z,x.name,y.name,z.name,x.splits,y.splits){
 
 #' Checks for NA, NaN or negative components in a vector (usually used for Qt)
 #' @inheritParams default_params_doc
-negatives_correction = function(v,pars,display_output=0){
+#' @param v sometjing
+#' @param display_output something
+negatives_correction <- function(
+  v,
+  pars,
+  display_output = 0
+){
   problems=0
   if ( any(is.na(v)) ){ problems=1;
   NA_components=which(is.na(v) & !is.nan(v) )
@@ -255,7 +288,17 @@ negatives_correction = function(v,pars,display_output=0){
 
 #' Compares two functions that accept same arguments args=(...)
 #' @inheritParams default_params_doc
-compare_functions=function(function1,function2,iterations=1,output=1,...){
+#' @param function1 something 
+#' @param function2 something 
+#' @param output something 
+#' @param ... something 
+compare_functions <- function(
+  function1,
+  function2,
+  iterations = 1,
+  output = 1,
+  ...
+){
   Atime1=0;Atime2=0;
   for (i in 1:iterations){
     t0=proc.time()
@@ -274,7 +317,9 @@ compare_functions=function(function1,function2,iterations=1,output=1,...){
 #' Checks function calls within a function
 #' @inheritParams default_params_doc
 called_functions <- function(
-  function.name, recursive = FALSE, checked.functions = NULL
+  function.name, 
+  recursive = FALSE, 
+  checked.functions = NULL
 ) {
 
     # Get the function's code:
@@ -311,7 +356,12 @@ called_functions <- function(
 
 #' Checks if some matrix entries are infinite, NaN, NA or (only in the lower triangle) negative
 #' @inheritParams default_params_doc
-matrix_check=function(Mlist,sign_check=0){
+#' @param Mlist something
+#' @param sign_check something
+matrix_check <- function(
+  Mlist,
+  sign_check = 0
+) {
   max_k=length(Mlist)
   black_list=as.complex(rep(0,max_k))
   negative_list=rep(0,max_k)
@@ -346,14 +396,18 @@ matrix_check=function(Mlist,sign_check=0){
 
 #' Does something
 #' @inheritParams default_params_doc
-append_multiple <- function(x, values, after){
-
+append_multiple <- function(
+  x, 
+  values, 
+  after
+) {
   if(!is.list(values) & length(values)!=length(after)) stop("In append_multiple: values must be a list unless it has the same length as after")
 
-  x2=x
-  for(i in 1:length(values)) x2=append(x2,values[[i]],after[i]+length(x2)-length(x))
-
-  return(x2)
+  x2 <- x
+  for(i in 1:length(values)) {
+    x2 <- append(x2,values[[i]],after[i]+length(x2)-length(x))
+  }
+  x2
 }
 
 #' Function returning branch lengths named by ending node
@@ -536,10 +590,12 @@ summarize_beast_posterior <- function(
 
 #' Does something
 #' @inheritParams default_params_doc
+#' @param file_name file name
+#' @param file_name something
 extract_posterior <- function(
-  file_name="simcophylo_1_RUN1.(time).trees.txt",
-  maxtree=10
-){
+  file_name = "simcophylo_1_RUN1.(time).trees.txt",
+  maxtree = 10
+) {
 
   names_i=file_name
 

@@ -366,7 +366,14 @@ mbd_sim_dataset0 <- function(
   N0 <- soc
   if (cond == 1){tips_interval[1]=max(N0,tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
   if (edge!=Inf && tips_interval == c(0,Inf) ){
-    estimation=mbd_P_eq(test_parameters=sim_pars,age=age,max_number_of_species = 3000, precision = 50L,soc=soc,output=0);
+    estimation <- mbd_P_eq(
+      test_parameters = sim_pars,
+      age = age,
+      max_number_of_species = 3000, 
+      precision = 50L,
+      soc = soc,
+      output=0
+    )
     max_tips=round(estimation$avg_n*(1+edge));
     min_tips=max(0,round(estimation$avg_n*(1-edge)));
     tips_interval=c(min_tips,max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees

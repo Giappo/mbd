@@ -8,7 +8,15 @@ compare_functions(function1, function2, iterations = 1, output = 1,
   ...)
 }
 \arguments{
+\item{function1}{something}
+
+\item{function2}{something}
+
 \item{iterations}{something}
+
+\item{output}{something}
+
+\item{...}{something}
 }
 \description{
 Compares two functions that accept same arguments args=(...)

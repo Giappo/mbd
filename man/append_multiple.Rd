@@ -10,6 +10,8 @@ append_multiple(x, values, after)
 \item{x}{something}
 
 \item{values}{something}
+
+\item{after}{something}
 }
 \description{
 Does something

@@ -7,6 +7,11 @@
 extract_posterior(file_name = "simcophylo_1_RUN1.(time).trees.txt",
   maxtree = 10)
 }
+\arguments{
+\item{file_name}{file name}
+
+\item{file_name}{something}
+}
 \description{
 Does something
 }

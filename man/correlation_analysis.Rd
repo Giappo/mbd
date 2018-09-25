@@ -11,6 +11,12 @@ correlation_analysis(results, path, titolo = NULL, pdfname,
 \arguments{
 \item{results}{something}
 
+\item{path}{something}
+
+\item{titolo}{something}
+
+\item{pdfname}{something}
+
 \item{sim_pars}{vector of parameters:
 \itemize{
   \item id == 1 corresponds to lambda (speciation rate)
@@ -19,6 +25,10 @@ correlation_analysis(results, path, titolo = NULL, pdfname,
   \item id == 4 corresponds to q (single-lineage speciation probability)
 }}
 
+\item{percentage_hidden_outliers}{something}
+
+\item{openit}{something}
+
 \item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:
 \itemize{
 \item id == 1 corresponds to lambda (speciation rate)
@@ -26,6 +36,8 @@ correlation_analysis(results, path, titolo = NULL, pdfname,
 \item id == 3 corresponds to nu (multiple speciation trigger rate)
 \item id == 4 corresponds to q (single-lineage speciation probability)
 }}
+
+\item{mother_folder}{something}
 }
 \description{
 analysis function
