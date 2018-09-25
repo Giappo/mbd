@@ -8,7 +8,7 @@ documentation.}
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, chain_length, changeloglikifnoconv,
   checked_functions, colormap, cond, function_name, idparsfix, idparsopt,
-  initparsopt, input_trees_path, INPUT.XML, interval.max, interval.min,
+  initparsopt, input_trees_path, input_xml, interval.max, interval.min,
   iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
   max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
   mbd.lambda, methode, minimum_multiple_births, missnumspec, mu,
@@ -69,7 +69,7 @@ The ids are defined as follows:
 
 \item{input_trees_path}{Path to \code{.trees} file}
 
-\item{INPUT.XML}{something}
+\item{input_xml}{something}
 
 \item{interval.max}{something}
 

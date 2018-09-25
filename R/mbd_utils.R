@@ -457,15 +457,15 @@ branchLengths <- function(tr)
 #' @inheritParams default_params_doc
 summarize_beast_posterior <- function(
   input_trees_path,
-  INPUT.XML = NULL,
+  input_xml = NULL,
   subsamp = NULL
 ){
 
 
   #If an XML with a starting tree is provided, get the node names from that tree
   node_names_xml=NULL
-  if(!is.null(INPUT.XML)){
-    subst.xml=scan(INPUT.XML,what="raw")
+  if(!is.null(input_xml)){
+    subst.xml=scan(input_xml,what="raw")
     where.starting.tree=which(subst.xml=="id=\"startingTree\">")+1
     start.tr <- ape::read.tree(text=subst.xml[where.starting.tree])
     node_names_xml=start.tr$node.label

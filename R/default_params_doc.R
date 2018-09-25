@@ -28,7 +28,7 @@
 #'   }
 #' @param initparsopt something
 #' @param input_trees_path Path to \code{.trees} file
-#' @param INPUT.XML something
+#' @param input_xml something
 #' @param interval.max something
 #' @param interval.min something
 #' @param iterations something
@@ -149,7 +149,7 @@ default_params_doc <- function(
   idparsopt,
   initparsopt,
   input_trees_path,
-  INPUT.XML,
+  input_xml,
   interval.max,
   interval.min,
   iterations,
