@@ -60,7 +60,7 @@
 #' @param N something
 #' @param N0 something
 #' @param n_steps something
-#' @param Nsubs something
+#' @param n_subs something
 #' @param nu something
 #' @param optimmethod something
 #' @param pars vector of parameters:
@@ -175,7 +175,7 @@ default_params_doc <- function(
   N,
   N0,
   n_steps,
-  Nsubs,
+  n_subs,
   nu,
   optimmethod,
   pars,

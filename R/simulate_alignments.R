@@ -39,7 +39,7 @@ BD.Nmutations <- function(lambda, mu, age, N0 = 2, sequence_length = 1000, mutat
 #' Does something D
 #' @inheritParams default_params_doc
 #' @export
-BD.infer.lambda.from.mutations <- function(Nsubs, 
+BD.infer.lambda.from.mutations <- function(n_subs, 
                                            mbd_lambda, 
                                            mu, 
                                            age, 
@@ -64,7 +64,7 @@ BD.infer.lambda.from.mutations <- function(Nsubs,
   )
   # graphics::plot(lavec, predict(fit.test), type = "l"); points(lavec, NN)
   # graphics::plot(stats::coef(fit.test)[2] * exp(stats::coef(fit.test)[1] * lavec) ~ lavec , type = "l"); points(lavec, NN)
-  best.lambda <- (log(Nsubs) - log(stats::coef(fit.test)[2]))/stats::coef(fit.test)[1]; #best.lambda
+  best.lambda <- (log(n_subs) - log(stats::coef(fit.test)[2]))/stats::coef(fit.test)[1]; #best.lambda
   return(best.lambda)
 }
 
@@ -162,7 +162,7 @@ alignments_comparison_multiple <- function(
   #sim dataset
   mbd_estimates   <- mbd_trees <- mbd_alignment <- mbd_nLTT <- vector("list", max_sims)
   BD.simulations  <- BD.estimates  <- BD.trees  <- BD.alignment  <- BD.nLTT  <- vector("list", max_sims)
-  Nsubstitutions  <- rep(NA, (max_sims2 <- 100 * max_sims))
+  n_substitutions  <- rep(NA, (max_sims2 <- 100 * max_sims))
   for (s in 1:max_sims)
   {
     set.seed(s)
@@ -176,7 +176,7 @@ alignments_comparison_multiple <- function(
     
     full_tree           <- mbd_simulation$tas #; graphics::plot(full_tree)
     total_branch_length <- sum(full_tree$edge.length) # total branch length
-    Nsubstitutions[s]   <- sequence_length * mutation_rate * total_branch_length
+    n_substitutions[s]   <- sequence_length * mutation_rate * total_branch_length
 
     mbd_out <- alignments_comparison_single(sim_phylo = mbd_simulation$tes,
                                             chain_length = chain_length,
@@ -190,8 +190,8 @@ alignments_comparison_multiple <- function(
     mbd_estimates[[s]] <- mbd_out$estimates
   # }
   
-  # BD.lambda <- BD.infer.lambda.from.mutations(Nsubs = mean(Nsubstitutions),
-    BD.lambda <- BD.infer.lambda.from.mutations(Nsubs = Nsubstitutions[s],
+  # BD.lambda <- BD.infer.lambda.from.mutations(n_subs = mean(n_substitutions),
+    BD.lambda <- BD.infer.lambda.from.mutations(n_subs = n_substitutions[s],
                                                 mbd_lambda = sim_pars[1],
                                                 mu = sim_pars[2],
                                                 age = age,

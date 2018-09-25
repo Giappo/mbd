@@ -4,11 +4,11 @@
 \alias{BD.infer.lambda.from.mutations}
 \title{Does something D}
 \usage{
-BD.infer.lambda.from.mutations(Nsubs, mbd_lambda, mu, age, N0 = 2,
+BD.infer.lambda.from.mutations(n_subs, mbd_lambda, mu, age, N0 = 2,
   sequence_length = 1000, mutation_rate = 1/age, n_steps = 40)
 }
 \arguments{
-\item{Nsubs}{something}
+\item{n_subs}{something}
 
 \item{mbd_lambda}{something}
 

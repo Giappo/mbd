@@ -12,7 +12,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
   max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
   mbd_lambda, methode, minimum_multiple_births, missnumspec, mu,
-  mutation_rate, N, N0, n_steps, Nsubs, nu, optimmethod, pars,
+  mutation_rate, N, N0, n_steps, n_subs, nu, optimmethod, pars,
   pars.transform, parsfix, precision, print_errors, printit, Q, q,
   quantiles_choice, recursive, reltol, res, results, s, sample_interval,
   sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
@@ -126,7 +126,7 @@ The ids are defined as follows:
 
 \item{n_steps}{something}
 
-\item{Nsubs}{something}
+\item{n_subs}{something}
 
 \item{nu}{something}
 
