@@ -120,17 +120,17 @@ pmb_loglik_choosepar <- function(
 
   # cond <- 0
   namepars <- c("lambda", "mu", "nu", "q")
-  Npars <- length(namepars)
+  n_pars <- length(namepars)
   if (length(trparsopt) == 4 && missing(trparsfix)) {
     trparsfix <- NULL
   }
   # idparsopt=(1:3)[-c(idparsfix)] #this argument is useless but I let the user specify it because Rampal also did it (for some reason)
-  trpars1 <- rep(0, Npars)
+  trpars1 <- rep(0, n_pars)
   trpars1[idparsopt] <- trparsopt
   if (length(idparsfix) != 0) {
     trpars1[idparsfix] <- trparsfix
   }
-  if (min(trpars1[1:Npars]) < 0 ) {
+  if (min(trpars1[1:n_pars]) < 0 ) {
     loglik <- -Inf
   } else {
     if (pars_transform == 1) {
@@ -175,14 +175,14 @@ pmb_ML <- function(
   # if (missing(parsfix)&&(length(idparsfix)==0)){parsfix=NULL}
 
   options(warn = -1)
-  namepars <- c("lambda", "mu", "nu", "q"); Npars <- length(namepars); #if you add more parameters to your model just change this
-  failpars <- rep(-1, Npars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
+  namepars <- c("lambda", "mu", "nu", "q"); n_pars <- length(namepars); #if you add more parameters to your model just change this
+  failpars <- rep(-1, n_pars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
   if (is.numeric(brts) == FALSE) {
     cat("The branching times should be numeric.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
   } else {
     idpars <- sort(c(idparsopt, idparsfix))
-    if ( (sum(idpars == (1:Npars)) != Npars) || (length(initparsopt) != length(idparsopt)) || (length(parsfix) != length(idparsfix)) )
+    if ( (sum(idpars == (1:n_pars)) != n_pars) || (length(initparsopt) != length(idparsopt)) || (length(parsfix) != length(idparsfix)) )
     {# bracket#3
       cat("The parameters to be optimized and/or fixed are incoherent.\n")
       out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
@@ -238,7 +238,7 @@ pmb_ML <- function(
           } else {
             MLpars <- MLtrpars
           }
-          MLpars1 <- rep(0, Npars)
+          MLpars1 <- rep(0, n_pars)
           names(MLpars1) <- namepars
           MLpars1[idparsopt] <- MLpars
           if (length(idparsfix) != 0) {
@@ -248,7 +248,7 @@ pmb_ML <- function(
           out2 <- data.frame(t(MLpars1), loglik = ML, df = length(initparsopt), conv = unlist(out$conv))
 
           tobeprint <- "Maximum likelihood parameter estimates:"
-          for (ii in 1:Npars)
+          for (ii in 1:n_pars)
           {
             tobeprint <- paste(tobeprint, paste(names(MLpars1[ii]), ":", sep = ""),MLpars1[ii])
           }

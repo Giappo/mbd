@@ -69,8 +69,9 @@ mbd_ML <- function(
   if (missing(parsfix) && (length(idparsfix) == 0)){parsfix <- idparsfix <- NULL}
 
   options(warn=-1)
-  namepars <- c("lambda", "mu", "nu", "q"); Npars <- length(namepars); #if you add more parameters to your model just change this
-  failpars <- rep(-1, Npars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
+  namepars <- c("lambda", "mu", "nu", "q")
+  n_pars <- length(namepars); #if you add more parameters to your model just change this
+  failpars <- rep(-1, n_pars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
   if (is.numeric(brts) == FALSE)
   {
     cat("The branching times should be numeric.\n")
@@ -78,7 +79,7 @@ mbd_ML <- function(
     return(invisible(out2))
   }
   idpars <- sort(c(idparsopt, idparsfix))
-  if ( (sum(idpars == (1:Npars)) != Npars) || (length(initparsopt) != length(idparsopt)) || (length(parsfix) != length(idparsfix)) )
+  if ( (sum(idpars == (1:n_pars)) != n_pars) || (length(initparsopt) != length(idparsopt)) || (length(parsfix) != length(idparsfix)) )
   {
     cat("The parameters to be optimized and/or fixed are incoherent.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
@@ -158,14 +159,14 @@ mbd_ML <- function(
   {
     MLpars <- MLtrpars
   }
-  MLpars1 <- rep(0, Npars); names(MLpars1) <- namepars
+  MLpars1 <- rep(0, n_pars); names(MLpars1) <- namepars
   MLpars1[idparsopt] <- MLpars
   if (length(idparsfix) != 0) {MLpars1[idparsfix] <- parsfix}
   ML <- as.numeric(unlist(out$fvalues))
   out2 <- data.frame(t(MLpars1), loglik = ML, df = length(initparsopt), conv = unlist(out$conv))
 
   tobeprint <- "Maximum likelihood parameter estimates:"
-  for (ii in 1:Npars)
+  for (ii in 1:n_pars)
   {
     tobeprint <- paste(tobeprint, paste(names(MLpars1[ii]), ":", sep = ""),MLpars1[ii])
   }

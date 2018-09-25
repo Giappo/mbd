@@ -32,83 +32,126 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
   lambda=pars[1]; mu=pars[2]; q=pars[3]; min_tips=tips_interval[1]; max_tips=tips_interval[2]; abstol=1e-16; reltol=1e-10;
   starting_alpha = alpha
   
-  condition1 = ( any(is.nan(pars))!=0 | any(is.infinite(pars))!=0 )
-  condition2 = ( mu<0 | lambda<=0+safety_threshold | q<=0+safety_threshold | q>=1-safety_threshold ) # mu>=lambda |
-  if (condition1 | condition2){loglik = -Inf}
-  else if(length(pars)!=3){print("input parameters are wrong");loglik = -Inf}
-  else{
-    Pc=-1
-    while (Pc<0 && alpha <= max(starting_alpha,80)){
+  condition1 <- (any(is.nan(pars)) != 0 | any(is.infinite(pars)) != 0)
+  condition2 <- (mu < 0 | 
+      lambda <= 0 + safety_threshold | 
+      q <= 0 + safety_threshold | 
+      q >= 1 - safety_threshold
+  )
+  if (condition1 | condition2) {
+    loglik = -Inf
+  } else if (length(pars) != 3) { 
+    print("input parameters are wrong")
+    loglik = -Inf
+  } else{
+    Pc <- -1
+    while (Pc < 0 && alpha <= max(starting_alpha, 80)) {
       
       #ADJUSTING DATA
-      data=brts2time_intervals_and_births(brts)
-      time_intervals=c(0,data$time_intervals)
-      births=c(0,data$births)
+      data <- brts2time_intervals_and_births(brts)
+      time_intervals <- c(0, data$time_intervals)
+      births <- c(0, data$births)
       
       #SET UP
       N0 = soc #number of starting species
       k_interval = N0 + cumsum(births)
       max_k = max(k_interval)
       max_number_of_species = alpha*max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
-      nvec=0:max_number_of_species
+      #nvec <- 0:max_number_of_species
       
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
-      Qi=c(1,rep(0,max_number_of_species))
-      Qt=matrix(0,ncol = (max_number_of_species+1), nrow = length(time_intervals))
-      Qt[1,]=Qi
-      dimnames(Qt)[[2]] = paste("Q",0:max_number_of_species,sep="")
-      k=N0 #N0 is the number of species at t=1
-      t=2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
-      C=rep(1,(length(time_intervals))); D=C
-      logB=0;
+      Qi <- c(1,rep(0, max_number_of_species))
+      Qt <- matrix(
+        0, 
+        ncol = (max_number_of_species + 1), 
+        nrow = length(time_intervals)
+      )
+      Qt[1, ] <- Qi
+      dimnames(Qt)[[2]] <- paste("Q", 0:max_number_of_species, sep = "")
+      k <- N0 #N0 is the number of species at t=1
+      t <- 2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
+      C <- rep(1,(length(time_intervals))) 
+      D <- C
+      logB <- 0
       
       #EVOLVING THE INITIAL STATE TO THE LAST BRANCHING POINT
-      while ( t<length(time_intervals) ){
+      while (t < length(time_intervals)) {
         
         #Applying A operator
-        transition_matrix=create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
-        Qt[t,]=A_operator(Q = Qt[(t-1),],transition_matrix = transition_matrix,time_interval = time_intervals[t],precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
-        if (methode!="sexpm"){Qt[t,]=mbd:::negatives_correction(Qt[t,],pars)} #it removes some small negative values that can occurr as bugs from the integration process
+        transition_matrix <- create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
+        Qt[t,] <- A_operator(
+          Q = Qt[(t - 1),], 
+          transition_matrix = transition_matrix,
+          time_interval = time_intervals[t],
+          precision = 50L,
+          methode = methode,
+          a_abstol = abstol,
+          a_reltol = reltol
+        )
+        if (methode != "sexpm") {
+          #it removes some small negative values that can occurr as bugs from the integration process
+          Qt[t,] <- mbd:::negatives_correction(Qt[t,],pars)
+        } 
         
         #Applying C operator (this is a trick to avoid precision issues)
-        if (debug_check==1){print(head(Qt[t,]))}
-        C[t]=1/(sum(Qt[t,]))
-        Qt[t,]=Qt[t,]*C[t]
+        if (debug_check == 1) {
+          print(head(Qt[t,]))
+        }
+        C[t] <- 1 / (sum(Qt[t,]))
+        Qt[t,] <- Qt[t,]*C[t]
         
         #Applying B operator
         B <- create_B0(max_number_of_species = max_number_of_species, q = q, k = k, b = births[t])
         # B[(row(B)>(2*col(B)+k-births[t])) | col(B)>row(B) ]=0 #this is a constrain due to maximum number of speciations being (2*n+k-b); probably it is redundant
         # if (max(is.nan(B))>0){print(paste("NaN were produced in the B matrix at time=",t))}
-        Qt[t,]=(B %*% Qt[t,])
-        if (methode!="sexpm"){Qt[t,]=mbd:::negatives_correction(Qt[t,],pars)}
-        logB = logB + log(lambda) + lchoose(k,births[t]) + births[t]*log(q)
+        Qt[t,] <- (B %*% Qt[t,])
+        if (methode!="sexpm") {
+          Qt[t,] <- mbd:::negatives_correction(Qt[t,],pars)
+        }
+        logB  <-  logB + log(lambda) + lchoose(k,births[t]) + births[t]*log(q)
         
         #Applying D operator (this works exactly like C)
-        if (debug_check==1){print(head(Qt[t,]))}
-        D[t]=1/(sum(Qt[t,]))
-        Qt[t,]=Qt[t,]*D[t]
+        if (debug_check == 1) {
+          print(head(Qt[t,]))
+        }
+        D[t] <- 1/(sum(Qt[t,]))
+        Qt[t,] <- Qt[t,]*D[t]
         
         #Updating running parameters
-        k=k+births[t]
-        t=t+1
+        k <- k + births[t]
+        t <- t + 1
       }
       
       #Applying A operator from the last branching time to the present
-      transition_matrix=create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
-      Qt[t,]=A_operator(Q = Qt[(t-1),],transition_matrix = transition_matrix,time_interval = time_intervals[t],precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
-      if (methode!="sexpm"){Qt[t,]=mbd:::negatives_correction(Qt[t,],pars)}
-      if (debug_check==1){print(head(Qt[t,]))}
+      transition_matrix <- create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
+      Qt[t,] <- A_operator(
+        Q = Qt[(t-1),],
+        transition_matrix = transition_matrix,
+        time_interval = time_intervals[t],
+        precision = 50L,
+        methode=methode,
+        a_abstol=abstol,
+        a_reltol=reltol
+      )
+      if (methode != "sexpm") {
+        Qt[t,] <- mbd:::negatives_correction(Qt[t, ], pars)
+      }
+      if (debug_check == 1) {
+        print(head(Qt[t,]))
+      }
       
       #Selecting the state I am interested in
-      vm = 1/choose((k+missnumspec),k)
-      P  = vm * Qt[t,(missnumspec+1)] #I have to include +1 because of Q0
+      vm <-  1/choose((k+missnumspec),k)
+      P <-  vm * Qt[t,(missnumspec+1)] #I have to include +1 because of Q0
       
       #Removing C and D effects from the LL
-      loglik = log(P) + logB - sum(log(C)) - sum(log(D))
+      loglik <- log(P) + logB - sum(log(C)) - sum(log(D))
       
       #Various checks
-      loglik = as.numeric(loglik)
-      if ( is.nan(loglik) | is.na(loglik) ){loglik=-Inf}
+      loglik <- as.numeric(loglik)
+      if (is.nan(loglik) | is.na(loglik)){
+        loglik=-Inf
+      }
       
       #CONDITIONING THE LIKELIHOOD ON THE SURVIVAL OF CROWN SPECIES
       Pc=1
@@ -152,24 +195,34 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
-                                  idparsfix = (1:3)[-idparsopt], brts, cond = 1, soc = 2,
-                                  tips_interval = c(0, Inf), missnumspec = 0,
-                                  methode = "expo", alpha = 20, pars_transform = 0){
+mbd_loglik_choosepar0 <- function(
+  trparsopt, trparsfix, 
+  idparsopt = 1:3,
+  idparsfix = (1:3)[-idparsopt], 
+  brts, 
+  cond = 1, 
+  soc = 2,
+  tips_interval = c(0, Inf), 
+  missnumspec = 0,
+  methode = "expo", 
+  alpha = 20, 
+  pars_transform = 0
+){
   #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like optim or subplex
   #idparsopt are the ids for parameters you want to analyze
   #trparsopt are the values for parameters you want to analyze
   #idparsfix are the ids of the parameters you want to fix
   #trparsfix are the values for parameters you want to fix
   
-  namepars <- c("lambda","mu","q"); Npars <- length(namepars);
+  namepars <- c("lambda","mu","q")
+  n_pars <- length(namepars)
   # idparsopt=(1:3)[-c(idparsfix)] #this argument is useless but I let the user specify it because Rampal also did it (for some reason)
-  trpars1 = rep(0,Npars)
+  trpars1 = rep(0,n_pars)
   trpars1[idparsopt] = trparsopt
   if (length(idparsfix) != 0) {
     trpars1[idparsfix] = trparsfix
   }
-  if (min(trpars1[1:Npars]) < 0) {
+  if (min(trpars1[1:n_pars]) < 0) {
     loglik <- -Inf
   } else {
     if (pars_transform == 1) {
@@ -247,16 +300,19 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
   }
   
   options(warn = -1)
-  namepars <- c("lambda","mu","q"); Npars <- length(namepars); #if you add more parameters to your model just change this
-  failpars <- rep(-1,Npars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
-  if (is.numeric(brts) == FALSE)
-  {# bracket#2
+  namepars <- c("lambda","mu","q")
+  n_pars <- length(namepars) #if you add more parameters to your model just change this
+  failpars <- rep(-1,n_pars) 
+  names(failpars) <- namepars #those are the parameters that you get if something goes sideways
+  if (is.numeric(brts) == FALSE) {
     cat("The branching times should be numeric.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
   } else {
     idpars <- sort(c(idparsopt, idparsfix))
-    if ( (sum(idpars == (1:Npars)) != Npars) || (length(initparsopt) != length(idparsopt)) || (length(parsfix) != length(idparsfix)) )
-    {# bracket#3
+    if ( (sum(idpars == (1:n_pars)) != n_pars) || 
+      (length(initparsopt) != length(idparsopt)) || 
+      (length(parsfix) != length(idparsfix)) 
+    ) {
       cat("The parameters to be optimized and/or fixed are incoherent.\n")
       out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     } else {
@@ -274,15 +330,13 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
       cat("You are fixing",fixstr,"\n")
       cat("Optimizing the likelihood - this may take a while.","\n")
       utils::flush.console()
-      if (pars_transform == 1)
-      {
+      if (pars_transform == 1) {
         #Rampal's transformation
         trparsopt = initparsopt/(1 + initparsopt)
         trparsopt[which(initparsopt == Inf)] = 1
         trparsfix = parsfix/(1 + parsfix)
         trparsfix[which(parsfix == Inf)] = 1
-      }else
-      {
+      } else {
         trparsopt  <- initparsopt
         trparsfix  <- parsfix
       }
@@ -301,12 +355,14 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
         cat("The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n")
         out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
       } else {
-        out <- DDD::optimizer(optimmethod = optimmethod, optimpars = optimpars,
-                               fun = mbd:::mbd_loglik_choosepar0, trparsopt = trparsopt,
-                               trparsfix = trparsfix, idparsopt = idparsopt,
-                               idparsfix = idparsfix, brts = brts, missnumspec = missnumspec,
-                               cond = cond, soc = soc, tips_interval = tips_interval,
-                               methode = methode, alpha = alpha, pars_transform = pars_transform)
+        out <- DDD::optimizer(
+          optimmethod = optimmethod, optimpars = optimpars,
+          fun = mbd:::mbd_loglik_choosepar0, trparsopt = trparsopt,
+          trparsfix = trparsfix, idparsopt = idparsopt,
+          idparsfix = idparsfix, brts = brts, missnumspec = missnumspec,
+          cond = cond, soc = soc, tips_interval = tips_interval,
+          methode = methode, alpha = alpha, pars_transform = pars_transform
+        )
         if (out$conv != 0) {
           cat("Optimization has not converged. Try again with different initial values.\n")
           out2 = data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
@@ -318,7 +374,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
           } else {
             MLpars <- MLtrpars
           }
-          MLpars1 <- rep(0, Npars); names(MLpars1) <- namepars
+          MLpars1 <- rep(0, n_pars); names(MLpars1) <- namepars
           MLpars1[idparsopt] <- MLpars
           if (length(idparsfix) != 0) {
             MLpars1[idparsfix] <- parsfix
@@ -331,8 +387,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
             conv = unlist(out$conv)
           )
           tobeprint <- "Maximum likelihood parameter estimates:"
-          for (ii in 1:Npars)
-          {
+          for (ii in 1:n_pars) {
             tobeprint <- paste(tobeprint,paste(names(MLpars1[ii]),":",sep = ""),MLpars1[ii])
           }
           s1 <- sprintf(tobeprint)
@@ -382,8 +437,8 @@ mbd_ML_cluster0 <- function(
 ){
   # initparsopt=c(1.8,0.3,0.15);
   parnames <- c("lambda","mu","nu","q")
-  Npars <- length(parnames)
-  idparsopt <- 1:Npars
+  n_pars <- length(parnames)
+  idparsopt <- 1:n_pars
   parsfix <- NULL
   
   # simpath=paste("sims/",sim_pars[1],"-",sim_pars[2],"-",sim_pars[3],"/",sep = '')
@@ -400,7 +455,7 @@ mbd_ML_cluster0 <- function(
   res <- mbd:::mbd_ML0(brts=sim_data[[s]],
                        initparsopt=initparsopt,
                        idparsopt=idparsopt,
-                       idparsfix = (1:Npars)[-idparsopt],
+                       idparsfix = (1:n_pars)[-idparsopt],
                        parsfix = parsfix,
                        missnumspec=0,
                        cond= cond,
@@ -415,17 +470,17 @@ mbd_ML_cluster0 <- function(
   #additional tree info
   how_many_multiple=percent_multiple=-1;
   if (length(sim_data[[s]])>2){
-    test0=sim_data[[s]][-1]; #actual branching events
-    test1=duplicated( test0 ); #additional species
-    test2=test1;for (iii in 2:length(test1)){if(test1[iii]==T){test2[iii-1]=T}} #considering also the first species at each multiple event
+    test0 <- sim_data[[s]][-1]; #actual branching events
+    test1 <- duplicated( test0 ); #additional species
+    test2 <- test1;for (iii in 2:length(test1)){if(test1[iii]==T){test2[iii-1]=T}} #considering also the first species at each multiple event
     how_many_multiple=sum(test2);
     percent_multiple <- how_many_multiple/length(test2);
   }
   # additional_species = sum( duplicated(sim_data[[s]]) );
-  tips=length(sim_data[[s]])+1;
+  tips <- length(sim_data[[s]])+1;
   
-  out=c(res[1:(Npars+1)],how_many_multiple,tips,percent_multiple,s);
-  out2=out;#names(out2)=c("lambda","mu","q","LL","species born from multiple events","number of tips","percentage of species born from multiple events","tree id")
+  out <- c(res[1:(n_pars+1)],how_many_multiple,tips,percent_multiple,s);
+  out2 <- out;#names(out2)=c("lambda","mu","q","LL","species born from multiple events","number of tips","percentage of species born from multiple events","tree id")
   names(out2)=c(parnames,"LL","species born from multiple events","number of tips","percentage of species born from multiple events","tree id")
   print(out2)
   #out[1] = lambda
@@ -439,6 +494,22 @@ mbd_ML_cluster0 <- function(
   sink()
   print(out2)
   
-  utils::write.table(matrix(out,ncol = length(out)),file = paste(simpath,"/mbd_MLE",s,".txt",sep = ''),append = T,row.names = F,col.names = F, sep = ",")
-  if (res[1:4]!=c(-1,-1,-1,-1)){suppressWarnings(  file.remove( paste(simpath,"/errors/mbd_MLE_errors",s,".txt",sep = '') )  )}
+  utils::write.table(
+    matrix(
+      out,
+      ncol = length(out)
+    ),
+    file = paste(simpath,"/mbd_MLE",s,".txt",sep = ''),
+    append = TRUE,
+    row.names = FALSE,
+    col.names = FALSE, 
+    sep = ","
+  )
+  if (res[1:4] != c(-1,-1,-1,-1)) {
+    suppressWarnings(
+      file.remove(
+        paste(simpath,"/errors/mbd_MLE_errors",s,".txt",sep = '')
+      )  
+    )
+  }
 }

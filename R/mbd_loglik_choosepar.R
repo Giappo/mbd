@@ -26,15 +26,15 @@ mbd_loglik_choosepar  <- function(
   #idparsfix are the ids of the parameters you want to fix
   #trparsfix are the values for parameters you want to fix
 
-  namepars <- c("lambda", "mu", "nu", "q"); Npars <- length(namepars);
+  namepars <- c("lambda", "mu", "nu", "q"); n_pars <- length(namepars);
   if (length(trparsopt) == 4 && missing(trparsfix)){trparsfix <- NULL}
-  trpars1 = rep(0, Npars)
+  trpars1 = rep(0, n_pars)
   trpars1[idparsopt] <- trparsopt
   if (length(idparsfix) != 0)
   {
     trpars1[idparsfix] <- trparsfix
   }
-  if ( min(trpars1[1:Npars]) < 0 ){loglik <- -Inf}else
+  if ( min(trpars1[1:n_pars]) < 0 ){loglik <- -Inf}else
   {
     if (pars_transform == 1)
     {
