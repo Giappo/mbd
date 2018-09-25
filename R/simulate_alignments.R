@@ -11,13 +11,13 @@ P_t1_t2 <- function(lambda, mu, t1, t2) {
 #' Does something B
 #' @inheritParams default_params_doc
 #' @export
-BD.Nct <- function(lambda, mu, t, N0 = 2, age) {
+BD.Nct <- function(lambda, mu, t, init_n_lineages = 2, age) {
   #average amount of species for a conditioned BD process
-  #Nct <- N0 * Lt/(1 - ((mu * (Lt - 1))/(Lt * lambda - mu))^N0) #old version from etienne 2008
+  #Nct <- init_n_lineages * Lt/(1 - ((mu * (Lt - 1))/(Lt * lambda - mu))^init_n_lineages) #old version from etienne 2008
   tt  <- t
   TT  <- abs(age)
   Lt  <- exp((lambda - mu) * tt)
-  Nct <- N0 * Lt * P_t1_t2(lambda = lambda, mu = mu, t1 = tt, t2 = TT) *
+  Nct <- init_n_lineages * Lt * P_t1_t2(lambda = lambda, mu = mu, t1 = tt, t2 = TT) *
     (P_t1_t2(lambda = lambda, mu = mu, t1 = 0, t2 = TT))^-1#new version from etienne & rosindell 2012, formula #15
 
   return(Nct)
@@ -27,10 +27,10 @@ BD.Nct <- function(lambda, mu, t, N0 = 2, age) {
 #' Does something C
 #' @inheritParams default_params_doc
 #' @export
-BD.Nmutations <- function(lambda, mu, age, N0 = 2, sequence_length = 1000, mutation_rate = 1/age) {
+BD.Nmutations <- function(lambda, mu, age, init_n_lineages = 2, sequence_length = 1000, mutation_rate = 1/age) {
 
   age <- abs(age)
-  ft  <- function(t) {mbd::BD.Nct(t, lambda = lambda, mu = mu, N0 = N0, age = age)}
+  ft  <- function(t) {mbd::BD.Nct(t, lambda = lambda, mu = mu, init_n_lineages = init_n_lineages, age = age)}
   Nmutations <- mutation_rate * sequence_length * stats::integrate(f = ft, lower = 0, upper = age)[[1]]
   return(Nmutations)
 }
@@ -43,7 +43,7 @@ BD.infer.lambda.from.mutations <- function(n_subs,
                                            mbd_lambda,
                                            mu,
                                            age,
-                                           N0 = 2,
+                                           init_n_lineages = 2,
                                            sequence_length = 1000,
                                            mutation_rate = 1/age,
                                            n_steps = 40) {
@@ -52,7 +52,7 @@ BD.infer.lambda.from.mutations <- function(n_subs,
   for (i in 1:length(lavec))
   {
     NN[i] <- mbd::BD.Nmutations(lambda = lavec[i], mu = mu, age = age,
-                           N0 = N0, sequence_length = sequence_length, mutation_rate = mutation_rate)
+                           init_n_lineages = init_n_lineages, sequence_length = sequence_length, mutation_rate = mutation_rate)
   }
   md <- stats::lm(log(NN) ~ lavec)
   fit.test <- stats::nls(
@@ -195,7 +195,7 @@ alignments_comparison_multiple <- function(
                                                 mbd_lambda = sim_pars[1],
                                                 mu = sim_pars[2],
                                                 age = age,
-                                                N0 = soc,
+                                                init_n_lineages = soc,
                                                 sequence_length = sequence_length,
                                                 mutation_rate = mutation_rate,
                                                 n_steps = 40)

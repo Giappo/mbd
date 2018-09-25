@@ -73,8 +73,8 @@ mbd_loglik <- function(
     data <- brts2time_intervals_and_births(brts)
     time_intervals <- c(0, data$time_intervals)
     births <- c(0, data$births)
-    N0 <- soc #number of starting species
-    k_interval <- N0 + cumsum(births)
+    init_n_lineages <- soc #number of starting species
+    k_interval <- init_n_lineages + cumsum(births)
     max_k <- max(k_interval)
 
     #DETERMINE PC AND ALPHA (OR LX)
@@ -128,7 +128,7 @@ mbd_loglik <- function(
       Qt <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals)) #do I need a +1 in nrow?
       Qt[1,] <- Qi
       dimnames(Qt)[[2]] <- paste0("Q", 0:lx)
-      k <- N0 #N0 is the number of species at t=1
+      k <- init_n_lineages #init_n_lineages is the number of species at t=1
       t <- 2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
       D <- C <- rep(1, (length(time_intervals)))
 

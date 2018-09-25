@@ -21,8 +21,8 @@ test_that("PureBirth theoretical check", {
     births=data$births
 
     #LOGLIK COMPUTATION
-    N0=soc
-    k=N0+cumsum(c(0, births))
+    init_n_lineages <- soc
+    k <- init_n_lineages + cumsum(c(0, births))
     A_term=1
     i=0:1e6
     for (t in 1:length(time_intervals)){

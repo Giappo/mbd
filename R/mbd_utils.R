@@ -185,7 +185,7 @@ mbd_P_eq <- function(
   soc = 2,
   output = 0
 ){
-  N0=soc
+  init_n_lineages <- soc
 
   # Use sim_pars for pars
   create_mbd_P_matrix <- function(
@@ -193,8 +193,15 @@ mbd_P_eq <- function(
     max_number_of_species
   )
   {
-    lambda=pars[1];mu=pars[2];q=pars[3];nvec=0:max_number_of_species
-    M=matrix(0, nrow=max_number_of_species+1, ncol=max_number_of_species+1)
+    lambda <- pars[1]
+    mu <- pars[2]
+    q <- pars[3]
+    nvec <- 0:max_number_of_species
+    M <- matrix(
+      0, 
+      nrow = max_number_of_species + 1, 
+      ncol = max_number_of_species + 1
+    )
     testit::assert(!"Do not call hyperA")
     # M = lambda * hyperA::hyperA(N = max_number_of_species, k = 0, q = q)
     # M[row(M) == col(M) - 1] = mu*nvec[2:(max_number_of_species+1)]
@@ -202,18 +209,26 @@ mbd_P_eq <- function(
     # return(M)
   }
 
-  nvec=0:max_number_of_species
-  v0=rep(0,(max_number_of_species+1));v0[N0+1]=1
-  transition_matrix = create_mbd_P_matrix(pars=test_parameters, max_number_of_species = max_number_of_species)
-  vf=expoRkit::expv(v=v0, x=transition_matrix, t=age, m = precision)
+  nvec <- 0:max_number_of_species
+  v0 <- rep(0,(max_number_of_species + 1))
+  v0[init_n_lineages + 1] <- 1
+  transition_matrix <- create_mbd_P_matrix(
+    pars = test_parameters, 
+    max_number_of_species = max_number_of_species
+  )
+  vf <- expoRkit::expv(
+    v = v0, 
+    x = transition_matrix, 
+    t = age, m = precision
+  )
 
-  nmedio=sum(nvec*vf)
-  std=sqrt( sum(nvec^2*vf)-nmedio^2 )
-  if (output==1){
+  nmedio <- sum(nvec*vf)
+  std <- sqrt(sum(nvec^2 * vf) - nmedio^2)
+  if (output == 1) {
     graphics::plot(log(vf))
     print(paste("Sim pars are:", test_parameters[1], test_parameters[2], test_parameters[3], ". Average n is", nmedio, "with std:", std))
   }
-  return(list(avg_n=nmedio, std_n=std))
+  list(avg_n = nmedio, std_n = std)
 }
 
 # @Giappo: add doc

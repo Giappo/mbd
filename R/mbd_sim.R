@@ -74,17 +74,21 @@ mbd_sim <- function(
   if (tips_interval[2] < tips_interval[1]) {
     stop("ERROR! Check again your settings.")
   }
-  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]; N0 <- soc
+  lambda <- pars[1]
+  mu <- pars[2] 
+  nu <- pars[3] 
+  q <- pars[4]
+  init_n_lineages <- soc
   tips <- -1; crown_species_dead <- cond; multiple_births_check <- 0;
   keep_the_sim <- 0
   while (keep_the_sim == 0 | multiple_births_check == 0)
   {
-    total_count <- N0
-    pool <- 1:N0
-    while (total_count == N0 | length(pool) < N0)
+    total_count <- init_n_lineages
+    pool <- 1:init_n_lineages
+    while (total_count == init_n_lineages | length(pool) < init_n_lineages)
     {
-      total_count <- N0
-      N <- N0
+      total_count <- init_n_lineages
+      N <- init_n_lineages
       pool <- c(-1,2)
       t <- age
       L <- matrix(0, nrow = 1e6, 4)
@@ -203,26 +207,36 @@ mbd_sim0 <- function(
   tips_interval = c(soc * (cond == 1), Inf),
   minimum_multiple_births = 0
 ) {
-  if (tips_interval[2]<tips_interval[1]){stop("ERROR! Check again your settings.")}
-  lambda=pars[1]; mu=pars[2]; q=pars[3]; N0=soc
-  tips=-1; conditioning_on_survival=cond; multiple_births_check = 0;
-  while ( tips<tips_interval[1] | tips>tips_interval[2] | conditioning_on_survival | multiple_births_check == 0)
+  if (tips_interval[2] < tips_interval[1]) {
+    stop("ERROR! Check again your settings.")
+  }
+  lambda <- pars[1]
+  mu <- pars[2]
+  q <- pars[3]
+  init_n_lineages <- soc
+  tips <- -1
+  conditioning_on_survival <- cond
+  multiple_births_check <- 0
+  while (tips < tips_interval[1] | 
+      tips > tips_interval[2] | 
+      conditioning_on_survival | 
+      multiple_births_check == 0
+  )
   {
-    total_count=N0
-    pool=1:N0
-    while (total_count==N0 | length(pool)<N0)
+    total_count <- init_n_lineages
+    pool <- 1:init_n_lineages
+    while (total_count==init_n_lineages | length(pool)<init_n_lineages)
     {
-      total_count=N0
-      N=N0
-      pool=c(-1,2)
-      t=age
-      L = matrix(0, nrow=1e6,4)
-      L[,4]=-1
-      L[,3]=0
-      L[1,1:4] = c(t,0,-1,-1)
-      L[2,1:4] = c(t,-1,2,-1)
-      while (t>0)
-      {
+      total_count=init_n_lineages
+      N <- init_n_lineages
+      pool <- c(-1,2)
+      t <- age
+      L <- matrix(0, nrow=1e6,4)
+      L[,4] <- -1
+      L[,3] <- 0
+      L[1,1:4] <- c(t,0,-1,-1)
+      L[2,1:4] <- c(t,-1,2,-1)
+      while (t > 0) {
         N=length(pool)
         deltaT <- stats::rexp(1, rate=(lambda+N*mu))
         outcome=sample(c(-1,1), size=1, prob = c(N*mu, lambda))
@@ -313,8 +327,8 @@ mbd_sim_dataset <- function(
 
   if (sim_pars[2] == 0){cond = 0; tips_interval = c(0, Inf)} #this allows me to use the analytical formula CHECK THIS!
 
-  N0 = soc
-  # if (cond == 1){tips_interval[1] = max(N0, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
+  init_n_lineages <- soc
+  # if (cond == 1){tips_interval[1] = max(init_n_lineages, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
   if (edge != Inf && tips_interval == c(0, Inf))
   {
     estimation <- mbd_P_eq(test_parameters = sim_pars, age = age, max_number_of_species = 3000, precision = 50L, soc=soc, output=0);
@@ -337,7 +351,7 @@ mbd_sim_dataset <- function(
     sim_tas[[s]]   <- simulation$tas
   }
 
-  max_k <- (N0 - 1) + (is.list(sim_data)) * max(sapply(sim_data, length)) + (1 - is.list(sim_data)) * length(sim_data)
+  max_k <- (init_n_lineages - 1) + (is.list(sim_data)) * max(sapply(sim_data, length)) + (1 - is.list(sim_data)) * length(sim_data)
   if (is.list(sim_data))
   {
     all_the_births=sapply(sim_data, FUN = function(brts){return(brts2time_intervals_and_births(brts)$births)})
@@ -396,47 +410,56 @@ mbd_sim_dataset0 <- function(
   # mbd_sim_dataset0 creates a full simulated dataset of "max_sims" trees, using only three parameters.
   #"edge" gives the extent of fluctuations around the mean that i want to consider
 
-  N0 <- soc
-  if (cond == 1){tips_interval[1]=max(N0, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
-  if (edge!=Inf && tips_interval == c(0,Inf) ){
+  init_n_lineages <- soc
+  if (cond == 1) {
+    #if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
+    tips_interval[1] <- max(init_n_lineages, tips_interval[1])
+  }
+  if (edge != Inf && tips_interval == c(0, Inf)) {
     estimation <- mbd_P_eq(
       test_parameters = sim_pars,
       age = age,
       max_number_of_species = 3000,
       precision = 50L,
       soc = soc,
-      output=0
+      output = 0
     )
-    max_tips=round(estimation$avg_n*(1+edge));
-    min_tips=max(0, round(estimation$avg_n*(1-edge)));
-    tips_interval=c(min_tips, max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
+    max_tips <- round(estimation$avg_n*(1 + edge));
+    min_tips <- max(0, round(estimation$avg_n*(1 - edge)));
+    tips_interval <- c(min_tips, max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
   }
 
   #simulate trees
-  sim_data=sim_tes=sim_tas=vector("list", max_sims)
-  ext_species=rep(NA, max_sims)
-  for (s in 1:max_sims){
-    simulation <- mbd_sim0(pars = sim_pars, soc = soc, age = age, cond = cond,
-                              tips_interval = tips_interval, minimum_multiple_births = minimum_multiple_births)
-    sim_data[[s]]=simulation$brts
-    ext_species[s]=simulation$extinct_species
-    sim_tes[[s]] = simulation$tes
-    sim_tas[[s]] = simulation$tas
+  sim_data <- sim_tes <- sim_tas <- vector("list", max_sims)
+  ext_species <- rep(NA, max_sims)
+  for (s in 1:max_sims) {
+    simulation <- mbd_sim0(
+      pars = sim_pars, 
+      soc = soc, 
+      age = age, 
+      cond = cond,
+      tips_interval = tips_interval, 
+      minimum_multiple_births = minimum_multiple_births
+    )
+    sim_data[[s]] <- simulation$brts
+    ext_species[s] <- simulation$extinct_species
+    sim_tes[[s]] <- simulation$tes
+    sim_tas[[s]] <- simulation$tas
   }
 
-  max_k=(N0-1)+(is.list(sim_data))*max(sapply(sim_data, length))+(1-is.list(sim_data))*length(sim_data)
-  if (is.list(sim_data))
-  {
-    all_the_births=sapply(sim_data, FUN = function(brts){return(brts2time_intervals_and_births(brts)$births)})
-  }else{
-    all_the_births=brts2time_intervals_and_births(sim_data)$births
+  max_k <- (init_n_lineages - 1) + (is.list(sim_data)) * 
+    max(sapply(sim_data, length)) + (1 - is.list(sim_data)) * length(sim_data)
+  if (is.list(sim_data)) {
+    all_the_births <- sapply(sim_data, FUN = function(brts){return(brts2time_intervals_and_births(brts)$births)})
+  } else {
+    all_the_births <- brts2time_intervals_and_births(sim_data)$births
   }
-  max_b=max(unlist(all_the_births))
+  max_b <- max(unlist(all_the_births))
 
-  additional_species = tips = rep(0, max_sims)
-  for (s in 1:max_sims){
-  additional_species[s] = sum( duplicated(sim_data[[s]]) )
-  tips[s] = length(sim_data[[s]])+1
+  additional_species <- tips <- rep(0, max_sims)
+  for (s in 1:max_sims) {
+    additional_species[s] <- sum( duplicated(sim_data[[s]]) )
+    tips[s] <- length(sim_data[[s]])+1
   }
   #saving sims and settings
   # simpath=paste("sims/", sim_pars[1], "-", sim_pars[2], "-", sim_pars[3], "/", sep = '')
@@ -462,17 +485,17 @@ mbd_sim_dataset0 <- function(
 #' mbd_sim3=function(pars, soc=2, age=10, cond=1, tips_interval = c(soc*(cond==1),Inf))
 #' {
 #'   if (tips_interval[2]<tips_interval[1]){print("ERROR! Check again your settings.");break}
-#'   lambda = pars[1]; mu = pars[2]; nu = pars[3]; q=pars[4]; N0=soc
+#'   lambda = pars[1]; mu = pars[2]; nu = pars[3]; q=pars[4]; init_n_lineages=soc
 #'   if (lambda!=0){print("This is supposed to work only with multiple events. Lambda is not allowed.");break}
 #'   tips=-1; conditioning_on_survival=cond;
 #'   while ( tips<tips_interval[1] | tips>tips_interval[2] | conditioning_on_survival )
 #'   {
-#'     total_count=N0
-#'     pool=1:N0
-#'     while (total_count==N0 | length(pool)<N0 )
+#'     total_count=init_n_lineages
+#'     pool=1:init_n_lineages
+#'     while (total_count==init_n_lineages | length(pool)<init_n_lineages )
 #'     {
-#'       total_count=N0
-#'       N=N0
+#'       total_count=init_n_lineages
+#'       N=init_n_lineages
 #'       pool=c(-1,2)
 #'       t=age
 #'       L = matrix(0, nrow=1e6,4)

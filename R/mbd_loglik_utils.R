@@ -523,10 +523,10 @@ alpha_conditional_probability <- function(
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
   min_tips <- tips_interval[1]; max_tips <- tips_interval[2];
   min_tips <- max(min_tips, soc * cond) #check this
-  N0 <- soc
+  init_n_lineages <- soc
   total_time <- max(abs(brts));
   births <- c(0, brts2time_intervals_and_births(brts)$births)
-  k_interval <- N0 + cumsum(births)
+  k_interval <- init_n_lineages + cumsum(births)
   max_k <- max(k_interval)
   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
 
@@ -537,16 +537,24 @@ alpha_conditional_probability <- function(
   {
     m <- 0:max_number_of_species;
     one_over_Cm <- (3 * (m + 1))/(m + 3)
-    one_over_qm_binom <- 1/choose((m + N0), N0)
+    one_over_qm_binom <- 1/choose((m + init_n_lineages), init_n_lineages)
     tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
-    if (cond == 1){tips_components <- tips_components - N0} #I am already considering the starting species to survive. I must not double count them!
+    if (cond == 1) {
+      # I am already considering the starting species to survive. 
+      # I must not double count them!
+      tips_components <- tips_components - init_n_lineages
+    }
 
     Qi <- c(1, rep(0, max_number_of_species))
     Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                             max_number_of_species = max_number_of_species)
     A2_v1 <- A_operator(Q = Qi, transition_matrix = Mk_N0, time_interval = total_time,
                               precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
-    if (methode != "sexpm"){A2_v1 <- negatives_correction(A2_v1, pars)} #it removes some small negative values that can occurr as bugs from the integration process
+    if (methode != "sexpm") {
+      # it removes some small negative values 
+      # that can occurr as bugs from the integration process
+      A2_v1 <- negatives_correction(A2_v1, pars)
+    } 
 
     if (minimum_multiple_births > 0) #adjust for the required minimum amount of mbd
     {
@@ -667,10 +675,10 @@ alpha_analysis <- function(
 #'   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
 #'   min_tips <- tips_interval[1]; max_tips <- tips_interval[2];
 #'   min_tips <- max(min_tips, soc * cond) #check this
-#'   N0 <- soc
+#'   init_n_lineages <- soc
 #'   total_time <- max(abs(brts));
 #'   births <- c(0, brts2time_intervals_and_births(brts)$births)
-#'   k_interval <- N0 + cumsum(births)
+#'   k_interval <- init_n_lineages + cumsum(births)
 #'   max_k <- max(k_interval)
 #'   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
 #'
@@ -681,9 +689,9 @@ alpha_analysis <- function(
 #'   {
 #'     m <- 0:max_number_of_species;
 #'     one_over_Cm <- (3 * (m + 1))/(m + 3)
-#'     one_over_qm_binom <- 1/choose((m + N0), N0)
+#'     one_over_qm_binom <- 1/choose((m + init_n_lineages), init_n_lineages)
 #'     tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
-#'     if (cond == 1){tips_components <- tips_components - N0} #I am already considering the starting species to survive. I must not double count them!
+#'     if (cond == 1){tips_components <- tips_components - init_n_lineages} #I am already considering the starting species to survive. I must not double count them!
 #'
 #'     Qi <- c(1, rep(0, max_number_of_species))
 #'     Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
@@ -716,16 +724,16 @@ alpha_analysis <- function(
 #'
 #'   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
 #'   min_tips <- missing_tips_interval[1]; max_tips <- missing_tips_interval[2];
-#'   N0 <- soc
+#'   init_n_lineages <- soc
 #'   total_time <- max(abs(brts))
 #'   births <- c(0, brts2time_intervals_and_births(brts)$births)
-#'   k_interval <- N0 + cumsum(births)
+#'   k_interval <- init_n_lineages + cumsum(births)
 #'   max_k <- max(k_interval)
 #'   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
 #'
 #'   m <- 0:max_number_of_species
 #'   one_over_Cm <- (3 * (m + 1))/(m + 3)
-#'   one_over_qm_binom <- 1/choose((m + N0), N0)
+#'   one_over_qm_binom <- 1/choose((m + init_n_lineages), init_n_lineages)
 #'   tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
 #'
 #'   Qi    <- c(1, rep(0, max_number_of_species))
@@ -742,10 +750,10 @@ alpha_analysis <- function(
 #'
 #'   if (min_tips < soc)
 #'     min_tips <- max(min_tips, soc * cond) #check this
-#'   N0 <- soc
+#'   init_n_lineages <- soc
 #'   total_time <- max(abs(brts));
 #'   births <- c(0, brts2time_intervals_and_births(brts)$births)
-#'   k_interval <- N0 + cumsum(births)
+#'   k_interval <- init_n_lineages + cumsum(births)
 #'   max_k <- max(k_interval)
 #'   max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
 #'
@@ -756,9 +764,9 @@ alpha_analysis <- function(
 #'   {
 #'     m <- 0:max_number_of_species;
 #'     one_over_Cm <- (3 * (m + 1))/(m + 3)
-#'     one_over_qm_binom <- 1/choose((m + N0), N0)
+#'     one_over_qm_binom <- 1/choose((m + init_n_lineages), init_n_lineages)
 #'     tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
-#'     if (cond == 1){tips_components <- tips_components - N0} #I am already considering the starting species to survive. I must not double count them!
+#'     if (cond == 1){tips_components <- tips_components - init_n_lineages} #I am already considering the starting species to survive. I must not double count them!
 #'
 #'     Qi <- c(1, rep(0, max_number_of_species))
 #'     Mk_N0 <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,

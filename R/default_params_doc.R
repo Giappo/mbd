@@ -59,7 +59,7 @@
 #' @param mu something
 #' @param mutation_rate something
 #' @param N something
-#' @param N0 something
+#' @param init_n_lineages the number of lineages at time equals zero
 #' @param n_steps something
 #' @param n_subs something
 #' @param nu something
@@ -174,7 +174,7 @@ default_params_doc <- function(
   mu,
   mutation_rate,
   N,
-  N0,
+  init_n_lineages,
   n_steps,
   n_subs,
   nu,

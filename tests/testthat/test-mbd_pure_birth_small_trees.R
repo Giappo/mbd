@@ -3,42 +3,46 @@ context("PureBirthSmallTrees")
 test_that("PureBirth theoretical check", {
 
   skip("Fix @Giappo: cannot find function 'mbd_loglik0'")
-  test_size <- 10; soc <- 2; cond <- 0; #methode = "both" #"lsoda" "expo"
+  test_size <- 10
+  soc <- 2
+  cond <- 0
 
-  mbd_theoretical_loglik <- function(pars, brts, soc = 2){
+  mbd_theoretical_loglik <- function(pars, brts, soc = 2) {
     #this works only for mu=0
-    lambda=pars[1]; mu=pars[2]; q=pars[3]
-    if (mu!=0 | lambda<=0 | q<=0 | q>=1){
+    lambda <- pars[1]
+    mu <- pars[2]
+    q <- pars[3]
+    if (mu != 0 | lambda <= 0 | q <= 0 | q >= 1) {
       return(-Inf)
     }
     #SETTING TIME INTERVALS AND NUMBER OF BIRTHS
     #     data=brts2time_intervals_and_births(brts)
     #     time_intervals=data$time_intervals
     #     births=data$births
-    data=brts2time_intervals_and_births(brts)
-    time_intervals=data$time_intervals
-    births=data$births
+    data <- brts2time_intervals_and_births(brts)
+    time_intervals <- data$time_intervals
+    births <- data$births
 
     #LOGLIK COMPUTATION
-    N0=soc
-    k=N0+cumsum(c(0, births))
-    A_term=1
-    i=0:1e6
-    for (t in 1:length(time_intervals)){
-      poisson_term = stats::dpois(i, lambda*time_intervals[t], log = FALSE)
-      ii = i[poisson_term!=0]
-      pois_not_zero = which(poisson_term!=0)
-      A_term=A_term*sum( ((1-q)^(ii*k[t]))*poisson_term[pois_not_zero] )
+    init_n_lineages <- soc
+    k <- init_n_lineages + cumsum(c(0, births))
+    A_term <- 1
+    i <- 0:1e6
+    for (t in 1:length(time_intervals)) {
+      poisson_term <- stats::dpois(i, lambda*time_intervals[t], log = FALSE)
+      ii <- i[poisson_term != 0]
+      pois_not_zero <- which(poisson_term != 0)
+      A_term <- A_term * sum(((1 - q) ^ (ii * k[t])) * poisson_term[pois_not_zero] )
       # poisson_term=stats::dpois(i, lambda*time_intervals[t], log = FALSE)[dpois(i, lambda*time_intervals[t], log = FALSE)!=0]
       # ii=i[stats::dpois(i, lambda*time_intervals[t], log = FALSE)!=0]
       # A_term=A_term*sum( ((1-q)^(ii*k[t]))*poisson_term )
     }
 
-    B_term=prod( lambda*choose(k[-length(k)], births)*q^births*(1-q)^(k[-length(k)]-births) )
+    B_term <- prod(lambda*choose(k[-length(k)], births)*q^births*(1 - q)^(k[-length(k)] - births) )
 
-    loglik=log(A_term*B_term)
+    loglik <- log(A_term*B_term)
     # loglik=-loglik #Rampal's optimizer uses loglik rather than -loglik
-    return(loglik)
+    loglik
   }
 
   mbd_test_pure_birth_small_trees <- function(pars, brts, soc=2, cond=0){

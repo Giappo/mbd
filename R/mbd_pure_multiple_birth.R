@@ -16,7 +16,7 @@ pmb_loglik <- function(
   # loglik=mbd_loglik(pars = test_pars, brts = test_brts, soc = soc, cond = 0, tips_interval = c(0,Inf))
   
   #theoretical loglik
-  N0 <- soc
+  init_n_lineages <- soc
   lambda <- test_pars[1]; mu <- test_pars[2]; nu <- test_pars[3]; q <- test_pars[4];
   condition1 <- (any(is.nan(test_pars)) != 0 | any(is.infinite(test_pars)) != 0 )
   condition2 <- (lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
@@ -26,7 +26,7 @@ pmb_loglik <- function(
     data <- brts2time_intervals_and_births(test_brts)
     time_intervals <- data$time_intervals
     births <- data$births
-    k <- N0 + cumsum(c(0, births))
+    k <- init_n_lineages + cumsum(c(0, births))
     A_term <- rep(1, length(time_intervals))     #branches
     B_term <- rep(1, length(time_intervals) - 1) #nodes
     #calculating branches contribution
@@ -63,7 +63,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
   # loglik=mbd_loglik(pars = test_pars, brts = test_brts, soc = soc, cond = 0, tips_interval = c(0,Inf))
 
   #theoretical loglik
-  N0 <- soc
+  init_n_lineages <- soc
   lambda <- test_pars[1]
   mu <- test_pars[2]
   nu <- test_pars[3]
@@ -76,7 +76,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
     data <- brts2time_intervals_and_births(test_brts)
     time_intervals <- data$time_intervals
     births <- data$births
-    k <- N0 + cumsum(c(0, births))
+    k <- init_n_lineages + cumsum(c(0, births))
     A_term <- rep(1, length(time_intervals)    ) #branches
     B_term <- rep(1, length(time_intervals) - 1) #nodes
     #calculating branches contribution
