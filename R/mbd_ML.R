@@ -4,13 +4,6 @@
 #' @description mbd_ML computes the maximum likelihood estimates of the parameters of a multiple birth-death diversification model for a given set of phylogenetic branching times. It also outputs the corresponding loglikelihood that can be used in model comparisons. Differently from mbd_ML it can account for three kind of events: sympatric (single) speciation, multiple (allopatric) speciation and extinction.
 #' @inheritParams default_params_doc
 #' @param initparsopt The initial values of the parameters that must be optimized
-#' @param idparsopt The ids of the parameters that must be optimized. The ids are defined as follows:
-#' \itemize{
-#'   \item pars[1] is lambda, the sympatric speciation rate;
-#'   \item pars[2] is mu, the extinction rate;
-#'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-#'   \item pars[4] is q, the single-lineage speciation probability.
-#' }
 #' @param idparsfix The ids of the parameters that should not be optimized. The default is to fix all parameters not specified in idparsopt.
 #' @param parsfix The values of the parameters that should not be optimized.
 #' @param res Sets the maximum number of species for which a probability must be computed, must be larger than 1 + length(brts).

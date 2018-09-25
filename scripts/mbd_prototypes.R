@@ -200,12 +200,13 @@ mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
 #' @description mbd_ML0 computes the maximum likelihood estimates of the parameters of a multiple birth-death diversification model for a given set of phylogenetic branching times. It also outputs the corresponding loglikelihood that can be used in model comparisons.
 #' @inheritParams default_params_doc
 #' @param initparsopt The initial values of the parameters that must be optimized
-#' @param idparsopt The ids of the parameters that must be optimized. The ids are defined as follows:
-#' \itemize{
-#' \item id == 1 corresponds to lambda (multiple speciation trigger rate)
-#' \item id == 2 corresponds to mu (extinction rate)
-#' \item id == 3 corresponds to q (single-lineage speciation probability)
-#' }
+#' @param idparsopt The ids of the parameters that must be optimized. 
+#'   The ids are defined as follows:
+#'   \itemize{
+#'     \item id == 1 corresponds to lambda (multiple speciation trigger rate)
+#'     \item id == 2 corresponds to mu (extinction rate)
+#'     \item id == 3 corresponds to q (single-lineage speciation probability)
+#'   }
 #' @param idparsfix The ids of the parameters that should not be optimized. The default is to fix all parameters not specified in idparsopt.
 #' @param parsfix The values of the parameters that should not be optimized.
 #' @param res Sets the maximum number of species for which a probability must be computed, must be larger than 1 + length(brts).
@@ -341,7 +342,8 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
 #' @inheritParams default_params_doc
 #' @param s The number of the simulation you want to evaluate.
 #' @param initparsopt The initial values of the parameters that must be optimized
-#' @param idparsopt The ids of the parameters that must be optimized. The ids are defined as follows:
+#' @param idparsopt The ids of the parameters that must be optimized. 
+#'   The ids are defined as follows:
 #' \itemize{
 #' \item id == 1 corresponds to lambda (multiple speciation trigger rate)
 #' \item id == 2 corresponds to mu (extinction rate)

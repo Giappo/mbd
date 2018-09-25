@@ -56,12 +56,13 @@ and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{idparsfix}{something}
 
-\item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:
+\item{idparsopt}{The ids of the parameters that must be optimized. 
+The ids are defined as follows:
 \itemize{
-\item id == 1 corresponds to lambda (speciation rate)
-\item id == 2 corresponds to mu (extinction rate)
-\item id == 3 corresponds to nu (multiple speciation trigger rate)
-\item id == 4 corresponds to q (single-lineage speciation probability)
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability.
 }}
 
 \item{initparsopt}{something}
@@ -241,5 +242,6 @@ This is an internal function, so it should be marked with
   functions to find the documentation parameters
 }
 \author{
-Documentation by Giovanni Laudanno, use of this function by Richel J.C. Bilderbeek
+Documentation by Giovanni Laudanno, 
+  use of this function by Richel J.C. Bilderbeek
 }

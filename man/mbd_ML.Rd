@@ -17,7 +17,8 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
 
 \item{initparsopt}{The initial values of the parameters that must be optimized}
 
-\item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:
+\item{idparsopt}{The ids of the parameters that must be optimized. 
+The ids are defined as follows:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
