@@ -15,7 +15,7 @@ mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
 
 \item{trparsfix}{something}
 
-\item{idparsopt}{The ids of the parameters that must be optimized. 
+\item{idparsopt}{The ids of the parameters that must be optimized.
 The ids are defined as follows:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
@@ -28,21 +28,22 @@ The ids are defined as follows:
 
 \item{brts}{A set of branching times of a phylogeny_}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age 
+\item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually 
+You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
-\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny_}
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny_}
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm} 
-  \item \code{expo}: use \code{expoRkit} 
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 

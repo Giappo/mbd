@@ -61,23 +61,23 @@ if (methode == "sexpm")
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1]
-    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1], timeout = 1000)
+    # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1]
+    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1], timeout = 1000)
   }
 
 if (any(!is.numeric(result)) || any(is.nan(result))) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1]
-    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1], timeout = 1000)
+    # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1]
+    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1], timeout = 1000)
   }
   else if (any(result < 0)) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    # result=deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1]
-    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=a_abstol,rtol=a_reltol)[2,-1], timeout = 1000)
+    # result=deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1]
+    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1], timeout = 1000)
   }
 
 # if ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && methode!="sexpm"){

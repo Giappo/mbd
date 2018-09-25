@@ -19,7 +19,7 @@ mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age 
+\item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{age}{The age of the tree.}
@@ -27,7 +27,7 @@ and non-extinction of the phylogeny_ Set 0 otherwise.}
 \item{max_sims}{something}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually 
+You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
 \item{edge}{the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.}
@@ -44,7 +44,7 @@ mbd_sim_dataset produces a full dataset of max_sims simulated trees including mu
 }
 \examples{
 # @Giappo: does not work
-# out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
+# out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15), soc=2, age=10, cond=1, edge=Inf )
 
 }
 \author{

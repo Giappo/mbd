@@ -22,8 +22,8 @@ A_operator(Q, transition_matrix, time_interval, precision = 50L,
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm} 
-  \item \code{expo}: use \code{expoRkit} 
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 }

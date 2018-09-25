@@ -54,7 +54,8 @@
 #'     \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 #'   }
 #' @param minimum_multiple_births something
-#' @param missnumspec The number of species that are in the clade but missing in the phylogeny_
+#' @param missnumspec The number of species that are in the clade,
+#'   but missing in the phylogeny_
 #' @param mu something
 #' @param mutation_rate something
 #' @param N something

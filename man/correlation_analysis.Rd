@@ -30,7 +30,7 @@ correlation_analysis(results, path, titolo = NULL, pdfname,
 
 \item{openit}{something}
 
-\item{idparsopt}{The ids of the parameters that must be optimized. 
+\item{idparsopt}{The ids of the parameters that must be optimized.
 The ids are defined as follows:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;

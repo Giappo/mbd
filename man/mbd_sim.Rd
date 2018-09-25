@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_sim.R
 \name{mbd_sim}
 \alias{mbd_sim}
-\title{Creates simulated trees under the multiple birth death process, 
+\title{Creates simulated trees under the multiple birth death process,
   including both sympatric and allopatric speciation}
 \usage{
 mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0,
@@ -21,48 +21,48 @@ mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0,
 
 \item{age}{The age of the tree.}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age 
+\item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually 
+You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
 \item{minimum_multiple_births}{something}
 }
 \value{
-The function returns a 
+The function returns a
   list of L table, branching times and number of extinct species:
 \itemize{
   \item brts are the branching times
-  \item tes is a tree-object corresponding to the 
+  \item tes is a tree-object corresponding to the
     reconstructed phylogenetic tree
   \item tas is a tree-object corresponding to the full phylogenetic tree
-  \item extinct_species is the number of species 
+  \item extinct_species is the number of species
     gone extinct before the present time
   \item L is a matrix of all species where the columns are:
   \itemize{
      \item first is the time at which a species is born;
-     \item second is the label of the parent of the species; 
-       positive and negative values only indicate 
+     \item second is the label of the parent of the species;
+       positive and negative values only indicate
        whether the species belongs to the left or right crown lineage;
-     \item third is the label of the daughter species itself; 
-       positive and negative values only indicate 
+     \item third is the label of the daughter species itself;
+       positive and negative values only indicate
        whether the species belongs to the left or right crown lineage;
-     \item fourth is the time of extinction of the species. 
+     \item fourth is the time of extinction of the species.
        If this is equal to -1, then the species is still extant.
   }
 }
 }
 \description{
-mbd_sim produces simulated trees allowing for 
-  three kind of events: sympatric speciation, multiple allopatric 
+mbd_sim produces simulated trees allowing for
+  three kind of events: sympatric speciation, multiple allopatric
   speciations and extinction.
 }
 \examples{
 out <- mbd_sim(
-  pars = c(0.6, 0.1, 0.4, 0.1), soc = 2, age = 10, cond = 1, 
-  tips_interval = c(0, Inf) 
+  pars = c(0.6, 0.1, 0.4, 0.1), soc = 2, age = 10, cond = 1,
+  tips_interval = c(0, Inf)
 )
 graphics::plot(out$tas)
 graphics::plot(out$tes)

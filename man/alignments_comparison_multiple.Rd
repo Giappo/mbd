@@ -26,13 +26,13 @@ alignments_comparison_multiple(sim_pars = c(0.2, 0.15, 2, 0.15),
 
 \item{sequence_length}{something}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age 
+\item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{age}{The age of the tree.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually 
+You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
 \item{mutation_rate}{something}

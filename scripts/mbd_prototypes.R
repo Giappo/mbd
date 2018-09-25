@@ -166,16 +166,15 @@ mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
   # idparsopt=(1:3)[-c(idparsfix)] #this argument is useless but I let the user specify it because Rampal also did it (for some reason)
   trpars1 = rep(0,Npars)
   trpars1[idparsopt] = trparsopt
-  if (length(idparsfix) != 0)
-  {
+  if (length(idparsfix) != 0) {
     trpars1[idparsfix] = trparsfix
   }
-  if (min(trpars1[1:Npars]) < 0){loglik <- -Inf}else
-  {
-    if (pars_transform == 1)
-    {
+  if (min(trpars1[1:Npars]) < 0) {
+    loglik <- -Inf
+  } else {
+    if (pars_transform == 1) {
       #Rampal's transformation
-      pars1 = trpars1/(1 - trpars1)
+      pars1 <- trpars1 / (1 - trpars1)
     }else
     {
       pars1 <- trpars1
@@ -184,12 +183,11 @@ mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
                                 tips_interval = tips_interval, methode = methode,
                                 alpha = alpha)
   }
-  if(is.nan(loglik) || is.na(loglik))
-  {
+  if (is.nan(loglik) || is.na(loglik)) {
     cat("There are parameter values used which cause numerical problems.\n")
     loglik <- -Inf
   }
-  return(loglik)
+  loglik
 }
 
 
@@ -244,9 +242,11 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
   # - optimmethod = 'subplex' (current default) or 'simplex' (default of previous versions)
   
-  if (missing(parsfix) && (length(idparsfix)==0)){parsfix <- NULL}
+  if (missing(parsfix) && (length(idparsfix) == 0)) {
+    parsfix <- NULL
+  }
   
-  options(warn=-1)
+  options(warn = -1)
   namepars <- c("lambda","mu","q"); Npars <- length(namepars); #if you add more parameters to your model just change this
   failpars <- rep(-1,Npars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
   if (is.numeric(brts) == FALSE)
@@ -260,9 +260,17 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
       cat("The parameters to be optimized and/or fixed are incoherent.\n")
       out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     } else {
-      if(length(namepars[idparsopt]) == 0) { optstr = "nothing" } else { optstr = namepars[idparsopt] }
+      if (length(namepars[idparsopt]) == 0) { 
+        optstr = "nothing" 
+      } else { 
+        optstr = namepars[idparsopt] 
+      }
       cat("You are optimizing",optstr,"\n")
-      if(length(namepars[idparsfix]) == 0) { fixstr = "nothing" } else { fixstr = namepars[idparsfix] }
+      if (length(namepars[idparsfix]) == 0) { 
+        fixstr = "nothing" 
+      } else { 
+        fixstr = namepars[idparsfix] 
+      }
       cat("You are fixing",fixstr,"\n")
       cat("Optimizing the likelihood - this may take a while.","\n")
       utils::flush.console()
@@ -279,16 +287,17 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
         trparsfix  <- parsfix
       }
       optimpars  <- c(tol, maxiter)
-      initloglik <- mbd:::mbd_loglik_choosepar0(trparsopt = trparsopt, trparsfix = trparsfix,
-                                                idparsopt = idparsopt, idparsfix = idparsfix,
-                                                brts = brts, missnumspec = missnumspec,
-                                                cond = cond, soc = soc,
-                                                tips_interval = tips_interval, methode = methode,
-                                                alpha = alpha, pars_transform = pars_transform) #there's no pars2 here and instead 3 more args at the end
+      initloglik <- mbd:::mbd_loglik_choosepar0(
+        trparsopt = trparsopt, trparsfix = trparsfix,
+        idparsopt = idparsopt, idparsfix = idparsfix,
+        brts = brts, missnumspec = missnumspec,
+        cond = cond, soc = soc,
+        tips_interval = tips_interval, methode = methode,
+        alpha = alpha, pars_transform = pars_transform
+      ) #there's no pars2 here and instead 3 more args at the end
       cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
       utils::flush.console()
-      if(initloglik == -Inf)
-      {# bracket#4
+      if (initloglik == -Inf) {
         cat("The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n")
         out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
       } else {
@@ -298,26 +307,29 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
                                idparsfix = idparsfix, brts = brts, missnumspec = missnumspec,
                                cond = cond, soc = soc, tips_interval = tips_interval,
                                methode = methode, alpha = alpha, pars_transform = pars_transform)
-        if(out$conv != 0)
-        {# bracket#5
+        if (out$conv != 0) {
           cat("Optimization has not converged. Try again with different initial values.\n")
           out2 = data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
         } else {
           MLtrpars = as.numeric(unlist(out$par))
-          if (pars_transform == 1)
-          {
+          if (pars_transform == 1) {
             #Rampal's transformation
-            MLpars = MLtrpars/(1-MLtrpars)
-          }else
-          {
+            MLpars <- MLtrpars / (1 - MLtrpars)
+          } else {
             MLpars <- MLtrpars
           }
           MLpars1 <- rep(0, Npars); names(MLpars1) <- namepars
           MLpars1[idparsopt] <- MLpars
-          if(length(idparsfix) != 0) {MLpars1[idparsfix] <- parsfix}
+          if (length(idparsfix) != 0) {
+            MLpars1[idparsfix] <- parsfix
+          }
           ML <- as.numeric(unlist(out$fvalues))
-          out2 <- data.frame(t(MLpars1), loglik = ML, df = length(initparsopt), conv = unlist(out$conv))
-          
+          out2 <- data.frame(
+            t(MLpars1), 
+            loglik = ML, 
+            df = length(initparsopt), 
+            conv = unlist(out$conv)
+          )
           tobeprint <- "Maximum likelihood parameter estimates:"
           for (ii in 1:Npars)
           {
@@ -325,7 +337,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
           }
           s1 <- sprintf(tobeprint)
           
-          if(out2$conv != 0 & changeloglikifnoconv == T) { out2$loglik = -Inf }
+          if (out2$conv != 0 & changeloglikifnoconv == T) { out2$loglik = -Inf }
           s2 = sprintf('Maximum loglikelihood: %f',ML)
           cat("\n",s1,"\n",s2,"\n\n")
         }# bracket#5
@@ -364,17 +376,22 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
 #' mbd:::mbd_ML_cluster0(1)
 #'
 #' @export
-mbd_ML_cluster0 <- function(s, initparsopt = c(1.8,0.3,0.15)){
+mbd_ML_cluster0 <- function(
+  s, 
+  initparsopt = c(1.8, 0.3, 0.15)
+){
   # initparsopt=c(1.8,0.3,0.15);
-  parnames=c("lambda","mu","nu","q"); Npars = length(parnames)
-  idparsopt=1:Npars;parsfix=NULL;
+  parnames <- c("lambda","mu","nu","q")
+  Npars <- length(parnames)
+  idparsopt <- 1:Npars
+  parsfix <- NULL
   
   # simpath=paste("sims/",sim_pars[1],"-",sim_pars[2],"-",sim_pars[3],"/",sep = '')
   simpath = getwd()
   
-  datapath=paste(simpath,"/data",sep = '')
-  load(file=paste(datapath,"/general_settings",sep = ''))
-  load(file=paste(datapath,"/sim_data",sep = ''))
+  datapath <- paste(simpath, "/data",sep = '')
+  load(file = paste(datapath, "/general_settings",sep = ''))
+  load(file = paste(datapath, "/sim_data",sep = ''))
   print(s)
   
   if ( !file.exists(paste(simpath,"/errors",sep = '')) ){dir.create(paste(simpath,"/errors",sep = ''))}

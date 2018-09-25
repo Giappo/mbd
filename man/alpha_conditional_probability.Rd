@@ -28,18 +28,18 @@ or
 \item{alpha}{something}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually 
+You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age 
+\item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm} 
-  \item \code{expo}: use \code{expoRkit} 
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 

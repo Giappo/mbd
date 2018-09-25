@@ -29,8 +29,8 @@ or
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm} 
-  \item \code{expo}: use \code{expoRkit} 
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 

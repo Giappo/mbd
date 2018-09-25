@@ -28,7 +28,8 @@ pmb_ML(brts, initparsopt, soc = 2, res = 10 * (1 + length(brts) +
 
 \item{pars_transform}{something}
 
-\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny_}
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny_}
 }
 \description{
 Does something N

@@ -17,7 +17,7 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
 
 \item{initparsopt}{The initial values of the parameters that must be optimized}
 
-\item{idparsopt}{The ids of the parameters that must be optimized. 
+\item{idparsopt}{The ids of the parameters that must be optimized.
 The ids are defined as follows:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
@@ -30,15 +30,16 @@ The ids are defined as follows:
 
 \item{parsfix}{The values of the parameters that should not be optimized.}
 
-\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny_}
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny_}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age 
+\item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually 
+You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
 \item{res}{Sets the maximum number of species for which a probability must be computed, must be larger than 1 + length(brts).}
@@ -58,8 +59,8 @@ do with a standard usage of mbd_sim.}
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm} 
-  \item \code{expo}: use \code{expoRkit} 
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
@@ -89,8 +90,8 @@ simulated_data = mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
 graphics::plot(simulated_data$tes)
 # @Giappo: does not work
 # mbd_ML(
-#   brts = simulated_data$brts, initparsopt = 0.11 ,idparsopt = 4,
-#   idparsfix = c(1,2,3), parsfix = test_pars[idparsfix], 
+#   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
+#   idparsfix = c(1,2,3), parsfix = test_pars[idparsfix],
 #   missnumspec = 0, cond = 1, soc = 2
 # )
 }

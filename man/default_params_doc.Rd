@@ -49,14 +49,14 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
 
 \item{colormap}{something}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age 
+\item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{function_name}{something}
 
 \item{idparsfix}{something}
 
-\item{idparsopt}{The ids of the parameters that must be optimized. 
+\item{idparsopt}{The ids of the parameters that must be optimized.
 The ids are defined as follows:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
@@ -107,14 +107,15 @@ The ids are defined as follows:
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm} 
-  \item \code{expo}: use \code{expoRkit} 
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
 \item{minimum_multiple_births}{something}
 
-\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny_}
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny_}
 
 \item{mu}{something}
 
@@ -197,7 +198,7 @@ or
 \item{t2}{something}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually 
+You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
 \item{time_interval}{something}
@@ -242,6 +243,6 @@ This is an internal function, so it should be marked with
   functions to find the documentation parameters
 }
 \author{
-Documentation by Giovanni Laudanno, 
+Documentation by Giovanni Laudanno,
   use of this function by Richel J.C. Bilderbeek
 }

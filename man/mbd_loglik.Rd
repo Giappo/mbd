@@ -22,7 +22,7 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age 
+\item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{lx0}{something}
@@ -30,17 +30,18 @@ and non-extinction of the phylogeny_ Set 0 otherwise.}
 \item{alpha}{something}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually 
+You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
-\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny_}
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny_}
 
 \item{safety_threshold}{It determines the precision on the parameters.}
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm} 
-  \item \code{expo}: use \code{expoRkit} 
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
@@ -60,8 +61,8 @@ simulated_data = mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond =
 graphics::plot(simulated_data$tas)
 # @Giappo: too big too run
 # mbd::mbd_loglik(
-#   pars = c(0.8, 0.05, 2.2, 0.1), 
-#   brts = simulated_data$brts, 
+#   pars = c(0.8, 0.05, 2.2, 0.1),
+#   brts = simulated_data$brts,
 #   soc = 2, cond = 1, missnumspec = 0
 # )
 
