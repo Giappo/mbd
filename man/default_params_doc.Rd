@@ -11,7 +11,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   initparsopt, input_trees_path, input_xml, interval_max, interval_min,
   iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
   max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
-  mbd.lambda, methode, minimum_multiple_births, missnumspec, mu,
+  mbd_lambda, methode, minimum_multiple_births, missnumspec, mu,
   mutation_rate, N, N0, Nsteps, Nsubs, nu, optimmethod, pars,
   pars.transform, parsfix, precision, print_errors, printit, Q, q,
   quantiles_choice, recursive, reltol, res, results, s, sample_interval,
@@ -103,7 +103,7 @@ The ids are defined as follows:
 
 \item{maxiter}{something}
 
-\item{mbd.lambda}{something}
+\item{mbd_lambda}{something}
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{

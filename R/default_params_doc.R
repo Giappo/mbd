@@ -45,7 +45,7 @@
 #' @param max_repetitions something
 #' @param max_sims something
 #' @param maxiter something
-#' @param mbd.lambda something
+#' @param mbd_lambda something
 #' @param methode 
 #'   Specifies how the integration must be performed:
 #'   \itemize{
@@ -166,7 +166,7 @@ default_params_doc <- function(
   max_repetitions,
   max_sims,
   maxiter,
-  mbd.lambda,
+  mbd_lambda,
   methode,
   minimum_multiple_births,
   missnumspec,
