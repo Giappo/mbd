@@ -1,7 +1,7 @@
 #' Imports data
 #' No globals please
 #' @inheritParams default_params_doc
-#' @param parnames sonething
+# @param parnames sonething
 # mbd_import_data <- function(
 #   parnames = c("lambda","mu","nu","q")
 # ) {
@@ -45,7 +45,8 @@ correlation_analysis <- function(
   titolo = NULL,
   pdfname,
   sim_pars = sim_pars,
-  percentage_hidden_outliers = 0.04, openit = 0, 
+  percentage_hidden_outliers = 0.04, 
+  openit = 0, 
   idparsopt, 
   mother_folder
 ) {
@@ -185,7 +186,12 @@ mbd_P_eq <- function(
   output = 0
 ){
   N0=soc
-  create_mbd_P_matrix = function(pars=sim_pars,max_number_of_species)
+  
+  # Use sim_pars for pars
+  create_mbd_P_matrix <- function(
+    pars,
+    max_number_of_species
+  )
   {
     lambda=pars[1];mu=pars[2];q=pars[3];nvec=0:max_number_of_species
     M=matrix(0,nrow=max_number_of_species+1,ncol=max_number_of_species+1)

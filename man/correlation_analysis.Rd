@@ -39,9 +39,6 @@ correlation_analysis(results, path, titolo = NULL, pdfname,
 }}
 
 \item{mother_folder}{something}
-
-\item{parnames}{sonething
-analysis function}
 }
 \description{
 Imports data
