@@ -138,12 +138,18 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
 #' Does something N
 #' @inheritParams default_params_doc
 #' @export
-pmb_ML <- function(brts, initparsopt, soc = 2,
-                 res = 10 * (1+length(brts)+missnumspec), tol = c(1E-3, 1E-4, 1E-6),
-                 maxiter = 1000 * round((1.25)^length(idparsopt)),
-                 changeloglikifnoconv = FALSE, optimmethod = 'simplex',
-                 pars.transform = 1)
-{# bracket#1
+pmb_ML <- function(
+  brts, 
+  initparsopt, 
+  soc = 2,
+  res = 10 * (1+length(brts)+missnumspec), 
+  tol = c(1E-3, 1E-4, 1E-6),
+  maxiter = 1000 * round((1.25)^length(idparsopt)),
+  changeloglikifnoconv = FALSE, 
+  optimmethod = 'simplex',
+  pars.transform = 1,
+  missnumspec = 0
+) {# bracket#1
   # - tol = tolerance in optimization
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization

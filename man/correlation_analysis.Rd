@@ -2,7 +2,8 @@
 % Please edit documentation in R/mbd_utils.R
 \name{correlation_analysis}
 \alias{correlation_analysis}
-\title{analysis function}
+\title{Imports data
+No globals please}
 \usage{
 correlation_analysis(results, path, titolo = NULL, pdfname,
   sim_pars = sim_pars, percentage_hidden_outliers = 0.04, openit = 0,
@@ -38,7 +39,11 @@ correlation_analysis(results, path, titolo = NULL, pdfname,
 }}
 
 \item{mother_folder}{something}
+
+\item{parnames}{sonething
+analysis function}
 }
 \description{
-analysis function
+Imports data
+No globals please
 }

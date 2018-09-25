@@ -1,34 +1,35 @@
 #' Imports data
+#' No globals please
 #' @inheritParams default_params_doc
 #' @param parnames sonething
-mbd_import_data <- function(
-  parnames = c("lambda","mu","nu","q")
-) {
-  parnames <<- parnames
-  Npars <<- length(parnames);
-  base_path=dirname(dirname(getwd()))
-  if( !exists("path")  ){ #&& interactive()
-    path<<-choose.dir(paste(base_path,"/Progress/RQ1 - Multiple Births/Results + Reports/4_parameters/",sep = ''), "Choose a suitable folder")
-  }
-  res_files = list.files(pattern=paste('[.]txt',sep = ''),path=path, full.names=TRUE)
-  for(i in 1:length(res_files)){
-    fileData <- utils::read.table(file=res_files[i],header=FALSE,sep=",")
-    ifelse(exists("targetTable"),targetTable<-rbind(targetTable,fileData),targetTable<-fileData)
-  }
-  all_results = targetTable
-  
-  tidy_results=all_results[order(all_results[,dim(all_results)[2]]),]
-  dimnames(tidy_results)[[2]]<-(c(parnames,"LL","multiple_born","number_of_tips","percentage_multiple_species","tree_id"))
-  bad_results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))==(Npars+1),];#print(Nbad<-dim(bad_results)[1])
-  results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))!=(Npars+1),];#print(N<-dim(results)[1])
-  print(paste("There are ",Nbad<-dim(bad_results)[1]," bad results.",sep = ''))
-  print(paste("There are ",N<<-dim(results)[1]," good results.",sep = ''))
-  
-  load( as.character(paste(path,"/data/general_settings",sep = '')), envir = e <- globalenv() )
-  load( as.character(paste(path,"/data/sim_data",sep = '')), envir = e <- globalenv()  )
-  suppressWarnings( rm(targetTable,all_results,fileData,i) )
-  return(results)
-}
+# mbd_import_data <- function(
+#   parnames = c("lambda","mu","nu","q")
+# ) {
+#   parnames <<- parnames
+#   Npars <<- length(parnames);
+#   base_path=dirname(dirname(getwd()))
+#   if( !exists("path")  ){ #&& interactive()
+#     path<<-choose.dir(paste(base_path,"/Progress/RQ1 - Multiple Births/Results + Reports/4_parameters/",sep = ''), "Choose a suitable folder")
+#   }
+#   res_files = list.files(pattern=paste('[.]txt',sep = ''),path=path, full.names=TRUE)
+#   for(i in 1:length(res_files)){
+#     fileData <- utils::read.table(file=res_files[i],header=FALSE,sep=",")
+#     ifelse(exists("targetTable"),targetTable<-rbind(targetTable,fileData),targetTable<-fileData)
+#   }
+#   all_results = targetTable
+#   
+#   tidy_results=all_results[order(all_results[,dim(all_results)[2]]),]
+#   dimnames(tidy_results)[[2]]<-(c(parnames,"LL","multiple_born","number_of_tips","percentage_multiple_species","tree_id"))
+#   bad_results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))==(Npars+1),];#print(Nbad<-dim(bad_results)[1])
+#   results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))!=(Npars+1),];#print(N<-dim(results)[1])
+#   print(paste("There are ",Nbad<-dim(bad_results)[1]," bad results.",sep = ''))
+#   print(paste("There are ",N<<-dim(results)[1]," good results.",sep = ''))
+#   
+#   load( as.character(paste(path,"/data/general_settings",sep = '')), envir = e <- globalenv() )
+#   load( as.character(paste(path,"/data/sim_data",sep = '')), envir = e <- globalenv()  )
+#   suppressWarnings( rm(targetTable,all_results,fileData,i) )
+#   return(results)
+# }
 
 #' analysis function
 #' @inheritParams default_params_doc
@@ -591,7 +592,7 @@ summarize_beast_posterior <- function(
 #' Does something
 #' @inheritParams default_params_doc
 #' @param file_name file name
-#' @param file_name something
+#' @param maxtree something
 extract_posterior <- function(
   file_name = "simcophylo_1_RUN1.(time).trees.txt",
   maxtree = 10
