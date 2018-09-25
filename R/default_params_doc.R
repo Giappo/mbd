@@ -59,7 +59,7 @@
 #' @param mutation_rate something
 #' @param N something
 #' @param N0 something
-#' @param Nsteps something
+#' @param n_steps something
 #' @param Nsubs something
 #' @param nu something
 #' @param optimmethod something
@@ -174,7 +174,7 @@ default_params_doc <- function(
   mutation_rate,
   N,
   N0,
-  Nsteps,
+  n_steps,
   Nsubs,
   nu,
   optimmethod,

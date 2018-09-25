@@ -5,7 +5,7 @@
 \title{Does something D}
 \usage{
 BD.infer.lambda.from.mutations(Nsubs, mbd_lambda, mu, age, N0 = 2,
-  sequence_length = 1000, mutation_rate = 1/age, Nsteps = 40)
+  sequence_length = 1000, mutation_rate = 1/age, n_steps = 40)
 }
 \arguments{
 \item{Nsubs}{something}
@@ -22,7 +22,7 @@ BD.infer.lambda.from.mutations(Nsubs, mbd_lambda, mu, age, N0 = 2,
 
 \item{mutation_rate}{something}
 
-\item{Nsteps}{something}
+\item{n_steps}{something}
 }
 \description{
 Does something D

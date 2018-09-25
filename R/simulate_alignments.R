@@ -46,8 +46,8 @@ BD.infer.lambda.from.mutations <- function(Nsubs,
                                            N0 = 2, 
                                            sequence_length = 1000, 
                                            mutation_rate = 1/age, 
-                                           Nsteps = 40) {
-  lavec <- seq((min.lambda <- 0.5 * mbd_lambda), (max.lambda <- 6 * mbd_lambda), by = abs(max.lambda - min.lambda)/(Nsteps))
+                                           n_steps = 40) {
+  lavec <- seq((min.lambda <- 0.5 * mbd_lambda), (max.lambda <- 6 * mbd_lambda), by = abs(max.lambda - min.lambda)/(n_steps))
   NN <- rep(NA, length(lavec))
   for (i in 1:length(lavec))
   {
@@ -198,7 +198,7 @@ alignments_comparison_multiple <- function(
                                                 N0 = soc,
                                                 sequence_length = sequence_length,
                                                 mutation_rate = mutation_rate,
-                                                Nsteps = 40)
+                                                n_steps = 40)
   
   # for (s in 1:max_sims)
   # {
