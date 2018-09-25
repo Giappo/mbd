@@ -4,8 +4,9 @@
 \alias{BD.infer.lambda.from.mutations}
 \title{Does something D}
 \usage{
-BD.infer.lambda.from.mutations(n_subs, mbd_lambda, mu, age, N0 = 2,
-  sequence_length = 1000, mutation_rate = 1/age, n_steps = 40)
+BD.infer.lambda.from.mutations(n_subs, mbd_lambda, mu, age,
+  init_n_lineages = 2, sequence_length = 1000, mutation_rate = 1/age,
+  n_steps = 40)
 }
 \arguments{
 \item{n_subs}{something}
@@ -16,7 +17,7 @@ BD.infer.lambda.from.mutations(n_subs, mbd_lambda, mu, age, N0 = 2,
 
 \item{age}{The age of the tree.}
 
-\item{N0}{something}
+\item{init_n_lineages}{the number of lineages at time equals zero}
 
 \item{sequence_length}{something}
 

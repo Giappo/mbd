@@ -4,7 +4,7 @@
 \alias{BD.Nct}
 \title{Does something B}
 \usage{
-BD.Nct(lambda, mu, t, N0 = 2, age)
+BD.Nct(lambda, mu, t, init_n_lineages = 2, age)
 }
 \arguments{
 \item{lambda}{something}
@@ -13,7 +13,7 @@ BD.Nct(lambda, mu, t, N0 = 2, age)
 
 \item{t}{something}
 
-\item{N0}{something}
+\item{init_n_lineages}{the number of lineages at time equals zero}
 
 \item{age}{The age of the tree.}
 }

@@ -12,8 +12,8 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
   max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
   mbd_lambda, methode, minimum_multiple_births, missnumspec, mu,
-  mutation_rate, N, N0, n_steps, n_subs, nu, optimmethod, pars,
-  pars_transform, parsfix, precision, print_errors, printit, Q, q,
+  mutation_rate, N, init_n_lineages, n_steps, n_subs, nu, optimmethod,
+  pars, pars_transform, parsfix, precision, print_errors, printit, Q, q,
   quantiles_choice, recursive, reltol, res, results, s, sample_interval,
   sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
@@ -123,7 +123,7 @@ but missing in the phylogeny_}
 
 \item{N}{something}
 
-\item{N0}{something}
+\item{init_n_lineages}{the number of lineages at time equals zero}
 
 \item{n_steps}{something}
 
