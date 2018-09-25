@@ -29,8 +29,8 @@
 #' @param initparsopt something
 #' @param input_trees_path Path to \code{.trees} file
 #' @param input_xml something
-#' @param interval.max something
-#' @param interval.min something
+#' @param interval_max something
+#' @param interval_min something
 #' @param iterations something
 #' @param k something
 #' @param lambda something
@@ -150,8 +150,8 @@ default_params_doc <- function(
   initparsopt,
   input_trees_path,
   input_xml,
-  interval.max,
-  interval.min,
+  interval_max,
+  interval_min,
   iterations,
   k,
   lambda,

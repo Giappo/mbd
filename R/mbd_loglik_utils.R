@@ -413,14 +413,14 @@ find_best_lx_for_Pc <- function(brts,
                                 abstol = 1e-16,
                                 reltol = 1e-10,
                                 iterations = 20,
-                                interval.min = 500,
-                                interval.max = 1400) {
+                                interval_min = 500,
+                                interval_max = 1400) {
   
   a <- iterations/2
-  interval.width <- interval.max - interval.min
-  step1 <- floor(interval.width/a)
+  interval_width <- interval_max - interval_min
+  step1 <- floor(interval_width/a)
   
-  lx.test <- rep(NA, length(lxvec <- seq(interval.min + step1, interval.max - step1, step1))); i <- 1; right.lx.coord <- 0
+  lx.test <- rep(NA, length(lxvec <- seq(interval_min + step1, interval_max - step1, step1))); i <- 1; right.lx.coord <- 0
   for (lx2 in lxvec)
   {
     lx.test[i] <- mbd::calculate_conditional_probability0(

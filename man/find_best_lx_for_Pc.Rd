@@ -6,7 +6,7 @@
 \usage{
 find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo",
   abstol = 1e-16, reltol = 1e-10, iterations = 20,
-  interval.min = 500, interval.max = 1400)
+  interval_min = 500, interval_max = 1400)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
@@ -40,9 +40,9 @@ or
 
 \item{iterations}{something}
 
-\item{interval.min}{something}
+\item{interval_min}{something}
 
-\item{interval.max}{something}
+\item{interval_max}{something}
 }
 \description{
 Internal mbd function.
