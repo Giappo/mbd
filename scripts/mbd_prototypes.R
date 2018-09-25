@@ -105,7 +105,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         # B[(row(B)>(2*col(B)+k-births[t])) | col(B)>row(B) ]=0 #this is a constrain due to maximum number of speciations being (2*n+k-b); probably it is redundant
         # if (max(is.nan(B))>0){print(paste("NaN were produced in the B matrix at time=",t))}
         Qt[t,] <- (B %*% Qt[t,])
-        if (methode!="sexpm") {
+        if (methode != "sexpm") {
           Qt[t,] <- mbd:::negatives_correction(Qt[t,],pars)
         }
         logB  <-  logB + log(lambda) + lchoose(k,births[t]) + births[t]*log(q)
@@ -123,26 +123,32 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       }
       
       #Applying A operator from the last branching time to the present
-      transition_matrix <- create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
+      transition_matrix <- create_A0(
+        max_number_of_species = max_number_of_species,
+        lambda = lambda,
+        mu = mu,
+        q = q,
+        k = k
+      )
       Qt[t,] <- A_operator(
-        Q = Qt[(t-1),],
+        Q = Qt[(t - 1),],
         transition_matrix = transition_matrix,
         time_interval = time_intervals[t],
         precision = 50L,
-        methode=methode,
-        a_abstol=abstol,
-        a_reltol=reltol
+        methode = methode,
+        a_abstol = abstol,
+        a_reltol = reltol
       )
       if (methode != "sexpm") {
         Qt[t,] <- mbd:::negatives_correction(Qt[t, ], pars)
       }
       if (debug_check == 1) {
-        print(head(Qt[t,]))
+        print(head(Qt[t, ]))
       }
       
       #Selecting the state I am interested in
-      vm <-  1/choose((k+missnumspec),k)
-      P <-  vm * Qt[t,(missnumspec+1)] #I have to include +1 because of Q0
+      vm <- 1 / choose((k+missnumspec),k)
+      P <- vm * Qt[t,(missnumspec + 1)] #I have to include +1 because of Q0
       
       #Removing C and D effects from the LL
       loglik <- log(P) + logB - sum(log(C)) - sum(log(D))
@@ -154,29 +160,36 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       }
       
       #CONDITIONING THE LIKELIHOOD ON THE SURVIVAL OF CROWN SPECIES
-      Pc=1
-      if ( (cond==1 | tips_interval[1]>1 | tips_interval[2]<Inf ) & !is.infinite(loglik) ){ #difference between sexpm and expo are not here
+      Pc <- 1
+      #difference between sexpm and expo are not here
+      if (
+        (
+          cond==1 | 
+          tips_interval[1]>1 | 
+          tips_interval[2]<Inf 
+        ) & !is.infinite(loglik) 
+      ) { 
         
-        total_time=max(abs(brts));
-        m=0:max_number_of_species
-        one_over_Cm=(3*(m+1))/(m+3)
-        one_over_qm_binom=1/choose((m+init_n_species),init_n_species)
-        tips_components=(1+min_tips):(1+min(max_tips,max_number_of_species)) #applying tips constrain
+        total_time <- max(abs(brts));
+        m <- 0:max_number_of_species
+        one_over_Cm <- (3*(m+1))/(m+3)
+        one_over_qm_binom <- 1/choose((m+init_n_species),init_n_species)
+        tips_components <- (1+min_tips):(1+min(max_tips,max_number_of_species)) #applying tips constrain
         
-        mk_n_zero=mbd:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = init_n_species)
-        A2_v1=A_operator(Q = Qt[1,],transition_matrix = mk_n_zero,time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
+        mk_n_zero <- mbd:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = init_n_species)
+        A2_v1 <- A_operator(Q = Qt[1,],transition_matrix = mk_n_zero,time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
         if (methode != "sexpm"){A2_v1=mbd:::negatives_correction(A2_v1,pars)} #it removes some small negative values that can occurr as bugs from the integration process
         if (debug_check == 1){print(head(A2_v1, max_tips))}
         total_product=A2_v1 * one_over_Cm * one_over_qm_binom
-        Pc=sum(total_product[tips_components])
+        Pc <- sum(total_product[tips_components])
         
         if (Pc==0){#slowest and best accuracy
           # ode_matrix=as.matrix(mk_n_zero) #use this only if you use sparsematrices
-          ode_matrix=mk_n_zero
-          times=c(0,total_time)
-          A2_v1=deSolve::ode(y = Qt[1,], times = times, func = mbd:::mbd_loglik_rhs, parms = ode_matrix,atol=abstol,rtol=reltol)[2,-1] #evolving crown species to the present
-          total_product=A2_v1*one_over_Cm*one_over_qm_binom
-          Pc=sum(total_product[tips_components])
+          ode_matrix <- mk_n_zero
+          times <- c(0,total_time)
+          A2_v1 <- deSolve::ode(y = Qt[1,], times = times, func = mbd:::mbd_loglik_rhs, parms = ode_matrix,atol=abstol,rtol=reltol)[2,-1] #evolving crown species to the present
+          total_product <- A2_v1*one_over_Cm*one_over_qm_binom
+          Pc <- sum(total_product[tips_components])
         }
         
       }
@@ -309,7 +322,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
   } else {
     idpars <- sort(c(idparsopt, idparsfix))
-    if ( (sum(idpars == (1:n_pars)) != n_pars) || 
+    if ((sum(idpars == (1:n_pars)) != n_pars) || 
       (length(initparsopt) != length(idparsopt)) || 
       (length(parsfix) != length(idparsfix)) 
     ) {

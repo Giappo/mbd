@@ -109,7 +109,11 @@ mbd_sim <- function(
 
           if (deltaN > 0 & t > 0)
           {
-            if (N > 1) {parents <- sample(pool, replace = FALSE, size = deltaN)}else{parents <- pool}
+            if (N > 1) {
+              parents <- sample(pool, replace = FALSE, size = deltaN)
+            } else {
+              parents <- pool
+            }
             new_interval <- (total_count + 1):(total_count + deltaN)
             L[new_interval,1] <- t#-(deltaN:1)*1e-5 add this if you need separate time points
             L[new_interval,2] <- parents

@@ -255,28 +255,47 @@ myheatmap <- function(
 #' @inheritParams default_params_doc
 myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
 
-  if (missing(x_splits)){x_splits=round( (length(x))/10 )}
-  if (missing(y_splits)){y_splits=round( (length(y))/10 )}
-  if (missing(x_name)){x_name=NULL}
-  if (missing(y_name)){y_name=NULL}
-  if (missing(z_name)){z_name=NULL}
+  if (missing(x_splits)) { 
+    x_splits <- round( (length(x))/10 )
+  }
+  if (missing(y_splits)) { 
+    y_splits <- round( (length(y))/10 )
+  }
+  if (missing(x_name)) { 
+    x_name <- NULL 
+  }
+  if (missing(y_name)) { 
+    y_name <- NULL 
+  }
+  if (missing(z_name)) { 
+    z_name <- NULL 
+  }
 
-  lX=x; lY=y;
-  pretty_X.at	<-	pretty(range(lX), n=x_splits)
-  pretty_X.lab	<-	round(pretty_X.at,2)
-  pretty_Y.at	<-	pretty(range(lY), n=y_splits)
-  pretty_Y.lab	<-	round(pretty_Y.at,2)
+  lX <- x
+  lY <- y
+  pretty_X.at	<-	pretty(range(lX), n = x_splits)
+  pretty_X.lab	<-	round(pretty_X.at, 2)
+  pretty_Y.at	<-	pretty(range(lY), n = y_splits)
+  pretty_Y.lab	<-	round(pretty_Y.at, 2)
 
   jet.colors <- grDevices::colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
-  graphics::filled.contour(t(z), color = jet.colors, nlevels=100,#asp = 1, #frame.plot = T, axes=F,
-                 ylab = y_name, xlab = x_name,
-                 plot.axes={
-                   # axis(1, at=seq(0,1, length.out = x_splits+1), labels=pretty_X.lab)
-                   # axis(2, at=seq(0,1, length.out = y_splits+1), labels=pretty_Y.lab)
-                   graphics::axis(1, at=seq(0,1, length.out = length(pretty_X.lab) ), labels=pretty_X.lab)
-                   graphics::axis(2, at=seq(0,1, length.out = length(pretty_Y.lab) ), labels=pretty_Y.lab)
-                 },
-                 key_title = graphics::title(main=z_name)
+  graphics::filled.contour(
+    t(z), 
+    color = jet.colors, 
+    nlevels = 100,
+    ylab = y_name, 
+    xlab = x_name,
+    plot.axes = {
+      graphics::axis(
+        1, at = seq(0, 1, length.out = length(pretty_X.lab) ), 
+        labels = pretty_X.lab
+      )
+      graphics::axis(
+        2, at = seq(0, 1, length.out = length(pretty_Y.lab) ), 
+        labels = pretty_Y.lab
+      )
+    },
+    key_title = graphics::title(main = z_name)
   )
 }
 
@@ -289,23 +308,24 @@ negatives_correction <- function(
   pars,
   display_output = 0
 ){
-  problems=0
-  if ( any(is.na(v)) ){ problems=1;
-  NA_components=which(is.na(v) & !is.nan(v) )
-  NaN_components=which(is.nan(v))
-  if (display_output==1){
-    cat("There are non-numeric components for par values:", pars, "\n")
-    if(length(NA_components)>0) {cat("NA component are:",NA_components)}
-    if(length(NaN_components)>0) {cat("NaN component are:",NaN_components)}
-  }
+  problems <- 0
+  if (any(is.na(v))) { 
+    problems <- 1
+    NA_components <- which(is.na(v) & !is.nan(v) )
+    NaN_components <- which(is.nan(v))
+    if (display_output == 1) {
+      cat("There are non-numeric components for par values:", pars, "\n")
+      if (length(NA_components) > 0) { cat("NA component are:", NA_components)}
+      if (length(NaN_components) > 0) { cat("NaN component are:", NaN_components)}
+    }
   }
 
-  if ( any(v<0) & (problems)==0){
-    negatives=v[v<0]
-    maximum=max(v)
-    v[v<0 & (abs(v)/abs(max(v)))<1e-10]=0
+  if (any(v < 0) & (problems) == 0) {
+    #negatives <- v[v < 0]
+    #maximum <- max(v)
+    v[v < 0 & (abs(v)/abs(max(v))) < 1e-10] <- 0
   }
-  return(v)
+  v
 }
 
 #' Compares two functions that accept same arguments args=(...)
@@ -548,7 +568,9 @@ summarize_beast_posterior <- function(
       parenthesis_colons=(colons-1)[tree_sub2[colons-1]==")"]
       if(is.null(node_names_xml)){
         node_names=paste("Node", seq_along(c(NA, parenthesis_colons)), sep="")
-      } else{node_names=node_names_xml}
+      } else {
+        node_names <- node_names_xml
+      }
       tree_sub2=append_multiple(tree_sub2, node_names, c(parenthesis_colons, length(tree_sub2)-1))
 
       #Find positions of opening and closing brackets

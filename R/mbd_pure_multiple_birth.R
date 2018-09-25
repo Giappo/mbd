@@ -182,8 +182,10 @@ pmb_ML <- function(
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
   } else {
     idpars <- sort(c(idparsopt, idparsfix))
-    if ( (sum(idpars == (1:n_pars)) != n_pars) || (length(initparsopt) != length(idparsopt)) || (length(parsfix) != length(idparsfix)) )
-    {# bracket#3
+    if ((sum(idpars == (1:n_pars)) != n_pars) || 
+        (length(initparsopt) != length(idparsopt)) || 
+        (length(parsfix) != length(idparsfix)) 
+    ) {
       cat("The parameters to be optimized and/or fixed are incoherent.\n")
       out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     } else {
