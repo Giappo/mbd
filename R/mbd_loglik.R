@@ -17,37 +17,37 @@
 #' graphics::plot(simulated_data$tas)
 #' # @Giappo: too big too run
 #' # mbd::mbd_loglik(
-#' #   pars = c(0.8, 0.05, 2.2, 0.1), 
-#' #   brts = simulated_data$brts, 
+#' #   pars = c(0.8, 0.05, 2.2, 0.1),
+#' #   brts = simulated_data$brts,
 #' #   soc = 2, cond = 1, missnumspec = 0
 #' # )
 #'
 #' @export
 mbd_loglik <- function(
-    pars, 
-    brts, 
-    soc = 2, 
-    cond = 1, 
+    pars,
+    brts,
+    soc = 2,
+    cond = 1,
     lx0 = 900,
     alpha = 10,
     tips_interval = c(0, Inf),
-    missnumspec = 0, 
+    missnumspec = 0,
     safety_threshold = 1e-3,
-    methode = "expo", 
-    minimum_multiple_births = 0, 
+    methode = "expo",
+    minimum_multiple_births = 0,
     print_errors = TRUE
 ) {
   #Optional stuff that I might need to run the program one line at the time:
   #brts = sim_data[[1]]; missnumspec = 0;pars = sim_pars; missing_interval = c(1, Inf); methode = "expo"
-  
+
   #BASIC SETTINGS AND CHECKS
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]
   abstol <- 1e-16; reltol <- 1e-10
   if (cond == 0) {tips_interval <- c(0, Inf)}
-  
+
   condition1 <- (any(is.nan(pars)) != 0 | any(is.infinite(pars)) != 0)
   condition2 <- (lambda < 0 | mu < 0 | nu < 0 |
-                 q <= 0 + safety_threshold | 
+                 q <= 0 + safety_threshold |
                  q >= 1 - safety_threshold |
                  minimum_multiple_births < 0)
   condition3 <- (length(pars) != 4)
@@ -60,15 +60,15 @@ mbd_loglik <- function(
   } else if (condition3) {
     if (print_errors == TRUE) { print("wrong number of input parameters")}
     loglik <- -Inf
-  } else if (mu == 0 && 
-      all(tips_interval == c(0, Inf)) && 
-      missnumspec == 0 && 
+  } else if (mu == 0 &&
+      all(tips_interval == c(0, Inf)) &&
+      missnumspec == 0 &&
       minimum_multiple_births == 0
   ) {
     loglik <- pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
   } else {
     #MAIN
-    
+
     #ADJUSTING DATA
     data <- brts2time_intervals_and_births(brts)
     time_intervals <- c(0, data$time_intervals)
@@ -76,7 +76,7 @@ mbd_loglik <- function(
     N0 <- soc #number of starting species
     k_interval <- N0 + cumsum(births)
     max_k <- max(k_interval)
-    
+
     #DETERMINE PC AND ALPHA (OR LX)
     Pc_and_Alpha <- mbd::alpha_analysis(
       brts = brts,
@@ -91,11 +91,11 @@ mbd_loglik <- function(
       reltol = reltol,
       minimum_multiple_births = minimum_multiple_births
     )
-    
+
     Pc    <- Pc_and_Alpha$Pc
     alpha <- Pc_and_Alpha$alpha
-    
-    # lx <- determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc, 
+
+    # lx <- determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc,
     #                               methode = methode, abstol = abstol, reltol = reltol)
     # alpha <- lx/10
     lx <- max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
@@ -112,7 +112,7 @@ mbd_loglik <- function(
         reltol = reltol
       )
     }
-    
+
     #LIKELIHOOD INTEGRATION
     start_over_again <- 1; iterations <- 0; max_iterations <- 100
     negative_values <- nan_values <- 0;

@@ -29,30 +29,30 @@
 #' # @Giappo: does not work
 #' # mbd_ML(
 #' #   brts = simulated_data$brts, initparsopt = 0.11 ,idparsopt = 4,
-#' #   idparsfix = c(1,2,3), parsfix = test_pars[idparsfix], 
+#' #   idparsfix = c(1,2,3), parsfix = test_pars[idparsfix],
 #' #   missnumspec = 0, cond = 1, soc = 2
 #' # )
 #' @export
 mbd_ML <- function(
-  brts, 
-  initparsopt, 
-  idparsopt, 
-  idparsfix = (1:4)[-idparsopt], 
+  brts,
+  initparsopt,
+  idparsopt,
+  idparsfix = (1:4)[-idparsopt],
   parsfix,
-  missnumspec = 0, 
-  cond = 1, 
-  soc = 2, 
+  missnumspec = 0,
+  cond = 1,
+  soc = 2,
   tips_interval = c(0, Inf),
-  res = 10 * (1 + length(brts) + missnumspec), 
+  res = 10 * (1 + length(brts) + missnumspec),
   tol = c(1E-3, 1E-4, 1E-6),
   maxiter = 1000 * round((1.25)^length(idparsopt)),
-  changeloglikifnoconv = FALSE, 
-  optimmethod = 'simplex', 
+  changeloglikifnoconv = FALSE,
+  optimmethod = 'simplex',
   methode = "expo",
-  minimum_multiple_births = 0, 
-  pars_transform = 1, 
-  print_errors = 0, 
-  verbose = TRUE, 
+  minimum_multiple_births = 0,
+  pars_transform = 1,
+  print_errors = 0,
+  verbose = TRUE,
   ...
 )
 {# bracket#1
@@ -84,7 +84,7 @@ mbd_ML <- function(
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     return(out2)
   }
-  
+
   if(length(namepars[idparsopt]) == 0) { optstr = "nothing" } else { optstr = namepars[idparsopt] }
   if (verbose == TRUE) {
     cat("You are optimizing",optstr,"\n")
@@ -137,7 +137,7 @@ mbd_ML <- function(
     brts = brts, missnumspec = missnumspec, cond = cond,
     soc = soc, tips_interval = tips_interval, methode = methode,
     minimum_multiple_births = minimum_multiple_births,
-    pars_transform = pars_transform, print_errors = print_errors, 
+    pars_transform = pars_transform, print_errors = print_errors,
     ...
   )
   if (verbose == TRUE) {
@@ -177,7 +177,7 @@ mbd_ML <- function(
     s2 <- sprintf('Maximum loglikelihood: %f',ML)
     cat("\n",s1,"\n",s2,"\n\n")
   }
-  
+
   invisible(out2)
 }
 

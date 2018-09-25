@@ -139,13 +139,13 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
 #' @inheritParams default_params_doc
 #' @export
 pmb_ML <- function(
-  brts, 
-  initparsopt, 
+  brts,
+  initparsopt,
   soc = 2,
-  res = 10 * (1+length(brts)+missnumspec), 
+  res = 10 * (1+length(brts)+missnumspec),
   tol = c(1E-3, 1E-4, 1E-6),
   maxiter = 1000 * round((1.25)^length(idparsopt)),
-  changeloglikifnoconv = FALSE, 
+  changeloglikifnoconv = FALSE,
   optimmethod = 'simplex',
   pars_transform = 1,
   missnumspec = 0

@@ -5,19 +5,19 @@
 #' @details This is not to be called by the user.
 #' @export
 mbd_loglik_choosepar  <- function(
-  trparsopt, 
-  trparsfix, 
+  trparsopt,
+  trparsfix,
   idparsopt = 1:4,
-  idparsfix = (1:4)[-idparsopt], 
-  brts, 
-  cond = 1, 
+  idparsfix = (1:4)[-idparsopt],
+  brts,
+  cond = 1,
   soc = 2,
-  tips_interval = c(0, Inf), 
-  missnumspec = 0, 
+  tips_interval = c(0, Inf),
+  missnumspec = 0,
   methode = "expo",
-  minimum_multiple_births = 0, 
-  pars_transform = 0, 
-  print_errors = 0, 
+  minimum_multiple_births = 0,
+  pars_transform = 0,
+  print_errors = 0,
   ...
 ) {
   #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like simplex, optim or subplex
@@ -25,7 +25,7 @@ mbd_loglik_choosepar  <- function(
   #trparsopt are the values for parameters you want to analyze
   #idparsfix are the ids of the parameters you want to fix
   #trparsfix are the values for parameters you want to fix
-  
+
   namepars <- c("lambda","mu","nu","q"); Npars <- length(namepars);
   if (length(trparsopt) == 4 && missing(trparsfix)){trparsfix <- NULL}
   trpars1 = rep(0, Npars)
@@ -45,14 +45,14 @@ mbd_loglik_choosepar  <- function(
       pars1 <- trpars1
     }
     loglik <- mbd_loglik(
-      pars = pars1, 
-      brts = brts, 
-      cond = cond, 
+      pars = pars1,
+      brts = brts,
+      cond = cond,
       soc = soc,
-      tips_interval = tips_interval, 
+      tips_interval = tips_interval,
       methode = methode,
-      minimum_multiple_births = minimum_multiple_births, 
-      print_errors = print_errors, 
+      minimum_multiple_births = minimum_multiple_births,
+      print_errors = print_errors,
       ...
     )
   }

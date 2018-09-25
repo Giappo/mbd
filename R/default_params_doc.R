@@ -14,11 +14,11 @@
 #' @param changeloglikifnoconv something
 #' @param checked_functions something
 #' @param colormap something
-#' @param cond Set 1 if you want to condition on stem or crown age 
+#' @param cond Set 1 if you want to condition on stem or crown age
 #'   and non-extinction of the phylogeny_ Set 0 otherwise.
 #' @param function_name something
 #' @param idparsfix something
-#' @param idparsopt The ids of the parameters that must be optimized. 
+#' @param idparsopt The ids of the parameters that must be optimized.
 #'   The ids are defined as follows:
 #'   \itemize{
 #'     \item pars[1] is lambda, the sympatric speciation rate;
@@ -46,11 +46,11 @@
 #' @param max_sims something
 #' @param maxiter something
 #' @param mbd_lambda something
-#' @param methode 
+#' @param methode
 #'   Specifies how the integration must be performed:
 #'   \itemize{
-#'     \item \code{sexpm}: use \code{sexpm} 
-#'     \item \code{expo}: use \code{expoRkit} 
+#'     \item \code{sexpm}: use \code{sexpm}
+#'     \item \code{expo}: use \code{expoRkit}
 #'     \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 #'   }
 #' @param minimum_multiple_births something
@@ -87,7 +87,7 @@
 #' @param recursive something
 #' @param reltol something
 #' @param res something
-#' @param results something 
+#' @param results something
 #' @param s something
 #' @param sample_interval something
 #' @param sequence_length something
@@ -106,7 +106,7 @@
 #' @param t2 something
 #' @param time_interval something
 #' @param tips_interval Sets tips boundaries constrain on simulated dataset.
-#'   You can also define the tips_interval as you can usually 
+#'   You can also define the tips_interval as you can usually
 #'   do with a standard usage of mbd_sim.
 #' @param tol something
 #' @param tr a phylogeny of class \code{phylo}
@@ -123,7 +123,7 @@
 #' @param y_splits something
 #' @param z something
 #' @param z_name something
-#' @author Documentation by Giovanni Laudanno, 
+#' @author Documentation by Giovanni Laudanno,
 #'   use of this function by Richel J.C. Bilderbeek
 #' @note This is an internal function, so it should be marked with
 #'   \code{@noRd}. This is not done, as this will disallow all
@@ -144,7 +144,7 @@ default_params_doc <- function(
   checked_functions,
   colormap,
   cond,
-  function_name, 
+  function_name,
   idparsfix,
   idparsopt,
   initparsopt,
@@ -183,14 +183,14 @@ default_params_doc <- function(
   parsfix,
   precision,
   print_errors,
-  printit, 
+  printit,
   Q,
   q,
   quantiles_choice,
-  recursive, 
+  recursive,
   reltol,
   res,
-  results, 
+  results,
   s,
   sample_interval,
   sequence_length,

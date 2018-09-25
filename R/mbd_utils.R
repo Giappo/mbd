@@ -17,14 +17,14 @@
 #     ifelse(exists("targetTable"),targetTable<-rbind(targetTable,fileData),targetTable<-fileData)
 #   }
 #   all_results = targetTable
-#   
+#
 #   tidy_results=all_results[order(all_results[,dim(all_results)[2]]),]
 #   dimnames(tidy_results)[[2]]<-(c(parnames,"LL","multiple_born","number_of_tips","percentage_multiple_species","tree_id"))
 #   bad_results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))==(Npars+1),];#print(Nbad<-dim(bad_results)[1])
 #   results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))!=(Npars+1),];#print(N<-dim(results)[1])
 #   print(paste("There are ",Nbad<-dim(bad_results)[1]," bad results.",sep = ''))
 #   print(paste("There are ",N<<-dim(results)[1]," good results.",sep = ''))
-#   
+#
 #   load( as.character(paste(path,"/data/general_settings",sep = '')), envir = e <- globalenv() )
 #   load( as.character(paste(path,"/data/sim_data",sep = '')), envir = e <- globalenv()  )
 #   suppressWarnings( rm(targetTable,all_results,fileData,i) )
@@ -37,7 +37,7 @@
 #' @param titolo something
 #' @param pdfname something
 #' @param percentage_hidden_outliers something
-#' @param openit something 
+#' @param openit something
 #' @param mother_folder something
 correlation_analysis <- function(
   results,
@@ -45,9 +45,9 @@ correlation_analysis <- function(
   titolo = NULL,
   pdfname,
   sim_pars = sim_pars,
-  percentage_hidden_outliers = 0.04, 
-  openit = 0, 
-  idparsopt, 
+  percentage_hidden_outliers = 0.04,
+  openit = 0,
+  idparsopt,
   mother_folder
 ) {
   Npars=length(sim_pars);#pars_interval=list(c(0,quantile(results[,1],.95)),c(0,quantile(results[,2],.95)),c(0,quantile(results[,3],.95)))
@@ -119,9 +119,9 @@ correlation_analysis <- function(
 #' Percentiles function
 #' @inheritParams default_params_doc
 percentiles_function <- function(
-  results, 
-  sim_pars, 
-  printit = 1, 
+  results,
+  sim_pars,
+  printit = 1,
   quantiles_choice = c(.25, .50, .75)
 ) {
   quantiles_names <- format(round(quantiles_choice,2),nsmall = 2)
@@ -145,9 +145,9 @@ percentiles_function <- function(
 heatmap2dataframe = function(
   x,
   y,
-  Matrix, 
-  x_name="x", 
-  y_name="y", 
+  Matrix,
+  x_name="x",
+  y_name="y",
   heatmap.name="HeatMap"
 ){
   Matrix2=matrix(Matrix,nrow = length(x)*length(y))
@@ -180,13 +180,13 @@ brts2time_intervals_and_births <- function(brts
 mbd_P_eq <- function(
   test_parameters,
   age=15,
-  max_number_of_species = 2000, 
+  max_number_of_species = 2000,
   precision = 50L,
   soc = 2,
   output = 0
 ){
   N0=soc
-  
+
   # Use sim_pars for pars
   create_mbd_P_matrix <- function(
     pars,
@@ -295,10 +295,10 @@ negatives_correction <- function(
 
 #' Compares two functions that accept same arguments args=(...)
 #' @inheritParams default_params_doc
-#' @param function1 something 
-#' @param function2 something 
-#' @param output something 
-#' @param ... something 
+#' @param function1 something
+#' @param function2 something
+#' @param output something
+#' @param ... something
 compare_functions <- function(
   function1,
   function2,
@@ -324,8 +324,8 @@ compare_functions <- function(
 #' Checks function calls within a function
 #' @inheritParams default_params_doc
 called_functions <- function(
-  function_name, 
-  recursive = FALSE, 
+  function_name,
+  recursive = FALSE,
   checked_functions = NULL
 ) {
 
@@ -404,8 +404,8 @@ matrix_check <- function(
 #' Does something
 #' @inheritParams default_params_doc
 append_multiple <- function(
-  x, 
-  values, 
+  x,
+  values,
   after
 ) {
   if(!is.list(values) & length(values)!=length(after)) stop("In append_multiple: values must be a list unless it has the same length as after")
@@ -607,7 +607,7 @@ extract_posterior <- function(
   names_i=file_name
 
   beast_posterior <- summarize_beast_posterior(
-      input_trees_path = names_i, 
+      input_trees_path = names_i,
       subsamp=maxtree #Number of samples to keep
     )
 
