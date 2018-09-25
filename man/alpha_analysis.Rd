@@ -8,7 +8,7 @@ alpha_analysis(brts, pars, tips_interval, cond, soc, alpha0, max_k,
   methode = "expo", abstol, reltol, minimum_multiple_births)
 }
 \arguments{
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{pars}{vector of parameters:
 \itemize{
@@ -24,9 +24,12 @@ or
   \item pars[4] is q, the single-lineage speciation probability.
 }}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+\item{cond}{Set 1 if you want to condition on stem or crown age 
+and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 

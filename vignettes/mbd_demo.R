@@ -38,3 +38,17 @@ mbd:::mbd_ML(brts = sim$brts,
              cond = cond)
 
 
+## ------------------------------------------------------------------------
+# # Uncomment if you are keen to wait.
+# idparsopt <- 4
+# ids <- 1:4; idparsfix <- ids[-idparsopt];
+# parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
+# MBD:::mbd_ML(brts = sim$brts, 
+#              initparsopt = initparsopt, 
+#              idparsopt = idparsopt, 
+#              parsfix = parsfix, 
+#              idparsfix = idparsfix, 
+#              soc = soc, 
+#              cond = cond)
+
+

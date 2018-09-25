@@ -1,35 +1,55 @@
-#imports data
-mbd_import_data = function(parnames=c("lambda","mu","nu","q")){
-parnames <<- parnames
-Npars <<- length(parnames);
-base_path=dirname(dirname(getwd()))
-if( !exists("path")  ){ #&& interactive()
-  path<<-choose.dir(paste(base_path,"/Progress/RQ1 - Multiple Births/Results + Reports/4_parameters/",sep = ''), "Choose a suitable folder")
-}
-res_files = list.files(pattern=paste('[.]txt',sep = ''),path=path, full.names=TRUE)
-for(i in 1:length(res_files)){
-  fileData <- utils::read.table(file=res_files[i],header=FALSE,sep=",")
-  ifelse(exists("targetTable"),targetTable<-rbind(targetTable,fileData),targetTable<-fileData)
-}
-all_results = targetTable
+#' Imports data
+#' No globals please
+#' @inheritParams default_params_doc
+# @param parnames sonething
+# mbd_import_data <- function(
+#   parnames = c("lambda","mu","nu","q")
+# ) {
+#   parnames <<- parnames
+#   Npars <<- length(parnames);
+#   base_path=dirname(dirname(getwd()))
+#   if( !exists("path")  ){ #&& interactive()
+#     path<<-choose.dir(paste(base_path,"/Progress/RQ1 - Multiple Births/Results + Reports/4_parameters/",sep = ''), "Choose a suitable folder")
+#   }
+#   res_files = list.files(pattern=paste('[.]txt',sep = ''),path=path, full.names=TRUE)
+#   for(i in 1:length(res_files)){
+#     fileData <- utils::read.table(file=res_files[i],header=FALSE,sep=",")
+#     ifelse(exists("targetTable"),targetTable<-rbind(targetTable,fileData),targetTable<-fileData)
+#   }
+#   all_results = targetTable
+#   
+#   tidy_results=all_results[order(all_results[,dim(all_results)[2]]),]
+#   dimnames(tidy_results)[[2]]<-(c(parnames,"LL","multiple_born","number_of_tips","percentage_multiple_species","tree_id"))
+#   bad_results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))==(Npars+1),];#print(Nbad<-dim(bad_results)[1])
+#   results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))!=(Npars+1),];#print(N<-dim(results)[1])
+#   print(paste("There are ",Nbad<-dim(bad_results)[1]," bad results.",sep = ''))
+#   print(paste("There are ",N<<-dim(results)[1]," good results.",sep = ''))
+#   
+#   load( as.character(paste(path,"/data/general_settings",sep = '')), envir = e <- globalenv() )
+#   load( as.character(paste(path,"/data/sim_data",sep = '')), envir = e <- globalenv()  )
+#   suppressWarnings( rm(targetTable,all_results,fileData,i) )
+#   return(results)
+# }
 
-tidy_results=all_results[order(all_results[,dim(all_results)[2]]),]
-dimnames(tidy_results)[[2]]<-(c(parnames,"LL","multiple_born","number_of_tips","percentage_multiple_species","tree_id"))
-bad_results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))==(Npars+1),];#print(Nbad<-dim(bad_results)[1])
-results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))!=(Npars+1),];#print(N<-dim(results)[1])
-print(paste("There are ",Nbad<-dim(bad_results)[1]," bad results.",sep = ''))
-print(paste("There are ",N<<-dim(results)[1]," good results.",sep = ''))
-
-load( as.character(paste(path,"/data/general_settings",sep = '')), envir = e <- globalenv() )
-load( as.character(paste(path,"/data/sim_data",sep = '')), envir = e <- globalenv()  )
-suppressWarnings( rm(targetTable,all_results,fileData,i) )
-return(results)
-}
-
-#analysis function
-correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars,
-                              percentage_hidden_outliers=0.04,openit=0,idparsopt,mother_folder){
-
+#' analysis function
+#' @inheritParams default_params_doc
+#' @param path something
+#' @param titolo something
+#' @param pdfname something
+#' @param percentage_hidden_outliers something
+#' @param openit something 
+#' @param mother_folder something
+correlation_analysis <- function(
+  results,
+  path,
+  titolo = NULL,
+  pdfname,
+  sim_pars = sim_pars,
+  percentage_hidden_outliers = 0.04, 
+  openit = 0, 
+  idparsopt, 
+  mother_folder
+) {
   Npars=length(sim_pars);#pars_interval=list(c(0,quantile(results[,1],.95)),c(0,quantile(results[,2],.95)),c(0,quantile(results[,3],.95)))
   if (missing(idparsopt)){estimated_pars=1:Npars}else{estimated_pars=idparsopt}
   par_names = colnames(results)[1:Npars]
@@ -96,8 +116,14 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
 
 }
 
-#percentiles function
-percentiles_function = function(results, sim_pars, printit = 1, quantiles_choice = c(.25, .50, .75)){
+#' Percentiles function
+#' @inheritParams default_params_doc
+percentiles_function <- function(
+  results, 
+  sim_pars, 
+  printit = 1, 
+  quantiles_choice = c(.25, .50, .75)
+) {
   quantiles_names <- format(round(quantiles_choice,2),nsmall = 2)
   Npars <- length(sim_pars);#pars_interval=list(c(0, stats::quantile(results[,1],.95)),c(0,quantile(results[,2],.95)),c(0,quantile(results[,3],.95)))
   parnames <-  colnames(results)[1:Npars]
@@ -112,8 +138,18 @@ percentiles_function = function(results, sim_pars, printit = 1, quantiles_choice
   out <- percentiles
 }
 
-#converts a matrix in a dataframe that can be used with ggplot
-heatmap2dataframe = function(x,y,Matrix, x.name="x", y.name="y", heatmap.name="HeatMap"){
+#' Converts a matrix in a dataframe that can be used with ggplot
+#' @inheritParams default_params_doc
+#' @param Matrix something
+#' @param heatmap.name heatmap name
+heatmap2dataframe = function(
+  x,
+  y,
+  Matrix, 
+  x.name="x", 
+  y.name="y", 
+  heatmap.name="HeatMap"
+){
   Matrix2=matrix(Matrix,nrow = length(x)*length(y))
   df=data.frame(expand.grid(x=x,y=y),HeatMap=Matrix2)
   #names(df$x)=names(x);names(df$y)=names(y);names(df$HeatMap)=names(Matrix);
@@ -123,8 +159,10 @@ heatmap2dataframe = function(x,y,Matrix, x.name="x", y.name="y", heatmap.name="H
   return(df)
 }
 
-#converts branching times to "time intervals between branching times" and "birth at nodes" vectors
-brts2time_intervals_and_births = function (brts){
+#' Converts branching times to "time intervals between branching times" and "birth at nodes" vectors
+#' @inheritParams default_params_doc
+brts2time_intervals_and_births <- function(brts
+) {
   time_points=-unlist(unname(sort(abs(brts),decreasing = T)) )
   branching_times = -sort(abs(as.numeric(time_points)),decreasing = TRUE)
   births=c(0,unname(table(branching_times))[-1])
@@ -135,19 +173,33 @@ brts2time_intervals_and_births = function (brts){
   return(out)
 }
 
-#provides estimated number of species integrating the P-equation
-mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precision = 50L,soc=2,output=0){
-
+#' Provides estimated number of species integrating the P-equation
+#' @inheritParams default_params_doc
+#' @param test_parameters something
+#' @param output something
+mbd_P_eq <- function(
+  test_parameters,
+  age=15,
+  max_number_of_species = 2000, 
+  precision = 50L,
+  soc = 2,
+  output = 0
+){
   N0=soc
-  create_mbd_P_matrix = function(pars=sim_pars,max_number_of_species)
+  
+  # Use sim_pars for pars
+  create_mbd_P_matrix <- function(
+    pars,
+    max_number_of_species
+  )
   {
     lambda=pars[1];mu=pars[2];q=pars[3];nvec=0:max_number_of_species
     M=matrix(0,nrow=max_number_of_species+1,ncol=max_number_of_species+1)
-
-    M = lambda * hyperA::hyperA(N = max_number_of_species,k = 0,q = q)
-    M[row(M) == col(M) - 1] = mu*nvec[2:(max_number_of_species+1)]
-    diag(M) = - mu*nvec - lambda*(1-(1-q)^nvec)
-    return(M)
+    testit::assert(!"Do not call hyperA")
+    # M = lambda * hyperA::hyperA(N = max_number_of_species,k = 0,q = q)
+    # M[row(M) == col(M) - 1] = mu*nvec[2:(max_number_of_species+1)]
+    # diag(M) = - mu*nvec - lambda*(1-(1-q)^nvec)
+    # return(M)
   }
 
   nvec=0:max_number_of_species
@@ -213,8 +265,15 @@ myheatmap2 <- function(x,y,z,x.name,y.name,z.name,x.splits,y.splits){
   )
 }
 
-#checks for NA, NaN or negative components in a vector (usually used for Qt)
-negatives_correction = function(v,pars,display_output=0){
+#' Checks for NA, NaN or negative components in a vector (usually used for Qt)
+#' @inheritParams default_params_doc
+#' @param v sometjing
+#' @param display_output something
+negatives_correction <- function(
+  v,
+  pars,
+  display_output = 0
+){
   problems=0
   if ( any(is.na(v)) ){ problems=1;
   NA_components=which(is.na(v) & !is.nan(v) )
@@ -234,8 +293,19 @@ negatives_correction = function(v,pars,display_output=0){
   return(v)
 }
 
-#compares two functions that accept same arguments args=(...)
-compare_functions=function(function1,function2,iterations=1,output=1,...){
+#' Compares two functions that accept same arguments args=(...)
+#' @inheritParams default_params_doc
+#' @param function1 something 
+#' @param function2 something 
+#' @param output something 
+#' @param ... something 
+compare_functions <- function(
+  function1,
+  function2,
+  iterations = 1,
+  output = 1,
+  ...
+){
   Atime1=0;Atime2=0;
   for (i in 1:iterations){
     t0=proc.time()
@@ -250,8 +320,14 @@ compare_functions=function(function1,function2,iterations=1,output=1,...){
   print( all.equal(Atest1,Atest2) )
   return(invisible(list(Atest1,Atest2)))
 }
-#checks function calls within a function
-called_functions <- function(function.name, recursive = FALSE, checked.functions = NULL){
+
+#' Checks function calls within a function
+#' @inheritParams default_params_doc
+called_functions <- function(
+  function.name, 
+  recursive = FALSE, 
+  checked.functions = NULL
+) {
 
     # Get the function's code:
     function.code <- deparse(get(function.name))
@@ -259,7 +335,7 @@ called_functions <- function(function.name, recursive = FALSE, checked.functions
     # break code up into sections preceding left brackets:
     left.brackets <- c(unlist(strsplit(function.code, split="[[:space:]]*\\(")))
 
-    called.functions <- unique(c(unlist(sapply(left.brackets, function (x) {
+    called.functions <- unique(c(unlist(sapply(left.brackets, function(x) {
         # Split up according to anything that can't be in a function name.
         # split = not alphanumeric, not '_', and not '.'
         words <- c(unlist(strsplit(x, split="[^[:alnum:]_.]")))
@@ -276,15 +352,23 @@ called_functions <- function(function.name, recursive = FALSE, checked.functions
         # we've checked to avoid infinite loops.
         functs.to.check <- called.functions[!(called.functions %in% checked.functions)]
 
-        called.functions <- unique(c(called.functions,
-            do.call(c, lapply(functs.to.check, function(x) {
-                listFunctions(x, recursive = T, checked.functions = c(checked.functions, called.functions))
-                }))))
+        testit::assert(!"Should never call listFunctions, whatever it is")
+        # called.functions <- unique(c(called.functions,
+        #     do.call(c, lapply(functs.to.check, function(x) {
+        #         listFunctions(x, recursive = T, checked.functions = c(checked.functions, called.functions))
+        #         }))))
     }
     return(called.functions)
 }
-#checks if some matrix entries are infinite, NaN, NA or (only in the lower triangle) negative
-matrix_check=function(Mlist,sign_check=0){
+
+#' Checks if some matrix entries are infinite, NaN, NA or (only in the lower triangle) negative
+#' @inheritParams default_params_doc
+#' @param Mlist something
+#' @param sign_check something
+matrix_check <- function(
+  Mlist,
+  sign_check = 0
+) {
   max_k=length(Mlist)
   black_list=as.complex(rep(0,max_k))
   negative_list=rep(0,max_k)
@@ -312,23 +396,30 @@ matrix_check=function(Mlist,sign_check=0){
   return(list(black_list=black_list,negative_list=negative_list))
 }
 
-#Install the missing packages
-require(ape)
+# RJCB: No, do not install missing packages here
+#require(ape)
 #require(abind)
-require(mvbutils)
+#require(mvbutils)
 
-append_multiple=function(x, values, after){
-
+#' Does something
+#' @inheritParams default_params_doc
+append_multiple <- function(
+  x, 
+  values, 
+  after
+) {
   if(!is.list(values) & length(values)!=length(after)) stop("In append_multiple: values must be a list unless it has the same length as after")
 
-  x2=x
-  for(i in 1:length(values)) x2=append(x2,values[[i]],after[i]+length(x2)-length(x))
-
-  return(x2)
+  x2 <- x
+  for(i in 1:length(values)) {
+    x2 <- append(x2,values[[i]],after[i]+length(x2)-length(x))
+  }
+  x2
 }
 
-#Function returning branch lengths named by ending node
-branchLengths=function(tr)
+#' Function returning branch lengths named by ending node
+#' @inheritParams default_params_doc
+branchLengths <- function(tr)
 {
   if(length(tr$node)>0) {type='NAMED'} else{type='UNNAMED'}
   if(length(tr$root)>0) {root.length=tr$root} else{root.length=0}
@@ -362,10 +453,12 @@ branchLengths=function(tr)
   return(res)
 }
 
-summarize_beast_posterior=function(
+#' Does something
+#' @inheritParams default_params_doc
+summarize_beast_posterior <- function(
   INPUT.TREES,
-  INPUT.XML=NULL,
-  subsamp=NULL
+  INPUT.XML = NULL,
+  subsamp = NULL
 ){
 
 
@@ -502,13 +595,19 @@ summarize_beast_posterior=function(
   return(list(branch_info=branch_infos, trees=tree_tot))
 }
 
-extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",maxtree=10){
+#' Does something
+#' @inheritParams default_params_doc
+#' @param file_name file name
+#' @param maxtree something
+extract_posterior <- function(
+  file_name = "simcophylo_1_RUN1.(time).trees.txt",
+  maxtree = 10
+) {
 
   names_i=file_name
 
-  beast_posterior=
-    summarize_beast_posterior(
-      INPUT.TREES=names_i, #Path to tree file
+  beast_posterior <- summarize_beast_posterior(
+      INPUT.TREES = names_i, 
       subsamp=maxtree #Number of samples to keep
     )
 
@@ -528,6 +627,7 @@ extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",max
 
   return(list(brts=brts,dist=dist))
 }
+
 # # Optimizers taken from DDD #I commented them because I wanna know if i can use them from DDD directly since they are the same
 # simplex = function(fun,trparsopt,optimpars,...)
 # {
@@ -1207,7 +1307,7 @@ extract_posterior = function (file_name="simcophylo_1_RUN1.(time).trees.txt",max
 
 # CORRELATION ANALYSIS EXTRA FUNCTIONS
 # #data with no outliers
-# fun_to_min = function (x,confidence_interval=0.95){
+# fun_to_min = function(x,confidence_interval=0.95){
 #   if (x<=0 || x>=1){return(Inf)}# x in [0,1]
 #   cresults=results[,1:3]
 #   cpars_interval=list(c(0,quantile(cresults[,1],x)),c(0,quantile(cresults[,2],x)),c(0,quantile(cresults[,3],x)))

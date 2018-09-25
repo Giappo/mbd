@@ -2,6 +2,7 @@ language: r
 cache: packages
 
 r_packages:
+  - BH
   - devtools
   - hunspell
 
@@ -10,10 +11,11 @@ r_github_packages:
   - jimhester/lintr
   - MangoTheCat/goodpractice
   - richelbilderbeek/pirouette
-  - richelbilderbeek/raket
   - ropensci/spelling
 
 before_script:
+  - Rscript -e "install.packages(\"libs/rsexpm_0.1.1.zip\", repos = NULL, type = \"source\")"
+  - Rscript -e "install.packages(\"libs/hyperA_0.1.0.tar.gz\", repos = NULL, type = \"source\")"
   - if [ -f ".lintr" ]; then echo "Do use Hadley Wickham's style guide"; exit 1; fi
   # proselint
   - sudo pip install proselint

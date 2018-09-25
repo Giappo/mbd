@@ -9,7 +9,7 @@
 #' @inheritParams default_params_doc
 #' @inheritParams default_params_doc
 #' @export
-get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
+get_data_from_cluster <- function(sim_pars, s, account_name = "p274829" ){
 
   if(account_name=="cyrus" || account_name=="Cyrus"){account_name = "p257011"} #cyrus account_name = "257011"
   if(account_name=="giovanni" || account_name=="Giovanni"){account_name = "p274829"} #giovanni account_name = "274829"
@@ -50,7 +50,7 @@ get_data_from_cluster = function (sim_pars, s, account_name = "p274829" ){
 #' Does something H
 #' @inheritParams default_params_doc
 #' @export
-get_all_data_from_cluster = function (sim_pars, max_sims = 1000, account_name = "p274829"){
+get_all_data_from_cluster = function(sim_pars, max_sims = 1000, account_name = "p274829"){
 
   Npars = length(sim_pars)
   folder_name =  NULL

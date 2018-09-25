@@ -5,17 +5,20 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
-default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
-  b, brts, chain_length, changeloglikifnoconv, colormap, idparsfix,
-  idparsopt, initparsopt, interval.max, interval.min, iterations, k,
-  lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
-  max_number_of_species, max_repetitions, max_sims, maxiter, mbd.lambda,
-  methode, minimum_multiple_births, missnumspec, mu, mutation_rate, N, N0,
-  Nsteps, Nsubs, nu, optimmethod, pars.transform, parsfix, precision,
-  print_errors, Q, q, reltol, res, s, sample_interval, sequence_length,
-  sim_pars, sim_phylo, soc, t, t1, t2, time_interval, tol,
-  transition_matrix, trparsfix, trparsopt, verbose, x, x.name, x.splits, y,
-  y.name, y.splits, z, z.name, age, cond, pars, tips_interval)
+default_params_doc(A_abstol, A_reltol, abstol, account_name, after, age,
+  alpha, alpha0, b, brts, chain_length, changeloglikifnoconv,
+  checked.functions, colormap, cond, function.name, idparsfix, idparsopt,
+  initparsopt, INPUT.TREES, INPUT.XML, interval.max, interval.min,
+  iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
+  max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
+  mbd.lambda, methode, minimum_multiple_births, missnumspec, mu,
+  mutation_rate, N, N0, Nsteps, Nsubs, nu, optimmethod, pars,
+  pars.transform, parsfix, precision, print_errors, printit, Q, q,
+  quantiles_choice, recursive, reltol, res, results, s, sample_interval,
+  sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
+  tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
+  trparsopt, values, verbose, x, x.name, x.splits, y, y.name, y.splits, z,
+  z.name)
 }
 \arguments{
 \item{A_abstol}{something}
@@ -26,19 +29,30 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{account_name}{something}
 
+\item{after}{something}
+
+\item{age}{The age of the tree.}
+
 \item{alpha}{something}
 
 \item{alpha0}{something}
 
 \item{b}{something}
 
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{chain_length}{something}
 
 \item{changeloglikifnoconv}{something}
 
+\item{checked.functions}{something}
+
 \item{colormap}{something}
+
+\item{cond}{Set 1 if you want to condition on stem or crown age 
+and non-extinction of the phylogeny. Set 0 otherwise.}
+
+\item{function.name}{something}
 
 \item{idparsfix}{something}
 
@@ -51,6 +65,10 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 }}
 
 \item{initparsopt}{something}
+
+\item{INPUT.TREES}{Path to \code{.trees} file}
+
+\item{INPUT.XML}{something}
 
 \item{interval.max}{something}
 
@@ -90,7 +108,7 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{minimum_multiple_births}{something}
 
-\item{missnumspec}{something}
+\item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
 
 \item{mu}{something}
 
@@ -108,6 +126,20 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{optimmethod}{something}
 
+\item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is the multiple speciation trigger rate;
+  \item pars[2] is the extinction rate;
+  \item pars[3] is the single-lineage speciation probability.
+}
+or
+\itemize{
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability.
+}}
+
 \item{pars.transform}{something}
 
 \item{parsfix}{The values of the parameters that should not be optimized.}
@@ -116,13 +148,21 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{print_errors}{something}
 
+\item{printit}{something}
+
 \item{Q}{something}
 
 \item{q}{something}
 
+\item{quantiles_choice}{something}
+
+\item{recursive}{something}
+
 \item{reltol}{something}
 
 \item{res}{something}
+
+\item{results}{something}
 
 \item{s}{something}
 
@@ -130,11 +170,19 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{sequence_length}{something}
 
-\item{sim_pars}{something}
+\item{sim_pars}{vector of parameters:
+\itemize{
+  \item id == 1 corresponds to lambda (speciation rate)
+  \item id == 2 corresponds to mu (extinction rate)
+  \item id == 3 corresponds to nu (multiple speciation trigger rate)
+  \item id == 4 corresponds to q (single-lineage speciation probability)
+}}
 
 \item{sim_phylo}{something}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+
+\item{subsamp}{something}
 
 \item{t}{something}
 
@@ -142,15 +190,23 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{t2}{something}
 
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
+
 \item{time_interval}{something}
 
 \item{tol}{something}
+
+\item{tr}{a phylogeny of class \code{phylo}}
 
 \item{transition_matrix}{something}
 
 \item{trparsfix}{something}
 
 \item{trparsopt}{something}
+
+\item{values}{something}
 
 \item{verbose}{something}
 
@@ -169,26 +225,6 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 \item{z}{something}
 
 \item{z.name}{something}
-
-\item{age}{The age of the tree.}
-
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
-
-\item{pars}{vector of parameters:
-\itemize{
-  \item pars[1] is the multiple speciation trigger rate;
-  \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability.
-}
-or
-\itemize{
-  \item pars[1] is lambda, the sympatric speciation rate;
-  \item pars[2] is mu, the extinction rate;
-  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
-}}
-
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

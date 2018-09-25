@@ -9,36 +9,35 @@
 #'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
 #'   \item pars[4] is q, the single-lineage speciation probability.
 #' }
-#' @param brts A set of branching times of a phylogeny.
-#' @param soc Sets whether stem or crown age should be used (1 or 2)
-#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param tips_interval It takes into account tips boundaries constrain on simulated dataset.
-#' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
 #' @param methode Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.
 #' @param safety_threshold It determines the precision on the parameters.
 #' @return The function returns the natural logarithm of the likelihood for the process.
-#'
 #' @examples
 #' set.seed(11)
 #' simulated_data = mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
 #' graphics::plot(simulated_data$tas)
 #' # @Giappo: too big too run
-#' # mbd::mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
+#' # mbd::mbd_loglik(
+#' #   pars = c(0.8, 0.05, 2.2, 0.1), 
+#' #   brts = simulated_data$brts, 
+#' #   soc = 2, cond = 1, missnumspec = 0
+#' # )
 #'
 #' @export
-mbd_loglik <- function(pars, 
-                       brts, 
-                       soc = 2, 
-                       cond = 1, 
-                       lx0 = 900,
-                       alpha = 10,
-                       tips_interval = c(0, Inf),
-                       missnumspec = 0, 
-                       safety_threshold = 1e-3,
-                       methode = "expo", 
-                       minimum_multiple_births = 0, 
-                       print_errors = TRUE){
-  
+mbd_loglik <- function(
+    pars, 
+    brts, 
+    soc = 2, 
+    cond = 1, 
+    lx0 = 900,
+    alpha = 10,
+    tips_interval = c(0, Inf),
+    missnumspec = 0, 
+    safety_threshold = 1e-3,
+    methode = "expo", 
+    minimum_multiple_births = 0, 
+    print_errors = TRUE
+) {
   #Optional stuff that I might need to run the program one line at the time:
   #brts = sim_data[[1]]; missnumspec = 0;pars = sim_pars; missing_interval = c(1, Inf); methode = "expo"
   
@@ -53,23 +52,23 @@ mbd_loglik <- function(pars,
                  q >= 1 - safety_threshold |
                  minimum_multiple_births < 0)
   condition3 <- (length(pars) != 4)
-  if       (condition1)
-  {
-    if (print_errors == TRUE){print("input parameters are either infinite or NaN")}
+  if (condition1) {
+    if (print_errors == TRUE) { print("input parameters are either infinite or NaN")}
     loglik <- -Inf
-  }else if (condition2)
-  {
-    if (print_errors == TRUE){print("input parameters have wrong values")}
+  } else if (condition2) {
+    if (print_errors == TRUE) { print("input parameters have wrong values")}
     loglik <- -Inf
-  }else if (condition3)
-  {
-    if (print_errors == TRUE){print("wrong number of input parameters")}
+  } else if (condition3) {
+    if (print_errors == TRUE) { print("wrong number of input parameters")}
     loglik <- -Inf
-  }else if (mu == 0 && all(tips_interval == c(0, Inf)) && missnumspec == 0 && minimum_multiple_births == 0)
-  {
+  } else if (mu == 0 && 
+      all(tips_interval == c(0, Inf)) && 
+      missnumspec == 0 && 
+      minimum_multiple_births == 0
+  ) {
     loglik <- pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
-  }else
-  {#MAIN
+  } else {
+    #MAIN
     
     #ADJUSTING DATA
     data <- brts2time_intervals_and_births(brts)
@@ -80,17 +79,19 @@ mbd_loglik <- function(pars,
     max_k <- max(k_interval)
     
     #DETERMINE PC AND ALPHA (OR LX)
-    Pc_and_Alpha <- mbd::alpha_analysis(brts = brts,
-                                        pars = pars,
-                                        tips_interval = tips_interval,
-                                        cond = cond,
-                                        soc = soc,
-                                        alpha0 = alpha,
-                                        max_k = max_k,
-                                        methode = methode,
-                                        abstol = abstol,
-                                        reltol = reltol,
-                                        minimum_multiple_births = minimum_multiple_births)
+    Pc_and_Alpha <- mbd::alpha_analysis(
+      brts = brts,
+      pars = pars,
+      tips_interval = tips_interval,
+      cond = cond,
+      soc = soc,
+      alpha0 = alpha,
+      max_k = max_k,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol,
+      minimum_multiple_births = minimum_multiple_births
+    )
     
     Pc    <- Pc_and_Alpha$Pc
     alpha <- Pc_and_Alpha$alpha
@@ -101,14 +102,16 @@ mbd_loglik <- function(pars,
     lx <- max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
     Pc <- 1
     if (cond == 1){
-      Pc <- mbd::calculate_conditional_probability(brts = brts,
-                                                   pars = pars,
-                                                   soc = soc,
-                                                   lx = lx,
-                                                   tips_interval = tips_interval,
-                                                   methode = methode,
-                                                   abstol = abstol,
-                                                   reltol = reltol)
+      Pc <- mbd::calculate_conditional_probability(
+        brts = brts,
+        pars = pars,
+        soc = soc,
+        lx = lx,
+        tips_interval = tips_interval,
+        methode = methode,
+        abstol = abstol,
+        reltol = reltol
+      )
     }
     
     #LIKELIHOOD INTEGRATION

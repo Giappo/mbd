@@ -9,7 +9,7 @@ find_best_lx_for_Pc(brts, pars, soc = 2, methode = "expo",
   interval.min = 500, interval.max = 1400)
 }
 \arguments{
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{pars}{vector of parameters:
 \itemize{

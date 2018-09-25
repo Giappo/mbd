@@ -9,7 +9,7 @@ calculate_conditional_probability1(brts, pars, soc = 2,
   reltol = 1e-10)
 }
 \arguments{
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{pars}{vector of parameters:
 \itemize{
@@ -27,7 +27,9 @@ or
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
 
 \item{methode}{something}
 

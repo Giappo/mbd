@@ -22,7 +22,7 @@ or
   \item pars[4] is q, the single-lineage speciation probability.
 }}
 
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{lx}{It is the number of ODEs considered for the computation.}
 
