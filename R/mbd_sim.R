@@ -328,7 +328,6 @@ mbd_sim_dataset <- function(
   if (sim_pars[2] == 0){cond = 0; tips_interval = c(0, Inf)} #this allows me to use the analytical formula CHECK THIS!
 
   init_n_lineages <- soc
-  # if (cond == 1){tips_interval[1] = max(init_n_lineages, tips_interval[1])}#if the tree is conditioned on the survival of crown species the minimum amount of tips has to be raised!!!
   if (edge != Inf && tips_interval == c(0, Inf))
   {
     estimation <- mbd_P_eq(test_parameters = sim_pars, age = age, max_number_of_species = 3000, precision = 50L, soc=soc, output=0);

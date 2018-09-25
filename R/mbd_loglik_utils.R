@@ -691,7 +691,10 @@ alpha_analysis <- function(
 #'     one_over_Cm <- (3 * (m + 1))/(m + 3)
 #'     one_over_qm_binom <- 1/choose((m + init_n_lineages), init_n_lineages)
 #'     tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
-#'     if (cond == 1){tips_components <- tips_components - init_n_lineages} #I am already considering the starting species to survive. I must not double count them!
+#'     if (cond == 1) {
+#'       #I am already considering the starting species to survive. I must not double count them!
+#'       tips_components <- tips_components - init_n_lineages
+#'     } 
 #'
 #'     Qi <- c(1, rep(0, max_number_of_species))
 #'     mk_n_zero <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
@@ -766,7 +769,10 @@ alpha_analysis <- function(
 #'     one_over_Cm <- (3 * (m + 1))/(m + 3)
 #'     one_over_qm_binom <- 1/choose((m + init_n_lineages), init_n_lineages)
 #'     tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
-#'     if (cond == 1){tips_components <- tips_components - init_n_lineages} #I am already considering the starting species to survive. I must not double count them!
+#'     if (cond == 1) { 
+#'       #I am already considering the starting species to survive. I must not double count them!
+#'       tips_components <- tips_components - init_n_lineages
+#'     } 
 #'
 #'     Qi <- c(1, rep(0, max_number_of_species))
 #'     mk_n_zero <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,

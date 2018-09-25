@@ -436,8 +436,16 @@ append_multiple <- function(
 #' @inheritParams default_params_doc
 branchLengths <- function(tr)
 {
-  if(length(tr$node)>0) {type='NAMED'} else{type='UNNAMED'}
-  if(length(tr$root)>0) {root.length=tr$root} else{root.length=0}
+  if (length(tr$node) > 0) {
+    type <- 'NAMED'
+  } else {
+    type <- 'UNNAMED'
+  }
+  if (length(tr$root) > 0) {
+    root.length <- tr$root
+  } else{ 
+    root.length <- 0
+  }
 
   node.numbers <- sort(unique(tr$edge[,1]))
   BL1 <- as.numeric(

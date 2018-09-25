@@ -43,7 +43,9 @@ mbd_loglik <- function(
   #BASIC SETTINGS AND CHECKS
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]
   abstol <- 1e-16; reltol <- 1e-10
-  if (cond == 0) {tips_interval <- c(0, Inf)}
+  if (cond == 0) {
+    tips_interval <- c(0, Inf)
+  }
 
   condition1 <- (any(is.nan(pars)) != 0 | any(is.infinite(pars)) != 0)
   condition2 <- (lambda < 0 | mu < 0 | nu < 0 |

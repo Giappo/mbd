@@ -27,15 +27,18 @@ mbd_loglik_choosepar  <- function(
   #trparsfix are the values for parameters you want to fix
 
   namepars <- c("lambda", "mu", "nu", "q"); n_pars <- length(namepars);
-  if (length(trparsopt) == 4 && missing(trparsfix)){trparsfix <- NULL}
-  trpars1 = rep(0, n_pars)
+  if (length(trparsopt) == 4 && missing(trparsfix)) {
+    trparsfix <- NULL
+  }
+  trpars1 <- rep(0, n_pars)
   trpars1[idparsopt] <- trparsopt
   if (length(idparsfix) != 0)
   {
     trpars1[idparsfix] <- trparsfix
   }
-  if ( min(trpars1[1:n_pars]) < 0 ){loglik <- -Inf}else
-  {
+  if (min(trpars1[1:n_pars]) < 0) {
+    loglik <- -Inf
+  } else {
     if (pars_transform == 1)
     {
       #Rampal's transformation
