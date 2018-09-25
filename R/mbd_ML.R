@@ -3,7 +3,6 @@
 #' @title Maximization of the loglikelihood under a multiple birth-death diversification model
 #' @description mbd_ML computes the maximum likelihood estimates of the parameters of a multiple birth-death diversification model for a given set of phylogenetic branching times. It also outputs the corresponding loglikelihood that can be used in model comparisons. Differently from mbd_ML it can account for three kind of events: sympatric (single) speciation, multiple (allopatric) speciation and extinction.
 #' @inheritParams default_params_doc
-#' @param brts A set of branching times of a phylogeny.
 #' @param initparsopt The initial values of the parameters that must be optimized
 #' @param idparsopt The ids of the parameters that must be optimized. The ids are defined as follows:
 #' \itemize{
@@ -16,8 +15,6 @@
 #' @param parsfix The values of the parameters that should not be optimized.
 #' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
 #' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param soc Sets whether stem or crown age should be used (1 or 2).
-#' @param tips_interval It takes into account tips boundaries constrain on simulated dataset.
 #' @param res Sets the maximum number of species for which a probability must be computed, must be larger than 1 + length(brts).
 #' @param tol Sets the tolerances in the optimization. Consists of:
 #' \itemize{

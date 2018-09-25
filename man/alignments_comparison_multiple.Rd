@@ -24,7 +24,9 @@ alignments_comparison_multiple(sim_pars = c(0.2, 0.15, 2, 0.15),
 
 \item{age}{The age of the tree.}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
 
 \item{mutation_rate}{something}
 }

@@ -9,7 +9,7 @@ alpha_conditional_probability(brts, pars, alpha, tips_interval = c(0,
   reltol = 1e-10, minimum_multiple_births = 0)
 }
 \arguments{
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{pars}{vector of parameters:
 \itemize{
@@ -27,7 +27,9 @@ or
 
 \item{alpha}{something}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 

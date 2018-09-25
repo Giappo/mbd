@@ -25,13 +25,15 @@ mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
 
 \item{idparsfix}{something}
 
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
 
 \item{missnumspec}{something}
 

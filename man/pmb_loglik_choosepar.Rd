@@ -22,7 +22,7 @@ pmb_loglik_choosepar(trparsopt, trparsfix = 0, idparsopt = c(1, 3, 4),
 
 \item{idparsfix}{something}
 
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 

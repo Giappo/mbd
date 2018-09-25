@@ -7,7 +7,7 @@
 #' @param alpha something
 #' @param alpha0 something
 #' @param b something
-#' @param brts something
+#' @param brts A set of branching times of a phylogeny.
 #' @param chain_length something
 #' @param changeloglikifnoconv something
 #' @param colormap something
@@ -77,7 +77,9 @@
 #' @param t something
 #' @param t1 something
 #' @param t2 something
-#' @param time_interval something
+#' @param tips_interval Sets tips boundaries constrain on simulated dataset.
+#'   You can also define the tips_interval as you can usually 
+#'   do with a standard usage of mbd_sim.
 #' @param tol something
 #' @param transition_matrix something
 #' @param trparsfix something
@@ -94,7 +96,6 @@
 #' @param age The age of the tree.
 #' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
 #' @param soc Sets whether stem or crown age should be used (1 or 2).
-#' @param tips_interval Sets tips boundaries constrain on simulated dataset.
 #' @author Documentation by Giovanni Laudanno, use of this function by Richel J.C. Bilderbeek
 #' @note This is an internal function, so it should be marked with
 #'   \code{@noRd}. This is not done, as this will disallow all
@@ -159,6 +160,7 @@ default_params_doc <- function(
   t,
   t1,
   t2,
+  tips_interval,
   time_interval,
   tol,
   transition_matrix,
@@ -175,8 +177,7 @@ default_params_doc <- function(
   z.name,
   age,
   cond,
-  pars,
-  tips_interval
+  pars
 ) {
   # Nothing
 }

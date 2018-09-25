@@ -13,9 +13,9 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
   methode, minimum_multiple_births, missnumspec, mu, mutation_rate, N, N0,
   Nsteps, Nsubs, nu, optimmethod, pars.transform, parsfix, precision,
   print_errors, Q, q, reltol, res, s, sample_interval, sequence_length,
-  sim_pars, sim_phylo, soc, t, t1, t2, time_interval, tol,
+  sim_pars, sim_phylo, soc, t, t1, t2, tips_interval, time_interval, tol,
   transition_matrix, trparsfix, trparsopt, verbose, x, x.name, x.splits, y,
-  y.name, y.splits, z, z.name, age, cond, pars, tips_interval)
+  y.name, y.splits, z, z.name, age, cond, pars)
 }
 \arguments{
 \item{A_abstol}{something}
@@ -32,7 +32,7 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{b}{something}
 
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{chain_length}{something}
 
@@ -142,7 +142,9 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{t2}{something}
 
-\item{time_interval}{something}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
 
 \item{tol}{something}
 
@@ -187,8 +189,6 @@ or
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
   \item pars[4] is q, the single-lineage speciation probability.
 }}
-
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

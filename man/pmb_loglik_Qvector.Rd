@@ -21,7 +21,7 @@ or
   \item pars[4] is q, the single-lineage speciation probability.
 }}
 
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 }

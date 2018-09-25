@@ -17,7 +17,7 @@ mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
 \item id == 4 corresponds to q (single-lineage speciation probability)
 }}
 
-\item{soc}{stands for stem or crown. Set 1 for stem or 2 for crown.}
+\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{cond}{conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.}
 
@@ -25,7 +25,9 @@ mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
 
 \item{max_sims}{something}
 
-\item{tips_interval}{You can also define the tips_interval as you can usually do with a standard usage of mbd_sim.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
 
 \item{edge}{the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.}
 

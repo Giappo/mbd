@@ -20,7 +20,7 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
 
 \item{brts}{A set of branching times of a phylogeny.}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2)}
+\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
 
@@ -28,7 +28,9 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
 
 \item{alpha}{something}
 
-\item{tips_interval}{It takes into account tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
 
 \item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
 

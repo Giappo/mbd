@@ -10,7 +10,7 @@ pmb_ML(brts, initparsopt, soc = 2, res = 10 * (1 + length(brts) +
   optimmethod = "simplex", pars.transform = 1)
 }
 \arguments{
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{initparsopt}{something}
 

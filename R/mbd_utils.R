@@ -288,10 +288,11 @@ called_functions <- function(
         # we've checked to avoid infinite loops.
         functs.to.check <- called.functions[!(called.functions %in% checked.functions)]
 
-        called.functions <- unique(c(called.functions,
-            do.call(c, lapply(functs.to.check, function(x) {
-                listFunctions(x, recursive = T, checked.functions = c(checked.functions, called.functions))
-                }))))
+        testit::assert(!"Should never call listFunctions, whatever it is")
+        # called.functions <- unique(c(called.functions,
+        #     do.call(c, lapply(functs.to.check, function(x) {
+        #         listFunctions(x, recursive = T, checked.functions = c(checked.functions, called.functions))
+        #         }))))
     }
     return(called.functions)
 }

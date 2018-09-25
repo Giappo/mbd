@@ -10,10 +10,8 @@
 #'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
 #'   \item pars[4] is q, the single-lineage speciation probability.
 #' }
-#' @param soc Sets whether stem or crown age should be used (1 or 2).
 #' @param age The age of the tree.
 #' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param tips_interval Sets tips boundaries constrain on simulated dataset.
 #' @return The function returns a list of L table, branching times and number of extinct species.
 #' \itemize{
 #'   \item brts are the branching times;
@@ -134,10 +132,8 @@ mbd_sim <- function(pars, soc = 2, age = 10, cond = 1,
 #'   \item pars[2] is the extinction rate;
 #'   \item pars[3] is the single-lineage speciation probability.
 #' }
-#' @param soc Sets whether stem or crown age should be used (1 or 2).
 #' @param age The age of the tree.
 #' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param tips_interval Sets tips boundaries constrain on simulated dataset.
 #' @return The function returns a list of L table, branching times and number of extinct species.
 #' \itemize{
 #'   \item brts are the branching times;
@@ -250,11 +246,9 @@ mbd_sim0 <- function(
 #' \item id == 3 corresponds to nu (multiple speciation trigger rate)
 #' \item id == 4 corresponds to q (single-lineage speciation probability)
 #' }
-#' @param soc stands for stem or crown. Set 1 for stem or 2 for crown.
 #' @param age is the age of the tree.
 #' @param cond conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.
 #' @param edge the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.
-#' @param tips_interval You can also define the tips_interval as you can usually do with a standard usage of mbd_sim.
 #' @return The function returns a list of brts vectors, one for each of the max_sims simulations.
 #' It also saves those in a file called "sim_data" and saves all the settings in a "general_settings" file.
 #' N.B.: At each call of the function you overwrite the previous files.
@@ -332,11 +326,9 @@ mbd_sim_dataset <- function(
 #' @title Creates a full simulated dataset of trees under the multiple birth death process
 #' @description mbd_sim_dataset0 produces a full dataset of max_sims simulated trees including multiple speciations at the same time.
 #' @inheritParams default_params_doc
-#' @param soc stands for stem or crown. Set 1 for stem or 2 for crown.
 #' @param age is the age of the tree.
 #' @param cond conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.
 #' @param edge the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.
-#' @param tips_interval You can also define the tips_interval as you can usually do with a standard usage of mbd_sim0.
 #' @return The function returns a list of brts vectors, one for each of the max_sims simulations.
 #' It also saves those in a file called "sim_data" and saves all the settings in a "general_settings" file.
 #' N.B.: At each call of the function you overwrite the previous files.

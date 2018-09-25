@@ -9,10 +9,7 @@
 #'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
 #'   \item pars[4] is q, the single-lineage speciation probability.
 #' }
-#' @param brts A set of branching times of a phylogeny.
-#' @param soc Sets whether stem or crown age should be used (1 or 2)
 #' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param tips_interval It takes into account tips boundaries constrain on simulated dataset.
 #' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
 #' @param methode Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.
 #' @param safety_threshold It determines the precision on the parameters.

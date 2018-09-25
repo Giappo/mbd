@@ -35,7 +35,9 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{tips_interval}{It takes into account tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually 
+do with a standard usage of mbd_sim.}
 
 \item{res}{Sets the maximum number of species for which a probability must be computed, must be larger than 1 + length(brts).}
 
