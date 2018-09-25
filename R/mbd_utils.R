@@ -324,13 +324,13 @@ compare_functions <- function(
 #' Checks function calls within a function
 #' @inheritParams default_params_doc
 called_functions <- function(
-  function.name, 
+  function_name, 
   recursive = FALSE, 
   checked_functions = NULL
 ) {
 
     # Get the function's code:
-    function.code <- deparse(get(function.name))
+    function.code <- deparse(get(function_name))
 
     # break code up into sections preceding left brackets:
     left.brackets <- c(unlist(strsplit(function.code, split="[[:space:]]*\\(")))

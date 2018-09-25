@@ -7,7 +7,7 @@ documentation.}
 \usage{
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, chain_length, changeloglikifnoconv,
-  checked_functions, colormap, cond, function.name, idparsfix, idparsopt,
+  checked_functions, colormap, cond, function_name, idparsfix, idparsopt,
   initparsopt, INPUT.TREES, INPUT.XML, interval.max, interval.min,
   iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
   max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
@@ -52,7 +52,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
 \item{cond}{Set 1 if you want to condition on stem or crown age 
 and non-extinction of the phylogeny. Set 0 otherwise.}
 
-\item{function.name}{something}
+\item{function_name}{something}
 
 \item{idparsfix}{something}
 

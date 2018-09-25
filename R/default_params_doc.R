@@ -16,7 +16,7 @@
 #' @param colormap something
 #' @param cond Set 1 if you want to condition on stem or crown age 
 #'   and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param function.name something
+#' @param function_name something
 #' @param idparsfix something
 #' @param idparsopt The ids of the parameters that must be optimized. 
 #'   The ids are defined as follows:
@@ -144,7 +144,7 @@ default_params_doc <- function(
   checked_functions,
   colormap,
   cond,
-  function.name, 
+  function_name, 
   idparsfix,
   idparsopt,
   initparsopt,
