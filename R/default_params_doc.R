@@ -27,7 +27,7 @@
 #'     \item pars[4] is q, the single-lineage speciation probability.
 #'   }
 #' @param initparsopt something
-#' @param INPUT.TREES Path to \code{.trees} file
+#' @param input_trees_path Path to \code{.trees} file
 #' @param INPUT.XML something
 #' @param interval.max something
 #' @param interval.min something
@@ -148,7 +148,7 @@ default_params_doc <- function(
   idparsfix,
   idparsopt,
   initparsopt,
-  INPUT.TREES,
+  input_trees_path,
   INPUT.XML,
   interval.max,
   interval.min,

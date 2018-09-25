@@ -456,7 +456,7 @@ branchLengths <- function(tr)
 #' Does something
 #' @inheritParams default_params_doc
 summarize_beast_posterior <- function(
-  INPUT.TREES,
+  input_trees_path,
   INPUT.XML = NULL,
   subsamp = NULL
 ){
@@ -474,10 +474,10 @@ summarize_beast_posterior <- function(
   branch_info_tot=tree_tot=list()
   subsamps=c()
 
-  for(t in 1:length(INPUT.TREES)){
+  for(t in 1:length(input_trees_path)){
 
     #Read the trees
-    subst.tr=scan(INPUT.TREES[t],what="raw")
+    subst.tr=scan(input_trees_path[t],what="raw")
 
     #Find the equal signs in tree file
     equals=(1:length(subst.tr))[subst.tr=="="]
@@ -489,7 +489,7 @@ summarize_beast_posterior <- function(
     #How many trees?
     Ntrees=length(tree.positions)
     if(is.null(subsamp)) subsamp=Ntrees
-    samp=sample(Ntrees,round(subsamp/length(INPUT.TREES)),replace=FALSE)
+    samp=sample(Ntrees,round(subsamp/length(input_trees_path)),replace=FALSE)
 
     #Get correspondance between numbers and taxa
     #How many taxa?
@@ -607,7 +607,7 @@ extract_posterior <- function(
   names_i=file_name
 
   beast_posterior <- summarize_beast_posterior(
-      INPUT.TREES = names_i, 
+      input_trees_path = names_i, 
       subsamp=maxtree #Number of samples to keep
     )
 

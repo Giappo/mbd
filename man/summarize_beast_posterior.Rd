@@ -4,11 +4,11 @@
 \alias{summarize_beast_posterior}
 \title{Does something}
 \usage{
-summarize_beast_posterior(INPUT.TREES, INPUT.XML = NULL,
+summarize_beast_posterior(input_trees_path, INPUT.XML = NULL,
   subsamp = NULL)
 }
 \arguments{
-\item{INPUT.TREES}{Path to \code{.trees} file}
+\item{input_trees_path}{Path to \code{.trees} file}
 
 \item{INPUT.XML}{something}
 
