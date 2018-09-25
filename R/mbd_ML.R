@@ -50,7 +50,7 @@ mbd_ML <- function(
   optimmethod = 'simplex', 
   methode = "expo",
   minimum_multiple_births = 0, 
-  pars.transform = 1, 
+  pars_transform = 1, 
   print_errors = 0, 
   verbose = TRUE, 
   ...
@@ -95,7 +95,7 @@ mbd_ML <- function(
     cat("Optimizing the likelihood - this may take a while.","\n")
     utils::flush.console()
   }
-  if (pars.transform == 1)
+  if (pars_transform == 1)
   {
     #Rampal's transformation
     trparsopt = initparsopt/(1 + initparsopt)
@@ -114,7 +114,7 @@ mbd_ML <- function(
                                            cond = cond, soc = soc, tips_interval = tips_interval,
                                            methode = methode,
                                            minimum_multiple_births = minimum_multiple_births,
-                                           pars.transform = pars.transform,
+                                           pars_transform = pars_transform,
                                            print_errors = print_errors, ...) #there's no pars2 here and instead 3 more args at the end
   if (verbose == TRUE) {
     cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
@@ -137,7 +137,7 @@ mbd_ML <- function(
     brts = brts, missnumspec = missnumspec, cond = cond,
     soc = soc, tips_interval = tips_interval, methode = methode,
     minimum_multiple_births = minimum_multiple_births,
-    pars.transform = pars.transform, print_errors = print_errors, 
+    pars_transform = pars_transform, print_errors = print_errors, 
     ...
   )
   if (verbose == TRUE) {
@@ -150,7 +150,7 @@ mbd_ML <- function(
     return(invisible(out2))
   }
   MLtrpars <- as.numeric(unlist(out$par))
-  if (pars.transform == 1)
+  if (pars_transform == 1)
   {
     #Rampal's transformation
     MLpars = MLtrpars/(1 - MLtrpars)

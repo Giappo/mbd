@@ -16,7 +16,7 @@ mbd_loglik_choosepar  <- function(
   missnumspec = 0, 
   methode = "expo",
   minimum_multiple_births = 0, 
-  pars.transform = 0, 
+  pars_transform = 0, 
   print_errors = 0, 
   ...
 ) {
@@ -36,7 +36,7 @@ mbd_loglik_choosepar  <- function(
   }
   if ( min(trpars1[1:Npars]) < 0 ){loglik <- -Inf}else
   {
-    if (pars.transform == 1)
+    if (pars_transform == 1)
     {
       #Rampal's transformation
       pars1 = trpars1/(1 - trpars1)

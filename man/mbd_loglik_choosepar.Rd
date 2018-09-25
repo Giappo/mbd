@@ -7,7 +7,7 @@
 mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
   idparsfix = (1:4)[-idparsopt], brts, cond = 1, soc = 2,
   tips_interval = c(0, Inf), missnumspec = 0, methode = "expo",
-  minimum_multiple_births = 0, pars.transform = 0, print_errors = 0,
+  minimum_multiple_births = 0, pars_transform = 0, print_errors = 0,
   ...)
 }
 \arguments{
@@ -48,7 +48,7 @@ do with a standard usage of mbd_sim.}
 
 \item{minimum_multiple_births}{something}
 
-\item{pars.transform}{something}
+\item{pars_transform}{something}
 
 \item{print_errors}{something}
 

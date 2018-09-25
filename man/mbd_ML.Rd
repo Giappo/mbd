@@ -9,7 +9,7 @@ mbd_ML(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
   Inf), res = 10 * (1 + length(brts) + missnumspec), tol = c(0.001,
   1e-04, 1e-06), maxiter = 1000 * round((1.25)^length(idparsopt)),
   changeloglikifnoconv = FALSE, optimmethod = "simplex",
-  methode = "expo", minimum_multiple_births = 0, pars.transform = 1,
+  methode = "expo", minimum_multiple_births = 0, pars_transform = 1,
   print_errors = 0, verbose = TRUE, ...)
 }
 \arguments{
@@ -65,7 +65,7 @@ do with a standard usage of mbd_sim.}
 
 \item{minimum_multiple_births}{something}
 
-\item{pars.transform}{something}
+\item{pars_transform}{something}
 
 \item{print_errors}{something}
 

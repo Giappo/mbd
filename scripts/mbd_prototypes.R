@@ -155,7 +155,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
 mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
                                   idparsfix = (1:3)[-idparsopt], brts, cond = 1, soc = 2,
                                   tips_interval = c(0, Inf), missnumspec = 0,
-                                  methode = "expo", alpha = 20, pars.transform = 0){
+                                  methode = "expo", alpha = 20, pars_transform = 0){
   #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like optim or subplex
   #idparsopt are the ids for parameters you want to analyze
   #trparsopt are the values for parameters you want to analyze
@@ -172,7 +172,7 @@ mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
   }
   if (min(trpars1[1:Npars]) < 0){loglik <- -Inf}else
   {
-    if (pars.transform == 1)
+    if (pars_transform == 1)
     {
       #Rampal's transformation
       pars1 = trpars1/(1 - trpars1)
@@ -236,7 +236,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
                     parsfix, missnumspec = 0, cond = 1, soc = 2, tips_interval=c(0,Inf),
                     res = 10 * (1 + length(brts) + missnumspec), tol = c(1E-3, 1E-4, 1E-6),
                     maxiter = 1000 * round((1.25)^length(idparsopt)), changeloglikifnoconv = FALSE,
-                    optimmethod = 'subplex', methode = "expo", alpha = 20, pars.transform = 1)
+                    optimmethod = 'subplex', methode = "expo", alpha = 20, pars_transform = 1)
 {# bracket#1
   # - tol = tolerance in optimization
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
@@ -266,7 +266,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
       cat("You are fixing",fixstr,"\n")
       cat("Optimizing the likelihood - this may take a while.","\n")
       utils::flush.console()
-      if (pars.transform == 1)
+      if (pars_transform == 1)
       {
         #Rampal's transformation
         trparsopt = initparsopt/(1 + initparsopt)
@@ -284,7 +284,7 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
                                                 brts = brts, missnumspec = missnumspec,
                                                 cond = cond, soc = soc,
                                                 tips_interval = tips_interval, methode = methode,
-                                                alpha = alpha, pars.transform = pars.transform) #there's no pars2 here and instead 3 more args at the end
+                                                alpha = alpha, pars_transform = pars_transform) #there's no pars2 here and instead 3 more args at the end
       cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
       utils::flush.console()
       if(initloglik == -Inf)
@@ -297,14 +297,14 @@ mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
                                trparsfix = trparsfix, idparsopt = idparsopt,
                                idparsfix = idparsfix, brts = brts, missnumspec = missnumspec,
                                cond = cond, soc = soc, tips_interval = tips_interval,
-                               methode = methode, alpha = alpha, pars.transform = pars.transform)
+                               methode = methode, alpha = alpha, pars_transform = pars_transform)
         if(out$conv != 0)
         {# bracket#5
           cat("Optimization has not converged. Try again with different initial values.\n")
           out2 = data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
         } else {
           MLtrpars = as.numeric(unlist(out$par))
-          if (pars.transform == 1)
+          if (pars_transform == 1)
           {
             #Rampal's transformation
             MLpars = MLtrpars/(1-MLtrpars)

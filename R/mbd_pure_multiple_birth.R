@@ -96,7 +96,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
 #' @export
 pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
                                  idparsfix = (1:4)[-idparsopt], brts, soc = 2,
-                                 pars.transform = 0){
+                                 pars_transform = 0){
 
   #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like optim or simplex
   #idparsopt are the ids of the parameters you want to analyze
@@ -116,7 +116,7 @@ pmb_loglik_choosepar <- function(trparsopt, trparsfix = 0, idparsopt = c(1,3,4),
   }
   if( min(trpars1[1:Npars]) < 0 ){loglik <- -Inf}else
   {
-    if (pars.transform == 1)
+    if (pars_transform == 1)
     {
       #Rampal's transformation
       pars1 = trpars1/(1 - trpars1)
@@ -147,7 +147,7 @@ pmb_ML <- function(
   maxiter = 1000 * round((1.25)^length(idparsopt)),
   changeloglikifnoconv = FALSE, 
   optimmethod = 'simplex',
-  pars.transform = 1,
+  pars_transform = 1,
   missnumspec = 0
 ) {# bracket#1
   # - tol = tolerance in optimization
@@ -180,7 +180,7 @@ pmb_ML <- function(
       cat("You are fixing",fixstr,"\n")
       cat("Optimizing the likelihood - this may take a while.","\n")
       utils::flush.console()
-      if (pars.transform == 1)
+      if (pars_transform == 1)
       {
         trparsopt = initparsopt/(1 + initparsopt)
         trparsopt[which(initparsopt == Inf)] = 1
@@ -194,7 +194,7 @@ pmb_ML <- function(
       optimpars = c(tol, maxiter)
       initloglik <- pmb_loglik_choosepar(trparsopt = trparsopt, trparsfix = trparsfix, idparsopt = idparsopt,
                                                idparsfix = idparsfix, brts = brts, soc = soc,
-                                               pars.transform = pars.transform) #there's no pars2 here and instead 3 more args at the end
+                                               pars_transform = pars_transform) #there's no pars2 here and instead 3 more args at the end
       cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
       utils::flush.console()
       if(initloglik == -Inf)
@@ -206,14 +206,14 @@ pmb_ML <- function(
                                fun = pmb_loglik_choosepar, trparsopt = trparsopt,
                                trparsfix = trparsfix, idparsopt = idparsopt,
                                idparsfix = idparsfix, brts = brts, soc = soc,
-                               pars.transform = pars.transform)
+                               pars_transform = pars_transform)
         if(out$conv != 0)
         {# bracket#5
           cat("Optimization has not converged. Try again with different initial values.\n")
           out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
         } else {
           MLtrpars <- as.numeric(unlist(out$par))
-          if (pars.transform == 1)
+          if (pars_transform == 1)
           {
             MLpars = MLtrpars/(1-MLtrpars)
           }else

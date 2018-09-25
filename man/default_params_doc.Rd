@@ -13,7 +13,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
   mbd_lambda, methode, minimum_multiple_births, missnumspec, mu,
   mutation_rate, N, N0, n_steps, n_subs, nu, optimmethod, pars,
-  pars.transform, parsfix, precision, print_errors, printit, Q, q,
+  pars_transform, parsfix, precision, print_errors, printit, Q, q,
   quantiles_choice, recursive, reltol, res, results, s, sample_interval,
   sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
@@ -146,7 +146,7 @@ or
   \item pars[4] is q, the single-lineage speciation probability.
 }}
 
-\item{pars.transform}{something}
+\item{pars_transform}{something}
 
 \item{parsfix}{The values of the parameters that should not be optimized.}
 

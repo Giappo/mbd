@@ -5,7 +5,7 @@
 \title{Does something M}
 \usage{
 pmb_loglik_choosepar(trparsopt, trparsfix = 0, idparsopt = c(1, 3, 4),
-  idparsfix = (1:4)[-idparsopt], brts, soc = 2, pars.transform = 0)
+  idparsfix = (1:4)[-idparsopt], brts, soc = 2, pars_transform = 0)
 }
 \arguments{
 \item{trparsopt}{something}
@@ -27,7 +27,7 @@ The ids are defined as follows:
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{pars.transform}{something}
+\item{pars_transform}{something}
 }
 \description{
 Does something M
