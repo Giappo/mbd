@@ -5,14 +5,14 @@
 \title{Checks function calls within a function}
 \usage{
 called_functions(function.name, recursive = FALSE,
-  checked.functions = NULL)
+  checked_functions = NULL)
 }
 \arguments{
 \item{function.name}{something}
 
 \item{recursive}{something}
 
-\item{checked.functions}{something}
+\item{checked_functions}{something}
 }
 \description{
 Checks function calls within a function

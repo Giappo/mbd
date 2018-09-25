@@ -12,7 +12,7 @@
 #' @param brts A set of branching times of a phylogeny.
 #' @param chain_length something
 #' @param changeloglikifnoconv something
-#' @param checked.functions something
+#' @param checked_functions something
 #' @param colormap something
 #' @param cond Set 1 if you want to condition on stem or crown age 
 #'   and non-extinction of the phylogeny. Set 0 otherwise.
@@ -141,7 +141,7 @@ default_params_doc <- function(
   brts,
   chain_length,
   changeloglikifnoconv,
-  checked.functions,
+  checked_functions,
   colormap,
   cond,
   function.name, 

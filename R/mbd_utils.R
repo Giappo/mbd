@@ -326,7 +326,7 @@ compare_functions <- function(
 called_functions <- function(
   function.name, 
   recursive = FALSE, 
-  checked.functions = NULL
+  checked_functions = NULL
 ) {
 
     # Get the function's code:
@@ -348,14 +348,14 @@ called_functions <- function(
 
     if (recursive){
 
-        # checked.functions: We need to keep track of which functions
+        # checked_functions: We need to keep track of which functions
         # we've checked to avoid infinite loops.
-        functs.to.check <- called.functions[!(called.functions %in% checked.functions)]
+        functs.to.check <- called.functions[!(called.functions %in% checked_functions)]
 
         testit::assert(!"Should never call listFunctions, whatever it is")
         # called.functions <- unique(c(called.functions,
         #     do.call(c, lapply(functs.to.check, function(x) {
-        #         listFunctions(x, recursive = T, checked.functions = c(checked.functions, called.functions))
+        #         listFunctions(x, recursive = T, checked_functions = c(checked_functions, called.functions))
         #         }))))
     }
     return(called.functions)
