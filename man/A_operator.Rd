@@ -12,6 +12,8 @@ A_operator(Q, transition_matrix, time_interval, precision = 50L,
 
 \item{transition_matrix}{something}
 
+\item{time_interval}{something}
+
 \item{precision}{something}
 
 \item{A_abstol}{something}

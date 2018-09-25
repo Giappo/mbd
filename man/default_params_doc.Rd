@@ -5,17 +5,19 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
-default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
-  b, brts, chain_length, changeloglikifnoconv, colormap, idparsfix,
-  idparsopt, initparsopt, interval.max, interval.min, iterations, k,
-  lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
-  max_number_of_species, max_repetitions, max_sims, maxiter, mbd.lambda,
-  methode, minimum_multiple_births, missnumspec, mu, mutation_rate, N, N0,
-  Nsteps, Nsubs, nu, optimmethod, pars.transform, parsfix, precision,
-  print_errors, Q, q, reltol, res, s, sample_interval, sequence_length,
-  sim_pars, sim_phylo, soc, t, t1, t2, tips_interval, time_interval, tol,
-  transition_matrix, trparsfix, trparsopt, verbose, x, x.name, x.splits, y,
-  y.name, y.splits, z, z.name, age, cond, pars)
+default_params_doc(A_abstol, A_reltol, abstol, account_name, age, alpha,
+  alpha0, b, brts, chain_length, changeloglikifnoconv, colormap, cond,
+  idparsfix, idparsopt, initparsopt, INPUT.TREES, INPUT.XML, interval.max,
+  interval.min, iterations, k, lambda, logs, lx, lx0, matrix,
+  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
+  max_sims, maxiter, mbd.lambda, methode, minimum_multiple_births,
+  missnumspec, mu, mutation_rate, N, N0, Nsteps, Nsubs, nu, optimmethod,
+  pars, pars.transform, parsfix, precision, print_errors, printit, Q, q,
+  quantiles_choice, reltol, res, results, s, sample_interval,
+  sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
+  tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
+  trparsopt, values, verbose, x, x.name, x.splits, y, y.name, y.splits, z,
+  z.name)
 }
 \arguments{
 \item{A_abstol}{something}
@@ -25,6 +27,8 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 \item{abstol}{something}
 
 \item{account_name}{something}
+
+\item{age}{The age of the tree.}
 
 \item{alpha}{something}
 
@@ -40,6 +44,8 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{colormap}{something}
 
+\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+
 \item{idparsfix}{something}
 
 \item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:
@@ -51,6 +57,10 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 }}
 
 \item{initparsopt}{something}
+
+\item{INPUT.TREES}{something}
+
+\item{INPUT.XML}{something}
 
 \item{interval.max}{something}
 
@@ -108,6 +118,20 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{optimmethod}{something}
 
+\item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is the multiple speciation trigger rate;
+  \item pars[2] is the extinction rate;
+  \item pars[3] is the single-lineage speciation probability.
+}
+or
+\itemize{
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability.
+}}
+
 \item{pars.transform}{something}
 
 \item{parsfix}{The values of the parameters that should not be optimized.}
@@ -116,13 +140,19 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{print_errors}{something}
 
+\item{printit}{something}
+
 \item{Q}{something}
 
 \item{q}{something}
 
+\item{quantiles_choice}{something}
+
 \item{reltol}{something}
 
 \item{res}{something}
+
+\item{results}{something}
 
 \item{s}{something}
 
@@ -136,6 +166,8 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
+\item{subsamp}{something}
+
 \item{t}{something}
 
 \item{t1}{something}
@@ -146,13 +178,19 @@ default_params_doc(A_abstol, A_reltol, abstol, account_name, alpha, alpha0,
 You can also define the tips_interval as you can usually 
 do with a standard usage of mbd_sim.}
 
+\item{time_interval}{something}
+
 \item{tol}{something}
+
+\item{tr}{a phylogeny of class \code{phylo}}
 
 \item{transition_matrix}{something}
 
 \item{trparsfix}{something}
 
 \item{trparsopt}{something}
+
+\item{values}{something}
 
 \item{verbose}{something}
 
@@ -171,24 +209,6 @@ do with a standard usage of mbd_sim.}
 \item{z}{something}
 
 \item{z.name}{something}
-
-\item{age}{The age of the tree.}
-
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
-
-\item{pars}{vector of parameters:
-\itemize{
-  \item pars[1] is the multiple speciation trigger rate;
-  \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability.
-}
-or
-\itemize{
-  \item pars[1] is lambda, the sympatric speciation rate;
-  \item pars[2] is mu, the extinction rate;
-  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
-}}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

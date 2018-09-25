@@ -8,6 +8,8 @@ append_multiple(x, values, after)
 }
 \arguments{
 \item{x}{something}
+
+\item{values}{something}
 }
 \description{
 Does something

@@ -8,7 +8,13 @@ percentiles_function(results, sim_pars, printit = 1,
   quantiles_choice = c(0.25, 0.5, 0.75))
 }
 \arguments{
+\item{results}{something}
+
 \item{sim_pars}{something}
+
+\item{printit}{something}
+
+\item{quantiles_choice}{something}
 }
 \description{
 Percentiles function

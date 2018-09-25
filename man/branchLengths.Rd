@@ -6,6 +6,9 @@
 \usage{
 branchLengths(tr)
 }
+\arguments{
+\item{tr}{a phylogeny of class \code{phylo}}
+}
 \description{
 Function returning branch lengths named by ending node
 }

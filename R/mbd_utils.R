@@ -100,7 +100,12 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
 
 #' Percentiles function
 #' @inheritParams default_params_doc
-percentiles_function <- function(results, sim_pars, printit = 1, quantiles_choice = c(.25, .50, .75)){
+percentiles_function <- function(
+  results, 
+  sim_pars, 
+  printit = 1, 
+  quantiles_choice = c(.25, .50, .75)
+) {
   quantiles_names <- format(round(quantiles_choice,2),nsmall = 2)
   Npars <- length(sim_pars);#pars_interval=list(c(0, stats::quantile(results[,1],.95)),c(0,quantile(results[,2],.95)),c(0,quantile(results[,3],.95)))
   parnames <-  colnames(results)[1:Npars]
@@ -382,10 +387,10 @@ branchLengths <- function(tr)
 
 #' Does something
 #' @inheritParams default_params_doc
-summarize_beast_posterior=function(
+summarize_beast_posterior <- function(
   INPUT.TREES,
-  INPUT.XML=NULL,
-  subsamp=NULL
+  INPUT.XML = NULL,
+  subsamp = NULL
 ){
 
 

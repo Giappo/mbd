@@ -7,6 +7,13 @@
 summarize_beast_posterior(INPUT.TREES, INPUT.XML = NULL,
   subsamp = NULL)
 }
+\arguments{
+\item{INPUT.TREES}{something}
+
+\item{INPUT.XML}{something}
+
+\item{subsamp}{something}
+}
 \description{
 Does something
 }

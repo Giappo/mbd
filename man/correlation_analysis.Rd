@@ -9,6 +9,8 @@ correlation_analysis(results, path, titolo = NULL, pdfname,
   idparsopt, mother_folder)
 }
 \arguments{
+\item{results}{something}
+
 \item{sim_pars}{something}
 
 \item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:

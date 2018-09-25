@@ -4,6 +4,7 @@
 #' @param A_reltol something
 #' @param abstol something
 #' @param account_name something
+#' @param age The age of the tree.
 #' @param alpha something
 #' @param alpha0 something
 #' @param b something
@@ -11,6 +12,7 @@
 #' @param chain_length something
 #' @param changeloglikifnoconv something
 #' @param colormap something
+#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
 #' @param idparsfix something
 #' @param idparsopt The ids of the parameters that must be optimized. The ids are defined as follows:
 #' \itemize{
@@ -20,6 +22,8 @@
 #' \item id == 4 corresponds to q (single-lineage speciation probability)
 #' }
 #' @param initparsopt something
+#' @param INPUT.TREES something
+#' @param INPUT.XML something
 #' @param interval.max something
 #' @param interval.min something
 #' @param iterations something
@@ -64,26 +68,34 @@
 #' @param pars.transform something
 #' @param parsfix The values of the parameters that should not be optimized.
 #' @param precision something
+#' @param printit something
 #' @param print_errors something
 #' @param Q something
 #' @param q something
+#' @param quantiles_choice something
 #' @param reltol something
 #' @param res something
+#' @param results something 
 #' @param s something
 #' @param sample_interval something
 #' @param sequence_length something
 #' @param sim_pars something
 #' @param sim_phylo something
+#' @param soc Sets whether stem or crown age should be used (1 or 2).
+#' @param subsamp something
 #' @param t something
 #' @param t1 something
 #' @param t2 something
+#' @param time_interval something
 #' @param tips_interval Sets tips boundaries constrain on simulated dataset.
 #'   You can also define the tips_interval as you can usually 
 #'   do with a standard usage of mbd_sim.
 #' @param tol something
+#' @param tr a phylogeny of class \code{phylo}
 #' @param transition_matrix something
 #' @param trparsfix something
 #' @param trparsopt something
+#' @param values something
 #' @param verbose something
 #' @param x something
 #' @param x.name something
@@ -93,9 +105,6 @@
 #' @param y.splits something
 #' @param z something
 #' @param z.name something
-#' @param age The age of the tree.
-#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param soc Sets whether stem or crown age should be used (1 or 2).
 #' @author Documentation by Giovanni Laudanno, use of this function by Richel J.C. Bilderbeek
 #' @note This is an internal function, so it should be marked with
 #'   \code{@noRd}. This is not done, as this will disallow all
@@ -105,6 +114,7 @@ default_params_doc <- function(
   A_reltol,
   abstol,
   account_name,
+  age,
   alpha,
   alpha0,
   b,
@@ -112,9 +122,12 @@ default_params_doc <- function(
   chain_length,
   changeloglikifnoconv,
   colormap,
+  cond,
   idparsfix,
   idparsopt,
   initparsopt,
+  INPUT.TREES,
+  INPUT.XML,
   interval.max,
   interval.min,
   iterations,
@@ -143,29 +156,36 @@ default_params_doc <- function(
   Nsubs,
   nu,
   optimmethod,
+  pars,
   pars.transform,
   parsfix,
   precision,
   print_errors,
+  printit, 
   Q,
   q,
+  quantiles_choice,
   reltol,
   res,
+  results, 
   s,
   sample_interval,
   sequence_length,
   sim_pars,
   sim_phylo,
   soc,
+  subsamp,
   t,
   t1,
   t2,
   tips_interval,
   time_interval,
   tol,
+  tr,
   transition_matrix,
   trparsfix,
   trparsopt,
+  values,
   verbose,
   x,
   x.name,
@@ -174,10 +194,7 @@ default_params_doc <- function(
   y.name,
   y.splits,
   z,
-  z.name,
-  age,
-  cond,
-  pars
+  z.name
 ) {
   # Nothing
 }
