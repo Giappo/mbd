@@ -9,7 +9,6 @@
 #'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
 #'   \item pars[4] is q, the single-lineage speciation probability.
 #' }
-#' @param methode Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.
 #' @param safety_threshold It determines the precision on the parameters.
 #' @return The function returns the natural logarithm of the likelihood for the process.
 #' @examples

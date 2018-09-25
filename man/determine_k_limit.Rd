@@ -28,7 +28,12 @@ or
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{methode}{something}
+\item{methode}{Specifies how the integration must be performed:
+\itemize{
+  \item \code{sexpm}: use \code{sexpm} 
+  \item \code{expo}: use \code{expoRkit} 
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 
 \item{abstol}{something}
 

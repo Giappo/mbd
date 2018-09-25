@@ -45,7 +45,13 @@
 #' @param max_sims something
 #' @param maxiter something
 #' @param mbd.lambda something
-#' @param methode something
+#' @param methode 
+#'   Specifies how the integration must be performed:
+#'   \itemize{
+#'     \item \code{sexpm}: use \code{sexpm} 
+#'     \item \code{expo}: use \code{expoRkit} 
+#'     \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+#'   }
 #' @param minimum_multiple_births something
 #' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
 #' @param mu something

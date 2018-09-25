@@ -31,7 +31,12 @@ or
 You can also define the tips_interval as you can usually 
 do with a standard usage of mbd_sim.}
 
-\item{methode}{something}
+\item{methode}{Specifies how the integration must be performed:
+\itemize{
+  \item \code{sexpm}: use \code{sexpm} 
+  \item \code{expo}: use \code{expoRkit} 
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 
 \item{abstol}{something}
 

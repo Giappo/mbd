@@ -38,7 +38,12 @@ do with a standard usage of mbd_sim.}
 
 \item{missnumspec}{The number of species that are in the clade but missing in the phylogeny.}
 
-\item{methode}{something}
+\item{methode}{Specifies how the integration must be performed:
+\itemize{
+  \item \code{sexpm}: use \code{sexpm} 
+  \item \code{expo}: use \code{expoRkit} 
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 
 \item{minimum_multiple_births}{something}
 

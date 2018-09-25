@@ -55,7 +55,12 @@ do with a standard usage of mbd_sim.}
 
 \item{optimmethod}{Method used in optimization of the likelihood. Current default is 'simplex'. Alternative is 'subplex' (default of previous versions).}
 
-\item{methode}{Set "sexpm" if you want to use sexpm. Set "expo" if you want to use expoRkit. Set "lsoda" if you want to use "lsoda".}
+\item{methode}{Specifies how the integration must be performed:
+\itemize{
+  \item \code{sexpm}: use \code{sexpm} 
+  \item \code{expo}: use \code{expoRkit} 
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 
 \item{minimum_multiple_births}{something}
 

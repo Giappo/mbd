@@ -37,7 +37,12 @@ do with a standard usage of mbd_sim.}
 
 \item{safety_threshold}{It determines the precision on the parameters.}
 
-\item{methode}{Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.}
+\item{methode}{Specifies how the integration must be performed:
+\itemize{
+  \item \code{sexpm}: use \code{sexpm} 
+  \item \code{expo}: use \code{expoRkit} 
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 
 \item{minimum_multiple_births}{something}
 

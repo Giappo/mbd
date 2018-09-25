@@ -10,7 +10,6 @@
 #'   \item pars[2] is the extinction rate;
 #'   \item pars[3] is the single-lineage speciation probability.
 #' }
-#' @param methode Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.
 #' @param safety_threshold It determines the precision on the parameters.
 #' @return The function returns the natural logarithm of the likelihood for the process.
 #'
@@ -219,7 +218,6 @@ mbd_loglik_choosepar0 <- function(trparsopt, trparsfix, idparsopt = 1:3,
 #' @param max_iter Sets the maximum number of iterations in the optimization.
 #' @param changeloglikifnoconv If TRUE the loglik will be set to -Inf if ML does not converge.
 #' @param optimmethod Method used in optimization of the likelihood. Current default is 'subplex'. Alternative is 'simplex' (default of previous versions).
-#' @param methode Set "sexpm" if you want to use sexpm. Set "expo" if you want to use expoRkit. Set "lsoda" if you want to use "lsoda".
 #' @return The output is a dataframe containing estimated parameters and maximum
 #' loglikelihood. The computed loglikelihood contains the factor q! m! / (q + m)!
 #' where q is the number of species in the phylogeny and m is the number of
