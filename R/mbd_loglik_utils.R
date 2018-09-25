@@ -120,8 +120,9 @@ A_operator <- function(Q, transition_matrix, time_interval, precision = 50L,
   
   if (methode == "sexpm")
   {
-    exp_matrix <- rsexpm:::sexpm(transition_matrix * time_interval)
-    result     <- exp_matrix %*% Q
+    testit::assert(!"Never use rsexpm")
+    # exp_matrix <- rsexpm:::sexpm(transition_matrix * time_interval)
+    # result     <- exp_matrix %*% Q
   }
   
   if (methode == "expo")

@@ -143,11 +143,11 @@ mbd_P_eq = function (test_parameters,age=15,max_number_of_species = 2000, precis
   {
     lambda=pars[1];mu=pars[2];q=pars[3];nvec=0:max_number_of_species
     M=matrix(0,nrow=max_number_of_species+1,ncol=max_number_of_species+1)
-
-    M = lambda * hyperA::hyperA(N = max_number_of_species,k = 0,q = q)
-    M[row(M) == col(M) - 1] = mu*nvec[2:(max_number_of_species+1)]
-    diag(M) = - mu*nvec - lambda*(1-(1-q)^nvec)
-    return(M)
+    testit::assert(!"Do not call hyperA")
+    # M = lambda * hyperA::hyperA(N = max_number_of_species,k = 0,q = q)
+    # M[row(M) == col(M) - 1] = mu*nvec[2:(max_number_of_species+1)]
+    # diag(M) = - mu*nvec - lambda*(1-(1-q)^nvec)
+    # return(M)
   }
 
   nvec=0:max_number_of_species
