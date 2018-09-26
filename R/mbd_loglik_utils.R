@@ -338,7 +338,7 @@ calculate_conditional_probability <- function(
     max_number_of_species = lx
   )
 
-  A2_v1 <- a_operator(
+  a2_v1 <- a_operator(
     Q = Qi,
     transition_matrix = TM,
     time_interval = total_time,
@@ -348,7 +348,7 @@ calculate_conditional_probability <- function(
     a_reltol = reltol
   )
 
-  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+  total_product <- a2_v1 * one_over_Cm * one_over_qm_binom
 
   #these are the components I want to exclude
   # (the one corresponding to 0 and 1 tips)
@@ -383,7 +383,7 @@ calculate_conditional_probability0 <- function(
   TM <- create_a(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                        max_number_of_species = lx)
 
-  A2_v1 <- a_operator(
+  a2_v1 <- a_operator(
     Q = Qi,
     transition_matrix = TM,
     time_interval = total_time,
@@ -392,7 +392,7 @@ calculate_conditional_probability0 <- function(
     a_abstol = abstol,
     a_reltol = reltol
   )
-  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+  total_product <- a2_v1 * one_over_Cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
   missingspecies_max <- min((tips_interval[2] - 2), lx)
   # +1 is because of the zero-th component
@@ -437,7 +437,7 @@ calculate_conditional_probability0PB <- function(
     max_number_of_species = lx
   )
 
-  A2_v1 <- a_operator(
+  a2_v1 <- a_operator(
     Q = Qi,
     transition_matrix = TM,
     time_interval = total_time,
@@ -447,7 +447,7 @@ calculate_conditional_probability0PB <- function(
     a_reltol = reltol
   )
 
-  total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+  total_product <- a2_v1 * one_over_Cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
   missingspecies_max <- min((tips_interval[2] - 2), lx)
   # +1 is because of the zero-th component
@@ -617,7 +617,7 @@ alpha_conditional_probability <- function(
   testit::assert(max_number_of_species < Inf)
 
   if (!(cond == 1 | tips_interval[1] > 0 | tips_interval[2] < Inf)) {
-    pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))
+    pc <- 1; a2_v1 <- c(1, rep(0, max_number_of_species))
   } else {
     m <- 0:max_number_of_species;
     one_over_Cm <- (3 * (m + 1)) / (m + 3)
@@ -639,7 +639,7 @@ alpha_conditional_probability <- function(
       k = soc,
       max_number_of_species = max_number_of_species
     )
-    A2_v1 <- a_operator(
+    a2_v1 <- a_operator(
       Q = Qi,
       transition_matrix = mk_n_zero,
       time_interval = total_time,
@@ -651,7 +651,7 @@ alpha_conditional_probability <- function(
     if (methode != "sexpm") {
       # it removes some small negative values
       # that can occurr as bugs from the integration process
-      A2_v1 <- negatives_correction(A2_v1, pars)
+      a2_v1 <- negatives_correction(a2_v1, pars)
     }
 
     #adjust for the required minimum amount of mbd
@@ -665,7 +665,7 @@ alpha_conditional_probability <- function(
         max_number_of_species = max_number_of_species,
         minimum_multiple_births = minimum_multiple_births
       )
-      A2_v1.no_mbd <- a_operator(
+      a2_v1.no_mbd <- a_operator(
         Q = Qi,
         transition_matrix = mk_n_zero.no_mbd,
         time_interval = total_time,
@@ -674,13 +674,13 @@ alpha_conditional_probability <- function(
         a_abstol = abstol,
         a_reltol = reltol
       )
-      A2_v1 <- A2_v1 - A2_v1.no_mbd
+      a2_v1 <- a2_v1 - a2_v1.no_mbd
     }
 
-    total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+    total_product <- a2_v1 * one_over_Cm * one_over_qm_binom
     pc <- sum(total_product[tips_components])
   }
-  return(list(pc = pc, A2_v1 = A2_v1))
+  return(list(pc = pc, a2_v1 = a2_v1))
 }
 
 #' @title Internal mbd function
