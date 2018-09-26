@@ -84,7 +84,7 @@ mbd_results_overview = function(){
     }
 
     sim_settings[y,8] <- working_account
-  };
+  }
 
   return( sim_settings )
 }

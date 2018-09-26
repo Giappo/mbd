@@ -534,7 +534,7 @@ find_best_lx_for_pc <- function(
       }
     }
     j <- j + 1
-  }; lx_test2
+  }
   if (right_lx_coord2 == 0) {
     right_lx_coord2 <- which(
       abs(lx_test2 - 1) == min(abs(lx_test2 - 1), na.rm = TRUE)
