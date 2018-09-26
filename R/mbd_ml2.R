@@ -73,7 +73,7 @@ mbd_ml2 <- function(
   if (!conditioned_on %in% c("nothing", "non_extinction")) {
     stop("'conditioned_on' must be either 'nothing' or 'non_extinction'")
   }
-  
+
   # Convert data
   #idparsopt <- which(estimated_params %in% get_mbd_param_names())
   #idparsfix <- which(fixed_params %in% get_mbd_param_names())
@@ -86,18 +86,18 @@ mbd_ml2 <- function(
     } else {
       idparsfix <- c(idparsfix, i)
     }
-  }  
+  }
   values <- as.numeric(unlist(init_param_values))
   initparsopt <- values[idparsopt]
   parsfix <- values[idparsfix]
-  
+
   conditioned_on_code <- 0
   if (conditioned_on == "non_extinction") {
     conditioned_on_code <- 1
   }
 
   testit::assert(length(idparsopt) + length(idparsfix) == 4)
-  
+
   mbd_ml(
     brts = branching_times,
     initparsopt = initparsopt,

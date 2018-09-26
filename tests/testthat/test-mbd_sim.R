@@ -6,7 +6,7 @@ test_that("abuse", {
     mbd_sim(pars = "nonsense"),
     "'pars' must have four parameters"
   )
-  
+
   expect_error(
     mbd_sim(pars = c(-12.34, 1.0, 1.0, 1.0)),
     "The sympatric speciation rate 'pars\\[1\\]' must be positive"

@@ -35,7 +35,7 @@ test_that("PureBirth theoretical check", {
       a_term <- a_term * sum(((1 - q) ^ (ii * k[t])) * poisson_term[pois_not_zero] )
     }
 
-    b_term <- prod(lambda*choose(k[-length(k)], births)*q^births * 
+    b_term <- prod(lambda*choose(k[-length(k)], births)*q^births *
       (1 - q) ^ (k[-length(k)] - births) )
 
     loglik <- log(a_term*b_term)
@@ -44,9 +44,9 @@ test_that("PureBirth theoretical check", {
   }
 
   mbd_test_pure_birth_small_trees <- function(
-    pars, 
-    brts, 
-    soc = 2, 
+    pars,
+    brts,
+    soc = 2,
     cond = 0
   ) {
     if (pars[2] != 0) {
@@ -56,11 +56,11 @@ test_that("PureBirth theoretical check", {
 
     theorethicalLL <- mbd_theoretical_loglik(pars = pars, brts = brts, soc = soc)
     lsodaLL <- mbd_loglik0(
-      pars = pars, brts = brts, soc = soc, cond = cond, 
+      pars = pars, brts = brts, soc = soc, cond = cond,
       missnumspec = 0, methode = "lsoda"
     )
     expoLL <- mbd_loglik0(
-      pars = pars, brts = brts, soc = soc, cond = cond, 
+      pars = pars, brts = brts, soc = soc, cond = cond,
       missnumspec = 0, methode = "expo"
     )
     #I need to divide to get rid of common factors

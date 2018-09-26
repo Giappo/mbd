@@ -30,7 +30,7 @@ test_that("abuse", {
       brts = "nonsense",
       initparsopt = 0.11,
       idparsopt = 4,
-      idparsfix = c(1, 2, 3), 
+      idparsfix = c(1, 2, 3),
       parsfix = test_pars[idparsfix],
       missnumspec = 0, cond = 1, soc = 2
     ),

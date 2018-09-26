@@ -42,7 +42,7 @@ test_that("compare style", {
   )
   expect_equal(out_classic, out_new)
 })
-  
+
 test_that("abuse", {
 
   mbd_params <- create_mbd_params(0.1, 0.2, 0.3, 0.4)
@@ -68,7 +68,7 @@ test_that("abuse", {
     ),
     "All 'branching_times' must be positive"
   )
-  
+
   expect_error(
     mbd_ml2(
       branching_times = c(1, 2, 3),
@@ -113,7 +113,7 @@ test_that("abuse", {
       branching_times = c(1, 2, 3),
       init_param_values = mbd_params,
       fixed_params = fixed_params,
-      estimated_params = c(estimated_params, estimated_params) 
+      estimated_params = c(estimated_params, estimated_params)
     ),
     "'estimated_params' must contain unique entries only"
   )

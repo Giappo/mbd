@@ -20,7 +20,7 @@ test_that("Sims are ok", {
   for (j in 1:test_size) {
     L <- test_sim[[j]]
     parents <- abs(L[, 2])
-    back_to_the_future_test <- back_to_the_future_test * 
+    back_to_the_future_test <- back_to_the_future_test *
       prod(L[-c(1:soc), 1] >= L[parents[-c(1:soc)], 4])
   }
 

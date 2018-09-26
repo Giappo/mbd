@@ -1,7 +1,7 @@
 context("create_mbd_params")
 
 test_that("use", {
-  
+
   lambda <- 0.1
   mu <- 0.2
   nu <- 0.3
@@ -19,7 +19,7 @@ test_that("use", {
 })
 
 test_that("abuse", {
-  
+
   expect_error(
     create_mbd_params(
       lambda = -12.34,
