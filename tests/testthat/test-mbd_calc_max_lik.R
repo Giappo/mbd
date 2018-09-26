@@ -1,4 +1,4 @@
-context("mbd_cal_max_lik")
+context("mbd_calc_max_lik")
 
 test_that("compare style", {
 
@@ -26,7 +26,7 @@ test_that("compare style", {
   # More intuitive interface
   #############################
   set.seed(10)
-  out_new <- mbd_cal_max_lik(
+  out_new <- mbd_calc_max_lik(
     branching_times = branching_times,
     init_param_values = create_mbd_params(
       lambda = lambda,
@@ -50,7 +50,7 @@ test_that("abuse", {
   estimated_params <- c("nu", "q")
 
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = "nonsense",
       init_param_values = mbd_params,
       fixed_params = fixed_params,
@@ -60,7 +60,7 @@ test_that("abuse", {
   )
 
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, -34.56),
       init_param_values = mbd_params,
       fixed_params = fixed_params,
@@ -70,7 +70,7 @@ test_that("abuse", {
   )
 
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, 3),
       init_param_values = "nonsense",
       fixed_params = fixed_params,
@@ -82,7 +82,7 @@ test_that("abuse", {
     )
   )
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, 3),
       init_param_values = mbd_params,
       fixed_params = "nonsense",
@@ -91,7 +91,7 @@ test_that("abuse", {
     "'fixed_params' must be a set of MBD parameter names"
   )
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, 3),
       init_param_values = mbd_params,
       fixed_params = c(fixed_params, fixed_params),
@@ -100,7 +100,7 @@ test_that("abuse", {
     "'fixed_params' must contain unique entries only"
   )
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, 3),
       init_param_values = mbd_params,
       fixed_params = fixed_params,
@@ -109,7 +109,7 @@ test_that("abuse", {
     "'estimated_params' must be a set of MBD parameter names"
   )
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, 3),
       init_param_values = mbd_params,
       fixed_params = fixed_params,
@@ -118,7 +118,7 @@ test_that("abuse", {
     "'estimated_params' must contain unique entries only"
   )
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, 3),
       init_param_values = mbd_params,
       fixed_params = c("lambda", "mu", "q"), # q twice
@@ -130,7 +130,7 @@ test_that("abuse", {
     )
   )
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, 3),
       init_param_values = mbd_params,
       fixed_params = fixed_params,
@@ -140,7 +140,7 @@ test_that("abuse", {
     "'init_n_species' must be 1 or 2"
   )
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, 3),
       init_param_values = mbd_params,
       fixed_params = fixed_params,
@@ -150,7 +150,7 @@ test_that("abuse", {
     "'n_missing_species' must be positive"
   )
   expect_error(
-    mbd_cal_max_lik(
+    mbd_calc_max_lik(
       branching_times = c(1, 2, 3),
       init_param_values = mbd_params,
       fixed_params = fixed_params,

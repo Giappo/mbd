@@ -149,7 +149,7 @@ mbd_loglik <- function(
       #EVOLVING THE INITIAL STATE TO THE LAST BRANCHING POINT
       while (t <= length(time_intervals)) {
         #Applying A operator
-        transition_matrix <- create_A(
+        transition_matrix <- create_a(
           lambda = lambda,
           mu = mu,
           nu = nu,
@@ -190,7 +190,7 @@ mbd_loglik <- function(
         if (t < length(time_intervals))
         {
           #Applying B operator
-          B <- create_B(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
+          B <- create_b(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
                               max_number_of_species = lx)
           Qt[t,] <- (B %*% Qt[t,])
           if (methode != "sexpm") {

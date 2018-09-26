@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_calc_max_lik.R
 \name{mbd_calc_max_lik}
 \alias{mbd_calc_max_lik}
-\title{Do an MBD maximum likelihood estimate}
+\title{Do an MBD maximum likelihood estimate.}
 \usage{
 mbd_calc_max_lik(branching_times, init_param_values, fixed_params,
   estimated_params, init_n_species = 2, n_missing_species = 0,
@@ -41,7 +41,7 @@ conditioned:
 }}
 }
 \description{
-Do an MBD maximum likelihood estimate
+Do an MBD maximum likelihood estimate.
 }
 \author{
 Richel J.C. Bilderbeek

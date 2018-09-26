@@ -121,7 +121,7 @@ mbd_loglik0 <- function(
         Qt[t,] <- Qt[t,]*C[t]
         
         #Applying B operator
-        B <- create_B0(
+        B <- create_b_zero(
           max_number_of_species = max_number_of_species, 
           q = q, 
           k = k, 

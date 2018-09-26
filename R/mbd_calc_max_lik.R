@@ -1,4 +1,4 @@
-#' Do an MBD maximum likelihood estimate
+#' Do an MBD maximum likelihood estimate.
 #' @param branching_times the branching times of the phylogeny
 #' @param init_param_values initial parameter values,
 #'   as created with \code{create_mbd_params}
