@@ -11,18 +11,18 @@ hyper_a_hanno <- function(n_species, k, q) {
   j <- 0:k
   a_1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
   n_species <- n_species + 1
-  A <- diag(a_1[1], nrow = n_species + 2, ncol = n_species + 2)
-  A[1:(k + 1), 1] <- a_1
+  matrix_a <- diag(a_1[1], nrow = n_species + 2, ncol = n_species + 2)
+  matrix_a[1:(k + 1), 1] <- a_1
   for (dst in 2:n_species) {
     src <- dst - 1
     s <- src:min(n_species, 2 * src + k - 1)
-    A[s + 2, dst] <- A[s, src] + A[s + 1, src]
+    matrix_a[s + 2, dst] <- matrix_a[s, src] + matrix_a[s + 1, src]
     m <- s - 1
     n <- src - 1;
-    A[s, src] <- A[s, src] * q ^ (m - n) * (1 - q) ^ (2 * n - m)
+    matrix_a[s, src] <- matrix_a[s, src] * q ^ (m - n) * (1 - q) ^ (2 * n - m)
   }
-  A[n_species, n_species] <- A[n_species, n_species] * (1 - q) ^ (n_species - 1);
-  A[1:n_species, 1:n_species]
+  matrix_a[n_species, n_species] <- matrix_a[n_species, n_species] * (1 - q) ^ (n_species - 1);
+  matrix_a[1:n_species, 1:n_species]
 }
 
 #' @title Internal mbd function
@@ -170,7 +170,7 @@ create_b.no_mbd <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-A_operator <- function(
+a_operator <- function(
   Q,
   transition_matrix,
   time_interval,
@@ -297,7 +297,7 @@ determine_k_limit <- function(
     k = soc,
     max_number_of_species = lx
   )
-  Pm <- A_operator(
+  Pm <- a_operator(
     Q = Qi,
     transition_matrix = T0,
     time_interval = total_time,
@@ -338,7 +338,7 @@ calculate_conditional_probability <- function(
     max_number_of_species = lx
   )
 
-  A2_v1 <- A_operator(
+  A2_v1 <- a_operator(
     Q = Qi,
     transition_matrix = TM,
     time_interval = total_time,
@@ -383,7 +383,7 @@ calculate_conditional_probability0 <- function(
   TM <- create_a(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                        max_number_of_species = lx)
 
-  A2_v1 <- A_operator(
+  A2_v1 <- a_operator(
     Q = Qi,
     transition_matrix = TM,
     time_interval = total_time,
@@ -437,7 +437,7 @@ calculate_conditional_probability0PB <- function(
     max_number_of_species = lx
   )
 
-  A2_v1 <- A_operator(
+  A2_v1 <- a_operator(
     Q = Qi,
     transition_matrix = TM,
     time_interval = total_time,
@@ -639,7 +639,7 @@ alpha_conditional_probability <- function(
       k = soc,
       max_number_of_species = max_number_of_species
     )
-    A2_v1 <- A_operator(
+    A2_v1 <- a_operator(
       Q = Qi,
       transition_matrix = mk_n_zero,
       time_interval = total_time,
@@ -665,7 +665,7 @@ alpha_conditional_probability <- function(
         max_number_of_species = max_number_of_species,
         minimum_multiple_births = minimum_multiple_births
       )
-      A2_v1.no_mbd <- A_operator(
+      A2_v1.no_mbd <- a_operator(
         Q = Qi,
         transition_matrix = mk_n_zero.no_mbd,
         time_interval = total_time,

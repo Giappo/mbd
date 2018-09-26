@@ -136,9 +136,9 @@ mbd_loglik <- function(
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
       Qi <- c(1, rep(0, lx))
       #do I need a +1 in nrow?
-      Qt <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals))
-      Qt[1,] <- Qi
-      dimnames(Qt)[[2]] <- paste0("Q", 0:lx)
+      q_t <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals))
+      q_t[1,] <- Qi
+      dimnames(q_t)[[2]] <- paste0("Q", 0:lx)
       # init_n_lineages is the number of species at t = 1
       k <- init_n_lineages
       # t is starting from 2 so everything is ok with birth[t] and
@@ -157,8 +157,8 @@ mbd_loglik <- function(
           k = k,
           max_number_of_species = lx
         )
-        Qt[t,] <- A_operator(
-          Q = Qt[(t - 1),],
+        q_t[t,] <- a_operator(
+          Q = q_t[(t - 1),],
           transition_matrix = transition_matrix,
           time_interval = time_intervals[t],
           precision = 50L,
@@ -169,48 +169,48 @@ mbd_loglik <- function(
         if (methode != "sexpm") {
           # it removes some small negative values that can occur
           # as bugs from the integration process
-          Qt[t,] <- negatives_correction(Qt[t,], pars)
+          q_t[t,] <- negatives_correction(q_t[t,], pars)
         }
-        if (any(is.nan(Qt[t,])))
+        if (any(is.nan(q_t[t,])))
         {
           if (Sys.info()[['sysname']] == "Windows")
           {
-            print(pars); print(Qt[t,])
+            print(pars); print(q_t[t,])
           }
           nan_values <- 1; break
         }
-        if (any(Qt[t,] < 0)) {
+        if (any(q_t[t,] < 0)) {
           negative_values <- 1
           break
         }
 
         #Applying C operator (this is a trick to avoid precision issues)
-        C[t] <- 1 / (sum(Qt[t,])); Qt[t,] <- Qt[t,] * C[t]
+        C[t] <- 1 / (sum(q_t[t,])); q_t[t,] <- q_t[t,] * C[t]
 
         if (t < length(time_intervals))
         {
           #Applying B operator
           B <- create_b(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
                               max_number_of_species = lx)
-          Qt[t,] <- (B %*% Qt[t,])
+          q_t[t,] <- (B %*% q_t[t,])
           if (methode != "sexpm") {
-            Qt[t,] <- negatives_correction(Qt[t,], pars)
+            q_t[t,] <- negatives_correction(q_t[t,], pars)
           }
-          if (any(is.nan(Qt[t,])))
+          if (any(is.nan(q_t[t,])))
           {
             if (Sys.info()[['sysname']] == "Windows")
             {
-              print(pars); print(Qt[t,])
+              print(pars); print(q_t[t,])
             }
             nan_values <- 1; break
           }
-          if (any(Qt[t,] < 0)) {
+          if (any(q_t[t,] < 0)) {
             negative_values <- 1
             break
           }
 
           #Applying D operator (this works exactly like C)
-          D[t] <- 1 / (sum(Qt[t,])); Qt[t,] <- Qt[t,] * D[t]
+          D[t] <- 1 / (sum(q_t[t,])); q_t[t,] <- q_t[t,] * D[t]
 
           #Updating running parameters
           k <- k + births[t]
@@ -234,7 +234,7 @@ mbd_loglik <- function(
 
     #Selecting the state I am interested in
     vm <- 1 / choose((k + missnumspec), k)
-    P  <- vm * Qt[t, (missnumspec + 1)] #I have to include +1 because of Q0
+    P  <- vm * q_t[t, (missnumspec + 1)] #I have to include +1 because of Q0
 
     #Removing C and D effects from the LL
     loglik <- log(P) - sum(log(C)) - sum(log(D))

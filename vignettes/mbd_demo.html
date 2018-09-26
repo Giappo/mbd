@@ -100,7 +100,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 mu &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># extinction rate;</span>
 nu &lt;-<span class="st"> </span><span class="fl">2.0</span> <span class="co"># multiple allopatric speciation trigger rate</span>
 q &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># single-lineage speciation probability</span>
-sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu, q); </code></pre></div>
+sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu, q)</code></pre></div>
 <p>Here “sim_pars” are <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\nu\)</span> and <span class="math inline">\(q\)</span>, i.e. the parameters we want to eventually be able to infer.</p>
 <p>Then we set some basic parameters to create a simulated tree:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">soc &lt;-<span class="st"> </span><span class="dv">2</span> <span class="co"># Use a crown age</span>
@@ -219,13 +219,18 @@ sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
 ape<span class="op">::</span><span class="kw">plot.phylo</span>(phylogeny)</code></pre></div>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAABsFBMVEUAAAABAQECAgIDAwMEBAQFBQUHBwcICAgKCgoLCwsMDAwNDQ0REREVFRUYGBgZGRkaGhobGxsdHR0eHh4fHx8gICAiIiIjIyMoKCgpKSksLCwtLS0uLi4vLy8wMDAyMjI0NDQ1NTU3Nzc4ODg8PDw9PT0+Pj4/Pz9AQEBCQkJHR0dJSUlLS0tMTExNTU1PT09TU1NVVVVWVlZXV1dZWVlaWlpcXFxdXV1eXl5fX19hYWFkZGRnZ2dqampra2ttbW1ubm5vb292dnZ3d3d5eXl6enp7e3uAgICBgYGCgoKEhISFhYWGhoaIiIiKioqNjY2Ojo6Pj4+QkJCSkpKUlJSWlpaYmJiampqbm5ucnJyenp6fn5+ioqKjo6OkpKSlpaWmpqaqqqqrq6usrKytra2vr6+wsLCxsbGysrK1tbW3t7e5ubm+vr6/v7/AwMDBwcHCwsLDw8PFxcXLy8vOzs7S0tLU1NTV1dXW1tbX19fY2Nja2trb29vd3d3e3t7i4uLj4+Pn5+fo6Ojp6ent7e3w8PD09PT19fX29vb4+Pj5+fn6+vr7+/v8/Pz9/f3///+lmBjqAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAEJ0lEQVR4nO3d11MTURhA8SuoWLBX7L333sHee+8g9oJdwF5Rsey/LInvnMlddyR3znnIfcl83+Y3w/CS3YTMei387wvo6wkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkEpQ70sH7K8ZY9gxZGD0gcqGPw5p89x5nwOHZC4kAzZv0qHZ8mXo6dkDbQ3XAn74hCgA4tWNkXWn1349jcn6UQoG1rWvpEbycsy/1ZCgHafbCIqRHVNf09r12MHpE20MgV5eP1gBPRI9IGWl73pue1a0ZDd/SItIHa64YfvX5k3Jh38SPSBsral40YOnXvlxwTEgfKn0CQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQFDiQC9CT/3G7I2fkDjQxXCutfXU4nA1ekLiQFuHlV6/99sRPSFxoJnlG8ZehkvRE9IG6h54IMu+PZk+7Xv0iCoD6n71poJ+PA3l5nyO31hlQBvrx1fQ2dOhubW1eX7NyfiNVQZ0aFdFb980oXw0NMRvTBto0qrysXRB/MakgbpqD5eO94PPx29MGuhR2HPz5o1jo9fn2Jg00LHSv7CaudGPpSiVNNC/SCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggqBCgxsKe5bq2sYjr7a1CgPbNL+oBv5NXFXG9vVVlz5NO5E+suASCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEgiKAnteEDzk2pg+0aGh4kmNj8kD3wrmQ516E1IF+T1nyq3+Ou8KTB7rQvzMbuyHHxioDapy9s4IeZ19HNWXZvDk5NlYZ0J3thyvoWba//nOWrRuRY2OVAVXYxyF/b3v+Gj8ibaAt4x+0tbXtDO3xI5IG6qi9UjruhdvxM5IGWjrpd+noDPG/Q5s00P1wq3x2hRzfKkoZ6J8kECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQ9AfQTMsji7njOwAAAABJRU5ErkJggg==" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brts &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">branching.times</span>(phylogeny)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lambda &lt;-<span class="st"> </span><span class="fl">0.3</span> <span class="co"># sympatric speciation rate</span>
+mu &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># extinction rate</span>
+nu &lt;-<span class="st"> </span><span class="fl">0.11</span> <span class="co"># multiple allopatric speciation trigger rate</span>
+q &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># single-lineage speciation probability</span></code></pre></div>
+<div id="classic-interface" class="section level3">
+<h3>Classic interface</h3>
 <p>If you want for example to maximize the likelihood only for the parameter q:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">idparsopt &lt;-<span class="st"> </span><span class="dv">4</span> <span class="co"># Only optimize the fourth parameter, q</span>
-ids &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">4</span>
-idparsfix &lt;-<span class="st"> </span>ids[<span class="op">-</span>idparsopt] <span class="co"># Fix all parameters except q</span>
-parsfix &lt;-<span class="st"> </span>sim_pars[idparsfix] <span class="co"># Use the known values for the fixed parameters</span>
-initparsopt &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># Set an initial guess for q</span>
-<span class="kw">mbd_ml</span>(
+idparsfix &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>) <span class="co"># Fix all parameters except q</span>
+parsfix &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu) <span class="co"># Use the known values for the fixed parameters</span>
+initparsopt &lt;-<span class="st"> </span>q <span class="co"># Set an initial guess for q</span>
+out &lt;-<span class="st"> </span><span class="kw">mbd_ml</span>(
   <span class="dt">brts =</span> brts, 
   <span class="dt">initparsopt =</span> initparsopt, 
   <span class="dt">idparsopt =</span> idparsopt, 
@@ -237,7 +242,103 @@ initparsopt &lt;-<span class="st"> </span><span class="fl">0.15</span> <span cla
 <pre><code>## You are optimizing q 
 ## You are fixing lambda mu nu 
 ## Optimizing the likelihood - this may take a while. 
-## The loglikelihood for the initial parameter values is -Inf</code></pre>
+## The loglikelihood for the initial parameter values is -1.652305 
+## 
+##  Maximum likelihood parameter estimates: lambda: 0.3 mu: 0.1 nu: 0.11 q: 0.00100021296751783 
+##  Maximum loglikelihood: -1.598731</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(out)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">lambda</th>
+<th align="right">mu</th>
+<th align="right">nu</th>
+<th align="right">q</th>
+<th align="right">loglik</th>
+<th align="right">df</th>
+<th align="right">conv</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.3</td>
+<td align="right">0.1</td>
+<td align="right">0.11</td>
+<td align="right">0.0010002</td>
+<td align="right">-1.598731</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="more-intuitive-interface" class="section level3">
+<h3>More intuitive interface</h3>
+<p>If you want for example to maximize the likelihood only for the parameter q:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span><span class="kw">mbd_calc_max_lik</span>(
+  <span class="dt">branching_times =</span> brts,
+  <span class="dt">init_param_values =</span> <span class="kw">create_mbd_params</span>(
+    <span class="dt">lambda =</span> lambda, <span class="dt">mu =</span> mu, <span class="dt">nu =</span> nu, <span class="dt">q =</span> q
+  ),
+  <span class="dt">fixed_params =</span> <span class="kw">c</span>(<span class="st">&quot;lambda&quot;</span>, <span class="st">&quot;mu&quot;</span>, <span class="st">&quot;nu&quot;</span>),
+  <span class="dt">estimated_params =</span> <span class="st">&quot;q&quot;</span>,
+  <span class="dt">init_n_species =</span> <span class="dv">2</span>,
+  <span class="dt">conditioned_on =</span> <span class="st">&quot;non_extinction&quot;</span>
+)</code></pre></div>
+<pre><code>## 1 0.15 -1.65230526698096 initial 
+## 2 0.135287846481876 -1.6471619350163 expand 
+## 3 0.106964656964657 -1.63716628437282 expand 
+## 4 0.0543564356435637 -1.61828093270909 expand 
+## 5 0.00652173913043386 -1.60077089117342 reflect 
+## 6 0.00652173913043386 -1.60077089117342 contract inside 
+## 7 0.00652173913043386 -1.60077089117342 contract inside 
+## 8 0.00652173913043386 -1.60077089117342 contract inside 
+## 9 0.00652173913043386 -1.60077089117342 contract inside 
+## 10 0.00367577756833083 -1.59971968990733 reflect 
+## 11 0.00367577756833083 -1.59971968990733 contract inside 
+## 12 0.00225882352941082 -1.59919593953927 reflect 
+## 13 0.00225882352941082 -1.59919593953927 contract inside 
+## 14 0.00155184575593604 -1.59893452559888 reflect 
+## 15 0.00155184575593604 -1.59893452559888 contract inside 
+## 16 0.00119873075566952 -1.59880393377478 reflect 
+## 17 0.00119873075566952 -1.59880393377478 contract inside 
+## 18 0.0010222666118315 -1.59873866662868 reflect 
+## 19 0.0010222666118315 -1.59873866662868 contract inside 
+## 20 0.0010222666118315 -1.59873866662868 contract inside 
+## 21 0.0010222666118315 -1.59873866662868 contract inside 
+## 22 0.00100021296751783 -1.59873050958342 reflect 
+## 23 0.00100021296751783 -1.59873050958342 contract inside 
+## 24 0.00100021296751783 -1.59873050958342 contract inside 
+## 25 0.00100021296751783 -1.59873050958342 contract inside 
+## 26 0.00100021296751783 -1.59873050958342 contract inside 
+## 27 0.00100021296751783 -1.59873050958342 contract inside 
+## Optimization has terminated successfully.</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(out)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">lambda</th>
+<th align="right">mu</th>
+<th align="right">nu</th>
+<th align="right">q</th>
+<th align="right">loglik</th>
+<th align="right">df</th>
+<th align="right">conv</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.3</td>
+<td align="right">0.1</td>
+<td align="right">0.11</td>
+<td align="right">0.0010002</td>
+<td align="right">-1.598731</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 <div class="footnotes">
 <hr />

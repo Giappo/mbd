@@ -9,7 +9,7 @@ lambda <- 0.2 # sympatric speciation rate
 mu <- 0.15 # extinction rate;
 nu <- 2.0 # multiple allopatric speciation trigger rate
 q <- 0.1 # single-lineage speciation probability
-sim_pars <- c(lambda, mu, nu, q); 
+sim_pars <- c(lambda, mu, nu, q)
 
 ## ------------------------------------------------------------------------
 soc <- 2 # Use a crown age
@@ -51,12 +51,17 @@ ape::plot.phylo(phylogeny)
 brts <- ape::branching.times(phylogeny)
 
 ## ------------------------------------------------------------------------
+lambda <- 0.3 # sympatric speciation rate
+mu <- 0.1 # extinction rate
+nu <- 0.11 # multiple allopatric speciation trigger rate
+q <- 0.15 # single-lineage speciation probability
+
+## ------------------------------------------------------------------------
 idparsopt <- 4 # Only optimize the fourth parameter, q
-ids <- 1:4
-idparsfix <- ids[-idparsopt] # Fix all parameters except q
-parsfix <- sim_pars[idparsfix] # Use the known values for the fixed parameters
-initparsopt <- 0.15 # Set an initial guess for q
-mbd_ml(
+idparsfix <- c(1, 2, 3) # Fix all parameters except q
+parsfix <- c(lambda, mu, nu) # Use the known values for the fixed parameters
+initparsopt <- q # Set an initial guess for q
+out <- mbd_ml(
   brts = brts, 
   initparsopt = initparsopt, 
   idparsopt = idparsopt, 
@@ -65,4 +70,18 @@ mbd_ml(
   soc = soc, 
   cond = cond
 )
+knitr::kable(out)
+
+## ------------------------------------------------------------------------
+out <- mbd_calc_max_lik(
+  branching_times = brts,
+  init_param_values = create_mbd_params(
+    lambda = lambda, mu = mu, nu = nu, q = q
+  ),
+  fixed_params = c("lambda", "mu", "nu"),
+  estimated_params = "q",
+  init_n_species = 2,
+  conditioned_on = "non_extinction"
+)
+knitr::kable(out)
 

@@ -204,7 +204,7 @@ If you want for example to maximize the likelihood only for the parameter q:
 out <- mbd_calc_max_lik(
   branching_times = brts,
   init_param_values = create_mbd_params(
-    lambda = lambda, mu = mu, nu = nu, q = 0.15
+    lambda = lambda, mu = mu, nu = nu, q = q
   ),
   fixed_params = c("lambda", "mu", "nu"),
   estimated_params = "q",

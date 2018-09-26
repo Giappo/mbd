@@ -71,13 +71,13 @@ mbd_loglik0 <- function(
       
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
       Qi <- c(1,rep(0, max_number_of_species))
-      Qt <- matrix(
+      q_t <- matrix(
         0, 
         ncol = (max_number_of_species + 1), 
         nrow = length(time_intervals)
       )
-      Qt[1, ] <- Qi
-      dimnames(Qt)[[2]] <- paste("Q", 0:max_number_of_species, sep = "")
+      q_t[1, ] <- Qi
+      dimnames(q_t)[[2]] <- paste("Q", 0:max_number_of_species, sep = "")
       # init_n_species is the number of species at t=1
       k <- init_n_species 
       # t is starting from 2 so everything is ok 
@@ -98,8 +98,8 @@ mbd_loglik0 <- function(
           q = q,
           k = k
         )
-        Qt[t,] <- A_operator(
-          Q = Qt[(t - 1),], 
+        q_t[t,] <- a_operator(
+          Q = q_t[(t - 1),], 
           transition_matrix = transition_matrix,
           time_interval = time_intervals[t],
           precision = 50L,
@@ -110,15 +110,15 @@ mbd_loglik0 <- function(
         if (methode != "sexpm") {
           # it removes some small negative values 
           # that can occurr as bugs from the integration process
-          Qt[t,] <- mbd:::negatives_correction(Qt[t,], pars)
+          q_t[t,] <- mbd:::negatives_correction(q_t[t,], pars)
         } 
         
         #Applying C operator (this is a trick to avoid precision issues)
         if (debug_check == 1) {
-          print(head(Qt[t,]))
+          print(head(q_t[t,]))
         }
-        C[t] <- 1 / (sum(Qt[t,]))
-        Qt[t,] <- Qt[t,]*C[t]
+        C[t] <- 1 / (sum(q_t[t,]))
+        q_t[t,] <- q_t[t,]*C[t]
         
         #Applying B operator
         B <- create_b_zero(
@@ -127,18 +127,18 @@ mbd_loglik0 <- function(
           k = k, 
           b = births[t]
         )
-        Qt[t,] <- (B %*% Qt[t,])
+        q_t[t,] <- (B %*% q_t[t,])
         if (methode != "sexpm") {
-          Qt[t,] <- mbd:::negatives_correction(Qt[t,],pars)
+          q_t[t,] <- mbd:::negatives_correction(q_t[t,],pars)
         }
         logB  <-  logB + log(lambda) + lchoose(k,births[t]) + births[t]*log(q)
         
         #Applying D operator (this works exactly like C)
         if (debug_check == 1) {
-          print(head(Qt[t,]))
+          print(head(q_t[t,]))
         }
-        D[t] <- 1/(sum(Qt[t,]))
-        Qt[t,] <- Qt[t,]*D[t]
+        D[t] <- 1/(sum(q_t[t,]))
+        q_t[t,] <- q_t[t,]*D[t]
         
         #Updating running parameters
         k <- k + births[t]
@@ -153,8 +153,8 @@ mbd_loglik0 <- function(
         q = q,
         k = k
       )
-      Qt[t,] <- A_operator(
-        Q = Qt[(t - 1),],
+      q_t[t,] <- a_operator(
+        Q = q_t[(t - 1),],
         transition_matrix = transition_matrix,
         time_interval = time_intervals[t],
         precision = 50L,
@@ -163,15 +163,15 @@ mbd_loglik0 <- function(
         a_reltol = reltol
       )
       if (methode != "sexpm") {
-        Qt[t,] <- mbd:::negatives_correction(Qt[t, ], pars)
+        q_t[t,] <- mbd:::negatives_correction(q_t[t, ], pars)
       }
       if (debug_check == 1) {
-        print(head(Qt[t, ]))
+        print(head(q_t[t, ]))
       }
       
       #Selecting the state I am interested in
       vm <- 1 / choose((k+missnumspec),k)
-      P <- vm * Qt[t,(missnumspec + 1)] #I have to include +1 because of Q0
+      P <- vm * q_t[t,(missnumspec + 1)] #I have to include +1 because of Q0
       
       #Removing C and D effects from the LL
       loglik <- log(P) + logB - sum(log(C)) - sum(log(D))
@@ -210,8 +210,8 @@ mbd_loglik0 <- function(
           q = q,
           k = init_n_species
         )
-        A2_v1 <- A_operator(
-          Q = Qt[1, ],
+        A2_v1 <- a_operator(
+          Q = q_t[1, ],
           transition_matrix = mk_n_zero,
           time_interval = total_time,
           precision = 50L,
@@ -237,7 +237,7 @@ mbd_loglik0 <- function(
           ode_matrix <- mk_n_zero
           times <- c(0, total_time)
           A2_v1 <- deSolve::ode(
-            y = Qt[1, ], 
+            y = q_t[1, ], 
             times = times, 
             func = mbd_loglik_rhs, 
             parms = ode_matrix,
