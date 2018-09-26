@@ -1,7 +1,7 @@
 #MD_DATA_ANALYSIS
 #setup
 rm(list=ls());
-mbd_data_analysis = function (sim_pars, max_sims = 1000, account_name = "274829"){
+mbd_data_analysis <- function(sim_pars, max_sims = 1000, account_name = "274829"){
   # results = mbd:::mbd_import_data()
   # sim_pars = c(0.2,0.15,2,0.05); max_sims = 1000; account_name = "cyrus"
   Npars = length(sim_pars);
@@ -50,27 +50,39 @@ mbd_results_overview = function(){
   # data_folder = "F:/Dropbox/University/Progress/RQ1 - Multiple Births/Results + Reports/4_parameters/"
   folder_list = dir(path = data_folder )
 
-  for (y in 1:dim(sim_settings)[1]){
-    folder_name =  NULL
-    for (i in 1:length(sim_settings[y,1:4])){
-      vec=unname(unlist( sim_settings[y,1:4] ))
-      folder_name = paste(folder_name,toString(vec[i]),sep = '')
-      if (i!=length(vec)){folder_name = paste(folder_name,"-",sep = '')}
+  for (y in 1:dim(sim_settings)[1]) {
+    folder_name <- NULL
+    for (i in 1:length(sim_settings[y,1:4])) {
+      vec <- unname(unlist( sim_settings[y,1:4] ))
+      folder_name <- paste(folder_name,toString(vec[i]),sep = '')
+      if (i != length(vec)) {
+        folder_name = paste(folder_name,"-",sep = '')
+      }
     }
-    present <- max(grepl(folder_name, folder_list))==1
+    present <- max(grepl(folder_name, folder_list)) == 1
     collected = 0
-    if (present!=0){
-      right_folder = folder_list[ max( which(grepl(folder_name, folder_list)==1) ) ]
-      collected = length( list.files(path = paste(data_folder,right_folder,sep = ''),pattern = ".*.txt") )
-      account_file = paste(data_folder,right_folder,"/account_name",sep = '')
+    if (present != 0) {
+      right_folder <- folder_list[
+        max( which(grepl(folder_name, folder_list) == 1) ) 
+      ]
+      collected = length(
+        list.files(
+          path = paste(data_folder,right_folder,sep = ''),
+          pattern = ".*.txt"
+        ) 
+      )
+      account_file <- paste(data_folder,right_folder,"/account_name",sep = '')
     }
     sim_settings[y,6] <- collected
-    sim_settings[y,7] <- ( collected>=(0.9*sim_settings[y,5]) )
+    sim_settings[y,7] <- (collected >= (0.9*sim_settings[y,5]) )
 
-    if (exists("account_file")){
-    if (file.exists(account_file)){
-        load(file=account_file)
-    }else{working_account = "noone"}}
+    if (exists("account_file")) {
+      if (file.exists(account_file)) {
+          load(file = account_file)
+      } else {
+        working_account = "noone"
+      }
+    }
 
     sim_settings[y,8] <- working_account
   };

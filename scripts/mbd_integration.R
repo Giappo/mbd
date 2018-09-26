@@ -46,12 +46,12 @@ if (1){
   }
   #utility functions
   finite.max <- function(x) max(x[is.finite(x)])
-  min.finite.max.list <- function(lista){
+  min.finite.max_list <- function(lista){
     n <- min(unname(unlist(lapply(lista, finite.max))))
     who <- which(unname(unlist(lapply(lista, finite.max))) == min(unname(unlist(lapply(lista, finite.max)))))
     return(list(n = n, who = who))
   }
-  get.matrix.columns <- function(matrix) lapply(1:ncol(matrix), FUN = function(i) matrix[,i])
+  get.matrix_columns <- function(matrix) lapply(1:ncol(matrix), FUN = function(i) matrix[,i])
   remove.infinites <- function(vector.list) lapply(vector.list, FUN = function(v) v[!is.infinite(v)])
   all.subsets <- function(set) {
     n    <- length(set)
@@ -62,7 +62,7 @@ if (1){
     out4 <- out3[-(lapply(out3, FUN = length) == 0)]
     return(out4)
   }
-  inside.borders <- function (x, brts){
+  inside.borders <- function(x, brts){
     cond1 <- (x < min(brts))
     cond2 <- (x > max(brts))
     x <- (1 - cond1 - cond2) * x + cond1 * min(brts) + cond2 * max(brts)
@@ -89,7 +89,7 @@ if (1){
     # combs <- combs[,!apply(combs, MARGIN = 2, FUN = function(x) is.infinite(x[1]))] #remove all INF
     N2 <- ncol(intervals)
     
-    pippo1 <- get.matrix.columns(combs); pippo1
+    pippo1 <- get.matrix_columns(combs); pippo1
     pippo2 <- remove.infinites(pippo1); pippo2
     pippo3 <- unique(unlist(lapply(pippo2, FUN = all.subsets),recursive = F)); pippo3
     pippo4 <- lapply(pippo3, FUN = function(v) c(v, rep(Inf, (N2 - length(v)))) ); pippo4
@@ -121,7 +121,7 @@ if (1){
     return(out)
   }
   update.scenarios <- function(scen){
-    next.one <- min.finite.max.list(scen)
+    next.one <- min.finite.max_list(scen)
     n   <- next.one$n + 1
     who <- next.one$who
     old.scen <- scen[who]; old.scen
@@ -142,7 +142,7 @@ if (1){
     combs <- intersections(tm = tm, brts = brts, brts.bars = brts.bars)
     N <- length(brts) - 1
     scen <- select.compatible.scenarios(n = 1, combs = combs); scen
-    while (min.finite.max.list(scen)$n != N)
+    while (min.finite.max_list(scen)$n != N)
     {
       scen  <- update.scenarios(scen); scen
     } 

@@ -1,7 +1,7 @@
 Package: mbd
 Type: Package
 Title: Multiple Birth Death Diversification
-Version: 0.0.0.9000
+Version: 0.1
 Author: Giovanni Laudanno <glaudanno@gmail.com>
 Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
 Depends: 
@@ -20,7 +20,6 @@ Imports:
   pirouette,
   R.utils, 
   RCurl,  
-  raket,
   subplex, 
   testit,
   tracerer,
@@ -35,7 +34,7 @@ Description:
     Multiple Birth Death Diversification.
     Multiple Birth Death Diversification.
     Multiple Birth Death Diversification.
-License: GPL-3
+License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: no

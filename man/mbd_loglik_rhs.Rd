@@ -15,14 +15,14 @@ mbd_loglik_rhs(t, x, pars)
 \itemize{
   \item pars[1] is the multiple speciation trigger rate;
   \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability.
+  \item pars[3] is the single-lineage speciation probability_
 }
 or
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 }
 \description{
@@ -34,7 +34,7 @@ Internal mbd function.
 #' @details This is not to be called by the user.
 #' @export
 A_operator_old <- function(Q, transition_matrix, time_interval, precision = 50L,
-                       A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo"){
+                       a_abstol = 1e-16, a_reltol = 1e-10, methode = "expo"){
 
 precision_limit <- 3000
 
@@ -61,23 +61,23 @@ if (methode == "sexpm")
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+    # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1]
+    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1], timeout = 1000)
   }
 
 if (any(!is.numeric(result)) || any(is.nan(result))) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+    # result<-deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1]
+    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1], timeout = 1000)
   }
   else if (any(result < 0)) #sometimes expoRkit gives weird negative values. In this case perform standard lsoda integration.
   {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    # result=deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1]
-    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix,atol=A_abstol,rtol=A_reltol)[2,-1], timeout = 1000)
+    # result=deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1]
+    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol=a_abstol, rtol=a_reltol)[2,-1], timeout = 1000)
   }
 
 # if ( ( any(!is.numeric(result)) || any(is.nan(result)) ) && methode!="sexpm"){

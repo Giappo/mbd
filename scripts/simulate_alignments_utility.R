@@ -38,8 +38,8 @@
 #   data <- mbd:::brts2time_intervals_and_births(brts)
 #   time_intervals <- c(0, data$time_intervals)
 #   births <- c(0, data$births)
-#   N0 <- soc #number of starting species
-#   k_interval <- N0 + cumsum(births)
+#   init_n_species <- soc #number of starting species
+#   k_interval <- init_n_species + cumsum(births)
 #   max_k <- max(k_interval)
 #   nvec <- 0:lx
 #   
@@ -48,7 +48,7 @@
 #   Qt <- matrix(0, ncol = (lx + 1), nrow = length(tm))
 #   Qt[1,] <- Qi
 #   dimnames(Qt)[[2]] <- paste0("Q", 0:lx)
-#   k <- N0 #N0 is the number of species at t=1
+#   k <- init_n_species #init_n_species is the number of species at t=1
 #   t <- 2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
 #   D <- C <- rep(1, (length(time_intervals)))
 #   logB <- 0;
@@ -58,7 +58,7 @@
 #   {
 #     #Applying A operator
 #     transition_matrix <- mbd:::create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
-#     Qt[t,] <- mbd:::A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+#     Qt[t,] <- mbd:::A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
 #     
 #     if (t < length(time_intervals))
 #     {
@@ -76,7 +76,7 @@
 #   return(loglik)
 # }
 # 
-# calculate_conditional_probability_in_time <- function (brts,
+# calculate_conditional_probability_in_time <- function(brts,
 #                                                        tm,
 #                                                        pars,
 #                                                        lx = 700,
@@ -115,7 +115,7 @@
 
 
 # 
-# lavec <- seq((min.lambda <- lambda), (max.lambda <- 3*lambda), by = abs(max.lambda - min.lambda)/(Nsteps <- 20))
+# lavec <- seq((min.lambda <- lambda), (max_lambda <- 3*lambda), by = abs(max_lambda - min.lambda)/(n_steps <- 20))
 # out <- rep(NA, length(lavec))
 # for (i in 1:length(lavec))
 # {

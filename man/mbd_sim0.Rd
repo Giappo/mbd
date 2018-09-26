@@ -12,16 +12,19 @@ mbd_sim0(pars, soc = 2, age = 10, cond = 1, tips_interval = c(soc *
 \itemize{
   \item pars[1] is the multiple speciation trigger rate;
   \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability.
+  \item pars[3] is the single-lineage speciation probability_
 }}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
 \item{age}{The age of the tree.}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+\item{cond}{Set 1 if you want to condition on stem or crown age
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually
+do with a standard usage of mbd_sim.}
 
 \item{minimum_multiple_births}{something}
 }
@@ -45,7 +48,7 @@ The function returns a list of L table, branching times and number of extinct sp
 mbd_sim0 produces simulated trees including multiple speciations at the same time.
 }
 \examples{
-out = mbd_sim0( pars=c(2.5,0.1,0.1),soc=2,age=10,cond=1,tips_interval=c(0,Inf) )
+out = mbd_sim0( pars=c(2.5,0.1,0.1), soc=2, age=10, cond=1, tips_interval=c(0,Inf) )
 graphics::plot(out$tas)
 graphics::plot(out$tes)
 out$L

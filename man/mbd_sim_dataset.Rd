@@ -11,21 +11,24 @@ mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
 \arguments{
 \item{sim_pars}{vector of parameters:
 \itemize{
-\item id == 1 corresponds to lambda (speciation rate)
-\item id == 2 corresponds to mu (extinction rate)
-\item id == 3 corresponds to nu (multiple speciation trigger rate)
-\item id == 4 corresponds to q (single-lineage speciation probability)
+  \item id == 1 corresponds to lambda (speciation rate)
+  \item id == 2 corresponds to mu (extinction rate)
+  \item id == 3 corresponds to nu (multiple speciation trigger rate)
+  \item id == 4 corresponds to q (single-lineage speciation probability)
 }}
 
-\item{soc}{stands for stem or crown. Set 1 for stem or 2 for crown.}
+\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{cond}{conditions on the survival of the crown (or the stem). Set to 1 if you want to condition on crown survival. Else set 0.}
+\item{cond}{Set 1 if you want to condition on stem or crown age
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{age}{is the age of the tree.}
+\item{age}{The age of the tree.}
 
 \item{max_sims}{something}
 
-\item{tips_interval}{You can also define the tips_interval as you can usually do with a standard usage of mbd_sim.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually
+do with a standard usage of mbd_sim.}
 
 \item{edge}{the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.}
 
@@ -41,7 +44,7 @@ mbd_sim_dataset produces a full dataset of max_sims simulated trees including mu
 }
 \examples{
 # @Giappo: does not work
-# out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15),soc=2,age=10,cond=1,edge=Inf )
+# out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15), soc=2, age=10, cond=1, edge=Inf )
 
 }
 \author{

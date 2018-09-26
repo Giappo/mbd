@@ -10,7 +10,13 @@ alignments_comparison_multiple(sim_pars = c(0.2, 0.15, 2, 0.15),
   Inf), mutation_rate = 1/age)
 }
 \arguments{
-\item{sim_pars}{something}
+\item{sim_pars}{vector of parameters:
+\itemize{
+  \item id == 1 corresponds to lambda (speciation rate)
+  \item id == 2 corresponds to mu (extinction rate)
+  \item id == 3 corresponds to nu (multiple speciation trigger rate)
+  \item id == 4 corresponds to q (single-lineage speciation probability)
+}}
 
 \item{max_sims}{something}
 
@@ -20,11 +26,14 @@ alignments_comparison_multiple(sim_pars = c(0.2, 0.15, 2, 0.15),
 
 \item{sequence_length}{something}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+\item{cond}{Set 1 if you want to condition on stem or crown age
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{age}{The age of the tree.}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually
+do with a standard usage of mbd_sim.}
 
 \item{mutation_rate}{something}
 }

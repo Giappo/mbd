@@ -5,7 +5,7 @@
 \title{Internal mbd function}
 \usage{
 A_operator(Q, transition_matrix, time_interval, precision = 50L,
-  A_abstol = 1e-16, A_reltol = 1e-10, methode = "expo")
+  a_abstol = 1e-16, a_reltol = 1e-10, methode = "expo")
 }
 \arguments{
 \item{Q}{something}
@@ -16,11 +16,16 @@ A_operator(Q, transition_matrix, time_interval, precision = 50L,
 
 \item{precision}{something}
 
-\item{A_abstol}{something}
+\item{a_abstol}{something}
 
-\item{A_reltol}{something}
+\item{a_reltol}{something}
 
-\item{methode}{something}
+\item{methode}{Specifies how the integration must be performed:
+\itemize{
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 }
 \description{
 Internal mbd function.

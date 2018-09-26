@@ -1,54 +1,73 @@
 ## ------------------------------------------------------------------------
-rm(list = ls()); options(warn = -1);
-suppressWarnings( suppressPackageStartupMessages( library(mbd) ) )
+library(mbd)
 
 ## ------------------------------------------------------------------------
-set.seed(14) #set.seed(42)
-sim_pars <- c(0.2, 0.15, 2, 0.1); soc <- 2; cond <- 1; age <- 10;#sim_pars <- c(0.2, 0.1, 1.5, 0.1); soc = 2; cond = 1; age = 10;
-sim <- mbd:::mbd_sim(pars = sim_pars, soc = soc, age = age, cond = cond, tips_interval = c(0, Inf))
+set.seed(14)
 
+## ------------------------------------------------------------------------
+lambda <- 0.2 # sympatric speciation rate
+mu <- 0.15 # extinction rate;
+nu <- 2.0 # multiple allopatric speciation trigger rate
+q <- 0.1 # single-lineage speciation probability
+sim_pars <- c(lambda, mu, nu, q); 
 
-## ---- fig.show='hold'----------------------------------------------------
+## ------------------------------------------------------------------------
+soc <- 2 # Use a crown age
+crown_age <- 10
+cond <- 1 # Condition on non-extinction
+
+sim <- mbd:::mbd_sim(
+  pars = sim_pars, 
+  soc = soc, 
+  age = crown_age, 
+  cond = cond, 
+  tips_interval = c(0, Inf)
+)
+
+## ---- fig.show='hold', fig.width=7, fig.height=7-------------------------
 graphics::plot(sim$tas)
 
-## ---- fig.show='hold'----------------------------------------------------
+## ---- fig.show='hold', fig.width=7, fig.height=7-------------------------
 graphics::plot(sim$tes)
 
 ## ------------------------------------------------------------------------
-sim$L
+knitr::kable(head(sim$L))
 
 ## ------------------------------------------------------------------------
-sim$brts
+knitr::kable(head(sim$brts))
 
 ## ------------------------------------------------------------------------
-test_pars <- c(0.3, 0.05, 1.0, 0.08)
-mbd::mbd_loglik(pars = test_pars, brts = sim$brts, soc = soc, cond = cond, missnumspec = 0)
+mbd::mbd_loglik(
+  pars = sim_pars, 
+  brts = sim$brts, 
+  soc = soc, 
+  cond = cond, 
+  missnumspec = 0
+)
 
 ## ------------------------------------------------------------------------
-# Uncomment if you are keen to wait.
-idparsopt <- 4
-ids <- 1:4; idparsfix <- ids[-idparsopt];
-parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
-mbd:::mbd_ML(brts = sim$brts, 
-             initparsopt = initparsopt, 
-             idparsopt = idparsopt, 
-             parsfix = parsfix, 
-             idparsfix = idparsfix, 
-             soc = soc, 
-             cond = cond)
-
+sim <- mbd:::mbd_sim(
+  pars = sim_pars, 
+  soc = soc, 
+  age = crown_age / 10, 
+  cond = cond, 
+  tips_interval = c(0, Inf)
+)
+ape::plot.phylo(sim$tes)
 
 ## ------------------------------------------------------------------------
-# # Uncomment if you are keen to wait.
-# idparsopt <- 4
-# ids <- 1:4; idparsfix <- ids[-idparsopt];
-# parsfix <- sim_pars[idparsfix]; initparsopt <- 0.15;
-# MBD:::mbd_ML(brts = sim$brts, 
-#              initparsopt = initparsopt, 
-#              idparsopt = idparsopt, 
-#              parsfix = parsfix, 
-#              idparsfix = idparsfix, 
-#              soc = soc, 
-#              cond = cond)
-
+idparsopt <- 4 # Only optimize the fourth parameter, q
+ids <- 1:4
+idparsfix <- ids[-idparsopt] # Fix all parameters except q
+parsfix <- sim_pars[idparsfix] # Use the known values for the fixed parameters
+initparsopt <- 0.15 # Set an initial guess for q
+mbd:::mbd_ML(
+  brts = sim$brts, 
+  initparsopt = initparsopt, 
+  idparsopt = idparsopt, 
+  parsfix = parsfix, 
+  idparsfix = idparsfix, 
+  soc = soc, 
+  cond = cond
+)
 

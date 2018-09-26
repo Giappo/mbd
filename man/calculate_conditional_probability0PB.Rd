@@ -9,29 +9,36 @@ calculate_conditional_probability0PB(brts, pars, lx = 200, soc = 2,
   reltol = 1e-10)
 }
 \arguments{
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny_}
 
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is the multiple speciation trigger rate;
   \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability.
+  \item pars[3] is the single-lineage speciation probability_
 }
 or
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{lx}{It is the number of ODEs considered for the computation.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually
+do with a standard usage of mbd_sim.}
 
-\item{methode}{something}
+\item{methode}{Specifies how the integration must be performed:
+\itemize{
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 
 \item{abstol}{something}
 

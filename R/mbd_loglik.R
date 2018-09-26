@@ -7,110 +7,114 @@
 #'   \item pars[1] is lambda, the sympatric speciation rate;
 #'   \item pars[2] is mu, the extinction rate;
 #'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-#'   \item pars[4] is q, the single-lineage speciation probability.
+#'   \item pars[4] is q, the single-lineage speciation probability_
 #' }
-#' @param brts A set of branching times of a phylogeny.
-#' @param soc Sets whether stem or crown age should be used (1 or 2)
-#' @param cond Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.
-#' @param tips_interval It takes into account tips boundaries constrain on simulated dataset.
-#' @param missnumspec The number of species that are in the clade but missing in the phylogeny.
-#' @param methode Specifies how the integration must be performed: set "sexpm" if you want to use sexpm; set "expo" if you want to use expoRkit; set "lsoda" if you want to use the "lsoda" method with the "deSolve::ode" function.
 #' @param safety_threshold It determines the precision on the parameters.
 #' @return The function returns the natural logarithm of the likelihood for the process.
-#'
 #' @examples
 #' set.seed(11)
 #' simulated_data = mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
 #' graphics::plot(simulated_data$tas)
 #' # @Giappo: too big too run
-#' # mbd::mbd_loglik(pars = c(0.8, 0.05, 2.2, 0.1), brts = simulated_data$brts, soc = 2, cond = 1, missnumspec = 0)
+#' # mbd::mbd_loglik(
+#' #   pars = c(0.8, 0.05, 2.2, 0.1),
+#' #   brts = simulated_data$brts,
+#' #   soc = 2, cond = 1, missnumspec = 0
+#' # )
 #'
 #' @export
-mbd_loglik <- function(pars, 
-                       brts, 
-                       soc = 2, 
-                       cond = 1, 
-                       lx0 = 900,
-                       alpha = 10,
-                       tips_interval = c(0, Inf),
-                       missnumspec = 0, 
-                       safety_threshold = 1e-3,
-                       methode = "expo", 
-                       minimum_multiple_births = 0, 
-                       print_errors = TRUE){
-  
+mbd_loglik <- function(
+    pars,
+    brts,
+    soc = 2,
+    cond = 1,
+    lx0 = 900,
+    alpha = 10,
+    tips_interval = c(0, Inf),
+    missnumspec = 0,
+    safety_threshold = 1e-3,
+    methode = "expo",
+    minimum_multiple_births = 0,
+    print_errors = TRUE
+) {
   #Optional stuff that I might need to run the program one line at the time:
   #brts = sim_data[[1]]; missnumspec = 0;pars = sim_pars; missing_interval = c(1, Inf); methode = "expo"
-  
+
   #BASIC SETTINGS AND CHECKS
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]
   abstol <- 1e-16; reltol <- 1e-10
-  if (cond == 0) {tips_interval <- c(0, Inf)}
-  
+  if (cond == 0) {
+    tips_interval <- c(0, Inf)
+  }
+
   condition1 <- (any(is.nan(pars)) != 0 | any(is.infinite(pars)) != 0)
   condition2 <- (lambda < 0 | mu < 0 | nu < 0 |
-                 q <= 0 + safety_threshold | 
+                 q <= 0 + safety_threshold |
                  q >= 1 - safety_threshold |
                  minimum_multiple_births < 0)
   condition3 <- (length(pars) != 4)
-  if       (condition1)
-  {
-    if (print_errors == TRUE){print("input parameters are either infinite or NaN")}
+  if (condition1) {
+    if (print_errors == TRUE) { print("input parameters are either infinite or NaN")}
     loglik <- -Inf
-  }else if (condition2)
-  {
-    if (print_errors == TRUE){print("input parameters have wrong values")}
+  } else if (condition2) {
+    if (print_errors == TRUE) { print("input parameters have wrong values")}
     loglik <- -Inf
-  }else if (condition3)
-  {
-    if (print_errors == TRUE){print("wrong number of input parameters")}
+  } else if (condition3) {
+    if (print_errors == TRUE) { print("wrong number of input parameters")}
     loglik <- -Inf
-  }else if (mu == 0 && all(tips_interval == c(0, Inf)) && missnumspec == 0 && minimum_multiple_births == 0)
-  {
+  } else if (mu == 0 &&
+      all(tips_interval == c(0, Inf)) &&
+      missnumspec == 0 &&
+      minimum_multiple_births == 0
+  ) {
     loglik <- pmb_loglik(pars = pars, brts = brts, soc = soc) #using pure birth analytical formula
-  }else
-  {#MAIN
-    
+  } else {
+    #MAIN
+
     #ADJUSTING DATA
     data <- brts2time_intervals_and_births(brts)
     time_intervals <- c(0, data$time_intervals)
     births <- c(0, data$births)
-    N0 <- soc #number of starting species
-    k_interval <- N0 + cumsum(births)
+    init_n_lineages <- soc #number of starting species
+    k_interval <- init_n_lineages + cumsum(births)
     max_k <- max(k_interval)
-    
+
     #DETERMINE PC AND ALPHA (OR LX)
-    Pc_and_Alpha <- mbd::alpha_analysis(brts = brts,
-                                        pars = pars,
-                                        tips_interval = tips_interval,
-                                        cond = cond,
-                                        soc = soc,
-                                        alpha0 = alpha,
-                                        max_k = max_k,
-                                        methode = methode,
-                                        abstol = abstol,
-                                        reltol = reltol,
-                                        minimum_multiple_births = minimum_multiple_births)
-    
+    Pc_and_Alpha <- mbd::alpha_analysis(
+      brts = brts,
+      pars = pars,
+      tips_interval = tips_interval,
+      cond = cond,
+      soc = soc,
+      alpha0 = alpha,
+      max_k = max_k,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol,
+      minimum_multiple_births = minimum_multiple_births
+    )
+
     Pc    <- Pc_and_Alpha$Pc
     alpha <- Pc_and_Alpha$alpha
-    
-    # lx <- determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc, 
+
+    # lx <- determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc,
     #                               methode = methode, abstol = abstol, reltol = reltol)
     # alpha <- lx/10
     lx <- max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
     Pc <- 1
     if (cond == 1){
-      Pc <- mbd::calculate_conditional_probability(brts = brts,
-                                                   pars = pars,
-                                                   soc = soc,
-                                                   lx = lx,
-                                                   tips_interval = tips_interval,
-                                                   methode = methode,
-                                                   abstol = abstol,
-                                                   reltol = reltol)
+      Pc <- mbd::calculate_conditional_probability(
+        brts = brts,
+        pars = pars,
+        soc = soc,
+        lx = lx,
+        tips_interval = tips_interval,
+        methode = methode,
+        abstol = abstol,
+        reltol = reltol
+      )
     }
-    
+
     #LIKELIHOOD INTEGRATION
     start_over_again <- 1; iterations <- 0; max_iterations <- 100
     negative_values <- nan_values <- 0;
@@ -126,7 +130,7 @@ mbd_loglik <- function(pars,
       Qt <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals)) #do I need a +1 in nrow?
       Qt[1,] <- Qi
       dimnames(Qt)[[2]] <- paste0("Q", 0:lx)
-      k <- N0 #N0 is the number of species at t=1
+      k <- init_n_lineages #init_n_lineages is the number of species at t=1
       t <- 2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
       D <- C <- rep(1, (length(time_intervals)))
 
@@ -134,8 +138,8 @@ mbd_loglik <- function(pars,
       while (t <= length(time_intervals))
       {
         #Applying A operator
-        transition_matrix <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k,max_number_of_species = lx)
-        Qt[t,] <- A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, A_abstol = abstol, A_reltol = reltol)
+        transition_matrix <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k, max_number_of_species = lx)
+        Qt[t,] <- A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
         if (methode != "sexpm"){Qt[t,] <- negatives_correction(Qt[t,], pars)} #it removes some small negative values that can occurr as bugs from the integration process
         if (any(is.nan(Qt[t,])))
         {

@@ -7,7 +7,7 @@
 mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
   idparsfix = (1:4)[-idparsopt], brts, cond = 1, soc = 2,
   tips_interval = c(0, Inf), missnumspec = 0, methode = "expo",
-  minimum_multiple_births = 0, pars.transform = 0, print_errors = 0,
+  minimum_multiple_births = 0, pars_transform = 0, print_errors = 0,
   ...)
 }
 \arguments{
@@ -15,31 +15,41 @@ mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
 
 \item{trparsfix}{something}
 
-\item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:
+\item{idparsopt}{The ids of the parameters that must be optimized.
+The ids are defined as follows:
 \itemize{
-\item id == 1 corresponds to lambda (speciation rate)
-\item id == 2 corresponds to mu (extinction rate)
-\item id == 3 corresponds to nu (multiple speciation trigger rate)
-\item id == 4 corresponds to q (single-lineage speciation probability)
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{idparsfix}{something}
 
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny_}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+\item{cond}{Set 1 if you want to condition on stem or crown age
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually
+do with a standard usage of mbd_sim.}
 
-\item{missnumspec}{something}
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny_}
 
-\item{methode}{something}
+\item{methode}{Specifies how the integration must be performed:
+\itemize{
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 
 \item{minimum_multiple_births}{something}
 
-\item{pars.transform}{something}
+\item{pars_transform}{something}
 
 \item{print_errors}{something}
 

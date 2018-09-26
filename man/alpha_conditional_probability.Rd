@@ -9,31 +9,39 @@ alpha_conditional_probability(brts, pars, alpha, tips_interval = c(0,
   reltol = 1e-10, minimum_multiple_births = 0)
 }
 \arguments{
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny_}
 
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is the multiple speciation trigger rate;
   \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability.
+  \item pars[3] is the single-lineage speciation probability_
 }
 or
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability.
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{alpha}{something}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.}
+\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+You can also define the tips_interval as you can usually
+do with a standard usage of mbd_sim.}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age and non-extinction of the phylogeny. Set 0 otherwise.}
+\item{cond}{Set 1 if you want to condition on stem or crown age
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{methode}{something}
+\item{methode}{Specifies how the integration must be performed:
+\itemize{
+  \item \code{sexpm}: use \code{sexpm}
+  \item \code{expo}: use \code{expoRkit}
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 
 \item{abstol}{something}
 

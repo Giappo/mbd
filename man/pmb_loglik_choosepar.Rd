@@ -5,28 +5,29 @@
 \title{Does something M}
 \usage{
 pmb_loglik_choosepar(trparsopt, trparsfix = 0, idparsopt = c(1, 3, 4),
-  idparsfix = (1:4)[-idparsopt], brts, soc = 2, pars.transform = 0)
+  idparsfix = (1:4)[-idparsopt], brts, soc = 2, pars_transform = 0)
 }
 \arguments{
 \item{trparsopt}{something}
 
 \item{trparsfix}{something}
 
-\item{idparsopt}{The ids of the parameters that must be optimized. The ids are defined as follows:
+\item{idparsopt}{The ids of the parameters that must be optimized.
+The ids are defined as follows:
 \itemize{
-\item id == 1 corresponds to lambda (speciation rate)
-\item id == 2 corresponds to mu (extinction rate)
-\item id == 3 corresponds to nu (multiple speciation trigger rate)
-\item id == 4 corresponds to q (single-lineage speciation probability)
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability_
 }}
 
 \item{idparsfix}{something}
 
-\item{brts}{something}
+\item{brts}{A set of branching times of a phylogeny_}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 
-\item{pars.transform}{something}
+\item{pars_transform}{something}
 }
 \description{
 Does something M
