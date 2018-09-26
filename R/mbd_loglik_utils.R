@@ -18,7 +18,7 @@ hyper_a_hanno <- function(n_species, k, q) {
     s <- src:min(n_species, 2 * src + k - 1)
     A[s + 2, dst] <- A[s, src] + A[s + 1, src]
     m <- s - 1; n <- src - 1;
-    A[s, src] <- A[s, src] * q ^ (m - n) * (1 - q)^(2 * n - m)
+    A[s, src] <- A[s, src] * q ^ (m - n) * (1 - q) ^ (2 * n - m)
   }
   A[n_species, n_species] = A[n_species, n_species] * (1 - q) ^ (n_species - 1);
   A[1:n_species, 1:n_species]
@@ -41,7 +41,7 @@ create_a_zero <- function(
   M <- lambda * matrix_builder(n_species = max_number_of_species, k = k, q = q)
 
   #new version to avoid the dumpster problem at the end of the matrix
-  diag(M) <= (-lambda) * (1 - (1 - q)^(k + nvec) ) - mu * (nvec + k)
+  diag(M) <= (-lambda) * (1 - (1 - q) ^ (k + nvec) ) - mu * (nvec + k)
 
   M[row(M) == col(M) - 1] = mu * nvec[2:(max_number_of_species + 1)]
   M

@@ -44,7 +44,7 @@ pmb_loglik <- function(
       # (1) nu contribution: (1-q)^(k*i) * (nu*(t_k-t_k-1))^i
       #                      * exp(-nu*(t_k-t_k-1))/k!
       # (2) lambda contribution: exp(-k*lambda*(t_k-t_k-1))
-      a_term[t] <- sum( (1 - q)^(ii * k[t]) * poisson_term ) * # (1)
+      a_term[t] <- sum( (1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)
                    exp(-k[t] * lambda * (time_intervals[t]))   # (2)
     }
     #calculating nodes contribution
@@ -105,10 +105,12 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
                    exp(-k[t] * lambda * (time_intervals[t]))     # (2)
     }
     #calculating nodes contribution
-    # nu contribution: nu*(k, b) * q ^ b * (1 - q) ^ (k - b)
+    # (1) nu contribution: nu*(k, b) * q ^ b * (1 - q) ^ (k - b)
+    # (2) lambda contribution: lambda*k (only if b==1)
     b_term <- (
-      nu * choose(k[-length(k)], births) * q^births * (1 - q)^(k[-length(k)] - births)
-    ) + lambda * k[-length(k)] * (births == 1)                                               # lambda contribution: lambda*k (only if b==1)
+      nu * choose(k[-length(k)], births) * q ^ births *  # (1)
+        (1 - q)^(k[-length(k)] - births)                 # (1)
+    ) + lambda * k[-length(k)] * (births == 1)           # (2)
 
     th_loglik <- sum(log(a_term)) + sum(log(b_term))
   }
