@@ -137,7 +137,7 @@ pmb_loglik_choosepar <- function(
   #trparsfix are the values for parameters you want to fix
 
   # cond <- 0
-  namepars <- get_mbd_param_names()
+  namepars <- mbd::get_mbd_param_names()
   n_pars <- length(namepars)
   if (length(trparsopt) == 4 && missing(trparsfix)) {
     trparsfix <- NULL
@@ -191,7 +191,7 @@ pmb_ML <- function(
   idparsfix <- 2
   parsfix   <- 0
   options(warn = -1)
-  namepars <- get_mbd_param_names()
+  namepars <- mbd::get_mbd_param_names()
   n_pars <- length(namepars); #if you add more parameters to your model just change this
   failpars <- rep(-1, n_pars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
   if (is.numeric(brts) == FALSE) {

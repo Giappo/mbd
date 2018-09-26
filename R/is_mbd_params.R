@@ -5,5 +5,5 @@
 #' @return TRUE if yes, else FALSE 
 #' @author Richel J.C. Bilderbeek
 is_mbd_params <- function(x) {
-  all(get_mbd_param_names() %in% names(x))
+  all(mbd::get_mbd_param_names() %in% names(x))
 }

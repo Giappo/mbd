@@ -46,13 +46,13 @@ mbd_ml2 <- function(
       "as created by 'create_mbd_params'"
     )
   }
-  if (!all(fixed_params %in% get_mbd_param_names())) {
+  if (!all(fixed_params %in% mbd::get_mbd_param_names())) {
     stop("'fixed_params' must be a set of MBD parameter names")
   }
   if (length(unique(fixed_params)) != length(fixed_params)) {
     stop("'fixed_params' must contain unique entries only")
   }
-  if (!all(estimated_params %in% get_mbd_param_names())) {
+  if (!all(estimated_params %in% mbd::get_mbd_param_names())) {
     stop("'estimated_params' must be a set of MBD parameter names")
   }
   if (length(unique(estimated_params)) != length(estimated_params)) {

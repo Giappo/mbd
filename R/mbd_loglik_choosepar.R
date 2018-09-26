@@ -28,7 +28,7 @@ mbd_loglik_choosepar  <- function(
   #idparsfix are the ids of the parameters you want to fix
   #trparsfix are the values for parameters you want to fix
 
-  namepars <- get_mbd_param_names()
+  namepars <- mbd::get_mbd_param_names()
   n_pars <- length(namepars)
   if (length(trparsopt) == 4 && missing(trparsfix)) {
     trparsfix <- NULL
