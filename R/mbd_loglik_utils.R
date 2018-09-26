@@ -481,7 +481,7 @@ find_best_lx_for_pc <- function(
     length(lxvec <- seq(interval_min + step1, interval_max - step1, step1))
   )
   i <- 1
-  right.lx_coord <- 0
+  right_lx_coord <- 0
   for (lx2 in lxvec) {
     lx_test[i] <- mbd::calculate_conditional_probability0(
       brts = brts,
@@ -495,18 +495,18 @@ find_best_lx_for_pc <- function(
     )
     if (!is.na(abs(lx_test[i]))) {
       if (abs(lx_test[i] - 1) < 0.01) {
-        right.lx_coord <- i
-        lx <- lxvec[right.lx_coord]
+        right_lx_coord <- i
+        lx <- lxvec[right_lx_coord]
         break
       }
     }
     i <- i + 1
   }
-  if (right.lx_coord == 0) {
-    right.lx_coord <- which(
+  if (right_lx_coord == 0) {
+    right_lx_coord <- which(
       abs(lx_test - 1) == min(abs(lx_test - 1), na.rm = TRUE)
     )
-    lx <- lxvec[right.lx_coord]
+    lx <- lxvec[right_lx_coord]
   }
 
   lx_test2 <- rep(
@@ -514,7 +514,7 @@ find_best_lx_for_pc <- function(
     length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2 * step1 / a)))
   )
   j <- 1
-  right.lx_coord2 <- 0
+  right_lx_coord2 <- 0
   for (lx2 in lxvec) {
     lx_test2[j] <- mbd::calculate_conditional_probability0(
       brts = brts,
@@ -528,18 +528,18 @@ find_best_lx_for_pc <- function(
     )
     if (!is.na(abs(lx_test2[i]))) {
       if (abs(lx_test2[j] - 1) < 0.01) {
-        right.lx_coord2 <- j
-        lx <- lxvec2[right.lx_coord2]
+        right_lx_coord2 <- j
+        lx <- lxvec2[right_lx_coord2]
         break
       }
     }
     j <- j + 1
   }; lx_test2
-  if (right.lx_coord2 == 0) {
-    right.lx_coord2 <- which(
+  if (right_lx_coord2 == 0) {
+    right_lx_coord2 <- which(
       abs(lx_test2 - 1) == min(abs(lx_test2 - 1), na.rm = TRUE)
     )
-    lx <- lxvec2[right.lx_coord2]
+    lx <- lxvec2[right_lx_coord2]
   }
 
   return(lx)
