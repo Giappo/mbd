@@ -55,7 +55,7 @@ mbd_ML <- function(
   verbose = TRUE,
   ...
 )
-{# bracket#1
+{
   # - tol = tolerance in optimization
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization
@@ -86,25 +86,31 @@ mbd_ML <- function(
     return(out2)
   }
 
-  if(length(namepars[idparsopt]) == 0) { optstr = "nothing" } else { optstr = namepars[idparsopt] }
+  if (length(namepars[idparsopt]) == 0) { 
+    optstr = "nothing" 
+  } else { 
+    optstr = namepars[idparsopt]
+  }
   if (verbose == TRUE) {
     cat("You are optimizing", optstr, "\n")
   }
-  if(length(namepars[idparsfix]) == 0) { fixstr = "nothing" } else { fixstr = namepars[idparsfix] }
+  if (length(namepars[idparsfix]) == 0) { 
+    fixstr = "nothing" 
+  } else { 
+    fixstr = namepars[idparsfix] 
+  }
   if (verbose == TRUE) {
     cat("You are fixing", fixstr, "\n")
     cat("Optimizing the likelihood - this may take a while.", "\n")
     utils::flush.console()
   }
-  if (pars_transform == 1)
-  {
+  if (pars_transform == 1) {
     #Rampal's transformation
     trparsopt = initparsopt/(1 + initparsopt)
     trparsopt[which(initparsopt == Inf)] = 1
     trparsfix = parsfix/(1 + parsfix)
     trparsfix[which(parsfix == Inf)] = 1
-  }else
-  {
+  } else {
     trparsopt  <- initparsopt
     trparsfix  <- parsfix
   }
@@ -121,11 +127,10 @@ mbd_ML <- function(
     cat("The loglikelihood for the initial parameter values is", initloglik, "\n")
     utils::flush.console()
   }
-  if (initloglik == -Inf)
-  {# bracket#4
+  if (initloglik == -Inf) {
     cat("The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
-    return (invisible(out2))
+    return(invisible(out2))
   }
   if (verbose == TRUE) {
     sink(file = tempfile()) # Sink output here
@@ -144,19 +149,16 @@ mbd_ML <- function(
   if (verbose == TRUE) {
     sink() # Give back the output
   }
-  if (out$conv != 0)
-  {# bracket#5
+  if (out$conv != 0) {
     cat("Optimization has not converged. Try again with different initial values.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     return(invisible(out2))
   }
   MLtrpars <- as.numeric(unlist(out$par))
-  if (pars_transform == 1)
-  {
+  if (pars_transform == 1) {
     #Rampal's transformation
-    MLpars = MLtrpars/(1 - MLtrpars)
-  }else
-  {
+    MLpars = MLtrpars / (1 - MLtrpars)
+  } else {
     MLpars <- MLtrpars
   }
   MLpars1 <- rep(0, n_pars); names(MLpars1) <- namepars
@@ -173,7 +175,9 @@ mbd_ML <- function(
   if (verbose == TRUE) {
     s1 <- sprintf(tobeprint)
   }
-  if(out2$conv != 0 & changeloglikifnoconv == T) {out2$loglik <- -Inf}
+  if(out2$conv != 0 & changeloglikifnoconv == T) {
+    out2$loglik <- -Inf
+  }
   if (verbose == TRUE) {
     s2 <- sprintf('Maximum loglikelihood: %f',ML)
     cat("\n", s1, "\n", s2, "\n\n")
@@ -184,7 +188,6 @@ mbd_ML <- function(
 
 # mbd_ML_cluster----------------
 # Moved to razzo
-
 
 # pmb_ML_cluster----------------
 # Moved to razzo

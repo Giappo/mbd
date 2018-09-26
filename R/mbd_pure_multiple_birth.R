@@ -13,8 +13,7 @@ pmb_loglik <- function(
   test_pars <- pars  # test_pars=c(0.4,0,0.1,0.2)
   test_brts <- brts  # test_brts=c(-10,-5,-5,-3,-3,-3,-2,-1,-1,-1)
   #numerical loglik
-  # loglik=mbd_loglik(pars = test_pars, brts = test_brts, soc = soc, cond = 0, tips_interval = c(0,Inf))
-  
+
   #theoretical loglik
   init_n_lineages <- soc
   lambda <- test_pars[1]; mu <- test_pars[2]; nu <- test_pars[3]; q <- test_pars[4];

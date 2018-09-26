@@ -37,9 +37,6 @@ mbd_loglik <- function(
     minimum_multiple_births = 0,
     print_errors = TRUE
 ) {
-  #Optional stuff that I might need to run the program one line at the time:
-  #brts = sim_data[[1]]; missnumspec = 0;pars = sim_pars; missing_interval = c(1, Inf); methode = "expo"
-
   #BASIC SETTINGS AND CHECKS
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]
   abstol <- 1e-16; reltol <- 1e-10
@@ -96,13 +93,9 @@ mbd_loglik <- function(
 
     Pc    <- Pc_and_Alpha$Pc
     alpha <- Pc_and_Alpha$alpha
-
-    # lx <- determine_k_limit(pars = pars, brts = brts, lx = lx0, soc = soc,
-    #                               methode = methode, abstol = abstol, reltol = reltol)
-    # alpha <- lx/10
     lx <- max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
     Pc <- 1
-    if (cond == 1){
+    if (cond == 1) {
       Pc <- mbd::calculate_conditional_probability(
         brts = brts,
         pars = pars,
@@ -165,7 +158,10 @@ mbd_loglik <- function(
           }
           nan_values <- 1; break
         }
-        if (any(Qt[t,] < 0)){negative_values <- 1; break}
+        if (any(Qt[t,] < 0)) {
+          negative_values <- 1
+          break
+        }
 
         #Applying C operator (this is a trick to avoid precision issues)
         C[t] <- 1 / (sum(Qt[t,])); Qt[t,] <- Qt[t,] * C[t]
@@ -176,7 +172,9 @@ mbd_loglik <- function(
           B <- create_B(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
                               max_number_of_species = lx)
           Qt[t,] <- (B %*% Qt[t,])
-          if (methode != "sexpm"){Qt[t,] <- negatives_correction(Qt[t,], pars)}
+          if (methode != "sexpm") {
+            Qt[t,] <- negatives_correction(Qt[t,], pars)
+          }
           if (any(is.nan(Qt[t,])))
           {
             if (Sys.info()[['sysname']] == "Windows")
@@ -222,15 +220,11 @@ mbd_loglik <- function(
 
     #Various checks
     loglik <- as.numeric(loglik)
-    if (is.nan(loglik) | is.na(loglik))
-    {
+    if (is.nan(loglik) | is.na(loglik)) {
       loglik <- -Inf
-    }else
-    {
+    } else {
       loglik <- loglik - log(Pc) * (cond == 1) #conditioned likelihood
     }
   }
-  return(loglik)
+  loglik
 }
-
-

@@ -81,12 +81,10 @@ mbd_sim <- function(
   init_n_lineages <- soc
   tips <- -1; crown_species_dead <- cond; multiple_births_check <- 0;
   keep_the_sim <- 0
-  while (keep_the_sim == 0 | multiple_births_check == 0)
-  {
+  while (keep_the_sim == 0 | multiple_births_check == 0) {
     total_count <- init_n_lineages
     pool <- 1:init_n_lineages
-    while (total_count == init_n_lineages | length(pool) < init_n_lineages)
-    {
+    while (total_count == init_n_lineages | length(pool) < init_n_lineages) {
       total_count <- init_n_lineages
       N <- init_n_lineages
       pool <- c(-1,2)
@@ -96,19 +94,16 @@ mbd_sim <- function(
       L[,3] <- 0
       L[1,1:4] <- c(t, 0,-1, -1)
       L[2,1:4] <- c(t,-1, 2, -1)
-      while (t > 0)
-      {
+      while (t > 0) {
         N <- length(pool)
         total_rate <- N * (lambda + mu) + nu
-        if (total_rate > 0)
-        {
+        if (total_rate > 0) {
           deltaT <- stats::rexp(1, rate = total_rate)
           outcome <- sample(c(-1,1,2), size = 1, prob = c(N * mu, N * lambda, nu))
           deltaN <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * stats::rbinom(n = 1, size = N, prob = q)
           t <- t - deltaT
 
-          if (deltaN > 0 & t > 0)
-          {
+          if (deltaN > 0 & t > 0) {
             if (N > 1) {
               parents <- sample(pool, replace = FALSE, size = deltaN)
             } else {
@@ -122,15 +117,16 @@ mbd_sim <- function(
             pool <- c(pool, abs(new_interval) * sign(parents) )
             total_count <- total_count + deltaN
           }
-          if (deltaN < 0 & t > 0)
-          {
-            if (N > 1) {dead <- sample(pool, replace = FALSE, size = 1)}else{dead <- pool}
+          if (deltaN < 0 & t > 0) {
+            if (N > 1) {
+              dead <- sample(pool, replace = FALSE, size = 1)
+            } else { 
+              dead <- pool
+            }
             L[abs(dead),4] <- t
             pool <- pool[pool != dead]
           }
-          # print(pool)
-        }else
-        {
+        } else {
           t <- 0
         }
       }
@@ -142,7 +138,8 @@ mbd_sim <- function(
     #survival of crown check
     alive <- L[L[,4] == -1,]
     alive <- matrix(alive, ncol = 4)
-    crown_species_dead <- ( length( unique(sign(alive[,3])) ) != 2 ) * cond #if cond == 0 they will always look like they're alive, because I don't care
+    #if cond == 0 they will always look like they're alive, because I don't care
+    crown_species_dead <- (length( unique(sign(alive[,3])) ) != 2 ) * cond 
     #multiple births check
     births.reconstructed_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
     births.full_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = FALSE), decreasing = TRUE)) )
@@ -158,8 +155,6 @@ mbd_sim <- function(
   brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   tes <- DDD::L2phylo(L, dropextinct = TRUE)
   tas <- DDD::L2phylo(L, dropextinct = FALSE)
-  #   graphics::plot(tas)
-  #   graphics::plot(tes)
   list(
     brts = brts,
     tes = tes,
@@ -222,14 +217,13 @@ mbd_sim0 <- function(
   conditioning_on_survival <- cond
   multiple_births_check <- 0
   while (tips < tips_interval[1] | 
-      tips > tips_interval[2] | 
-      conditioning_on_survival | 
-      multiple_births_check == 0
-  )
-  {
+    tips > tips_interval[2] | 
+    conditioning_on_survival | 
+    multiple_births_check == 0
+  ) {
     total_count <- init_n_lineages
     pool <- 1:init_n_lineages
-    while (total_count==init_n_lineages | length(pool)<init_n_lineages)
+    while (total_count == init_n_lineages | length(pool) < init_n_lineages)
     {
       total_count=init_n_lineages
       N <- init_n_lineages
@@ -248,23 +242,28 @@ mbd_sim0 <- function(
         t=t-deltaT
         if (deltaN>0 & t>0)
         {
-          if (N>1) {parents=sample(pool, replace = F, size=deltaN)}else{parents=pool}
-          new_interval=(total_count+1):(total_count+deltaN)
-          L[new_interval,1]=t#-(deltaN:1)*1e-5 add this if you need separate time points
-          L[new_interval,2]=parents
-          L[new_interval,3]=abs(new_interval)*sign(parents)
+          if (N>1) {
+            parents <- sample(pool, replace = FALSE, size = deltaN)
+          } else {
+            parents <- pool
+          }
+          new_interval <- (total_count+1):(total_count+deltaN)
+          L[new_interval,1] <- t#-(deltaN:1)*1e-5 add this if you need separate time points
+          L[new_interval,2] <- parents
+          L[new_interval,3] <- abs(new_interval)*sign(parents)
 
-          pool=c(pool, abs(new_interval)*sign(parents) )
-          total_count=total_count+deltaN
+          pool <- c(pool, abs(new_interval)*sign(parents) )
+          total_count <- total_count+deltaN
         }
-        if (deltaN<0 & t>0)
-        {
-          if (N>1) {dead=sample(pool, replace = F, size=1)}else{dead=pool}
-          # dead=abs(dead)
-          L[abs(dead),4]=t
-          pool=pool[pool!=dead]
+        if (deltaN < 0 & t > 0) {
+          if (N > 1) {
+            dead <- sample(pool, replace = F, size=1)
+          } else {
+            dead <- pool
+          }
+          L[abs(dead),4] <- t
+          pool <- pool[pool!=dead]
         }
-        # print(pool)
       }
     }
     L=L[(1:total_count),]
@@ -475,82 +474,9 @@ mbd_sim_dataset0 <- function(
   save(sim_data, file=sim_data_name)
   if (file.exists(general_settings_name)){suppressWarnings( file.remove(general_settings_name) )}
   save(sim_pars, soc, age, cond, max_sims, tips_interval, max_k, max_b, ext_species, additional_species, tips, file=general_settings_name)
-  if (file.exists(sim_trees_name)){suppressWarnings( file.remove(sim_trees_name) )}
+  if (file.exists(sim_trees_name)) {
+    suppressWarnings( file.remove(sim_trees_name) )
+  }
   save(sim_tas, sim_tes, file=sim_trees_name)
-  return(sim_data)
+  sim_data
 }
-
-# mbd_sim3 - experimental: DON'T USE------------------------------
-#' #' @author Giovanni Laudanno
-#' #' @title Creates simulated trees under the multiple birth death process, including both sympatric and allopatric speciation
-#' #' @description mbd_sim3 produces simulated trees in the same way as mbd_sim. The only difference is that you can only allow multiple births event to occur.
-#' #' @export
-#' mbd_sim3=function(pars, soc=2, age=10, cond=1, tips_interval = c(soc*(cond==1),Inf))
-#' {
-#'   if (tips_interval[2]<tips_interval[1]){print("ERROR! Check again your settings.");break}
-#'   lambda = pars[1]; mu = pars[2]; nu = pars[3]; q=pars[4]; init_n_lineages=soc
-#'   if (lambda!=0){print("This is supposed to work only with multiple events. Lambda is not allowed.");break}
-#'   tips=-1; conditioning_on_survival=cond;
-#'   while ( tips<tips_interval[1] | tips>tips_interval[2] | conditioning_on_survival )
-#'   {
-#'     total_count=init_n_lineages
-#'     pool=1:init_n_lineages
-#'     while (total_count==init_n_lineages | length(pool)<init_n_lineages )
-#'     {
-#'       total_count=init_n_lineages
-#'       N=init_n_lineages
-#'       pool=c(-1,2)
-#'       t=age
-#'       L = matrix(0, nrow=1e6,4)
-#'       L[,4]=-1
-#'       L[,3]=0
-#'       L[1,1:4] = c(t,0,-1,-1)
-#'       L[2,1:4] = c(t,-1,2,-1)
-#'       while (t>0)
-#'       {
-#'         N=length(pool)
-#'         total_rate = N*(lambda + mu) + nu
-#'         deltaT=rexp(1, rate = total_rate)
-#'         outcome=sample(c(-1,1,2), size=1, prob = c(N*mu,N*lambda, nu))
-#'         deltaN=-1*(outcome==-1)+1*(outcome==1)+rbinom(n=1, size=N, prob=q)*(outcome==2)
-#'         t=t-deltaT
-#'
-#'         if (deltaN>1 & t>0)
-#'         {
-#'           if (N>1) {parents=sample(pool, replace = F, size=deltaN)}else{parents=pool}
-#'           new_interval=(total_count+1):(total_count+deltaN)
-#'           L[new_interval,1]=t#-(deltaN:1)*1e-5 add this if you need separate time points
-#'           L[new_interval,2]=parents
-#'           L[new_interval,3]=abs(new_interval)*sign(parents)
-#'
-#'           pool=c(pool, abs(new_interval)*sign(parents) )
-#'           total_count=total_count+deltaN
-#'         }
-#'         if (deltaN<0 & t>0)
-#'         {
-#'           if (N>1) {dead=sample(pool, replace = F, size=1)}else{dead=pool}
-#'           # dead=abs(dead)
-#'           L[abs(dead),4]=t
-#'           pool=pool[pool!=dead]
-#'         }
-#'         # print(pool)
-#'       }
-#'     }
-#'     L=L[(1:total_count),]
-#'     extinct_species = sum(L[,4]!=-1)
-#'     #tips check
-#'     tips=length(L[,4][L[,4]==-1])
-#'     #survival of crown check
-#'     alive=L[L[,4]==-1,]
-#'     alive=matrix(alive, ncol=4)
-#'     conditioning_on_survival = ( length( unique(sign(alive[,3])) )!=2 )*cond
-#'   }
-#'   time_points=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)) )
-#'   brts = -sort(abs(as.numeric(time_points)), decreasing = TRUE)
-#'   tes = DDD::L2phylo(L, dropextinct = T)
-#'   tas = DDD::L2phylo(L, dropextinct = F)
-#'   #   graphics::plot(tas)
-#'   #   graphics::plot(tes)
-#'   out = list(brts=brts, tes = tes, tas = tas, extinct_species=extinct_species,L = L)
-#'   return(out)
-#' }
