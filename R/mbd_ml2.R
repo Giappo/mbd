@@ -73,4 +73,40 @@ mbd_ml2 <- function(
   if (!conditioned_on %in% c("nothing", "non_extinction")) {
     stop("'conditioned_on' must be either 'nothing' or 'non_extinction'")
   }
+  
+  # Convert data
+  #idparsopt <- which(estimated_params %in% get_mbd_param_names())
+  #idparsfix <- which(fixed_params %in% get_mbd_param_names())
+  idparsopt <- NULL
+  idparsfix <- NULL
+  for (i in seq(1, 4)) {
+    param_name <- get_mbd_param_names()[i]
+    if (param_name %in% estimated_params) {
+      idparsopt <- c(idparsopt, i)
+    } else {
+      idparsfix <- c(idparsfix, i)
+    }
+  }  
+  values <- as.numeric(unlist(init_param_values))
+  initparsopt <- values[idparsopt]
+  parsfix <- values[idparsfix]
+  
+  conditioned_on_code <- 0
+  if (conditioned_on == "non_extinction") {
+    conditioned_on_code <- 1
+  }
+
+  testit::assert(length(idparsopt) + length(idparsfix) == 4)
+  
+  mbd_ml(
+    brts = branching_times,
+    initparsopt = initparsopt,
+    idparsopt = idparsopt,
+    idparsfix = idparsfix,
+    parsfix = parsfix,
+    missnumspec = n_missing_species,
+    cond = conditioned_on_code,
+    soc = init_n_species,
+    verbose = FALSE
+  )
 }
