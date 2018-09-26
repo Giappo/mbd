@@ -15,7 +15,7 @@ test_that("optimize q", {
   idparsfix <- ids[-idparsopt] # Fix all parameters except q
   parsfix <- init_pars[idparsfix] # Use the known values for the fixed parameters
   initparsopt <- init_pars[idparsopt] # Set an initial guess for q
-  ml_classic <- mbd:::mbd_ML(
+  ml_classic <- mbd_ml(
     brts = brts, 
     initparsopt = initparsopt, 
     idparsopt = idparsopt, 

@@ -279,10 +279,10 @@ mbd_loglik_choosepar0 <- function(
 
 
 
-# mbd_ML0----------------
+# mbd_ml0----------------
 #' @author Giovanni Laudanno
 #' @title Maximization of the loglikelihood under a multiple birth-death diversification model
-#' @description mbd_ML0 computes the maximum likelihood estimates of the parameters of a multiple birth-death diversification model for a given set of phylogenetic branching times. It also outputs the corresponding loglikelihood that can be used in model comparisons.
+#' @description mbd_ml0 computes the maximum likelihood estimates of the parameters of a multiple birth-death diversification model for a given set of phylogenetic branching times. It also outputs the corresponding loglikelihood that can be used in model comparisons.
 #' @inheritParams default_params_doc
 #' @param initparsopt The initial values of the parameters that must be optimized
 #' @param idparsopt The ids of the parameters that must be optimized. 
@@ -314,10 +314,10 @@ mbd_loglik_choosepar0 <- function(
 #' test_pars = c(1.6,0.1,0.08)
 #' simulated_data = mbd:::mbd_sim0( pars=test_pars,soc=2,age=10,cond=1 )
 #' plot(simulated_data$tas)
-#' mbd:::mbd_ML0(brts=simulated_data$brts, initparsopt = 0.11 ,idparsopt = 3,
+#' mbd:::mbd_ml0(brts=simulated_data$brts, initparsopt = 0.11 ,idparsopt = 3,
 #' idparsfix = 1:2 ,parsfix = test_pars[1:2],missnumspec=0,cond=1, soc = 2)
 #' @export
-mbd_ML0 <- function(
+mbd_ml0 <- function(
   brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
   parsfix, missnumspec = 0, cond = 1, soc = 2, tips_interval=c(0,Inf),
   res = 10 * (1 + length(brts) + missnumspec), tol = c(1E-3, 1E-4, 1E-6),
@@ -438,5 +438,5 @@ mbd_ML0 <- function(
   invisible(out2)
 }# bracket#1
 
-# mbd_ML_cluster0----------------
+# mbd_ml_cluster0----------------
 # Moved to razzo

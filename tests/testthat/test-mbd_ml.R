@@ -1,6 +1,6 @@
-context("mbd_ML")
+context("mbd_ml")
 
-test_that("mbd_ML can be silent", {
+test_that("mbd_ml can be silent", {
 
   skip("Fix @Giappo")
   # https://github.com/richelbilderbeek/razzo_article/issues/10
@@ -9,7 +9,7 @@ test_that("mbd_ML can be silent", {
   idparsfix <- c(1, 2, 3)
 
   expect_silent(
-    mbd_ML(
+    mbd_ml(
       brts = c(1, 2, 3),
       initparsopt = 0.11,
       idparsopt = 4,
@@ -38,7 +38,7 @@ test_that("use", {
   idparsfix <- ids[-idparsopt] # Fix all parameters except q
   parsfix <- init_pars[idparsfix] # Use the known values for the fixed parameters
   initparsopt <- init_pars[idparsopt] # Set an initial guess for q
-  ml_classic <- mbd_ML(
+  ml_classic <- mbd_ml(
     brts = brts, 
     initparsopt = initparsopt, 
     idparsopt = idparsopt, 
@@ -57,7 +57,7 @@ test_that("use", {
 test_that("abuse", {
 
   testthat::expect_error(
-    mbd:::mbd_ML(
+    mbd:::mbd_ml(
       brts = "nonsense",
       initparsopt = 0.11,
       idparsopt = 4,

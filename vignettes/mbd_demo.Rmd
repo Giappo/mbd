@@ -34,7 +34,7 @@ Here:
 
 - $q$ is the single-lineage speciation probability.
 
-Those parameters may be inferred through a maximum likelihood approach using the function mbd_ML.
+Those parameters may be inferred through a maximum likelihood approach using the function mbd_ml.
 
 ## Setup
 
@@ -156,7 +156,7 @@ mbd::mbd_loglik(
 ## Maximum likelihood estimation
 
 You can also ask for an optimization of the likelihood function 
-using the function `mbd_ML` either considering a variation of all 
+using the function `mbd_ml` either considering a variation of all 
 the parameters ($\lambda, \mu, \nu, q$) or any their subset of your choice. 
 
 Because this is a heavy calculation, we'll use a simpler tree:
@@ -175,7 +175,7 @@ ids <- 1:4
 idparsfix <- ids[-idparsopt] # Fix all parameters except q
 parsfix <- sim_pars[idparsfix] # Use the known values for the fixed parameters
 initparsopt <- 0.15 # Set an initial guess for q
-mbd_ML(
+mbd_ml(
   brts = brts, 
   initparsopt = initparsopt, 
   idparsopt = idparsopt, 

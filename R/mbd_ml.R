@@ -1,15 +1,14 @@
-# mbd_ML----------------
-#' @author Giovanni Laudanno
 #' @title Maximization of the loglikelihood 
 #'   under a multiple birth-death diversification model
-#' @description mbd_ML computes the maximum likelihood estimates of 
+#' @description mbd_ml computes the maximum likelihood estimates of 
 #'   the parameters of a multiple birth-death diversification model 
 #'   for a given set of phylogenetic branching times. 
 #'   It also outputs the corresponding loglikelihood 
 #'   that can be used in model comparisons. 
-#'   Differently from mbd_ML it can account for three kind of events: 
+#'   Differently from mbd_ml it can account for three kind of events: 
 #'   sympatric (single) speciation, multiple (allopatric) speciation 
 #'   and extinction.
+#' @author Giovanni Laudanno
 #' @inheritParams default_params_doc
 #' @param initparsopt The initial values of the parameters 
 #'   that must be optimized
@@ -43,14 +42,14 @@
 #' simulated_data = mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
 #' graphics::plot(simulated_data$tes)
 #' # @Giappo: does not work
-#' # mbd_ML(
+#' # mbd_ml(
 #' #   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
 #' #   idparsfix = c(1, 2, 3), 
 #' #   parsfix = test_pars[idparsfix],
 #' #   missnumspec = 0, cond = 1, soc = 2
 #' # )
 #' @export
-mbd_ML <- function(
+mbd_ml <- function(
   brts,
   initparsopt,
   idparsopt,
@@ -224,7 +223,7 @@ mbd_ML <- function(
   invisible(out2)
 }
 
-# mbd_ML_cluster----------------
+# mbd_ml_cluster----------------
 # Moved to razzo
 
 # pmb_ML_cluster----------------

@@ -84,7 +84,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><p><span class="math inline">\(\nu\)</span> is the multiple allopatric speciation trigger rate;</p></li>
 <li><p><span class="math inline">\(q\)</span> is the single-lineage speciation probability.</p></li>
 </ul>
-<p>Those parameters may be inferred through a maximum likelihood approach using the function mbd_ML.</p>
+<p>Those parameters may be inferred through a maximum likelihood approach using the function mbd_ml.</p>
 </div>
 <div id="setup" class="section level2">
 <h2>Setup</h2>
@@ -213,7 +213,7 @@ sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
 </div>
 <div id="maximum-likelihood-estimation" class="section level2">
 <h2>Maximum likelihood estimation</h2>
-<p>You can also ask for an optimization of the likelihood function using the function <code>mbd_ML</code> either considering a variation of all the parameters (<span class="math inline">\(\lambda, \mu, \nu, q\)</span>) or any their subset of your choice.</p>
+<p>You can also ask for an optimization of the likelihood function using the function <code>mbd_ml</code> either considering a variation of all the parameters (<span class="math inline">\(\lambda, \mu, \nu, q\)</span>) or any their subset of your choice.</p>
 <p>Because this is a heavy calculation, we’ll use a simpler tree:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">phylogeny &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">read.tree</span>(<span class="dt">text =</span> <span class="st">&quot;((A:1, B:1):2, C:3);&quot;</span>)  
 ape<span class="op">::</span><span class="kw">plot.phylo</span>(phylogeny)</code></pre></div>
@@ -225,7 +225,7 @@ ids &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</s
 idparsfix &lt;-<span class="st"> </span>ids[<span class="op">-</span>idparsopt] <span class="co"># Fix all parameters except q</span>
 parsfix &lt;-<span class="st"> </span>sim_pars[idparsfix] <span class="co"># Use the known values for the fixed parameters</span>
 initparsopt &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># Set an initial guess for q</span>
-<span class="kw">mbd_ML</span>(
+<span class="kw">mbd_ml</span>(
   <span class="dt">brts =</span> brts, 
   <span class="dt">initparsopt =</span> initparsopt, 
   <span class="dt">idparsopt =</span> idparsopt, 

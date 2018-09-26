@@ -56,7 +56,7 @@ ids <- 1:4
 idparsfix <- ids[-idparsopt] # Fix all parameters except q
 parsfix <- sim_pars[idparsfix] # Use the known values for the fixed parameters
 initparsopt <- 0.15 # Set an initial guess for q
-mbd_ML(
+mbd_ml(
   brts = brts, 
   initparsopt = initparsopt, 
   idparsopt = idparsopt, 

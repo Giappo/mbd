@@ -40,7 +40,7 @@
 # mbd_sim0(pars=sim_pars, soc=2, age=10, cond=1, tips_interval=c(0,Inf))
 # mbd_loglik0(pars=sim_pars, brts = brts, soc=2, cond=1, tips_interval=c(0,Inf) )
 # mbd_loglik_choosepar0(trparsfix = trparsfix, trparsopt = trparsopt, idparsopt = idparsopt, idparsfix = idparsfix, brts = brts)
-# mbd_ML0(brts = brts, initparsopt = initparsopt, idparsopt = idparsopt, parsfix = parsfix, idparsfix = idparsfix, soc = soc, cond = cond, optimmethod = optimmethod)
+# mbd_ml0(brts = brts, initparsopt = initparsopt, idparsopt = idparsopt, parsfix = parsfix, idparsfix = idparsfix, soc = soc, cond = cond, optimmethod = optimmethod)
 # mbd_theoretical_pure_birth(pars=c(sim_pars[1],0, sim_pars[3]), brts=brts, soc=2, cond=0)
 #
 #
