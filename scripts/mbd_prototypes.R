@@ -494,7 +494,7 @@ mbd_ml0 <- function(
           if (out2$conv != 0 & changeloglikifnoconv == TRUE) { 
             out2$loglik <- -Inf 
           }
-          s2 <- sprintf('Maximum loglikelihood: %f',ML)
+          s2 <- sprintf("Maximum loglikelihood: %f", ML)
           cat("\n",s1,"\n",s2,"\n\n")
         }# bracket#5
       }# bracket#4

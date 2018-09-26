@@ -413,7 +413,7 @@ calculate_conditional_probability0PB <- function(
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
   total_time <- max(abs(brts))
   if (mu != 0) {
-    cat('mu is supposed to be equal zero to use this function')
+    cat("mu is supposed to be equal zero to use this function")
     return(pc <- NA)
   }
 

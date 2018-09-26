@@ -171,7 +171,7 @@ mbd_loglik <- function(
         }
         if (any(is.nan(q_t[t,])))
         {
-          if (Sys.info()[['sysname']] == "Windows")
+          if (Sys.info()[["sysname"]] == "Windows")
           {
             print(pars); print(q_t[t,])
           }
@@ -196,7 +196,7 @@ mbd_loglik <- function(
           }
           if (any(is.nan(q_t[t,])))
           {
-            if (Sys.info()[['sysname']] == "Windows")
+            if (Sys.info()[["sysname"]] == "Windows")
             {
               print(pars); print(q_t[t,])
             }

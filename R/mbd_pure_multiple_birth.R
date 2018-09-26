@@ -178,7 +178,7 @@ pmb_ML <- function(
   tol = c(1E-3, 1E-4, 1E-6),
   maxiter = 1000 * round((1.25) ^ length(idparsopt)),
   changeloglikifnoconv = FALSE,
-  optimmethod = 'simplex',
+  optimmethod = "simplex",
   pars_transform = 1,
   missnumspec = 0
 ) {
@@ -186,7 +186,7 @@ pmb_ML <- function(
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
-  # - optimmethod = 'simplex' (current default) or 'subplex' (default of previous versions)
+  # - optimmethod = "simplex" (current default) or 'subplex' (default of previous versions)
   idparsfix <- 2
   parsfix   <- 0
   options(warn = -1)
@@ -275,7 +275,7 @@ pmb_ML <- function(
           if (out2$conv != 0 & changeloglikifnoconv == T) {
             out2$loglik <- -Inf
           }
-          s2 <- sprintf('Maximum loglikelihood: %f',ML)
+          s2 <- sprintf("Maximum loglikelihood: %f", ML)
           cat("\n", s1, "\n", s2, "\n\n")
         }# bracket#5
       }# bracket#4

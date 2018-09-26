@@ -63,7 +63,7 @@ mbd_ml <- function(
   tol = c(1E-3, 1E-4, 1E-6),
   maxiter = 1000 * round((1.25)^length(idparsopt)),
   changeloglikifnoconv = FALSE,
-  optimmethod = 'simplex',
+  optimmethod = "simplex",
   methode = "expo",
   minimum_multiple_births = 0,
   pars_transform = 1,
@@ -78,7 +78,7 @@ mbd_ml <- function(
   # - maxiter = the maximum number of iterations in the optimization
   # - changeloglikifnoconv = if TRUE
   #     the loglik will be set to -Inf if ML does not converge
-  # - optimmethod = 'simplex' (current default)
+  # - optimmethod = "simplex" (current default)
   #     or 'subplex' (default of previous versions)
   if (!is.numeric(brts))
   {
@@ -216,7 +216,7 @@ mbd_ml <- function(
     out2$loglik <- -Inf
   }
   if (verbose == TRUE) {
-    s2 <- sprintf('Maximum loglikelihood: %f',ML)
+    s2 <- sprintf("Maximum loglikelihood: %f", ML)
     cat("\n", s1, "\n", s2, "\n\n")
   }
 
