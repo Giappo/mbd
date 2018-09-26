@@ -5,7 +5,7 @@
 \title{Internal mbd function}
 \usage{
 create_A0(max_number_of_species, lambda, mu, q, k,
-  matrix_builder = hyperA_HannoX)
+  matrix_builder = hyper_a_hanno)
 }
 \arguments{
 \item{max_number_of_species}{something}
