@@ -90,7 +90,7 @@ mbd_ml <- function(
   }
 
   options(warn = -1)
-  namepars <- c("lambda", "mu", "nu", "q")
+  namepars <- get_mbd_param_names()
   #if you add more parameters to your model just change this
   n_pars <- length(namepars)
   #those are the parameters that you get if something goes sideways

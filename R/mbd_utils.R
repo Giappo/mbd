@@ -643,7 +643,7 @@ extract_posterior <- function(
 #' @inheritParams default_params_doc
 # @param parnames sonething
 # mbd_import_data <- function(
-#   parnames = c("lambda", "mu", "nu", "q")
+#   parnames = get_mbd_param_names()
 # ) {
 #   parnames <<- parnames
 #   n_pars <<- length(parnames);
