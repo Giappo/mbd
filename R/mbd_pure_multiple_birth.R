@@ -10,8 +10,8 @@ pmb_loglik <- function(
 
   #BOTH LAmbdA AND NU
   #setup
-  test_pars <- pars  # test_pars=c(0.4,0,0.1,0.2)
-  test_brts <- brts  # test_brts=c(-10,-5,-5,-3,-3,-3,-2,-1,-1,-1)
+  test_pars <- pars
+  test_brts <- brts
   #numerical loglik
 
   #theoretical loglik
@@ -68,10 +68,9 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
 
   #BOTH LAmbdA AND NU
   #setup
-  test_pars <- pars  # test_pars=c(0.4,0,0.1,0.2)
-  test_brts <- brts  # test_brts=c(-10,-5,-5,-3,-3,-3,-2,-1,-1,-1)
+  test_pars <- pars
+  test_brts <- brts
   #numerical loglik
-  # loglik=mbd_loglik(pars = test_pars, brts = test_brts, soc = soc, cond = 0, tips_interval = c(0,Inf))
 
   #theoretical loglik
   init_n_lineages <- soc
@@ -138,13 +137,11 @@ pmb_loglik_choosepar <- function(
   #idparsfix are the ids of the parameters you want to fix
   #trparsfix are the values for parameters you want to fix
 
-  # cond <- 0
   namepars <- mbd::get_mbd_param_names()
   n_pars <- length(namepars)
   if (length(trparsopt) == 4 && missing(trparsfix)) {
     trparsfix <- NULL
   }
-  # idparsopt=(1:3)[-c(idparsfix)] #this argument is useless but I let the user specify it because Rampal also did it (for some reason)
   trpars1 <- rep(0, n_pars)
   trpars1[idparsopt] <- trparsopt
   if (length(idparsfix) != 0) {

@@ -186,12 +186,7 @@ a_operator <- function(
   result <- rep(-1, length(Q))
   bad_result <- 0
 
-  if (methode == "sexpm") {
-    testit::assert(!"Never use rsexpm")
-    # exp_matrix <- rsexpm:::sexpm(transition_matrix * time_interval)
-    # result     <- exp_matrix %*% Q
-  }
-
+  testit::assert(methode != "sexpm")
   if (methode == "expo") {
     result.nan <- result.negative <- 1
     repetition <- 1
@@ -283,7 +278,6 @@ determine_k_limit <- function(
   reltol = 1e-10
 ) {
   lambda <- pars[1]
-  #mu <- pars[2]
   nu <- pars[3]
   q <- pars[4]
   mvec <- 0:lx
@@ -561,31 +555,17 @@ calculate_conditional_probability1 <- function(
 ){
 
   lx <- find_best_lx_for_pc(brts = brts, pars = pars, soc = soc)
-  if (pars[2] == 0) {
-    pc <- mbd::calculate_conditional_probability0PB(
-      brts = brts,
-      pars = pars,
-      lx = lx,
-      soc = soc,
-      tips_interval = tips_interval,
-      methode = methode,
-      abstol = abstol,
-      reltol = reltol
-    )
-  } else {
-    # @Giappo: this function does not exist any more
-    # pc <- mbd::calculate_conditional_probability02(
-    #   brts = brts,
-    #   pars = pars,
-    #   lx = lx,
-    #   soc = soc,
-    #   tips_interval = tips_interval,
-    #   methode = methode,
-    #   abstol = abstol,
-    #   reltol = reltol
-    # )
-    stop("Function 'mbd::calculate_conditional_probability02' is absent")
-  }
+  testit::assert(pars[2] == 0)
+  pc <- mbd::calculate_conditional_probability0PB(
+    brts = brts,
+    pars = pars,
+    lx = lx,
+    soc = soc,
+    tips_interval = tips_interval,
+    methode = methode,
+    abstol = abstol,
+    reltol = reltol
+  )
   return(list(pc = pc, lx = lx))
 }
 
@@ -719,7 +699,6 @@ alpha_analysis <- function(
       reltol = reltol,
       minimum_multiple_births = minimum_multiple_births
     )$pc
-    # pc_1 <- calculate_conditional_probability(alpha = alpha, ...)$pc
     pc_notanumber <- is.nan(pc_1)
     alpha <- alpha - pc_notanumber
   }
@@ -750,7 +729,6 @@ alpha_analysis <- function(
     }
 
     count <- count + 1
-    # print(alpha)
   }
   if (max_k * alpha >= 2000) {
     #check to see whether alpha is too big to be handled without memory issues

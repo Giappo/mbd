@@ -286,7 +286,6 @@ mbd_loglik_choosepar0 <- function(
   
   namepars <- c("lambda","mu","q")
   n_pars <- length(namepars)
-  # idparsopt=(1:3)[-c(idparsfix)] #this argument is useless 
   # but I let the user specify it because Rampal also did it (for some reason)
   trpars1 = rep(0,n_pars)
   trpars1[idparsopt] = trparsopt

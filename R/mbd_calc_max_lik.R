@@ -75,8 +75,6 @@ mbd_calc_max_lik <- function(
   }
 
   # Convert data
-  #idparsopt <- which(estimated_params %in% get_mbd_param_names())
-  #idparsfix <- which(fixed_params %in% get_mbd_param_names())
   idparsopt <- NULL
   idparsfix <- NULL
   for (i in seq(1, 4)) {

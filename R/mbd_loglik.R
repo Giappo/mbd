@@ -130,8 +130,6 @@ mbd_loglik <- function(
       # alpha is the proportionality factor between max_k
       # and the edge of the matrix
       lx <- max_number_of_species <- alpha * max_k;
-      # lx <- 10 * alpha; #bonus line to simplify
-      # nvec <- 0:lx
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
       Qi <- c(1, rep(0, lx))
