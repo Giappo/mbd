@@ -6,6 +6,15 @@
 \usage{
 create_mbd_params(lambda = lambda, mu = mu, nu = nu, q = q)
 }
+\arguments{
+\item{lambda}{the sympatric speciation rate}
+
+\item{mu, }{the extinction rate}
+
+\item{nu, }{the multiple allopatric speciation trigger rate}
+
+\item{q, }{the single-lineage speciation probability}
+}
 \description{
 Create the MBD parameters
 }
