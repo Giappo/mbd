@@ -91,7 +91,7 @@ mbd_loglik0 <- function(
       while (t < length(time_intervals)) {
         
         #Applying A operator
-        transition_matrix <- create_A0(
+        transition_matrix <- create_a_zero(
           max_number_of_species = max_number_of_species,
           lambda = lambda,
           mu = mu,
@@ -146,7 +146,7 @@ mbd_loglik0 <- function(
       }
       
       #Applying A operator from the last branching time to the present
-      transition_matrix <- create_A0(
+      transition_matrix <- create_a_zero(
         max_number_of_species = max_number_of_species,
         lambda = lambda,
         mu = mu,
@@ -203,7 +203,7 @@ mbd_loglik0 <- function(
           1 + min(max_tips,max_number_of_species)
         ) 
         
-        mk_n_zero <- mbd:::create_A0(
+        mk_n_zero <- mbd:::create_a_zero(
           max_number_of_species = max_number_of_species,
           lambda = lambda,
           mu = mu,

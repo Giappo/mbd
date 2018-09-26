@@ -28,7 +28,7 @@ hyper_a_hanno <- function(n_species, k, q) {
 #' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-create_A0 <- function(
+create_a_zero <- function(
   max_number_of_species,
   lambda,
   mu,
@@ -78,7 +78,7 @@ create_A <- function(
 ) {
   testit::assert(max_number_of_species < Inf)
   nvec <- 0:max_number_of_species
-  m <- create_A0(max_number_of_species = max_number_of_species,
+  m <- create_a_zero(max_number_of_species = max_number_of_species,
                        lambda = nu, mu = mu, q = q, k = k)
   m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] +
     lambda * (nvec[1:(max_number_of_species)] + 2 * k)
@@ -128,7 +128,7 @@ create_A.no_mbd = function(
 ) {
   testit::assert(max_number_of_species < Inf)
   nvec <- 0:max_number_of_species
-  m <- create_A0(
+  m <- create_a_zero(
     max_number_of_species = max_number_of_species,
     lambda = nu, mu = mu, q = q, k = k
   )
