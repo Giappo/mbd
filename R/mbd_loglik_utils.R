@@ -11,7 +11,7 @@ hyperA_HannoX <- function(n_species, k, q) {
   A1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
   n_species <- n_species + 1
   A <- diag(A1[1], nrow = n_species + 2, ncol = n_species + 2)
-  A[1:(k + 1),1] <- A1
+  A[1:(k + 1), 1] <- A1
   for (dst in 2:n_species) {
     src <- dst - 1
     s <- src:min(n_species, 2 * src + k - 1)

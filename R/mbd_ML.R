@@ -45,7 +45,8 @@
 #' # @Giappo: does not work
 #' # mbd_ML(
 #' #   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
-#' #   idparsfix = c(1,2,3), parsfix = test_pars[idparsfix],
+#' #   idparsfix = c(1, 2, 3), 
+#' #   parsfix = test_pars[idparsfix],
 #' #   missnumspec = 0, cond = 1, soc = 2
 #' # )
 #' @export

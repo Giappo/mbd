@@ -117,7 +117,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
 pmb_loglik_choosepar <- function(
   trparsopt, 
   trparsfix = 0, 
-  idparsopt = c(1,3,4),
+  idparsopt = c(1, 3, 4),
   idparsfix = (1:4)[-idparsopt], 
   brts, 
   soc = 2,
@@ -166,10 +166,11 @@ pmb_loglik_choosepar <- function(
 pmb_ML <- function(
   brts,
   initparsopt,
+  idparsopt = c(1, 3, 4), # RJCB: No idea why @Giappo uses that as a default
   soc = 2,
   res = 10 * (1 + length(brts) + missnumspec),
   tol = c(1E-3, 1E-4, 1E-6),
-  maxiter = 1000 * round((1.25)^length(idparsopt)),
+  maxiter = 1000 * round((1.25) ^ length(idparsopt)),
   changeloglikifnoconv = FALSE,
   optimmethod = 'simplex',
   pars_transform = 1,
@@ -182,9 +183,6 @@ pmb_ML <- function(
   # - optimmethod = 'simplex' (current default) or 'subplex' (default of previous versions)
   idparsfix <- 2
   parsfix   <- 0
-  idparsopt <- c(1,3,4)
-  # if (missing(parsfix)&&(length(idparsfix)==0)){parsfix=NULL}
-
   options(warn = -1)
   namepars <- c("lambda", "mu", "nu", "q"); n_pars <- length(namepars); #if you add more parameters to your model just change this
   failpars <- rep(-1, n_pars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways

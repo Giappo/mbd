@@ -20,8 +20,8 @@
 #
 #   tidy_results=all_results[order(all_results[, dim(all_results)[2]]),]
 #   dimnames(tidy_results)[[2]]<-(c(parnames, "LL", "multiple_born", "number_of_tips", "percentage_multiple_species", "tree_id"))
-#   bad_results=tidy_results[rowSums(tidy_results[,1:(n_pars+1)]==rep(-1,(n_pars+1)))==(n_pars+1),];#print(Nbad<-dim(bad_results)[1])
-#   results=tidy_results[rowSums(tidy_results[,1:(n_pars+1)]==rep(-1,(n_pars+1)))!=(n_pars+1),];#print(N<-dim(results)[1])
+#   bad_results=tidy_results[rowSums(tidy_results[, 1:(n_pars+1)]==rep(-1,(n_pars+1)))==(n_pars+1),];#print(Nbad<-dim(bad_results)[1])
+#   results=tidy_results[rowSums(tidy_results[, 1:(n_pars+1)]==rep(-1,(n_pars+1)))!=(n_pars+1),];#print(N<-dim(results)[1])
 #   print(paste("There are ",Nbad<-dim(bad_results)[1], " bad results.", sep = ''))
 #   print(paste("There are ",N<<-dim(results)[1], " good results.", sep = ''))
 #
@@ -50,7 +50,7 @@ correlation_analysis <- function(
   idparsopt,
   mother_folder
 ) {
-  n_pars=length(sim_pars);#pars_interval=list(c(0, quantile(results[,1],.95)), c(0, quantile(results[,2],.95)), c(0, quantile(results[,3],.95)))
+  n_pars=length(sim_pars);#pars_interval=list(c(0, quantile(results[, 1],.95)), c(0, quantile(results[, 2],.95)), c(0, quantile(results[,3],.95)))
   if (missing(idparsopt)){estimated_pars=1:n_pars}else{estimated_pars=idparsopt}
   par_names = colnames(results)[1:n_pars]
 
@@ -58,8 +58,8 @@ correlation_analysis <- function(
   medians_color_name = "blue"; truevalues_color_name = "red";
 
   medians=rep(0,n_pars);for (idpar in 1:n_pars){medians[idpar]=stats::median(results[, idpar])}
-  medians_string=paste0( "MLE Medians (", medians_color_name, ") = (", paste(signif(medians,2), sep = "''", collapse = ", "), ")")
-  truevalues_string=paste0( "True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars,2), sep = "''", collapse = ", "), ")")
+  medians_string=paste0( "MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), sep = "''", collapse = ", "), ")")
+  truevalues_string=paste0( "True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars, 2), sep = "''", collapse = ", "), ")")
   axislimits=rep(NA, n_pars)
   for (i in 1:n_pars){
     axislimits[i] <- stats::quantile(
@@ -71,7 +71,7 @@ correlation_analysis <- function(
   #pdf
   grDevices::pdf(file = paste(path, "/", pdfname, ".pdf", sep=''));#plot.new();
   graphics::par(mfrow=c(length(estimated_pars), length(estimated_pars)))
-  graphics::par(oma=c(0,0,2,0));
+  graphics::par(oma=c(0,0, 2,0));
   for (i in estimated_pars){for (j in estimated_pars){
     good.lines = results[, i]<axislimits[i] & results[, j]<axislimits[j]
     ifelse(any(good.lines)>0, good.results <- results[good.lines,], good.results <- results)
@@ -96,7 +96,7 @@ correlation_analysis <- function(
     {
     grDevices::pdf(file = paste(mother_folder, "/", pdfname, ".pdf", sep=''));#plot.new();
     graphics::par(mfrow=c(length(estimated_pars), length(estimated_pars)))
-    graphics::par(oma=c(0,0,2,0));
+    graphics::par(oma=c(0,0, 2,0));
     for (i in estimated_pars){for (j in estimated_pars){
       good.lines = results[, i]<axislimits[i] & results[, j]<axislimits[j]
       ifelse(any(good.lines)>0, good.results <- results[good.lines,], good.results <- results)
@@ -124,8 +124,8 @@ percentiles_function <- function(
   printit = 1,
   quantiles_choice = c(.25, .50, .75)
 ) {
-  quantiles_names <- format(round(quantiles_choice,2), nsmall = 2)
-  n_pars <- length(sim_pars);#pars_interval=list(c(0, stats::quantile(results[,1],.95)), c(0, quantile(results[,2],.95)), c(0, quantile(results[,3],.95)))
+  quantiles_names <- format(round(quantiles_choice, 2), nsmall = 2)
+  n_pars <- length(sim_pars);#pars_interval=list(c(0, stats::quantile(results[, 1],.95)), c(0, quantile(results[, 2],.95)), c(0, quantile(results[,3],.95)))
   parnames <-  colnames(results)[1:n_pars]
   percentiles <- vector("list",3)
   for (idpar in 1:n_pars){percentiles[[idpar]] <- stats::quantile(results[, idpar], quantiles_choice)}
@@ -167,7 +167,7 @@ brts2time_intervals_and_births <- function(brts
   branching_times = -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   births=c(0, unname(table(branching_times))[-1])
   unique_branching_times=as.numeric(names(table(branching_times)))
-  time_intervals=c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times,1))) )
+  time_intervals=c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times, 1))) )
   births=births[-1]
   out=list(time_intervals=time_intervals, births=births)
   return(out)
@@ -243,7 +243,7 @@ myheatmap <- function(
   ...
 ){
   if (is.matrix(matrix)==F){matrix=as.matrix(matrix)}
-  T=t(matrix[nrow(matrix):1,1:ncol(matrix)])
+  T=t(matrix[nrow(matrix):1, 1:ncol(matrix)])
   if (logs ==1 ) {
   # image(log(T))
     graphics::image(log(T), col=rev(colormap),...)
@@ -462,18 +462,18 @@ branchLengths <- function(tr)
     root.length <- 0
   }
 
-  node.numbers <- sort(unique(tr$edge[,1]))
+  node.numbers <- sort(unique(tr$edge[, 1]))
   BL1 <- as.numeric(
     stats::na.omit(
       c(
         root.length,
-        tr$edge.length[match(node.numbers, tr$edge[,2])]
+        tr$edge.length[match(node.numbers, tr$edge[, 2])]
       )
     )
   )
 
   tip.numbers <- 1:length(tr$tip)
-  BL2 <- tr$edge.length[match(tip.numbers, tr$edge[,2])]
+  BL2 <- tr$edge.length[match(tip.numbers, tr$edge[, 2])]
 
   if (type=='NAMED') {
     res <- data.frame(
@@ -540,7 +540,7 @@ summarize_beast_posterior <- function(
     Translate.pos=(1:length(subst.tr))[subst.tr=="Translate"]
     comma.pos=which(subst.tr==", ")
     if(length(comma.pos)==0){
-      numbers.pos=seq(Translate.pos+1,Translate.pos+2*ntax,2)
+      numbers.pos=seq(Translate.pos+1,Translate.pos+2*ntax, 2)
     } else{
       numbers.pos=seq(Translate.pos+1,Translate.pos+3*ntax,3)
     }
@@ -612,14 +612,14 @@ summarize_beast_posterior <- function(
       #trees[[i]]=tr
       branch_info=branchLengths(tr)[-1,]
       res=res[match(branch_info[, "Name"], res[, "name"]),]
-      branch_info=cbind(tr$edge[match(branch_info[, "Number"], tr$edge[,2]),],
-                        #tr$edge.length[match(branch_info[, "Number"], tr$edge[,2])],
+      branch_info=cbind(tr$edge[match(branch_info[, "Number"], tr$edge[, 2]),],
+                        #tr$edge.length[match(branch_info[, "Number"], tr$edge[, 2])],
                         branch_info[,-1], res[,-1, drop=FALSE])
       colnames(branch_info)[1:2]=c("Ancestor", "Descendant")
 
       if(i==1) {
         branch_infos=array(, c(dim(branch_info), length(samp)))
-        dimnames(branch_infos)=list(NULL, dimnames(branch_info)[[2]],1:length(samp))
+        dimnames(branch_infos)=list(NULL, dimnames(branch_info)[[2]], 1:length(samp))
       }
 
       branch_infos[,, i]=as.matrix(branch_info)

@@ -6,11 +6,11 @@ test_that("mbd_ML can be silent", {
   # https://github.com/richelbilderbeek/razzo_article/issues/10
   set.seed(10)
   test_pars <- c(0.3, 0.1, 0.1, 0.15)
-  idparsfix <- c(1,2,3)
+  idparsfix <- c(1, 2, 3)
 
   expect_silent(
     mbd_ML(
-      brts = c(1,2,3),
+      brts = c(1, 2, 3),
       initparsopt = 0.11,
       idparsopt = 4,
       idparsfix = idparsfix,
@@ -61,7 +61,9 @@ test_that("abuse", {
       brts = "nonsense",
       initparsopt = 0.11,
       idparsopt = 4,
-      idparsfix = c(1,2,3), parsfix = test_pars[idparsfix], missnumspec = 0, cond = 1, soc = 2
+      idparsfix = c(1, 2, 3), 
+      parsfix = test_pars[idparsfix],
+      missnumspec = 0, cond = 1, soc = 2
     ),
     "'brts' must be numeric"
   )

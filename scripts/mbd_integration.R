@@ -128,10 +128,12 @@ if (1){
     new.scen <- select.compatible.scenarios(n = n, combs = combs); new.scen
     list.coords <- expand.grid(1:length(old.scen), 1:length(new.scen))
     out.scen <- vector("list", nrow(list.coords))
-    for (i in 1:nrow(list.coords))
-    {
-      out.scen[[i]] <- rbind(old.scen[[list.coords[i,1]]], new.scen[[list.coords[i,2]]])
-    }; out.scen
+    for (i in 1:nrow(list.coords)) {
+      out.scen[[i]] <- rbind(
+        old.scen[[list.coords[i, 1]]], 
+        new.scen[[list.coords[i, 2]]]
+      )
+    }
     scen <- do.call(c, list(scen[-who], out.scen))
     scen <- unique(scen)
     coherent_with_n <- unlist(lapply(scen, FUN = function(x) n %in% x))

@@ -19,21 +19,21 @@ test_that("Sims are ok", {
   back_to_the_future_test  <-  1
   for (j in 1:test_size) {
     L <- test_sim[[j]]
-    parents <- abs(L[,2])
+    parents <- abs(L[, 2])
     back_to_the_future_test <- back_to_the_future_test * 
-      prod(L[-c(1:soc),1] >=L [parents[-c(1:soc)], 4])
+      prod(L[-c(1:soc), 1] >= L[parents[-c(1:soc)], 4])
   }
 
   #check if the conditioning on survival works
   conditioning_test = 1
-  for (j in 1:test_size){
-    L=test_sim[[j]]
-    check_signs = sort(unique(sign(L[,3])))
-    conditioning_test = conditioning_test * prod ( check_signs == c(-1,1) )
+  for (j in 1:test_size) {
+    L <- test_sim[[j]]
+    check_signs <- sort(unique(sign(L[, 3])))
+    conditioning_test <- conditioning_test * prod(check_signs == c(-1, 1))
   }
 
-  expect_equal(back_to_the_future_test,1)
-  expect_equal(conditioning_test,1)
+  expect_equal(back_to_the_future_test, 1)
+  expect_equal(conditioning_test, 1)
   # warnings()
 })
 
