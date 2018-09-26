@@ -100,24 +100,24 @@ mbd_sim <- function(
         if (total_rate > 0) {
           deltaT <- stats::rexp(1, rate = total_rate)
           outcome <- sample(c(-1,1,2), size = 1, prob = c(N * mu, N * lambda, nu))
-          deltaN <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * stats::rbinom(n = 1, size = N, prob = q)
+          delta_n <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * stats::rbinom(n = 1, size = N, prob = q)
           t <- t - deltaT
 
-          if (deltaN > 0 & t > 0) {
+          if (delta_n > 0 & t > 0) {
             if (N > 1) {
-              parents <- sample(pool, replace = FALSE, size = deltaN)
+              parents <- sample(pool, replace = FALSE, size = delta_n)
             } else {
               parents <- pool
             }
-            new_interval <- (total_count + 1):(total_count + deltaN)
-            L[new_interval,1] <- t#-(deltaN:1)*1e-5 add this if you need separate time points
+            new_interval <- (total_count + 1):(total_count + delta_n)
+            L[new_interval,1] <- t#-(delta_n:1)*1e-5 add this if you need separate time points
             L[new_interval,2] <- parents
             L[new_interval,3] <- abs(new_interval) * sign(parents)
 
             pool <- c(pool, abs(new_interval) * sign(parents) )
-            total_count <- total_count + deltaN
+            total_count <- total_count + delta_n
           }
-          if (deltaN < 0 & t > 0) {
+          if (delta_n < 0 & t > 0) {
             if (N > 1) {
               dead <- sample(pool, replace = FALSE, size = 1)
             } else { 
@@ -238,24 +238,24 @@ mbd_sim0 <- function(
         N=length(pool)
         deltaT <- stats::rexp(1, rate=(lambda+N*mu))
         outcome=sample(c(-1,1), size=1, prob = c(N*mu, lambda))
-        deltaN <- stats::rbinom(n=1, size=N, prob=q)*(outcome==1)-1*(outcome==-1)
+        delta_n <- stats::rbinom(n=1, size=N, prob=q)*(outcome==1)-1*(outcome==-1)
         t=t-deltaT
-        if (deltaN>0 & t>0)
+        if (delta_n>0 & t>0)
         {
           if (N>1) {
-            parents <- sample(pool, replace = FALSE, size = deltaN)
+            parents <- sample(pool, replace = FALSE, size = delta_n)
           } else {
             parents <- pool
           }
-          new_interval <- (total_count+1):(total_count+deltaN)
-          L[new_interval,1] <- t#-(deltaN:1)*1e-5 add this if you need separate time points
+          new_interval <- (total_count+1):(total_count+delta_n)
+          L[new_interval,1] <- t#-(delta_n:1)*1e-5 add this if you need separate time points
           L[new_interval,2] <- parents
           L[new_interval,3] <- abs(new_interval)*sign(parents)
 
           pool <- c(pool, abs(new_interval)*sign(parents) )
-          total_count <- total_count+deltaN
+          total_count <- total_count+delta_n
         }
-        if (deltaN < 0 & t > 0) {
+        if (delta_n < 0 & t > 0) {
           if (N > 1) {
             dead <- sample(pool, replace = F, size=1)
           } else {
