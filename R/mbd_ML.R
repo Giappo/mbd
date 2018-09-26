@@ -1,25 +1,41 @@
 # mbd_ML----------------
 #' @author Giovanni Laudanno
-#' @title Maximization of the loglikelihood under a multiple birth-death diversification model
-#' @description mbd_ML computes the maximum likelihood estimates of the parameters of a multiple birth-death diversification model for a given set of phylogenetic branching times. It also outputs the corresponding loglikelihood that can be used in model comparisons. Differently from mbd_ML it can account for three kind of events: sympatric (single) speciation, multiple (allopatric) speciation and extinction.
+#' @title Maximization of the loglikelihood 
+#'   under a multiple birth-death diversification model
+#' @description mbd_ML computes the maximum likelihood estimates of 
+#'   the parameters of a multiple birth-death diversification model 
+#'   for a given set of phylogenetic branching times. 
+#'   It also outputs the corresponding loglikelihood 
+#'   that can be used in model comparisons. 
+#'   Differently from mbd_ML it can account for three kind of events: 
+#'   sympatric (single) speciation, multiple (allopatric) speciation 
+#'   and extinction.
 #' @inheritParams default_params_doc
-#' @param initparsopt The initial values of the parameters that must be optimized
-#' @param idparsfix The ids of the parameters that should not be optimized. The default is to fix all parameters not specified in idparsopt.
+#' @param initparsopt The initial values of the parameters 
+#'   that must be optimized
+#' @param idparsfix The ids of the parameters that should not be optimized. 
+#'   The default is to fix all parameters not specified in idparsopt.
 #' @param parsfix The values of the parameters that should not be optimized.
-#' @param res Sets the maximum number of species for which a probability must be computed, must be larger than 1 + length(brts).
+#' @param res Sets the maximum number of species for which a probability 
+#'   must be computed, must be larger than 1 + length(brts).
 #' @param tol Sets the tolerances in the optimization. Consists of:
 #' \itemize{
 #' \item reltolx = relative tolerance of parameter values in optimization
 #' \item reltolf = relative tolerance of function value in optimization
 #' \item abstolx = absolute tolerance of parameter values in optimization
 #' }
-#' @param changeloglikifnoconv If TRUE the loglik will be set to -Inf if ML does not converge.
-#' @param optimmethod Method used in optimization of the likelihood. Current default is 'simplex'. Alternative is 'subplex' (default of previous versions).
+#' @param changeloglikifnoconv If TRUE, 
+#'   the loglik will be set to -Inf if ML does not converge.
+#' @param optimmethod Method used in optimization of the likelihood. 
+#'   Current default is 'simplex'. 
+#'   Alternative is 'subplex' (default of previous versions).
 #' @param ... Something
-#' @return The output is a dataframe containing estimated parameters and maximum
-#' loglikelihood. The computed loglikelihood contains the factor q! m! / (q + m)!
-#' where q is the number of species in the phylogeny and m is the number of
-#' missing species, as explained in the supplementary material to Etienne et al. 2012.
+#' @return The output is a dataframe containing 
+#'   estimated parameters and maximum loglikelihood. 
+#'   The computed loglikelihood contains the factor q! m! / (q + m)!
+#'   where q is the number of species in the phylogeny and m is the number of
+#'   missing species, as explained in the supplementary 
+#'   material to Etienne et al. 2012.
 #'
 #' @examples
 #' set.seed(10)
@@ -57,21 +73,28 @@ mbd_ML <- function(
 )
 {
   # - tol = tolerance in optimization
-  # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
+  # - changeloglikifnoconv = if TRUE the loglik 
+  #     will be set to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization
-  # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
-  # - optimmethod = 'simplex' (current default) or 'subplex' (default of previous versions)
+  # - changeloglikifnoconv = if TRUE 
+  #     the loglik will be set to -Inf if ML does not converge
+  # - optimmethod = 'simplex' (current default) 
+  #     or 'subplex' (default of previous versions)
   if (!is.numeric(brts))
   {
     stop("'brts' must be numeric")
   }
   if (length(idparsfix) == 0) {idparsfix <- NULL}
-  if (missing(parsfix) && (length(idparsfix) == 0)){parsfix <- idparsfix <- NULL}
+  if (missing(parsfix) && (length(idparsfix) == 0)) { 
+    parsfix <- idparsfix <- NULL
+  }
 
-  options(warn=-1)
+  options(warn = -1)
   namepars <- c("lambda", "mu", "nu", "q")
-  n_pars <- length(namepars); #if you add more parameters to your model just change this
-  failpars <- rep(-1, n_pars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
+  #if you add more parameters to your model just change this
+  n_pars <- length(namepars)
+  #those are the parameters that you get if something goes sideways
+  failpars <- rep(-1, n_pars); names(failpars) <- namepars
   if (is.numeric(brts) == FALSE)
   {
     cat("The branching times should be numeric.\n")
@@ -79,8 +102,10 @@ mbd_ML <- function(
     return(invisible(out2))
   }
   idpars <- sort(c(idparsopt, idparsfix))
-  if ((sum(idpars == (1:n_pars)) != n_pars) || (length(initparsopt) != length(idparsopt)) || (length(parsfix) != length(idparsfix)) )
-  {
+  if ((sum(idpars == (1:n_pars)) != n_pars) || 
+    (length(initparsopt) != length(idparsopt)) || 
+    (length(parsfix) != length(idparsfix)) 
+  ) {
     cat("The parameters to be optimized and/or fixed are incoherent.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     return(out2)
@@ -115,20 +140,30 @@ mbd_ML <- function(
     trparsfix  <- parsfix
   }
   optimpars  <- c(tol, maxiter)
-  initloglik <- mbd_loglik_choosepar(trparsopt = trparsopt, trparsfix = trparsfix,
-                                           idparsopt = idparsopt, idparsfix = idparsfix,
-                                           brts = brts, missnumspec = missnumspec,
-                                           cond = cond, soc = soc, tips_interval = tips_interval,
-                                           methode = methode,
-                                           minimum_multiple_births = minimum_multiple_births,
-                                           pars_transform = pars_transform,
-                                           print_errors = print_errors, ...) #there's no pars2 here and instead 3 more args at the end
+  
+  #there's no pars2 here and instead 3 more args at the end
+  initloglik <- mbd_loglik_choosepar(
+    trparsopt = trparsopt, trparsfix = trparsfix,
+    idparsopt = idparsopt, idparsfix = idparsfix,
+    brts = brts, missnumspec = missnumspec,
+    cond = cond, soc = soc, tips_interval = tips_interval,
+    methode = methode,
+    minimum_multiple_births = minimum_multiple_births,
+    pars_transform = pars_transform,
+    print_errors = print_errors, ...
+  ) 
   if (verbose == TRUE) {
-    cat("The loglikelihood for the initial parameter values is", initloglik, "\n")
+    cat(
+      "The loglikelihood for the initial parameter values is", 
+      initloglik, "\n"
+    )
     utils::flush.console()
   }
   if (initloglik == -Inf) {
-    cat("The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n")
+    warning(
+      "The initial parameter values have a likelihood that is equal to 0",
+      "or below machine precision. Try again with different initial values."
+    )
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     return(invisible(out2))
   }
@@ -150,7 +185,9 @@ mbd_ML <- function(
     sink() # Give back the output
   }
   if (out$conv != 0) {
-    cat("Optimization has not converged. Try again with different initial values.\n")
+    warning("Optimization has not converged. ",
+      "Try again with different initial values."
+    )
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     return(invisible(out2))
   }
@@ -175,7 +212,7 @@ mbd_ML <- function(
   if (verbose == TRUE) {
     s1 <- sprintf(tobeprint)
   }
-  if(out2$conv != 0 & changeloglikifnoconv == T) {
+  if (out2$conv != 0 & changeloglikifnoconv == TRUE) {
     out2$loglik <- -Inf
   }
   if (verbose == TRUE) {

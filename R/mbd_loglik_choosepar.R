@@ -20,7 +20,9 @@ mbd_loglik_choosepar  <- function(
   print_errors = 0,
   ...
 ) {
-  #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like simplex, optim or subplex
+  #This function provides a likelihood for a subset of parameters. 
+  # This is built to work inside mbd_minusLL_vs_single_parameter 
+  # or any optimizer like simplex, optim or subplex
   #idparsopt are the ids of the parameters you want to analyze
   #trparsopt are the values for parameters you want to analyze
   #idparsfix are the ids of the parameters you want to fix
@@ -58,7 +60,9 @@ mbd_loglik_choosepar  <- function(
     )
   }
   if (is.nan(loglik) || is.na(loglik)) {
-    cat("There are parameter values used which cause numerical problems:", trpars1, "\n")
+    warning("There are parameter values used which cause numerical problems:", 
+      trpars1, "\n"
+    )
     loglik <- -Inf
   }
   loglik

@@ -5,7 +5,8 @@
 hyperA_HannoX <- function(N, k, q) {
   # HG function: fast O(N), updated after Moulis meeting
   #this is the matrix builder: helps to create A and B operators
-  #it produces the structure q^(m-n)*(1-q)^(k+2*n-m)*sum_j 2^j choose(k, j)*choose(n, m-n-j)
+  #it produces the structure 
+  # q^(m-n)*(1-q)^(k+2*n-m)*sum_j 2^j choose(k, j)*choose(n, m-n-j)
   j <- 0:k
   A1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
   N <- N + 1
@@ -22,14 +23,18 @@ hyperA_HannoX <- function(N, k, q) {
   A[1:N, 1:N]
 }
 
-# if (.Platform$OS.type=="windows"){matrix_builder = hyperA:::hyperA}
-# if (.Platform$OS.type=="unix")   {matrix_builder = hyperA_HannoX} #this is set to work with home directory of the cluster
-
 #' @title Internal mbd function
 #' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-create_A0 <- function(max_number_of_species, lambda, mu, q, k, matrix_builder = hyperA_HannoX){
+create_A0 <- function(
+  max_number_of_species, 
+  lambda, 
+  mu, 
+  q, 
+  k, 
+  matrix_builder = hyperA_HannoX
+){
   nvec <- 0:max_number_of_species
   M <- lambda * matrix_builder(N = max_number_of_species, k = k, q = q)
 
@@ -44,7 +49,14 @@ create_A0 <- function(max_number_of_species, lambda, mu, q, k, matrix_builder = 
 #' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-create_B0 <- function(max_number_of_species, q, k, b, matrix_builder = hyperA_HannoX){#lambda * choose(k, b) * q^b  is going to be added in logB in the main script
+create_B0 <- function(
+  max_number_of_species, 
+  q, 
+  k, 
+  b, 
+  matrix_builder = hyperA_HannoX
+) {
+  #lambda * choose(k, b) * q^b  is going to be added in logB in the main script
   k2 <- k - b
   matrix_builder(N = max_number_of_species, k = k2, q = q)
 }
@@ -61,7 +73,8 @@ create_A <- function(lambda, mu, nu, q, k, max_number_of_species){
   m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] + 
     lambda * (nvec[1:(max_number_of_species)] + 2 * k)
 
-  m[row(m) == col(m)] <- m[row(m) == col(m)] - lambda * (nvec + k) #new version to avoid the dumpster problem at the end of the matrix
+  # new version to avoid the dumpster problem at the end of the matrix
+  m[row(m) == col(m)] <- m[row(m) == col(m)] - lambda * (nvec + k) 
 
   m
 }
@@ -71,9 +84,22 @@ create_A <- function(lambda, mu, nu, q, k, max_number_of_species){
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_B <- function(lambda, nu, q, k, b, max_number_of_species){
-  m <- create_B0(max_number_of_species = max_number_of_species, q = q, k = k, b = b)
-  lambda * k * diag(max_number_of_species + 1) * (b == 1) + nu * choose(k, b) * (q^b) * m
+create_B <- function(
+  lambda, 
+  nu, 
+  q, 
+  k, 
+  b, 
+  max_number_of_species
+) {
+  m <- create_B0(
+    max_number_of_species = max_number_of_species, 
+    q = q, 
+    k = k, 
+    b = b
+  )
+  lambda * k * diag(max_number_of_species + 1) * 
+    (b == 1) + nu * choose(k, b) * (q^b) * m
 }
 
 #' @title Internal mbd function
@@ -97,7 +123,8 @@ create_A.no_mbd = function(
   )
   m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] + lambda * 
     (nvec[1:(max_number_of_species)] + 2 * k)
-  m[row(m) == col(m)]     <- m[row(m) == col(m)] - c(lambda * (nvec[-length(nvec)] + k), 0)
+  m[row(m) == col(m)] <- m[row(m) == col(m)] - 
+    c(lambda * (nvec[-length(nvec)] + k), 0)
   m[row(m) > col(m) + minimum_multiple_births] <- 0
   m
 }
@@ -159,7 +186,15 @@ A_operator <- function(
     while ((result.nan == 1 | result.negative == 1) & 
       repetition < max_repetitions
     ) {
-      result <- try(expoRkit::expv(v = Q, x = transition_matrix, t = time_interval, m = precision), silent = TRUE)
+      result <- try(
+        expoRkit::expv(
+          v = Q, 
+          x = transition_matrix, 
+          t = time_interval, 
+          m = precision
+        ), 
+        silent = TRUE
+      )
 
       result.nan <- (any(!is.numeric(result)) || any(is.nan(result)))
       if (result.nan) {
@@ -185,7 +220,15 @@ A_operator <- function(
   if (methode == "lsoda" | bad_result) {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    R.utils::withTimeout(result <- deSolve::ode(y = Q, times = times, func = mbd_loglik_rhs, parms = ode_matrix, atol = a_abstol, rtol = a_reltol)[2,-1], timeout = 1001)
+    R.utils::withTimeout(result <- deSolve::ode(
+      y = Q, 
+      times = times, 
+      func = mbd_loglik_rhs, 
+      parms = ode_matrix, 
+      atol = a_abstol, 
+      rtol = a_reltol)[2,-1], 
+      timeout = 1001
+    )
   }
 
   result
@@ -228,17 +271,29 @@ determine_k_limit <- function(
   reltol = 1e-10
 ) {
   lambda <- pars[1] 
-  mu <- pars[2] 
+  #mu <- pars[2] 
   nu <- pars[3]
   q <- pars[4]
   mvec <- 0:lx
   Qi <- c(1, rep(0, lx))
   total_time <- max(abs(brts));
-  T0 <- create_A(lambda = lambda, mu = 0, nu = nu, q = q, k = soc,
-                       max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
-  Pm <- A_operator(Q = Qi, transition_matrix = T0, time_interval = total_time,
-                         precision = 250L, methode = methode, a_abstol = abstol, a_reltol = reltol)
-  # graphics::plot((Pm/sum(Pm)))
+  T0 <- create_A(
+    lambda = lambda, 
+    mu = 0, 
+    nu = nu, 
+    q = q, 
+    k = soc,
+    max_number_of_species = lx
+  )
+  Pm <- A_operator(
+    Q = Qi, 
+    transition_matrix = T0, 
+    time_interval = total_time,
+    precision = 250L, 
+    methode = methode, 
+    a_abstol = abstol, 
+    a_reltol = reltol
+  )
   soc + max(mvec[(mvec %in% which((cumsum(Pm/sum(Pm))) <= 0.95))])
 }
 
@@ -263,7 +318,8 @@ calculate_conditional_probability <- function(
   m <- 0:lx; length(m)
   one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
-  Qi <- rep(0, lx + 1);  Qi[3] <- 1 #starting with k = 0 and m = 2 missing species
+  #starting with k = 0 and m = 2 missing species
+  Qi <- rep(0, lx + 1);  Qi[3] <- 1 
 
   TM <- create_A(
     lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
@@ -315,12 +371,20 @@ calculate_conditional_probability0 <- function(
   TM <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                        max_number_of_species = lx)
 
-  A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
-  precision = 250L, methode = methode, a_abstol = abstol, a_reltol = reltol)
+  A2_v1 <- A_operator(
+    Q = Qi, 
+    transition_matrix = TM, 
+    time_interval = total_time,
+    precision = 250L, 
+    methode = methode, 
+    a_abstol = abstol, 
+    a_reltol = reltol
+  )
   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
   missingspecies_max <- min((tips_interval[2] - 2), lx)
-  tips_components <- 1 + c(missingspecies_min, missingspecies_max) # +1 is because of the zero-th component
+  # +1 is because of the zero-th component
+  tips_components <- 1 + c(missingspecies_min, missingspecies_max) 
   sum(total_product[tips_components[1]:tips_components[2]])
 }
 
@@ -352,16 +416,30 @@ calculate_conditional_probability0PB <- function(
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   Qi <- c(1, rep(0, lx)); length(Qi)
 
-  TM <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
-                       max_number_of_species = lx); #dim(TM); max(is.na(TM)); max(is.infinite(TM))
+  TM <- create_A(
+    lambda = lambda, 
+    mu = mu, 
+    nu = nu, 
+    q = q, 
+    k = soc,
+    max_number_of_species = lx
+  )
 
-  A2_v1 <- A_operator(Q = Qi, transition_matrix = TM, time_interval = total_time,
-                            precision = 250L, methode = methode, a_abstol = abstol, a_reltol = reltol)
+  A2_v1 <- A_operator(
+    Q = Qi, 
+    transition_matrix = TM, 
+    time_interval = total_time,
+    precision = 250L, 
+    methode = methode, 
+    a_abstol = abstol, 
+    a_reltol = reltol
+  )
 
   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
   missingspecies_max <- min((tips_interval[2] - 2), lx)
-  tips_components <- 1 + c(missingspecies_min, missingspecies_max) # +1 is because of the zero-th component
+  # +1 is because of the zero-th component
+  tips_components <- 1 + c(missingspecies_min, missingspecies_max) 
   opposite_tips_components <- (m + 1)[!((m + 1) %in% (tips_components[1]:tips_components[2]))]
   1 - sum(total_product[opposite_tips_components])
 }
@@ -386,7 +464,12 @@ find_best_lx_for_Pc <- function(
   interval_width <- interval_max - interval_min
   step1 <- floor(interval_width/a)
 
-  lx_test <- rep(NA, length(lxvec <- seq(interval_min + step1, interval_max - step1, step1))); i <- 1; right.lx_coord <- 0
+  lx_test <- rep(
+    NA, 
+    length(lxvec <- seq(interval_min + step1, interval_max - step1, step1))
+  ) 
+  i <- 1
+  right.lx_coord <- 0
   for (lx2 in lxvec) {
     lx_test[i] <- mbd::calculate_conditional_probability0(
       brts = brts,
@@ -408,7 +491,9 @@ find_best_lx_for_Pc <- function(
     i <- i + 1
   }
   if (right.lx_coord == 0) {
-    right.lx_coord <- which(abs(lx_test - 1) == min(abs(lx_test - 1), na.rm = TRUE))
+    right.lx_coord <- which(
+      abs(lx_test - 1) == min(abs(lx_test - 1), na.rm = TRUE)
+    )
     lx <- lxvec[right.lx_coord]
   }
 
@@ -439,7 +524,9 @@ find_best_lx_for_Pc <- function(
     j <- j + 1
   }; lx_test2
   if (right.lx_coord2 == 0) {
-    right.lx_coord2 <- which(abs(lx_test2 - 1) == min(abs(lx_test2 - 1), na.rm = TRUE))
+    right.lx_coord2 <- which(
+      abs(lx_test2 - 1) == min(abs(lx_test2 - 1), na.rm = TRUE)
+    )
     lx <- lxvec2[right.lx_coord2]
   }
 
@@ -475,14 +562,16 @@ calculate_conditional_probability1 <- function(
     )
   } else {
     # @Giappo: this function does not exist any more
-    # Pc <- mbd::calculate_conditional_probability02(brts = brts,
-    #                                                pars = pars,
-    #                                                lx = lx,
-    #                                                soc = soc,
-    #                                                tips_interval = tips_interval,
-    #                                                methode = methode,
-    #                                                abstol = abstol,
-    #                                                reltol = reltol)
+    # Pc <- mbd::calculate_conditional_probability02(
+    #   brts = brts,
+    #   pars = pars,
+    #   lx = lx,
+    #   soc = soc,
+    #   tips_interval = tips_interval,
+    #   methode = methode,
+    #   abstol = abstol,
+    #   reltol = reltol
+    # )
     stop("Function 'mbd::calculate_conditional_probability02' is absent")
   }
   return(list(Pc = Pc, lx = lx))
@@ -510,7 +599,9 @@ alpha_conditional_probability <- function(
   births <- c(0, brts2time_intervals_and_births(brts)$births)
   k_interval <- init_n_lineages + cumsum(births)
   max_k <- max(k_interval)
-  max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
+  # alpha is the proportionality factor between max_k 
+  # and the edge of the matrix
+  max_number_of_species <- alpha * max_k
 
   if (!(cond == 1 | tips_interval[1] > 0 | tips_interval[2] < Inf)) {
     Pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))
@@ -518,7 +609,8 @@ alpha_conditional_probability <- function(
     m <- 0:max_number_of_species;
     one_over_Cm <- (3 * (m + 1)) / (m + 3)
     one_over_qm_binom <- 1 / choose((m + init_n_lineages), init_n_lineages)
-    tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
+    # applying tips constrain
+    tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) 
     if (cond == 1) {
       # I am already considering the starting species to survive. 
       # I must not double count them!
@@ -631,7 +723,6 @@ alpha_analysis <- function(
       reltol = reltol,
       minimum_multiple_births = minimum_multiple_births
     )$Pc
-    # Pc2 <- calculate_conditional_probability(alpha = alpha + deltaAlpha, ...)$Pc
     if (is.nan(Pc2)) {
       deltaAlpha <- deltaAlpha - 1
     } else if (Pc2 < Pc1) {
@@ -663,7 +754,6 @@ alpha_analysis <- function(
       reltol = reltol,
       minimum_multiple_births = minimum_multiple_births
     )$Pc
-    # Pc1 <- calculate_conditional_probability(alpha = alpha, ...)$Pc
   }
   Pc <- Pc1
   if (count >= 100) { 

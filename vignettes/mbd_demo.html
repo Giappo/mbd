@@ -12,7 +12,7 @@
 
 <meta name="author" content="Giovanni Laudanno" />
 
-<meta name="date" content="2018-09-25" />
+<meta name="date" content="2018-09-26" />
 
 <title>Using mbd</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Using mbd</h1>
 <h4 class="author"><em>Giovanni Laudanno</em></h4>
-<h4 class="date"><em>2018-09-25</em></h4>
+<h4 class="date"><em>2018-09-26</em></h4>
 
 
 
@@ -107,7 +107,7 @@ sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu,
 crown_age &lt;-<span class="st"> </span><span class="dv">10</span>
 cond &lt;-<span class="st"> </span><span class="dv">1</span> <span class="co"># Condition on non-extinction</span>
 
-sim &lt;-<span class="st"> </span>mbd<span class="op">:::</span><span class="kw">mbd_sim</span>(
+sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
   <span class="dt">pars =</span> sim_pars, 
   <span class="dt">soc =</span> soc, 
   <span class="dt">age =</span> crown_age, 
@@ -221,13 +221,36 @@ sim &lt;-<span class="st"> </span>mbd<span class="op">:::</span><span class="kw"
   <span class="dt">cond =</span> cond, 
   <span class="dt">missnumspec =</span> <span class="dv">0</span>
 )</code></pre></div>
-<pre><code>## [1] -13.05345</code></pre>
+<pre><code>## DLSODA-  At current T (=R1), MXSTEP (=I1) steps   
+##       taken on this call before reaching TOUT     
+## In above message, I1 = 5000
+##  
+## In above message, R1 = 7.98859
+## </code></pre>
+<pre><code>## Warning in lsoda(y, times, func, parms, ...): an excessive amount of work
+## (&gt; maxsteps ) was done, but integration was not successful - increase
+## maxsteps</code></pre>
+<pre><code>## Warning in lsoda(y, times, func, parms, ...): Returning early. Results are
+## accurate, as far as they go</code></pre>
+<pre><code>## DLSODA-  At current T (=R1), MXSTEP (=I1) steps   
+##       taken on this call before reaching TOUT     
+## In above message, I1 = 5000
+##  
+## In above message, R1 = 7.35755
+## </code></pre>
+<pre><code>## Warning in lsoda(y, times, func, parms, ...): an excessive amount of work
+## (&gt; maxsteps ) was done, but integration was not successful - increase
+## maxsteps
+
+## Warning in lsoda(y, times, func, parms, ...): Returning early. Results are
+## accurate, as far as they go</code></pre>
+<pre><code>## [1] NaN</code></pre>
 </div>
 <div id="maximum-likelihood-estimation" class="section level2">
 <h2>Maximum likelihood estimation</h2>
 <p>You can also ask for an optimization of the likelihood function using the function <code>mbd_ML</code> either considering a variation of all the parameters (<span class="math inline">\(\lambda, \mu, \nu, q\)</span>) or any their subset of your choice.</p>
 <p>Because this is a heavy calculation, we’ll use a simpler tree:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim &lt;-<span class="st"> </span>mbd<span class="op">:::</span><span class="kw">mbd_sim</span>(
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
   <span class="dt">pars =</span> sim_pars, 
   <span class="dt">soc =</span> soc, 
   <span class="dt">age =</span> crown_age <span class="op">/</span><span class="st"> </span><span class="dv">10</span>, 
@@ -242,7 +265,7 @@ ids &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</s
 idparsfix &lt;-<span class="st"> </span>ids[<span class="op">-</span>idparsopt] <span class="co"># Fix all parameters except q</span>
 parsfix &lt;-<span class="st"> </span>sim_pars[idparsfix] <span class="co"># Use the known values for the fixed parameters</span>
 initparsopt &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># Set an initial guess for q</span>
-mbd<span class="op">:::</span><span class="kw">mbd_ML</span>(
+<span class="kw">mbd_ML</span>(
   <span class="dt">brts =</span> sim<span class="op">$</span>brts, 
   <span class="dt">initparsopt =</span> initparsopt, 
   <span class="dt">idparsopt =</span> idparsopt, 
@@ -254,10 +277,10 @@ mbd<span class="op">:::</span><span class="kw">mbd_ML</span>(
 <pre><code>## You are optimizing q 
 ## You are fixing lambda mu nu 
 ## Optimizing the likelihood - this may take a while. 
-## The loglikelihood for the initial parameter values is -1.047112 
+## The loglikelihood for the initial parameter values is 2.73906 
 ## 
-##  Maximum likelihood parameter estimates: lambda: 0.2 mu: 0.15 nu: 2 q: 0.247274276612842 
-##  Maximum loglikelihood: -0.873817</code></pre>
+##  Maximum likelihood parameter estimates: lambda: 0.2 mu: 0.15 nu: 2 q: 0.00100021296751783 
+##  Maximum loglikelihood: 4.230746</code></pre>
 </div>
 <div class="footnotes">
 <hr />
