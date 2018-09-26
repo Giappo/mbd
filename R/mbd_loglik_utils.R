@@ -320,7 +320,7 @@ calculate_conditional_probability <- function(
   lx = 1000,
   soc = 2,
   tips_interval = c(0, Inf),
-  methode = 'expo',
+  methode = "expo",
   abstol = 1e-16,
   reltol = 1e-10
 ) {
@@ -368,7 +368,7 @@ calculate_conditional_probability0 <- function(
   lx = 1000,
   soc = 2,
   tips_interval = c(0, Inf),
-  methode = 'expo',
+  methode = "expo",
   abstol = 1e-16,
   reltol = 1e-10
 ) {
@@ -412,7 +412,7 @@ calculate_conditional_probability0PB <- function(
   lx = 200,
   soc = 2,
   tips_interval = c(0, Inf),
-  methode = 'expo',
+  methode = "expo",
   abstol = 1e-16,
   reltol = 1e-10
 ) {
@@ -465,7 +465,7 @@ find_best_lx_for_pc <- function(
   brts,
   pars,
   soc = 2,
-  methode = 'expo',
+  methode = "expo",
   abstol = 1e-16,
   reltol = 1e-10,
   iterations = 20,
@@ -555,7 +555,7 @@ calculate_conditional_probability1 <- function(
   pars,
   soc = 2,
   tips_interval = c(0, Inf),
-  methode = 'expo',
+  methode = "expo",
   abstol = 1e-16,
   reltol = 1e-10
 ){
@@ -696,7 +696,7 @@ alpha_analysis <- function(
   soc,
   alpha0,
   max_k,
-  methode = 'expo',
+  methode = "expo",
   abstol,
   reltol,
   minimum_multiple_births
