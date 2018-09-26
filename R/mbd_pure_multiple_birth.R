@@ -174,7 +174,7 @@ pmb_ML <- function(
   optimmethod = 'simplex',
   pars_transform = 1,
   missnumspec = 0
-) {# bracket#1
+) {
   # - tol = tolerance in optimization
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization
@@ -240,8 +240,7 @@ pmb_ML <- function(
                                trparsfix = trparsfix, idparsopt = idparsopt,
                                idparsfix = idparsfix, brts = brts, soc = soc,
                                pars_transform = pars_transform)
-        if (out$conv != 0)
-        {# bracket#5
+        if (out$conv != 0) {
           cat("Optimization has not converged. Try again with different initial values.\n")
           out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
         } else {

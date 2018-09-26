@@ -183,7 +183,8 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         total_product=A2_v1 * one_over_Cm * one_over_qm_binom
         Pc <- sum(total_product[tips_components])
         
-        if (Pc==0){#slowest and best accuracy
+        if (Pc==0) {
+          #slowest and best accuracy
           # ode_matrix=as.matrix(mk_n_zero) #use this only if you use sparsematrices
           ode_matrix <- mk_n_zero
           times <- c(0,total_time)
@@ -296,12 +297,14 @@ mbd_loglik_choosepar0 <- function(
 #' mbd:::mbd_ML0(brts=simulated_data$brts, initparsopt = 0.11 ,idparsopt = 3,
 #' idparsfix = 1:2 ,parsfix = test_pars[1:2],missnumspec=0,cond=1, soc = 2)
 #' @export
-mbd_ML0 <- function(brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
-                    parsfix, missnumspec = 0, cond = 1, soc = 2, tips_interval=c(0,Inf),
-                    res = 10 * (1 + length(brts) + missnumspec), tol = c(1E-3, 1E-4, 1E-6),
-                    maxiter = 1000 * round((1.25)^length(idparsopt)), changeloglikifnoconv = FALSE,
-                    optimmethod = 'subplex', methode = "expo", alpha = 20, pars_transform = 1)
-{# bracket#1
+mbd_ML0 <- function(
+  brts, initparsopt, idparsopt, idparsfix = (1:3)[-idparsopt],
+  parsfix, missnumspec = 0, cond = 1, soc = 2, tips_interval=c(0,Inf),
+  res = 10 * (1 + length(brts) + missnumspec), tol = c(1E-3, 1E-4, 1E-6),
+  maxiter = 1000 * round((1.25)^length(idparsopt)), 
+  changeloglikifnoconv = FALSE,
+  optimmethod = 'subplex', methode = "expo", alpha = 20, pars_transform = 1
+) {
   # - tol = tolerance in optimization
   # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization
