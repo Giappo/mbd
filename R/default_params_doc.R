@@ -58,7 +58,7 @@
 #'   but missing in the phylogeny_
 #' @param mu something
 #' @param mutation_rate something
-#' @param N something
+#' @param n_species number of species
 #' @param init_n_lineages the number of lineages at time equals zero
 #' @param n_steps something
 #' @param n_subs something
@@ -173,7 +173,7 @@ default_params_doc <- function(
   missnumspec,
   mu,
   mutation_rate,
-  N,
+  n_species,
   init_n_lineages,
   n_steps,
   n_subs,

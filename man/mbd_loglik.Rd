@@ -50,14 +50,19 @@ but missing in the phylogeny_}
 \item{print_errors}{something}
 }
 \value{
-The function returns the natural logarithm of the likelihood for the process.
+The function returns the natural logarithm 
+  of the likelihood for the process.
 }
 \description{
-mbd_loglik provides the likelihood for a process in which multiple births (from different parents) at the same time are possible, along with usual sympatric speciation and extinction events.
+mbd_loglik provides the likelihood for a process 
+  in which multiple births (from different parents) at the same time 
+  are possible, along with usual sympatric speciation and extinction events.
 }
 \examples{
 set.seed(11)
-simulated_data = mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
+simulated_data = mbd_sim(
+  pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1
+)
 graphics::plot(simulated_data$tas)
 # @Giappo: too big too run
 # mbd::mbd_loglik(

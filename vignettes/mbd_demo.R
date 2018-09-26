@@ -36,38 +36,3 @@ knitr::kable(head(sim$L))
 ## ------------------------------------------------------------------------
 knitr::kable(head(sim$brts))
 
-## ------------------------------------------------------------------------
-mbd::mbd_loglik(
-  pars = sim_pars, 
-  brts = sim$brts, 
-  soc = soc, 
-  cond = cond, 
-  missnumspec = 0
-)
-
-## ------------------------------------------------------------------------
-sim <- mbd_sim(
-  pars = sim_pars, 
-  soc = soc, 
-  age = crown_age / 10, 
-  cond = cond, 
-  tips_interval = c(0, Inf)
-)
-ape::plot.phylo(sim$tes)
-
-## ------------------------------------------------------------------------
-idparsopt <- 4 # Only optimize the fourth parameter, q
-ids <- 1:4
-idparsfix <- ids[-idparsopt] # Fix all parameters except q
-parsfix <- sim_pars[idparsfix] # Use the known values for the fixed parameters
-initparsopt <- 0.15 # Set an initial guess for q
-mbd_ML(
-  brts = sim$brts, 
-  initparsopt = initparsopt, 
-  idparsopt = idparsopt, 
-  parsfix = parsfix, 
-  idparsfix = idparsfix, 
-  soc = soc, 
-  cond = cond
-)
-

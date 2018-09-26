@@ -2,25 +2,25 @@
 #' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-hyperA_HannoX <- function(N, k, q) {
+hyperA_HannoX <- function(n_species, k, q) {
   # HG function: fast O(N), updated after Moulis meeting
   #this is the matrix builder: helps to create A and B operators
   #it produces the structure 
   # q^(m-n)*(1-q)^(k+2*n-m)*sum_j 2^j choose(k, j)*choose(n, m-n-j)
   j <- 0:k
   A1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
-  N <- N + 1
-  A <- diag(A1[1], nrow = N + 2, ncol = N + 2)
+  n_species <- n_species + 1
+  A <- diag(A1[1], nrow = n_species + 2, ncol = n_species + 2)
   A[1:(k + 1),1] <- A1
-  for (dst in 2:N) {
+  for (dst in 2:n_species) {
     src <- dst - 1
-    s <- src:min(N, 2 * src + k - 1)
+    s <- src:min(n_species, 2 * src + k - 1)
     A[s + 2, dst] <- A[s, src] + A[s + 1, src]
     m <- s - 1; n <- src - 1;
     A[s, src] <- A[s, src] * q ^ (m - n)*(1 - q)^(2 * n - m)
   }
-  A[N, N] = A[N, N] * (1 - q) ^ (N - 1);
-  A[1:N, 1:N]
+  A[n_species, n_species] = A[n_species, n_species] * (1 - q) ^ (n_species - 1);
+  A[1:n_species, 1:n_species]
 }
 
 #' @title Internal mbd function
@@ -36,7 +36,7 @@ create_A0 <- function(
   matrix_builder = hyperA_HannoX
 ){
   nvec <- 0:max_number_of_species
-  M <- lambda * matrix_builder(N = max_number_of_species, k = k, q = q)
+  M <- lambda * matrix_builder(n_species = max_number_of_species, k = k, q = q)
 
   #new version to avoid the dumpster problem at the end of the matrix
   diag(M) <= (-lambda) * (1 - (1 - q)^(k + nvec) ) - mu * (nvec + k) 
@@ -58,7 +58,7 @@ create_B0 <- function(
 ) {
   #lambda * choose(k, b) * q^b  is going to be added in logB in the main script
   k2 <- k - b
-  matrix_builder(N = max_number_of_species, k = k2, q = q)
+  matrix_builder(n_species = max_number_of_species, k = k2, q = q)
 }
 
 #' @title Internal mbd function

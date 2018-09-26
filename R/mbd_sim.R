@@ -86,7 +86,7 @@ mbd_sim <- function(
     pool <- 1:init_n_lineages
     while (total_count == init_n_lineages | length(pool) < init_n_lineages) {
       total_count <- init_n_lineages
-      N <- init_n_lineages
+      n_species <- init_n_lineages
       pool <- c(-1,2)
       t <- age
       L <- matrix(0, nrow = 1e6, 4)
@@ -95,16 +95,16 @@ mbd_sim <- function(
       L[1,1:4] <- c(t, 0,-1, -1)
       L[2,1:4] <- c(t,-1, 2, -1)
       while (t > 0) {
-        N <- length(pool)
-        total_rate <- N * (lambda + mu) + nu
+        n_species <- length(pool)
+        total_rate <- n_species * (lambda + mu) + nu
         if (total_rate > 0) {
           deltaT <- stats::rexp(1, rate = total_rate)
-          outcome <- sample(c(-1,1,2), size = 1, prob = c(N * mu, N * lambda, nu))
-          delta_n <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * stats::rbinom(n = 1, size = N, prob = q)
+          outcome <- sample(c(-1,1,2), size = 1, prob = c(n_species * mu, n_species * lambda, nu))
+          delta_n <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * stats::rbinom(n = 1, size = n_species, prob = q)
           t <- t - deltaT
 
           if (delta_n > 0 & t > 0) {
-            if (N > 1) {
+            if (n_species > 1) {
               parents <- sample(pool, replace = FALSE, size = delta_n)
             } else {
               parents <- pool
@@ -118,7 +118,7 @@ mbd_sim <- function(
             total_count <- total_count + delta_n
           }
           if (delta_n < 0 & t > 0) {
-            if (N > 1) {
+            if (n_species > 1) {
               dead <- sample(pool, replace = FALSE, size = 1)
             } else { 
               dead <- pool
@@ -226,7 +226,7 @@ mbd_sim0 <- function(
     while (total_count == init_n_lineages | length(pool) < init_n_lineages)
     {
       total_count=init_n_lineages
-      N <- init_n_lineages
+      n_species <- init_n_lineages
       pool <- c(-1,2)
       t <- age
       L <- matrix(0, nrow=1e6,4)
@@ -235,14 +235,14 @@ mbd_sim0 <- function(
       L[1,1:4] <- c(t,0,-1,-1)
       L[2,1:4] <- c(t,-1,2,-1)
       while (t > 0) {
-        N=length(pool)
-        deltaT <- stats::rexp(1, rate=(lambda+N*mu))
-        outcome=sample(c(-1,1), size=1, prob = c(N*mu, lambda))
-        delta_n <- stats::rbinom(n=1, size=N, prob=q)*(outcome==1)-1*(outcome==-1)
+        n_species <- length(pool)
+        deltaT <- stats::rexp(1, rate=(lambda + n_species * mu))
+        outcome=sample(c(-1,1), size=1, prob = c(n_species * mu, lambda))
+        delta_n <- stats::rbinom(n = 1, size = n_species, prob = q)*(outcome==1)-1*(outcome==-1)
         t=t-deltaT
         if (delta_n>0 & t>0)
         {
-          if (N>1) {
+          if (n_species>1) {
             parents <- sample(pool, replace = FALSE, size = delta_n)
           } else {
             parents <- pool
@@ -256,7 +256,7 @@ mbd_sim0 <- function(
           total_count <- total_count+delta_n
         }
         if (delta_n < 0 & t > 0) {
-          if (N > 1) {
+          if (n_species > 1) {
             dead <- sample(pool, replace = F, size=1)
           } else {
             dead <- pool

@@ -6,7 +6,7 @@
 #   parnames = c("lambda", "mu", "nu", "q")
 # ) {
 #   parnames <<- parnames
-#   Npars <<- length(parnames);
+#   n_pars <<- length(parnames);
 #   base_path=dirname(dirname(getwd()))
 #   if( !exists("path")  ){ #&& interactive()
 #     path<<-choose.dir(paste(base_path, "/Progress/RQ1 - Multiple Births/Results + Reports/4_parameters/", sep = ''), "Choose a suitable folder")
@@ -20,8 +20,8 @@
 #
 #   tidy_results=all_results[order(all_results[, dim(all_results)[2]]),]
 #   dimnames(tidy_results)[[2]]<-(c(parnames, "LL", "multiple_born", "number_of_tips", "percentage_multiple_species", "tree_id"))
-#   bad_results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))==(Npars+1),];#print(Nbad<-dim(bad_results)[1])
-#   results=tidy_results[rowSums(tidy_results[,1:(Npars+1)]==rep(-1,(Npars+1)))!=(Npars+1),];#print(N<-dim(results)[1])
+#   bad_results=tidy_results[rowSums(tidy_results[,1:(n_pars+1)]==rep(-1,(n_pars+1)))==(n_pars+1),];#print(Nbad<-dim(bad_results)[1])
+#   results=tidy_results[rowSums(tidy_results[,1:(n_pars+1)]==rep(-1,(n_pars+1)))!=(n_pars+1),];#print(N<-dim(results)[1])
 #   print(paste("There are ",Nbad<-dim(bad_results)[1], " bad results.", sep = ''))
 #   print(paste("There are ",N<<-dim(results)[1], " good results.", sep = ''))
 #
@@ -50,18 +50,18 @@ correlation_analysis <- function(
   idparsopt,
   mother_folder
 ) {
-  Npars=length(sim_pars);#pars_interval=list(c(0, quantile(results[,1],.95)), c(0, quantile(results[,2],.95)), c(0, quantile(results[,3],.95)))
-  if (missing(idparsopt)){estimated_pars=1:Npars}else{estimated_pars=idparsopt}
-  par_names = colnames(results)[1:Npars]
+  n_pars=length(sim_pars);#pars_interval=list(c(0, quantile(results[,1],.95)), c(0, quantile(results[,2],.95)), c(0, quantile(results[,3],.95)))
+  if (missing(idparsopt)){estimated_pars=1:n_pars}else{estimated_pars=idparsopt}
+  par_names = colnames(results)[1:n_pars]
 
   truevalues_color="red"; points_color = "azure4"; medians_color = "blue3"#"chartreuse3";
   medians_color_name = "blue"; truevalues_color_name = "red";
 
-  medians=rep(0,Npars);for (idpar in 1:Npars){medians[idpar]=stats::median(results[, idpar])}
+  medians=rep(0,n_pars);for (idpar in 1:n_pars){medians[idpar]=stats::median(results[, idpar])}
   medians_string=paste0( "MLE Medians (", medians_color_name, ") = (", paste(signif(medians,2), sep = "''", collapse = ", "), ")")
   truevalues_string=paste0( "True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars,2), sep = "''", collapse = ", "), ")")
-  axislimits=rep(NA,Npars)
-  for (i in 1:Npars){
+  axislimits=rep(NA, n_pars)
+  for (i in 1:n_pars){
     axislimits[i] <- stats::quantile(
       results[, i],
       probs = 1 - percentage_hidden_outliers
@@ -76,7 +76,7 @@ correlation_analysis <- function(
     good.lines = results[, i]<axislimits[i] & results[, j]<axislimits[j]
     ifelse(any(good.lines)>0, good.results <- results[good.lines,], good.results <- results)
 
-    if (i==j){graphics::hist((good.results[, i]), main=NULL, xlab = paste(par_names[i]), breaks = 15); #, breaks = 15
+    if (i==j){graphics::hist((good.results[, i]), main=NULL, xlab = paste(par_names[i]), breaks = 15)
       graphics::abline(v=sim_pars[i], col = truevalues_color)
       graphics::abline(v=medians[i], col = medians_color)
     }
@@ -101,7 +101,7 @@ correlation_analysis <- function(
       good.lines = results[, i]<axislimits[i] & results[, j]<axislimits[j]
       ifelse(any(good.lines)>0, good.results <- results[good.lines,], good.results <- results)
 
-      if (i==j){graphics::hist((good.results[, i]), main=NULL, xlab = paste(par_names[i]), breaks = 15); #, breaks = 15
+      if (i==j){graphics::hist((good.results[, i]), main=NULL, xlab = paste(par_names[i]), breaks = 15)
         graphics::abline(v=sim_pars[i], col = truevalues_color)
         graphics::abline(v=medians[i], col = medians_color)
       }
@@ -125,11 +125,11 @@ percentiles_function <- function(
   quantiles_choice = c(.25, .50, .75)
 ) {
   quantiles_names <- format(round(quantiles_choice,2), nsmall = 2)
-  Npars <- length(sim_pars);#pars_interval=list(c(0, stats::quantile(results[,1],.95)), c(0, quantile(results[,2],.95)), c(0, quantile(results[,3],.95)))
-  parnames <-  colnames(results)[1:Npars]
+  n_pars <- length(sim_pars);#pars_interval=list(c(0, stats::quantile(results[,1],.95)), c(0, quantile(results[,2],.95)), c(0, quantile(results[,3],.95)))
+  parnames <-  colnames(results)[1:n_pars]
   percentiles <- vector("list",3)
-  for (idpar in 1:Npars){percentiles[[idpar]] <- stats::quantile(results[, idpar], quantiles_choice)}
-  percentiles <- t(matrix(unlist(percentiles), nrow = 3, ncol = Npars));
+  for (idpar in 1:n_pars){percentiles[[idpar]] <- stats::quantile(results[, idpar], quantiles_choice)}
+  percentiles <- t(matrix(unlist(percentiles), nrow = 3, ncol = n_pars));
   colnames(percentiles) <- quantiles_names; rownames(percentiles) <- parnames
   if (printit==1)
   {
@@ -311,12 +311,12 @@ negatives_correction <- function(
   problems <- 0
   if (any(is.na(v))) { 
     problems <- 1
-    NA_components <- which(is.na(v) & !is.nan(v) )
-    NaN_components <- which(is.nan(v))
+    na_components <- which(is.na(v) & !is.nan(v) )
+    nan_components <- which(is.nan(v))
     if (display_output == 1) {
       cat("There are non-numeric components for par values:", pars, "\n")
-      if (length(NA_components) > 0) { cat("NA component are:", NA_components)}
-      if (length(NaN_components) > 0) { cat("NaN component are:", NaN_components)}
+      if (length(na_components) > 0) { cat("NA component are:", na_components)}
+      if (length(nan_components) > 0) { cat("NaN component are:", nan_components)}
     }
   }
 
@@ -472,20 +472,22 @@ branchLengths <- function(tr)
     )
   )
 
-  tip.numbers=1:length(tr$tip)
-  BL2=tr$edge.length[match(tip.numbers, tr$edge[,2])]
+  tip.numbers <- 1:length(tr$tip)
+  BL2 <- tr$edge.length[match(tip.numbers, tr$edge[,2])]
 
-  if(type=='NAMED')
-  {
-    res=data.frame(	Number=c(sort(node.numbers), tip.numbers),
-                    Name=c(tr$node, tr$tip),
-                    Lengths=c(BL1,BL2))
+  if (type=='NAMED') {
+    res <- data.frame(
+      Number = c(sort(node.numbers), tip.numbers),
+      Name = c(tr$node, tr$tip),
+      Lengths = c(BL1,BL2)
+    )
   }
-  if(type=='UNNAMED')
-  {
-    res=data.frame(	Number=c(sort(node.numbers), tip.numbers),
-                    Name=c(rep(NA, tr$Nnode), tr$tip),
-                    Lengths=c(BL1,BL2))
+  if (type=='UNNAMED') {
+    res <- data.frame(
+      Number = c(sort(node.numbers), tip.numbers),
+      Name = c(rep(NA, tr$Nnode), tr$tip),
+      Lengths = c(BL1,BL2)
+    )
   }
 
   return(res)
@@ -525,9 +527,9 @@ summarize_beast_posterior <- function(
     tree.names.pos=equals-2
 
     #How many trees?
-    Ntrees=length(tree.positions)
-    if(is.null(subsamp)) subsamp=Ntrees
-    samp=sample(Ntrees, round(subsamp/length(input_trees_path)), replace=FALSE)
+    n_trees=length(tree.positions)
+    if(is.null(subsamp)) subsamp=n_trees
+    samp=sample(n_trees, round(subsamp/length(input_trees_path)), replace=FALSE)
 
     #Get correspondance between numbers and taxa
     #How many taxa?

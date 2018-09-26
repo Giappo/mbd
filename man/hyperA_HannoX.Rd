@@ -4,10 +4,10 @@
 \alias{hyperA_HannoX}
 \title{Internal mbd function}
 \usage{
-hyperA_HannoX(N, k, q)
+hyperA_HannoX(n_species, k, q)
 }
 \arguments{
-\item{N}{something}
+\item{n_species}{number of species}
 
 \item{k}{something}
 
