@@ -34,5 +34,17 @@ mbd_ml2 <- function(
   n_missing_species = 0,
   conditioned_on = "nothing"
 ) {
+  if (!is.numeric(branching_times)) {
+    stop("'branching_times' must be numeric")
+  }
+  if (!all(branching_times >= 0.0)) {
+    stop("All 'branching_times' must be positive")
+  }
+  if (!is_mbd_params(init_param_values)) {
+    stop(
+      "'init_param_values' must be an mbd_params, ",
+      "as created by 'create_mbd_params'"
+    )
+  }
 
 }

@@ -42,3 +42,66 @@ test_that("use", {
   )
 })
   
+test_that("abuse", {
+
+  skip("WIP")
+  expect_silent(
+    mbd_ml2(
+      branching_times = c(1, 2, 3),
+      init_param_values = create_mbd_params(
+        lambda = lambda,
+        mu = mu,
+        nu = nu,
+        q = q
+      ),
+      fixed_params = c("lambda", "mu", "nu"),
+      estimated_params = c("q")
+    )
+  )
+
+  expect_error(
+    mbd_ml2(
+      branching_times = "nonsense",
+      init_param_values = create_mbd_params(
+        lambda = lambda,
+        mu = mu,
+        nu = nu,
+        q = q
+      ),
+      fixed_params = c("lambda", "mu", "nu"),
+      estimated_params = c("q")
+    ),
+    "'branching_times' must be numeric"
+  )
+
+  expect_error(
+    mbd_ml2(
+      branching_times = c(1, 2, -34.56),
+      init_param_values = create_mbd_params(
+        lambda = lambda,
+        mu = mu,
+        nu = nu,
+        q = q
+      ),
+      fixed_params = c("lambda", "mu", "nu"),
+      estimated_params = c("q")
+    ),
+    "All 'branching_times' must be positive"
+  )
+  
+  expect_error(
+    mbd_ml2(
+      branching_times = c(1, 2, 3),
+      init_param_values = "nonsense",
+      fixed_params = c("lambda", "mu", "nu"),
+      estimated_params = c("q")
+    ),
+    paste0(
+      "'init_param_values' must be an mbd_params, ",
+      "as created by 'create_mbd_params'"
+    )
+  )
+
+})
+  
+
