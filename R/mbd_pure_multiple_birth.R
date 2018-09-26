@@ -25,7 +25,7 @@ pmb_loglik <- function(
   )
   condition2 <- (lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
   if (condition1 | condition2) {
-    th_loglik = -Inf
+    th_loglik <- -Inf
   } else {
     data <- brts2time_intervals_and_births(test_brts)
     time_intervals <- data$time_intervals
@@ -82,7 +82,7 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
   condition1 <- (any(is.nan(test_pars)) != 0 | any(is.infinite(test_pars)) != 0 )
   condition2 <- (lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
   if (condition1 | condition2) {
-    th_loglik = -Inf
+    th_loglik <- -Inf
   } else {
     data <- brts2time_intervals_and_births(test_brts)
     time_intervals <- data$time_intervals
@@ -222,21 +222,22 @@ pmb_ML <- function(
       cat("You are fixing", fixstr, "\n")
       cat("Optimizing the likelihood - this may take a while.", "\n")
       utils::flush.console()
-      if (pars_transform == 1)
-      {
-        trparsopt = initparsopt/(1 + initparsopt)
-        trparsopt[which(initparsopt == Inf)] = 1
-        trparsfix = parsfix/(1 + parsfix)
-        trparsfix[which(parsfix == Inf)] = 1
-      }else
-      {
+      if (pars_transform == 1) {
+        trparsopt <- initparsopt/(1 + initparsopt)
+        trparsopt[which(initparsopt == Inf)] <- 1
+        trparsfix <- parsfix/(1 + parsfix)
+        trparsfix[which(parsfix == Inf)] <- 1
+      } else {
         trparsopt <- initparsopt
         trparsfix <- parsfix
       }
-      optimpars = c(tol, maxiter)
-      initloglik <- pmb_loglik_choosepar(trparsopt = trparsopt, trparsfix = trparsfix, idparsopt = idparsopt,
-                                               idparsfix = idparsfix, brts = brts, soc = soc,
-                                               pars_transform = pars_transform) #there's no pars2 here and instead 3 more args at the end
+      optimpars <- c(tol, maxiter)
+      # there's no pars2 here and instead 3 more args at the end
+      initloglik <- pmb_loglik_choosepar(
+        trparsopt = trparsopt, trparsfix = trparsfix, idparsopt = idparsopt,
+        idparsfix = idparsfix, brts = brts, soc = soc,
+        pars_transform = pars_transform
+      ) 
       cat("The loglikelihood for the initial parameter values is", initloglik, "\n")
       utils::flush.console()
       if (initloglik == -Inf) {

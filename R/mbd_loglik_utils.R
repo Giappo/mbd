@@ -20,7 +20,7 @@ hyper_a_hanno <- function(n_species, k, q) {
     m <- s - 1; n <- src - 1;
     A[s, src] <- A[s, src] * q ^ (m - n) * (1 - q) ^ (2 * n - m)
   }
-  A[n_species, n_species] = A[n_species, n_species] * (1 - q) ^ (n_species - 1);
+  A[n_species, n_species] <- A[n_species, n_species] * (1 - q) ^ (n_species - 1);
   A[1:n_species, 1:n_species]
 }
 
@@ -43,7 +43,7 @@ create_a_zero <- function(
   #new version to avoid the dumpster problem at the end of the matrix
   diag(M) <= (-lambda) * (1 - (1 - q) ^ (k + nvec) ) - mu * (nvec + k)
 
-  M[row(M) == col(M) - 1] = mu * nvec[2:(max_number_of_species + 1)]
+  M[row(M) == col(M) - 1] <- mu * nvec[2:(max_number_of_species + 1)]
   M
 }
 
@@ -117,7 +117,7 @@ create_B <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_A.no_mbd = function(
+create_A.no_mbd <- function(
   lambda,
   mu,
   nu,
@@ -145,7 +145,7 @@ create_A.no_mbd = function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_B.no_mbd = function(
+create_B.no_mbd <- function(
   lambda,
   nu,
   q,
@@ -257,12 +257,12 @@ mbd_loglik_rhs <- function(
 ) {
   #builds right hand side of the ODE set for multiple birth model
   with(as.list(x), {
-    starting_vector = x
-    transition_matrix = pars
-    dx  = rep(0, length(starting_vector))
-    dx  = drop(transition_matrix %*% starting_vector)
-    out = (dx)
-    names(out) = names(x)
+    starting_vector <- x
+    transition_matrix <- pars
+    dx <- rep(0, length(starting_vector))
+    dx <- drop(transition_matrix %*% starting_vector)
+    out <- (dx)
+    names(out) <- names(x)
     return(list(out))
   })
 }
@@ -748,7 +748,7 @@ alpha_analysis <- function(
       pc_1 <- pc_2
     }
 
-    count = count + 1
+    count <- count + 1
     # print(alpha)
   }
   if (max_k * alpha >= 2000) {

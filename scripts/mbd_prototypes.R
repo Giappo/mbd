@@ -47,10 +47,10 @@ mbd_loglik0 <- function(
       q >= 1 - safety_threshold
   )
   if (condition1 | condition2) {
-    loglik = -Inf
+    loglik <- -Inf
   } else if (length(pars) != 3) { 
     print("input parameters are wrong")
-    loglik = -Inf
+    loglik <- -Inf
   } else{
     pc <- -1
     while (pc < 0 && alpha <= max(starting_alpha, 80)) {
@@ -493,9 +493,9 @@ mbd_ml0 <- function(
           s1 <- sprintf(tobeprint)
           
           if (out2$conv != 0 & changeloglikifnoconv == TRUE) { 
-            out2$loglik = -Inf 
+            out2$loglik <- -Inf 
           }
-          s2 = sprintf('Maximum loglikelihood: %f',ML)
+          s2 <- sprintf('Maximum loglikelihood: %f',ML)
           cat("\n",s1,"\n",s2,"\n\n")
         }# bracket#5
       }# bracket#4

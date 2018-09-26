@@ -112,17 +112,17 @@ mbd_ml <- function(
   }
 
   if (length(namepars[idparsopt]) == 0) {
-    optstr = "nothing"
+    optstr <- "nothing"
   } else {
-    optstr = namepars[idparsopt]
+    optstr <- namepars[idparsopt]
   }
   if (verbose == TRUE) {
     cat("You are optimizing", optstr, "\n")
   }
   if (length(namepars[idparsfix]) == 0) {
-    fixstr = "nothing"
+    fixstr <- "nothing"
   } else {
-    fixstr = namepars[idparsfix]
+    fixstr <- namepars[idparsfix]
   }
   if (verbose == TRUE) {
     cat("You are fixing", fixstr, "\n")
@@ -194,7 +194,7 @@ mbd_ml <- function(
   MLtrpars <- as.numeric(unlist(out$par))
   if (pars_transform == 1) {
     #Rampal's transformation
-    MLpars = MLtrpars / (1 - MLtrpars)
+    MLpars <- MLtrpars / (1 - MLtrpars)
   } else {
     MLpars <- MLtrpars
   }
