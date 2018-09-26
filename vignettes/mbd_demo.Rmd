@@ -73,7 +73,7 @@ soc <- 2 # Use a crown age
 crown_age <- 10
 cond <- 1 # Condition on non-extinction
 
-sim <- mbd:::mbd_sim(
+sim <- mbd_sim(
   pars = sim_pars, 
   soc = soc, 
   age = crown_age, 
@@ -162,7 +162,7 @@ the parameters ($\lambda, \mu, \nu, q$) or any their subset of your choice.
 Because this is a heavy calculation, we'll use a simpler tree:
 
 ```{r}
-sim <- mbd:::mbd_sim(
+sim <- mbd_sim(
   pars = sim_pars, 
   soc = soc, 
   age = crown_age / 10, 
@@ -180,7 +180,7 @@ ids <- 1:4
 idparsfix <- ids[-idparsopt] # Fix all parameters except q
 parsfix <- sim_pars[idparsfix] # Use the known values for the fixed parameters
 initparsopt <- 0.15 # Set an initial guess for q
-mbd:::mbd_ML(
+mbd_ML(
   brts = sim$brts, 
   initparsopt = initparsopt, 
   idparsopt = idparsopt, 
