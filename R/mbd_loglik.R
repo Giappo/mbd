@@ -212,7 +212,7 @@ mbd_loglik <- function(
     }
 
     #Selecting the state I am interested in
-    vm <- 1/choose((k + missnumspec), k)
+    vm <- 1 / choose((k + missnumspec), k)
     P  <- vm * Qt[t, (missnumspec + 1)] #I have to include +1 because of Q0
 
     #Removing C and D effects from the LL

@@ -262,7 +262,7 @@ calculate_conditional_probability <- function(
 
   m <- 0:lx; length(m)
   one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
-  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
+  one_over_qm_binom <- 1 / choose((m + soc), soc)
   Qi <- rep(0, lx + 1);  Qi[3] <- 1 #starting with k = 0 and m = 2 missing species
 
   TM <- create_A(
@@ -309,7 +309,7 @@ calculate_conditional_probability0 <- function(
 
   m <- 0:lx; length(m)
   one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
-  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
+  one_over_qm_binom <- 1 / choose((m + soc), soc)
   Qi <- c(1, rep(0, lx)); length(Qi)
 
   TM <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
@@ -349,7 +349,7 @@ calculate_conditional_probability0PB <- function(
 
   m <- 0:lx; length(m)
   one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
-  one_over_qm_binom <- 1/choose((m + soc), soc); length(one_over_qm_binom)
+  one_over_qm_binom <- 1 / choose((m + soc), soc)
   Qi <- c(1, rep(0, lx)); length(Qi)
 
   TM <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
@@ -412,7 +412,12 @@ find_best_lx_for_Pc <- function(
     lx <- lxvec[right.lx_coord]
   }
 
-  lx_test2 <- rep(NA, length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2 * step1/a)))); j <- 1; right.lx_coord2 <- 0
+  lx_test2 <- rep(
+    NA, 
+    length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2 * step1 / a)))
+  )
+  j <- 1
+  right.lx_coord2 <- 0
   for (lx2 in lxvec) {
     lx_test2[j] <- mbd::calculate_conditional_probability0(
       brts = brts,
@@ -511,8 +516,8 @@ alpha_conditional_probability <- function(
     Pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))
   } else {
     m <- 0:max_number_of_species;
-    one_over_Cm <- (3 * (m + 1))/(m + 3)
-    one_over_qm_binom <- 1/choose((m + init_n_lineages), init_n_lineages)
+    one_over_Cm <- (3 * (m + 1)) / (m + 3)
+    one_over_qm_binom <- 1 / choose((m + init_n_lineages), init_n_lineages)
     tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) #applying tips constrain
     if (cond == 1) {
       # I am already considering the starting species to survive. 
@@ -635,7 +640,6 @@ alpha_analysis <- function(
     } else {
       same_result_count <- 0
       deltaPc <- abs(Pc2 - Pc1)/Pc1;
-      # deltaAlpha = floor(  10*(-1 + 2/( 1 + exp(-(1/2*deltaPc)) ))  )
       deltaAlpha <- floor(10 * deltaPc)
       alpha <- alpha + deltaAlpha
       Pc1 <- Pc2
