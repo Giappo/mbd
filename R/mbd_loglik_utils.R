@@ -21,7 +21,8 @@ hyper_a_hanno <- function(n_species, k, q) {
     n <- src - 1;
     matrix_a[s, src] <- matrix_a[s, src] * q ^ (m - n) * (1 - q) ^ (2 * n - m)
   }
-  matrix_a[n_species, n_species] <- matrix_a[n_species, n_species] * (1 - q) ^ (n_species - 1);
+  matrix_a[n_species, n_species] <- matrix_a[n_species, n_species] * 
+    (1 - q) ^ (n_species - 1);
   matrix_a[1:n_species, 1:n_species]
 }
 
@@ -446,7 +447,9 @@ calculate_conditional_probability0PB <- function(
   missingspecies_max <- min((tips_interval[2] - 2), lx)
   # +1 is because of the zero-th component
   tips_components <- 1 + c(missingspecies_min, missingspecies_max)
-  opposite_tips_components <- (m + 1)[!((m + 1) %in% (tips_components[1]:tips_components[2]))]
+  opposite_tips_components <- (m + 1)[
+    !((m + 1) %in% (tips_components[1]:tips_components[2]))
+  ]
   1 - sum(total_product[opposite_tips_components])
 }
 

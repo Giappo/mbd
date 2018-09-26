@@ -48,11 +48,12 @@ pmb_loglik <- function(
                    exp(-k[t] * lambda * (time_intervals[t]))   # (2)
     }
     #calculating nodes contribution
-    # nu contribution: nu*(k, b)*q^b*(1-q)^(k-b)
+    # (1) nu contribution: nu*(k, b)*q^b*(1-q)^(k-b)
+    # (2) lambda contribution: lambda*k (only if b==1)
     b_term <- (
-      nu * choose(k[-length(k)], births) * q^births *
-      (1 - q) ^ (k[-length(k)] - births)
-    ) + lambda * k[-length(k)] * (births == 1)                                               # lambda contribution: lambda*k (only if b==1)
+      nu * choose(k[-length(k)], births) * q^births *  # (1)
+      (1 - q) ^ (k[-length(k)] - births)               # (1)
+    ) + lambda * k[-length(k)] * (births == 1)         # (2)
 
     th_loglik <- sum(log(a_term)) + sum(log(b_term))
   }
@@ -263,12 +264,19 @@ pmb_ML <- function(
             ml_pars1[idparsfix] <- parsfix
           }
           ML <- as.numeric(unlist(out$fvalues))
-          out2 <- data.frame(t(ml_pars1), loglik = ML, df = length(initparsopt), conv = unlist(out$conv))
+          out2 <- data.frame(
+            t(ml_pars1), 
+            loglik = ML, 
+            df = length(initparsopt), 
+            conv = unlist(out$conv)
+          )
 
           tobeprint <- "Maximum likelihood parameter estimates:"
           for (ii in 1:n_pars)
           {
-            tobeprint <- paste(tobeprint, paste(names(ml_pars1[ii]), ":", sep = ""),ml_pars1[ii])
+            tobeprint <- paste(
+              tobeprint, paste(names(ml_pars1[ii]), ":", sep = ""),ml_pars1[ii]
+            )
           }
           s1 <- sprintf(tobeprint)
 

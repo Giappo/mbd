@@ -202,12 +202,19 @@ mbd_ml <- function(
   ml_pars1[idparsopt] <- ml_pars
   if (length(idparsfix) != 0) {ml_pars1[idparsfix] <- parsfix}
   ML <- as.numeric(unlist(out$fvalues))
-  out2 <- data.frame(t(ml_pars1), loglik = ML, df = length(initparsopt), conv = unlist(out$conv))
+  out2 <- data.frame(
+    t(ml_pars1), 
+    loglik = ML, 
+    df = length(initparsopt), 
+    conv = unlist(out$conv)
+  )
 
   tobeprint <- "Maximum likelihood parameter estimates:"
   for (ii in 1:n_pars)
   {
-    tobeprint <- paste(tobeprint, paste(names(ml_pars1[ii]), ":", sep = ""),ml_pars1[ii])
+    tobeprint <- paste(
+      tobeprint, paste(names(ml_pars1[ii]), ":", sep = ""),ml_pars1[ii]
+    )
   }
   if (verbose == TRUE) {
     s1 <- sprintf(tobeprint)
