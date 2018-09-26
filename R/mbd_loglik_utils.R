@@ -17,7 +17,8 @@ hyper_a_hanno <- function(n_species, k, q) {
     src <- dst - 1
     s <- src:min(n_species, 2 * src + k - 1)
     A[s + 2, dst] <- A[s, src] + A[s + 1, src]
-    m <- s - 1; n <- src - 1;
+    m <- s - 1
+    n <- src - 1;
     A[s, src] <- A[s, src] * q ^ (m - n) * (1 - q) ^ (2 * n - m)
   }
   A[n_species, n_species] <- A[n_species, n_species] * (1 - q) ^ (n_species - 1);
@@ -51,7 +52,7 @@ create_a_zero <- function(
 #' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-create_B0 <- function(
+create_b_zero <- function(
   max_number_of_species,
   q,
   k,
@@ -68,7 +69,7 @@ create_B0 <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_A <- function(
+create_a <- function(
   lambda,
   mu,
   nu,
@@ -94,7 +95,7 @@ create_A <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_B <- function(
+create_b <- function(
   lambda,
   nu,
   q,
@@ -102,7 +103,7 @@ create_B <- function(
   b,
   max_number_of_species
 ) {
-  m <- create_B0(
+  m <- create_b_zero(
     max_number_of_species = max_number_of_species,
     q = q,
     k = k,
@@ -117,7 +118,7 @@ create_B <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_A.no_mbd <- function(
+create_a.no_mbd <- function(
   lambda,
   mu,
   nu,
@@ -145,7 +146,7 @@ create_A.no_mbd <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_B.no_mbd <- function(
+create_b.no_mbd <- function(
   lambda,
   nu,
   q,
@@ -154,7 +155,7 @@ create_B.no_mbd <- function(
   max_number_of_species,
   minimum_multiple_births
 ) {
-  m <- create_B0(
+  m <- create_b_zero(
     max_number_of_species = max_number_of_species,
     q = q, k = k, b = b
   )
@@ -288,7 +289,7 @@ determine_k_limit <- function(
   mvec <- 0:lx
   Qi <- c(1, rep(0, lx))
   total_time <- max(abs(brts));
-  T0 <- create_A(
+  T0 <- create_a(
     lambda = lambda,
     mu = 0,
     nu = nu,
@@ -332,7 +333,7 @@ calculate_conditional_probability <- function(
   #starting with k = 0 and m = 2 missing species
   Qi <- rep(0, lx + 1);  Qi[3] <- 1
 
-  TM <- create_A(
+  TM <- create_a(
     lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
     max_number_of_species = lx
   )
@@ -379,7 +380,7 @@ calculate_conditional_probability0 <- function(
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   Qi <- c(1, rep(0, lx)); length(Qi)
 
-  TM <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+  TM <- create_a(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                        max_number_of_species = lx)
 
   A2_v1 <- A_operator(
@@ -427,7 +428,7 @@ calculate_conditional_probability0PB <- function(
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   Qi <- c(1, rep(0, lx)); length(Qi)
 
-  TM <- create_A(
+  TM <- create_a(
     lambda = lambda,
     mu = mu,
     nu = nu,
@@ -630,7 +631,7 @@ alpha_conditional_probability <- function(
     }
 
     Qi <- c(1, rep(0, max_number_of_species))
-    mk_n_zero <- create_A(
+    mk_n_zero <- create_a(
       lambda = lambda,
       mu = mu,
       nu = nu,
@@ -655,7 +656,7 @@ alpha_conditional_probability <- function(
 
     #adjust for the required minimum amount of mbd
     if (minimum_multiple_births > 0) {
-      mk_n_zero.no_mbd <- create_A.no_mbd(
+      mk_n_zero.no_mbd <- create_a.no_mbd(
         lambda = lambda,
         mu = mu,
         nu = nu,

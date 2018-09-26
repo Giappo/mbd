@@ -2,7 +2,7 @@
 % Please edit documentation in R/is_mbd_params.R
 \name{is_mbd_params}
 \alias{is_mbd_params}
-\title{Is object \code{x} an MBD parameter set, 
+\title{Is object \code{x} an MBD parameter set,
   as can be created by \code{create_mbd_params}?}
 \usage{
 is_mbd_params(x)
@@ -15,7 +15,7 @@ its an MBD parameter set}
 TRUE if yes, else FALSE
 }
 \description{
-Is object \code{x} an MBD parameter set, 
+Is object \code{x} an MBD parameter set,
   as can be created by \code{create_mbd_params}?
 }
 \author{
