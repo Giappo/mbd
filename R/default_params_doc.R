@@ -82,8 +82,8 @@
 #' @param precision something
 #' @param printit something
 #' @param print_errors something
-#' @param Q something
-#' @param q something
+#' @param q_matrix a matrix of something
+#' @param q a speciation parameter
 #' @param quantiles_choice something
 #' @param recursive something
 #' @param reltol something
@@ -185,7 +185,7 @@ default_params_doc <- function(
   precision,
   print_errors,
   printit,
-  Q,
+  q_matrix,
   q,
   quantiles_choice,
   recursive,

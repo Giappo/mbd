@@ -63,7 +63,7 @@ pmb_loglik <- function(
 #' Does something L
 #' @inheritParams default_params_doc
 #' @export
-pmb_loglik_Qvector <- function(pars, brts, soc = 2){
+pmb_loglik_q_vector <- function(pars, brts, soc = 2){
   #I would like to get the entire Q vector out of this...
 
   #BOTH LAmbdA AND NU

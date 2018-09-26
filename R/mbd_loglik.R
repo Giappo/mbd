@@ -132,10 +132,10 @@ mbd_loglik <- function(
       lx <- max_number_of_species <- alpha * max_k;
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
-      Qi <- c(1, rep(0, lx))
+      q_i <- c(1, rep(0, lx))
       #do I need a +1 in nrow?
       q_t <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals))
-      q_t[1,] <- Qi
+      q_t[1,] <- q_i
       dimnames(q_t)[[2]] <- paste0("Q", 0:lx)
       # init_n_lineages is the number of species at t = 1
       k <- init_n_lineages
@@ -156,7 +156,7 @@ mbd_loglik <- function(
           max_number_of_species = lx
         )
         q_t[t,] <- a_operator(
-          Q = q_t[(t - 1),],
+          q_matrix = q_t[(t - 1),],
           transition_matrix = transition_matrix,
           time_interval = time_intervals[t],
           precision = 50L,
@@ -232,7 +232,8 @@ mbd_loglik <- function(
 
     #Selecting the state I am interested in
     vm <- 1 / choose((k + missnumspec), k)
-    P  <- vm * q_t[t, (missnumspec + 1)] #I have to include +1 because of Q0
+    #I have to include +1 because of Q0
+    P  <- vm * q_t[t, (missnumspec + 1)] 
 
     #Removing C and D effects from the LL
     loglik <- log(P) - sum(log(C)) - sum(log(D))

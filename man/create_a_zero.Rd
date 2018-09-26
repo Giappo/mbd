@@ -14,7 +14,7 @@ create_a_zero(max_number_of_species, lambda, mu, q, k,
 
 \item{mu}{something}
 
-\item{q}{something}
+\item{q}{a speciation parameter}
 
 \item{k}{something}
 

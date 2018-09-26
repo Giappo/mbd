@@ -4,11 +4,11 @@
 \alias{a_operator}
 \title{Internal mbd function}
 \usage{
-a_operator(Q, transition_matrix, time_interval, precision = 50L,
+a_operator(q_matrix, transition_matrix, time_interval, precision = 50L,
   a_abstol = 1e-16, a_reltol = 1e-10, methode = "expo")
 }
 \arguments{
-\item{Q}{something}
+\item{q_matrix}{a matrix of something}
 
 \item{transition_matrix}{something}
 

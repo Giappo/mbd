@@ -171,7 +171,7 @@ create_b.no_mbd <- function(
 #' @details This is not to be called by the user.
 #' @export
 a_operator <- function(
-  Q,
+  q_matrix,
   transition_matrix,
   time_interval,
   precision = 50L,
@@ -183,7 +183,7 @@ a_operator <- function(
   precision_step1 <- 40
   precision_step2 <- 50
   max_repetitions <- 10
-  result <- rep(-1, length(Q))
+  result <- rep(-1, length(q_matrix))
   bad_result <- 0
 
   testit::assert(methode != "sexpm")
@@ -195,7 +195,7 @@ a_operator <- function(
     ) {
       result <- try(
         expoRkit::expv(
-          v = Q,
+          v = q_matrix,
           x = transition_matrix,
           t = time_interval,
           m = precision
@@ -228,7 +228,7 @@ a_operator <- function(
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
     R.utils::withTimeout(result <- deSolve::ode(
-      y = Q,
+      y = q_matrix,
       times = times,
       func = mbd_loglik_rhs,
       parms = ode_matrix,
@@ -281,7 +281,7 @@ determine_k_limit <- function(
   nu <- pars[3]
   q <- pars[4]
   mvec <- 0:lx
-  Qi <- c(1, rep(0, lx))
+  q_i <- c(1, rep(0, lx))
   total_time <- max(abs(brts));
   T0 <- create_a(
     lambda = lambda,
@@ -292,7 +292,7 @@ determine_k_limit <- function(
     max_number_of_species = lx
   )
   Pm <- a_operator(
-    Q = Qi,
+    q_matrix = q_i,
     transition_matrix = T0,
     time_interval = total_time,
     precision = 250L,
@@ -325,7 +325,7 @@ calculate_conditional_probability <- function(
   one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   #starting with k = 0 and m = 2 missing species
-  Qi <- rep(0, lx + 1);  Qi[3] <- 1
+  q_i <- rep(0, lx + 1);  q_i[3] <- 1
 
   TM <- create_a(
     lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
@@ -333,7 +333,7 @@ calculate_conditional_probability <- function(
   )
 
   a2_v1 <- a_operator(
-    Q = Qi,
+    q_matrix = q_i,
     transition_matrix = TM,
     time_interval = total_time,
     precision = 250L,
@@ -372,13 +372,13 @@ calculate_conditional_probability0 <- function(
   m <- 0:lx; length(m)
   one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
-  Qi <- c(1, rep(0, lx)); length(Qi)
+  q_i <- c(1, rep(0, lx)); length(q_i)
 
   TM <- create_a(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                        max_number_of_species = lx)
 
   a2_v1 <- a_operator(
-    Q = Qi,
+    q_matrix = q_i,
     transition_matrix = TM,
     time_interval = total_time,
     precision = 250L,
@@ -420,7 +420,7 @@ calculate_conditional_probability0PB <- function(
   m <- 0:lx; length(m)
   one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
-  Qi <- c(1, rep(0, lx)); length(Qi)
+  q_i <- c(1, rep(0, lx)); length(q_i)
 
   TM <- create_a(
     lambda = lambda,
@@ -432,7 +432,7 @@ calculate_conditional_probability0PB <- function(
   )
 
   a2_v1 <- a_operator(
-    Q = Qi,
+    q_matrix = q_i,
     transition_matrix = TM,
     time_interval = total_time,
     precision = 250L,
@@ -610,7 +610,7 @@ alpha_conditional_probability <- function(
       tips_components <- tips_components - init_n_lineages
     }
 
-    Qi <- c(1, rep(0, max_number_of_species))
+    q_i <- c(1, rep(0, max_number_of_species))
     mk_n_zero <- create_a(
       lambda = lambda,
       mu = mu,
@@ -620,7 +620,7 @@ alpha_conditional_probability <- function(
       max_number_of_species = max_number_of_species
     )
     a2_v1 <- a_operator(
-      Q = Qi,
+      q_matrix = q_i,
       transition_matrix = mk_n_zero,
       time_interval = total_time,
       precision = 50L,
@@ -646,7 +646,7 @@ alpha_conditional_probability <- function(
         minimum_multiple_births = minimum_multiple_births
       )
       a2_v1.no_mbd <- a_operator(
-        Q = Qi,
+        q_matrix = q_i,
         transition_matrix = mk_n_zero.no_mbd,
         time_interval = total_time,
         precision = 50L,

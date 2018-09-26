@@ -14,9 +14,9 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   mbd_lambda, methode, minimum_multiple_births, missnumspec, mu,
   mutation_rate, n_species, init_n_lineages, n_steps, n_subs, nu,
   optimmethod, pars, pars_transform, parsfix, precision, print_errors,
-  printit, Q, q, quantiles_choice, recursive, reltol, res, results, s,
-  sample_interval, sequence_length, sim_pars, sim_phylo, soc, subsamp, t,
-  t1, t2, tips_interval, time_interval, tol, tr, transition_matrix,
+  printit, q_matrix, q, quantiles_choice, recursive, reltol, res, results,
+  s, sample_interval, sequence_length, sim_pars, sim_phylo, soc, subsamp,
+  t, t1, t2, tips_interval, time_interval, tol, tr, transition_matrix,
   trparsfix, trparsopt, values, verbose, x, x_name, x_splits, y, y_name,
   y_splits, z, z_name)
 }
@@ -157,9 +157,9 @@ or
 
 \item{printit}{something}
 
-\item{Q}{something}
+\item{q_matrix}{a matrix of something}
 
-\item{q}{something}
+\item{q}{a speciation parameter}
 
 \item{quantiles_choice}{something}
 

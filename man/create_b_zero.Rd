@@ -10,7 +10,7 @@ create_b_zero(max_number_of_species, q, k, b,
 \arguments{
 \item{max_number_of_species}{something}
 
-\item{q}{something}
+\item{q}{a speciation parameter}
 
 \item{k}{something}
 

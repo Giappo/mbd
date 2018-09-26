@@ -11,7 +11,7 @@ hyper_a_hanno(n_species, k, q)
 
 \item{k}{something}
 
-\item{q}{something}
+\item{q}{a speciation parameter}
 }
 \description{
 Internal mbd function.

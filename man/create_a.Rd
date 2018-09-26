@@ -13,7 +13,7 @@ create_a(lambda, mu, nu, q, k, max_number_of_species)
 
 \item{nu}{something}
 
-\item{q}{something}
+\item{q}{a speciation parameter}
 
 \item{k}{something}
 

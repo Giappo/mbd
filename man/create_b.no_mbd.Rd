@@ -12,7 +12,7 @@ create_b.no_mbd(lambda, nu, q, k, b, max_number_of_species,
 
 \item{nu}{something}
 
-\item{q}{something}
+\item{q}{a speciation parameter}
 
 \item{k}{something}
 
