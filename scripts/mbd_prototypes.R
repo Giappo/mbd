@@ -70,13 +70,13 @@ mbd_loglik0 <- function(
       #nvec <- 0:max_number_of_species
       
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
-      Qi <- c(1,rep(0, max_number_of_species))
+      q_i <- c(1,rep(0, max_number_of_species))
       q_t <- matrix(
         0, 
         ncol = (max_number_of_species + 1), 
         nrow = length(time_intervals)
       )
-      q_t[1, ] <- Qi
+      q_t[1, ] <- q_i
       dimnames(q_t)[[2]] <- paste("Q", 0:max_number_of_species, sep = "")
       # init_n_species is the number of species at t=1
       k <- init_n_species 
@@ -196,7 +196,7 @@ mbd_loglik0 <- function(
         total_time <- max(abs(brts));
         testit::assert(max_number_of_species < Inf)
         m <- 0:max_number_of_species
-        one_over_Cm <- (3 * (m + 1)) / (m + 3)
+        one_over_cm <- (3 * (m + 1)) / (m + 3)
         one_over_qm_binom <- 1/choose((m + init_n_species),init_n_species)
         #applying tips constrain
         tips_components <- (1 + min_tips):(
@@ -227,7 +227,7 @@ mbd_loglik0 <- function(
         if (debug_check == 1) {
           print(head(A2_v1, max_tips))
         }
-        total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
+        total_product <- A2_v1 * one_over_cm * one_over_qm_binom
         pc <- sum(total_product[tips_components])
         
         if (pc == 0 ) {
@@ -244,7 +244,7 @@ mbd_loglik0 <- function(
             atol = abstol,
             rtol = reltol
           )[2, -1] #evolving crown species to the present
-          total_product <- A2_v1*one_over_Cm*one_over_qm_binom
+          total_product <- A2_v1*one_over_cm*one_over_qm_binom
           pc <- sum(total_product[tips_components])
         }
       }
@@ -463,21 +463,21 @@ mbd_ml0 <- function(
           )
           out2 = data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
         } else {
-          MLtrpars = as.numeric(unlist(out$par))
+          mltrpars = as.numeric(unlist(out$par))
           if (pars_transform == 1) {
             #Rampal's transformation
-            MLpars <- MLtrpars / (1 - MLtrpars)
+            ml_pars <- mltrpars / (1 - mltrpars)
           } else {
-            MLpars <- MLtrpars
+            ml_pars <- mltrpars
           }
-          MLpars1 <- rep(0, n_pars); names(MLpars1) <- namepars
-          MLpars1[idparsopt] <- MLpars
+          ml_pars1 <- rep(0, n_pars); names(ml_pars1) <- namepars
+          ml_pars1[idparsopt] <- ml_pars
           if (length(idparsfix) != 0) {
-            MLpars1[idparsfix] <- parsfix
+            ml_pars1[idparsfix] <- parsfix
           }
           ML <- as.numeric(unlist(out$fvalues))
           out2 <- data.frame(
-            t(MLpars1), 
+            t(ml_pars1), 
             loglik = ML, 
             df = length(initparsopt), 
             conv = unlist(out$conv)
@@ -485,8 +485,8 @@ mbd_ml0 <- function(
           tobeprint <- "Maximum likelihood parameter estimates:"
           for (ii in 1:n_pars) {
             tobeprint <- paste(
-              tobeprint,paste(names(MLpars1[ii]), ":", sep = ""), 
-              MLpars1[ii]
+              tobeprint,paste(names(ml_pars1[ii]), ":", sep = ""), 
+              ml_pars1[ii]
             )
           }
           s1 <- sprintf(tobeprint)

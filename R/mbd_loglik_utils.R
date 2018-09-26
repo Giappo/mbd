@@ -283,7 +283,7 @@ determine_k_limit <- function(
   mvec <- 0:lx
   q_i <- c(1, rep(0, lx))
   total_time <- max(abs(brts));
-  T0 <- create_a(
+  t_zero <- create_a(
     lambda = lambda,
     mu = 0,
     nu = nu,
@@ -293,7 +293,7 @@ determine_k_limit <- function(
   )
   Pm <- a_operator(
     q_matrix = q_i,
-    transition_matrix = T0,
+    transition_matrix = t_zero,
     time_interval = total_time,
     precision = 250L,
     methode = methode,
@@ -322,19 +322,19 @@ calculate_conditional_probability <- function(
   total_time <- max(abs(brts));
 
   m <- 0:lx; length(m)
-  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
+  one_over_cm <- (3 * (m + 1))/(m + 3); length(one_over_cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   #starting with k = 0 and m = 2 missing species
   q_i <- rep(0, lx + 1);  q_i[3] <- 1
 
-  TM <- create_a(
+  t_matrix <- create_a(
     lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
     max_number_of_species = lx
   )
 
   a2_v1 <- a_operator(
     q_matrix = q_i,
-    transition_matrix = TM,
+    transition_matrix = t_matrix,
     time_interval = total_time,
     precision = 250L,
     methode = methode,
@@ -342,7 +342,7 @@ calculate_conditional_probability <- function(
     a_reltol = reltol
   )
 
-  total_product <- a2_v1 * one_over_Cm * one_over_qm_binom
+  total_product <- a2_v1 * one_over_cm * one_over_qm_binom
 
   #these are the components I want to exclude
   # (the one corresponding to 0 and 1 tips)
@@ -370,23 +370,23 @@ calculate_conditional_probability0 <- function(
   total_time <- max(abs(brts));
 
   m <- 0:lx; length(m)
-  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
+  one_over_cm <- (3 * (m + 1))/(m + 3); length(one_over_cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   q_i <- c(1, rep(0, lx)); length(q_i)
 
-  TM <- create_a(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
+  t_matrix <- create_a(lambda = lambda, mu = mu, nu = nu, q = q, k = soc,
                        max_number_of_species = lx)
 
   a2_v1 <- a_operator(
     q_matrix = q_i,
-    transition_matrix = TM,
+    transition_matrix = t_matrix,
     time_interval = total_time,
     precision = 250L,
     methode = methode,
     a_abstol = abstol,
     a_reltol = reltol
   )
-  total_product <- a2_v1 * one_over_Cm * one_over_qm_binom
+  total_product <- a2_v1 * one_over_cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
   missingspecies_max <- min((tips_interval[2] - 2), lx)
   # +1 is because of the zero-th component
@@ -418,11 +418,11 @@ calculate_conditional_probability0PB <- function(
   }
 
   m <- 0:lx; length(m)
-  one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
+  one_over_cm <- (3 * (m + 1))/(m + 3); length(one_over_cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   q_i <- c(1, rep(0, lx)); length(q_i)
 
-  TM <- create_a(
+  t_matrix <- create_a(
     lambda = lambda,
     mu = mu,
     nu = nu,
@@ -433,7 +433,7 @@ calculate_conditional_probability0PB <- function(
 
   a2_v1 <- a_operator(
     q_matrix = q_i,
-    transition_matrix = TM,
+    transition_matrix = t_matrix,
     time_interval = total_time,
     precision = 250L,
     methode = methode,
@@ -441,7 +441,7 @@ calculate_conditional_probability0PB <- function(
     a_reltol = reltol
   )
 
-  total_product <- a2_v1 * one_over_Cm * one_over_qm_binom
+  total_product <- a2_v1 * one_over_cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
   missingspecies_max <- min((tips_interval[2] - 2), lx)
   # +1 is because of the zero-th component
@@ -600,7 +600,7 @@ alpha_conditional_probability <- function(
     pc <- 1; a2_v1 <- c(1, rep(0, max_number_of_species))
   } else {
     m <- 0:max_number_of_species;
-    one_over_Cm <- (3 * (m + 1)) / (m + 3)
+    one_over_cm <- (3 * (m + 1)) / (m + 3)
     one_over_qm_binom <- 1 / choose((m + init_n_lineages), init_n_lineages)
     # applying tips constrain
     tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species))
@@ -636,7 +636,7 @@ alpha_conditional_probability <- function(
 
     #adjust for the required minimum amount of mbd
     if (minimum_multiple_births > 0) {
-      mk_n_zero.no_mbd <- create_a.no_mbd(
+      mk_n_zero_no_mbd <- create_a.no_mbd(
         lambda = lambda,
         mu = mu,
         nu = nu,
@@ -645,19 +645,19 @@ alpha_conditional_probability <- function(
         max_number_of_species = max_number_of_species,
         minimum_multiple_births = minimum_multiple_births
       )
-      a2_v1.no_mbd <- a_operator(
+      a2_v1_no_mbd <- a_operator(
         q_matrix = q_i,
-        transition_matrix = mk_n_zero.no_mbd,
+        transition_matrix = mk_n_zero_no_mbd,
         time_interval = total_time,
         precision = 50L,
         methode = methode,
         a_abstol = abstol,
         a_reltol = reltol
       )
-      a2_v1 <- a2_v1 - a2_v1.no_mbd
+      a2_v1 <- a2_v1 - a2_v1_no_mbd
     }
 
-    total_product <- a2_v1 * one_over_Cm * one_over_qm_binom
+    total_product <- a2_v1 * one_over_cm * one_over_qm_binom
     pc <- sum(total_product[tips_components])
   }
   return(list(pc = pc, a2_v1 = a2_v1))
@@ -756,5 +756,3 @@ alpha_analysis <- function(
   }
   return(list(pc = pc, alpha = alpha))
 }
-
-

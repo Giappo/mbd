@@ -191,23 +191,23 @@ mbd_ml <- function(
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     return(invisible(out2))
   }
-  MLtrpars <- as.numeric(unlist(out$par))
+  mltrpars <- as.numeric(unlist(out$par))
   if (pars_transform == 1) {
     #Rampal's transformation
-    MLpars <- MLtrpars / (1 - MLtrpars)
+    ml_pars <- mltrpars / (1 - mltrpars)
   } else {
-    MLpars <- MLtrpars
+    ml_pars <- mltrpars
   }
-  MLpars1 <- rep(0, n_pars); names(MLpars1) <- namepars
-  MLpars1[idparsopt] <- MLpars
-  if (length(idparsfix) != 0) {MLpars1[idparsfix] <- parsfix}
+  ml_pars1 <- rep(0, n_pars); names(ml_pars1) <- namepars
+  ml_pars1[idparsopt] <- ml_pars
+  if (length(idparsfix) != 0) {ml_pars1[idparsfix] <- parsfix}
   ML <- as.numeric(unlist(out$fvalues))
-  out2 <- data.frame(t(MLpars1), loglik = ML, df = length(initparsopt), conv = unlist(out$conv))
+  out2 <- data.frame(t(ml_pars1), loglik = ML, df = length(initparsopt), conv = unlist(out$conv))
 
   tobeprint <- "Maximum likelihood parameter estimates:"
   for (ii in 1:n_pars)
   {
-    tobeprint <- paste(tobeprint, paste(names(MLpars1[ii]), ":", sep = ""),MLpars1[ii])
+    tobeprint <- paste(tobeprint, paste(names(ml_pars1[ii]), ":", sep = ""),ml_pars1[ii])
   }
   if (verbose == TRUE) {
     s1 <- sprintf(tobeprint)
