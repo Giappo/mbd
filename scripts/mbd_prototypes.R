@@ -22,14 +22,22 @@
 #' @export
 
 #MAIN
-mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf), missnumspec = 0,
-                        safety_threshold = 1e-4,methode = "expo", debug_check = 0,alpha = 20){
+mbd_loglik0 <- function(
+  pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf), missnumspec = 0,
+  safety_threshold = 1e-4, methode = "expo", debug_check = 0, alpha = 20
+) {
   
   #Optional stuff that I might need to run the program one line at the time:
   #brts=sim_data[[1]];missnumspec=0;pars=sim_pars;missing_interval=c(1,Inf)
   
   #BASIC SETTINGS AND CHECKS
-  lambda=pars[1]; mu=pars[2]; q=pars[3]; min_tips=tips_interval[1]; max_tips=tips_interval[2]; abstol=1e-16; reltol=1e-10;
+  lambda <- pars[1]
+  mu <- pars[2]
+  q <- pars[3]
+  min_tips <- tips_interval[1]
+  max_tips <- tips_interval[2]
+  abstol <- 1e-16
+  reltol <- 1e-10;
   starting_alpha = alpha
   
   condition1 <- (any(is.nan(pars)) != 0 | any(is.infinite(pars)) != 0)
@@ -56,7 +64,9 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       init_n_species = soc #number of starting species
       k_interval = init_n_species + cumsum(births)
       max_k = max(k_interval)
-      max_number_of_species = alpha*max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
+      # alpha is the proportionality factor between max_k 
+      # and the edge of the matrix
+      max_number_of_species = alpha*max_k; 
       #nvec <- 0:max_number_of_species
       
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
@@ -68,8 +78,11 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       )
       Qt[1, ] <- Qi
       dimnames(Qt)[[2]] <- paste("Q", 0:max_number_of_species, sep = "")
-      k <- init_n_species #init_n_species is the number of species at t=1
-      t <- 2  #t is starting from 2 so everything is ok with birth[t] and time_intervals[t] vectors
+      # init_n_species is the number of species at t=1
+      k <- init_n_species 
+      # t is starting from 2 so everything is ok 
+      # with birth[t] and time_intervals[t] vectors
+      t <- 2  
       C <- rep(1,(length(time_intervals))) 
       D <- C
       logB <- 0
@@ -78,7 +91,13 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       while (t < length(time_intervals)) {
         
         #Applying A operator
-        transition_matrix <- create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = k)
+        transition_matrix <- create_A0(
+          max_number_of_species = max_number_of_species,
+          lambda = lambda,
+          mu = mu,
+          q = q,
+          k = k
+        )
         Qt[t,] <- A_operator(
           Q = Qt[(t - 1),], 
           transition_matrix = transition_matrix,
@@ -89,8 +108,9 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
           a_reltol = reltol
         )
         if (methode != "sexpm") {
-          #it removes some small negative values that can occurr as bugs from the integration process
-          Qt[t,] <- mbd:::negatives_correction(Qt[t,],pars)
+          # it removes some small negative values 
+          # that can occurr as bugs from the integration process
+          Qt[t,] <- mbd:::negatives_correction(Qt[t,], pars)
         } 
         
         #Applying C operator (this is a trick to avoid precision issues)
@@ -101,9 +121,12 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         Qt[t,] <- Qt[t,]*C[t]
         
         #Applying B operator
-        B <- create_B0(max_number_of_species = max_number_of_species, q = q, k = k, b = births[t])
-        # B[(row(B)>(2*col(B)+k-births[t])) | col(B)>row(B) ]=0 #this is a constrain due to maximum number of speciations being (2*n+k-b); probably it is redundant
-        # if (max(is.nan(B))>0){print(paste("NaN were produced in the B matrix at time=",t))}
+        B <- create_B0(
+          max_number_of_species = max_number_of_species, 
+          q = q, 
+          k = k, 
+          b = births[t]
+        )
         Qt[t,] <- (B %*% Qt[t,])
         if (methode != "sexpm") {
           Qt[t,] <- mbd:::negatives_correction(Qt[t,],pars)
@@ -174,9 +197,18 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         m <- 0:max_number_of_species
         one_over_Cm <- (3 * (m + 1)) / (m + 3)
         one_over_qm_binom <- 1/choose((m + init_n_species),init_n_species)
-        tips_components <- (1 + min_tips):(1 + min(max_tips,max_number_of_species)) #applying tips constrain
+        #applying tips constrain
+        tips_components <- (1 + min_tips):(
+          1 + min(max_tips,max_number_of_species)
+        ) 
         
-        mk_n_zero <- mbd:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = init_n_species)
+        mk_n_zero <- mbd:::create_A0(
+          max_number_of_species = max_number_of_species,
+          lambda = lambda,
+          mu = mu,
+          q = q,
+          k = init_n_species
+        )
         A2_v1 <- A_operator(
           Q = Qt[1, ],
           transition_matrix = mk_n_zero,
@@ -199,7 +231,8 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
         
         if (pc == 0 ) {
           #slowest and best accuracy
-          # ode_matrix=as.matrix(mk_n_zero) #use this only if you use sparsematrices
+          #use this only if you use sparse matrices
+          # ode_matrix=as.matrix(mk_n_zero) 
           ode_matrix <- mk_n_zero
           times <- c(0, total_time)
           A2_v1 <- deSolve::ode(
@@ -242,7 +275,9 @@ mbd_loglik_choosepar0 <- function(
   alpha = 20, 
   pars_transform = 0
 ){
-  #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like optim or subplex
+  #This function provides a likelihood for a subset of parameters. 
+  # This is built to work inside mbd_minusLL_vs_single_parameter 
+  # or any optimizer like optim or subplex
   #idparsopt are the ids for parameters you want to analyze
   #trparsopt are the values for parameters you want to analyze
   #idparsfix are the ids of the parameters you want to fix
@@ -250,7 +285,8 @@ mbd_loglik_choosepar0 <- function(
   
   namepars <- c("lambda","mu","q")
   n_pars <- length(namepars)
-  # idparsopt=(1:3)[-c(idparsfix)] #this argument is useless but I let the user specify it because Rampal also did it (for some reason)
+  # idparsopt=(1:3)[-c(idparsfix)] #this argument is useless 
+  # but I let the user specify it because Rampal also did it (for some reason)
   trpars1 = rep(0,n_pars)
   trpars1[idparsopt] = trparsopt
   if (length(idparsfix) != 0) {
@@ -266,9 +302,11 @@ mbd_loglik_choosepar0 <- function(
     {
       pars1 <- trpars1
     }
-    loglik <- mbd:::mbd_loglik0(pars = pars1, brts = brts, cond = cond, soc = soc,
-                                tips_interval = tips_interval, methode = methode,
-                                alpha = alpha)
+    loglik <- mbd:::mbd_loglik0(
+      pars = pars1, brts = brts, cond = cond, soc = soc,
+      tips_interval = tips_interval, methode = methode,
+      alpha = alpha
+    )
   }
   if (is.nan(loglik) || is.na(loglik)) {
     cat("There are parameter values used which cause numerical problems.\n")
@@ -281,10 +319,16 @@ mbd_loglik_choosepar0 <- function(
 
 # mbd_ml0----------------
 #' @author Giovanni Laudanno
-#' @title Maximization of the loglikelihood under a multiple birth-death diversification model
-#' @description mbd_ml0 computes the maximum likelihood estimates of the parameters of a multiple birth-death diversification model for a given set of phylogenetic branching times. It also outputs the corresponding loglikelihood that can be used in model comparisons.
+#' @title Maximization of the loglikelihood under a multiple birth-death 
+#'   diversification model
+#' @description mbd_ml0 computes the maximum likelihood estimates of the 
+#'   parameters of a multiple birth-death diversification model 
+#'   for a given set of phylogenetic branching times. 
+#'   It also outputs the corresponding loglikelihood 
+#'   that can be used in model comparisons.
 #' @inheritParams default_params_doc
-#' @param initparsopt The initial values of the parameters that must be optimized
+#' @param initparsopt The initial values of the parameters 
+#'   that must be optimized
 #' @param idparsopt The ids of the parameters that must be optimized. 
 #'   The ids are defined as follows:
 #'   \itemize{
@@ -292,9 +336,11 @@ mbd_loglik_choosepar0 <- function(
 #'     \item id == 2 corresponds to mu (extinction rate)
 #'     \item id == 3 corresponds to q (single-lineage speciation probability)
 #'   }
-#' @param idparsfix The ids of the parameters that should not be optimized. The default is to fix all parameters not specified in idparsopt.
+#' @param idparsfix The ids of the parameters that should not be optimized. 
+#'   The default is to fix all parameters not specified in idparsopt.
 #' @param parsfix The values of the parameters that should not be optimized.
-#' @param res Sets the maximum number of species for which a probability must be computed, must be larger than 1 + length(brts).
+#' @param res Sets the maximum number of species for which a probability 
+#'   must be computed, must be larger than 1 + length(brts).
 #' @param tol Sets the tolerances in the optimization. Consists of:
 #' \itemize{
 #' \item reltolx = relative tolerance of parameter values in optimization
@@ -302,12 +348,17 @@ mbd_loglik_choosepar0 <- function(
 #' \item abstolx = absolute tolerance of parameter values in optimization
 #' }
 #' @param max_iter Sets the maximum number of iterations in the optimization.
-#' @param changeloglikifnoconv If TRUE the loglik will be set to -Inf if ML does not converge.
-#' @param optimmethod Method used in optimization of the likelihood. Current default is 'subplex'. Alternative is 'simplex' (default of previous versions).
-#' @return The output is a dataframe containing estimated parameters and maximum
-#' loglikelihood. The computed loglikelihood contains the factor q! m! / (q + m)!
-#' where q is the number of species in the phylogeny and m is the number of
-#' missing species, as explained in the supplementary material to Etienne et al. 2012.
+#' @param changeloglikifnoconv If TRUE the loglik will be set 
+#'   to -Inf if ML does not converge.
+#' @param optimmethod Method used in optimization of the likelihood. 
+#'   Current default is 'subplex'. Alternative 
+#'   is 'simplex' (default of previous versions).
+#' @return The output is a dataframe containing estimated parameters 
+#'   and maximum loglikelihood. The computed loglikelihood contains the 
+#'   factor q! m! / (q + m)!
+#'   where q is the number of species in the phylogeny and m is the number of
+#'   missing species, as explained in the supplementary material 
+#'   to Etienne et al. 2012.
 #'
 #' @examples
 #' set.seed(11)
@@ -337,9 +388,11 @@ mbd_ml0 <- function(
   
   options(warn = -1)
   namepars <- c("lambda","mu","q")
-  n_pars <- length(namepars) #if you add more parameters to your model just change this
+  #if you add more parameters to your model just change this
+  n_pars <- length(namepars) 
   failpars <- rep(-1,n_pars) 
-  names(failpars) <- namepars #those are the parameters that you get if something goes sideways
+  #those are the parameters that you get if something goes sideways
+  names(failpars) <- namepars 
   if (is.numeric(brts) == FALSE) {
     cat("The branching times should be numeric.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
@@ -388,7 +441,11 @@ mbd_ml0 <- function(
       cat("The loglikelihood for the initial parameter values is",initloglik,"\n")
       utils::flush.console()
       if (initloglik == -Inf) {
-        cat("The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n")
+        warning(
+          "The initial parameter values have a likelihood that is equal to 0 ",
+          "or below machine precision. ",
+          "Try again with different initial values"
+        )
         out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
       } else {
         out <- DDD::optimizer(
@@ -400,7 +457,10 @@ mbd_ml0 <- function(
           methode = methode, alpha = alpha, pars_transform = pars_transform
         )
         if (out$conv != 0) {
-          cat("Optimization has not converged. Try again with different initial values.\n")
+          warning(
+            "Optimization has not converged. ",
+            "Try again with different initial values"
+          )
           out2 = data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
         } else {
           MLtrpars = as.numeric(unlist(out$par))
@@ -424,11 +484,16 @@ mbd_ml0 <- function(
           )
           tobeprint <- "Maximum likelihood parameter estimates:"
           for (ii in 1:n_pars) {
-            tobeprint <- paste(tobeprint,paste(names(MLpars1[ii]),":",sep = ""),MLpars1[ii])
+            tobeprint <- paste(
+              tobeprint,paste(names(MLpars1[ii]), ":", sep = ""), 
+              MLpars1[ii]
+            )
           }
           s1 <- sprintf(tobeprint)
           
-          if (out2$conv != 0 & changeloglikifnoconv == T) { out2$loglik = -Inf }
+          if (out2$conv != 0 & changeloglikifnoconv == TRUE) { 
+            out2$loglik = -Inf 
+          }
           s2 = sprintf('Maximum loglikelihood: %f',ML)
           cat("\n",s1,"\n",s2,"\n\n")
         }# bracket#5

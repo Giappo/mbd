@@ -128,7 +128,9 @@ pmb_loglik_choosepar <- function(
   soc = 2,
   pars_transform = 0
 ) {
-  #This function provides a likelihood for a subset of parameters. This is built to work inside mbd_minusLL_vs_single_parameter or any optimizer like optim or simplex
+  #This function provides a likelihood for a subset of parameters. 
+  # This is built to work inside mbd_minusLL_vs_single_parameter 
+  # or any optimizer like optim or simplex
   #idparsopt are the ids of the parameters you want to analyze
   #trparsopt are the values for parameters you want to analyze
   #idparsfix are the ids of the parameters you want to fix
