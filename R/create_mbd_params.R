@@ -20,7 +20,7 @@ create_mbd_params <- function(
   if (nu < 0.0) {
     stop("'nu' must be positive")
   }
-  if (q < 0.0) { 
+  if (q < 0.0) {
     stop("'q' must be positive")
   }
   list(

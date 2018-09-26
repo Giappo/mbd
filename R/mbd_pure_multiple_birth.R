@@ -3,11 +3,11 @@
 #' @inheritParams default_params_doc
 #' @export
 pmb_loglik <- function(
-  pars, 
-  brts, 
+  pars,
+  brts,
   soc = 2
 ) {
-  
+
   #BOTH LAmbdA AND NU
   #setup
   test_pars <- pars  # test_pars=c(0.4,0,0.1,0.2)
@@ -20,7 +20,7 @@ pmb_loglik <- function(
   mu <- test_pars[2]
   nu <- test_pars[3]
   q <- test_pars[4];
-  condition1 <- (any(is.nan(test_pars)) != 0 | 
+  condition1 <- (any(is.nan(test_pars)) != 0 |
     any(is.infinite(test_pars)) != 0
   )
   condition2 <- (lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
@@ -39,7 +39,7 @@ pmb_loglik <- function(
     {
       #(nu*(t_k-t_k-1))^i*exp(-nu * (t_k - t_k - 1)) / k!
       poisson_term <- stats::dpois(i, nu*time_intervals[t], log = FALSE)[
-        stats::dpois(i, nu*time_intervals[t], log = FALSE) != 0] 
+        stats::dpois(i, nu*time_intervals[t], log = FALSE) != 0]
       ii <- i[stats::dpois(i, nu*time_intervals[t], log = FALSE) != 0 ]
       # (1) nu contribution: (1-q)^(k*i) * (nu*(t_k-t_k-1))^i
       #                      * exp(-nu*(t_k-t_k-1))/k!
@@ -53,7 +53,7 @@ pmb_loglik <- function(
       nu * choose(k[-length(k)], births) * q^births *
       (1 - q) ^ (k[-length(k)] - births)
     ) + lambda * k[-length(k)] * (births == 1)                                               # lambda contribution: lambda*k (only if b==1)
-  
+
     th_loglik <- sum(log(a_term)) + sum(log(b_term))
   }
   th_loglik
@@ -97,11 +97,11 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
       #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
       poisson_term <- stats::dpois(
           i, nu * time_intervals[t], log = FALSE
-        )[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0] 
+        )[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
       ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
       # (1) nu contribution: (1-q)^(k*i) * (nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
       # (2) lambda contribution: exp(-k*lambda*(t_k-t_k-1))
-      a_term[t] <- sum( (1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)  
+      a_term[t] <- sum( (1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)
                    exp(-k[t] * lambda * (time_intervals[t]))     # (2)
     }
     #calculating nodes contribution
@@ -120,16 +120,16 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
 #' @inheritParams default_params_doc
 #' @export
 pmb_loglik_choosepar <- function(
-  trparsopt, 
-  trparsfix = 0, 
+  trparsopt,
+  trparsfix = 0,
   idparsopt = c(1, 3, 4),
-  idparsfix = (1:4)[-idparsopt], 
-  brts, 
+  idparsfix = (1:4)[-idparsopt],
+  brts,
   soc = 2,
   pars_transform = 0
 ) {
-  #This function provides a likelihood for a subset of parameters. 
-  # This is built to work inside mbd_minusLL_vs_single_parameter 
+  #This function provides a likelihood for a subset of parameters.
+  # This is built to work inside mbd_minusLL_vs_single_parameter
   # or any optimizer like optim or simplex
   #idparsopt are the ids of the parameters you want to analyze
   #trparsopt are the values for parameters you want to analyze
@@ -198,23 +198,23 @@ pmb_ML <- function(
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
   } else {
     idpars <- sort(c(idparsopt, idparsfix))
-    if ((sum(idpars == (1:n_pars)) != n_pars) || 
-        (length(initparsopt) != length(idparsopt)) || 
-        (length(parsfix) != length(idparsfix)) 
+    if ((sum(idpars == (1:n_pars)) != n_pars) ||
+        (length(initparsopt) != length(idparsopt)) ||
+        (length(parsfix) != length(idparsfix))
     ) {
       cat("The parameters to be optimized and/or fixed are incoherent.\n")
       out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     } else {
-      if (length(namepars[idparsopt]) == 0) { 
-        optstr <- "nothing" 
-      } else { 
-        optstr <- namepars[idparsopt] 
+      if (length(namepars[idparsopt]) == 0) {
+        optstr <- "nothing"
+      } else {
+        optstr <- namepars[idparsopt]
       }
       cat("You are optimizing", optstr, "\n")
-      if (length(namepars[idparsfix]) == 0) { 
-        fixstr <- "nothing" 
-      } else { 
-        fixstr <- namepars[idparsfix] 
+      if (length(namepars[idparsfix]) == 0) {
+        fixstr <- "nothing"
+      } else {
+        fixstr <- namepars[idparsfix]
       }
       cat("You are fixing", fixstr, "\n")
       cat("Optimizing the likelihood - this may take a while.", "\n")

@@ -1,21 +1,21 @@
-#' @title Maximization of the loglikelihood 
+#' @title Maximization of the loglikelihood
 #'   under a multiple birth-death diversification model
-#' @description mbd_ml computes the maximum likelihood estimates of 
-#'   the parameters of a multiple birth-death diversification model 
-#'   for a given set of phylogenetic branching times. 
-#'   It also outputs the corresponding loglikelihood 
-#'   that can be used in model comparisons. 
-#'   Differently from mbd_ml it can account for three kind of events: 
-#'   sympatric (single) speciation, multiple (allopatric) speciation 
+#' @description mbd_ml computes the maximum likelihood estimates of
+#'   the parameters of a multiple birth-death diversification model
+#'   for a given set of phylogenetic branching times.
+#'   It also outputs the corresponding loglikelihood
+#'   that can be used in model comparisons.
+#'   Differently from mbd_ml it can account for three kind of events:
+#'   sympatric (single) speciation, multiple (allopatric) speciation
 #'   and extinction.
 #' @author Giovanni Laudanno
 #' @inheritParams default_params_doc
-#' @param initparsopt The initial values of the parameters 
+#' @param initparsopt The initial values of the parameters
 #'   that must be optimized
-#' @param idparsfix The ids of the parameters that should not be optimized. 
+#' @param idparsfix The ids of the parameters that should not be optimized.
 #'   The default is to fix all parameters not specified in idparsopt.
 #' @param parsfix The values of the parameters that should not be optimized.
-#' @param res Sets the maximum number of species for which a probability 
+#' @param res Sets the maximum number of species for which a probability
 #'   must be computed, must be larger than 1 + length(brts).
 #' @param tol Sets the tolerances in the optimization. Consists of:
 #' \itemize{
@@ -23,17 +23,17 @@
 #' \item reltolf = relative tolerance of function value in optimization
 #' \item abstolx = absolute tolerance of parameter values in optimization
 #' }
-#' @param changeloglikifnoconv If TRUE, 
+#' @param changeloglikifnoconv If TRUE,
 #'   the loglik will be set to -Inf if ML does not converge.
-#' @param optimmethod Method used in optimization of the likelihood. 
-#'   Current default is 'simplex'. 
+#' @param optimmethod Method used in optimization of the likelihood.
+#'   Current default is 'simplex'.
 #'   Alternative is 'subplex' (default of previous versions).
 #' @param ... Something
-#' @return The output is a dataframe containing 
-#'   estimated parameters and maximum loglikelihood. 
+#' @return The output is a dataframe containing
+#'   estimated parameters and maximum loglikelihood.
 #'   The computed loglikelihood contains the factor q! m! / (q + m)!
 #'   where q is the number of species in the phylogeny and m is the number of
-#'   missing species, as explained in the supplementary 
+#'   missing species, as explained in the supplementary
 #'   material to Etienne et al. 2012.
 #'
 #' @examples
@@ -44,7 +44,7 @@
 #' # @Giappo: does not work
 #' # mbd_ml(
 #' #   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
-#' #   idparsfix = c(1, 2, 3), 
+#' #   idparsfix = c(1, 2, 3),
 #' #   parsfix = test_pars[idparsfix],
 #' #   missnumspec = 0, cond = 1, soc = 2
 #' # )
@@ -73,19 +73,19 @@ mbd_ml <- function(
 )
 {
   # - tol = tolerance in optimization
-  # - changeloglikifnoconv = if TRUE the loglik 
+  # - changeloglikifnoconv = if TRUE the loglik
   #     will be set to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization
-  # - changeloglikifnoconv = if TRUE 
+  # - changeloglikifnoconv = if TRUE
   #     the loglik will be set to -Inf if ML does not converge
-  # - optimmethod = 'simplex' (current default) 
+  # - optimmethod = 'simplex' (current default)
   #     or 'subplex' (default of previous versions)
   if (!is.numeric(brts))
   {
     stop("'brts' must be numeric")
   }
   if (length(idparsfix) == 0) {idparsfix <- NULL}
-  if (missing(parsfix) && (length(idparsfix) == 0)) { 
+  if (missing(parsfix) && (length(idparsfix) == 0)) {
     parsfix <- idparsfix <- NULL
   }
 
@@ -102,27 +102,27 @@ mbd_ml <- function(
     return(invisible(out2))
   }
   idpars <- sort(c(idparsopt, idparsfix))
-  if ((sum(idpars == (1:n_pars)) != n_pars) || 
-    (length(initparsopt) != length(idparsopt)) || 
-    (length(parsfix) != length(idparsfix)) 
+  if ((sum(idpars == (1:n_pars)) != n_pars) ||
+    (length(initparsopt) != length(idparsopt)) ||
+    (length(parsfix) != length(idparsfix))
   ) {
     cat("The parameters to be optimized and/or fixed are incoherent.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     return(out2)
   }
 
-  if (length(namepars[idparsopt]) == 0) { 
-    optstr = "nothing" 
-  } else { 
+  if (length(namepars[idparsopt]) == 0) {
+    optstr = "nothing"
+  } else {
     optstr = namepars[idparsopt]
   }
   if (verbose == TRUE) {
     cat("You are optimizing", optstr, "\n")
   }
-  if (length(namepars[idparsfix]) == 0) { 
-    fixstr = "nothing" 
-  } else { 
-    fixstr = namepars[idparsfix] 
+  if (length(namepars[idparsfix]) == 0) {
+    fixstr = "nothing"
+  } else {
+    fixstr = namepars[idparsfix]
   }
   if (verbose == TRUE) {
     cat("You are fixing", fixstr, "\n")
@@ -140,7 +140,7 @@ mbd_ml <- function(
     trparsfix  <- parsfix
   }
   optimpars  <- c(tol, maxiter)
-  
+
   #there's no pars2 here and instead 3 more args at the end
   initloglik <- mbd_loglik_choosepar(
     trparsopt = trparsopt, trparsfix = trparsfix,
@@ -151,10 +151,10 @@ mbd_ml <- function(
     minimum_multiple_births = minimum_multiple_births,
     pars_transform = pars_transform,
     print_errors = print_errors, ...
-  ) 
+  )
   if (verbose == TRUE) {
     cat(
-      "The loglikelihood for the initial parameter values is", 
+      "The loglikelihood for the initial parameter values is",
       initloglik, "\n"
     )
     utils::flush.console()

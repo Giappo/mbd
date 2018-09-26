@@ -75,8 +75,8 @@ mbd_sim <- function(
     stop("ERROR! Check again your settings.")
   }
   lambda <- pars[1]
-  mu <- pars[2] 
-  nu <- pars[3] 
+  mu <- pars[2]
+  nu <- pars[3]
   q <- pars[4]
   init_n_lineages <- soc
   tips <- -1; crown_species_dead <- cond; multiple_births_check <- 0;
@@ -120,7 +120,7 @@ mbd_sim <- function(
           if (delta_n < 0 & t > 0) {
             if (n_species > 1) {
               dead <- sample(pool, replace = FALSE, size = 1)
-            } else { 
+            } else {
               dead <- pool
             }
             L[abs(dead),4] <- t
@@ -139,7 +139,7 @@ mbd_sim <- function(
     alive <- L[L[,4] == -1,]
     alive <- matrix(alive, ncol = 4)
     #if cond == 0 they will always look like they're alive, because I don't care
-    crown_species_dead <- (length( unique(sign(alive[, 3])) ) != 2 ) * cond 
+    crown_species_dead <- (length( unique(sign(alive[, 3])) ) != 2 ) * cond
     #multiple births check
     births.reconstructed_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
     births.full_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = FALSE), decreasing = TRUE)) )
@@ -216,9 +216,9 @@ mbd_sim0 <- function(
   tips <- -1
   conditioning_on_survival <- cond
   multiple_births_check <- 0
-  while (tips < tips_interval[1] | 
-    tips > tips_interval[2] | 
-    conditioning_on_survival | 
+  while (tips < tips_interval[1] |
+    tips > tips_interval[2] |
+    conditioning_on_survival |
     multiple_births_check == 0
   ) {
     total_count <- init_n_lineages
@@ -238,7 +238,7 @@ mbd_sim0 <- function(
         n_species <- length(pool)
         deltaT <- stats::rexp(1, rate = (lambda + n_species * mu))
         outcome <- sample(c(-1, 1), size = 1, prob = c(n_species * mu, lambda))
-        delta_n <- stats::rbinom(n = 1, size = n_species, prob = q) * 
+        delta_n <- stats::rbinom(n = 1, size = n_species, prob = q) *
           (outcome == 1) - 1 * (outcome == -1)
         t <- t - deltaT
         if (delta_n > 0 & t > 0)
@@ -333,17 +333,17 @@ mbd_sim_dataset <- function(
     #this allows me to use the analytical formula CHECK THIS!
     cond <- 0
     tips_interval <- c(0, Inf)
-  } 
+  }
 
   init_n_lineages <- soc
   if (edge != Inf && tips_interval == c(0, Inf))
   {
     estimation <- mbd_P_eq(
-      test_parameters = sim_pars, 
-      age = age, 
-      max_number_of_species = 3000, 
-      precision = 50L, 
-      soc = soc, 
+      test_parameters = sim_pars,
+      age = age,
+      max_number_of_species = 3000,
+      precision = 50L,
+      soc = soc,
       output = 0
     )
     max_tips <- round(estimation$avg_n * (1 + edge))

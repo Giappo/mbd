@@ -166,8 +166,8 @@ mbd_P_eq <- function(
     q <- pars[3]
     nvec <- 0:max_number_of_species
     M <- matrix(
-      0, 
-      nrow = max_number_of_species + 1, 
+      0,
+      nrow = max_number_of_species + 1,
       ncol = max_number_of_species + 1
     )
     testit::assert(!"Do not call hyperA")
@@ -181,12 +181,12 @@ mbd_P_eq <- function(
   v0 <- rep(0,(max_number_of_species + 1))
   v0[init_n_lineages + 1] <- 1
   transition_matrix <- create_mbd_P_matrix(
-    pars = test_parameters, 
+    pars = test_parameters,
     max_number_of_species = max_number_of_species
   )
   vf <- expoRkit::expv(
-    v = v0, 
-    x = transition_matrix, 
+    v = v0,
+    x = transition_matrix,
     t = age, m = precision
   )
 
@@ -223,20 +223,20 @@ myheatmap <- function(
 #' @inheritParams default_params_doc
 myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
 
-  if (missing(x_splits)) { 
+  if (missing(x_splits)) {
     x_splits <- round( (length(x))/10 )
   }
-  if (missing(y_splits)) { 
+  if (missing(y_splits)) {
     y_splits <- round( (length(y))/10 )
   }
-  if (missing(x_name)) { 
-    x_name <- NULL 
+  if (missing(x_name)) {
+    x_name <- NULL
   }
-  if (missing(y_name)) { 
-    y_name <- NULL 
+  if (missing(y_name)) {
+    y_name <- NULL
   }
-  if (missing(z_name)) { 
-    z_name <- NULL 
+  if (missing(z_name)) {
+    z_name <- NULL
   }
 
   lX <- x
@@ -248,18 +248,18 @@ myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
 
   jet.colors <- grDevices::colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
   graphics::filled.contour(
-    t(z), 
-    color = jet.colors, 
+    t(z),
+    color = jet.colors,
     nlevels = 100,
-    ylab = y_name, 
+    ylab = y_name,
     xlab = x_name,
     plot.axes = {
       graphics::axis(
-        1, at = seq(0, 1, length.out = length(pretty_X.lab) ), 
+        1, at = seq(0, 1, length.out = length(pretty_X.lab) ),
         labels = pretty_X.lab
       )
       graphics::axis(
-        2, at = seq(0, 1, length.out = length(pretty_Y.lab) ), 
+        2, at = seq(0, 1, length.out = length(pretty_Y.lab) ),
         labels = pretty_Y.lab
       )
     },
@@ -277,7 +277,7 @@ negatives_correction <- function(
   display_output = 0
 ){
   problems <- 0
-  if (any(is.na(v))) { 
+  if (any(is.na(v))) {
     problems <- 1
     na_components <- which(is.na(v) & !is.nan(v) )
     nan_components <- which(is.nan(v))
@@ -426,7 +426,7 @@ branchLengths <- function(tr)
   }
   if (length(tr$root) > 0) {
     root.length <- tr$root
-  } else{ 
+  } else{
     root.length <- 0
   }
 

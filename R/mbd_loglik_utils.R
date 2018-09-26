@@ -5,8 +5,8 @@
 hyperA_HannoX <- function(n_species, k, q) {
   # HG function: fast O(N), updated after Moulis meeting
   #this is the matrix builder: helps to create A and B operators
-  #it produces the structure 
-  # q ^ (m - n) * (1 - q) ^ (k + 2 * n-m) * 
+  #it produces the structure
+  # q ^ (m - n) * (1 - q) ^ (k + 2 * n-m) *
   #  sum_j 2 ^ j choose(k, j) * choose(n, m - n - j)
   j <- 0:k
   a_1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
@@ -29,11 +29,11 @@ hyperA_HannoX <- function(n_species, k, q) {
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 create_A0 <- function(
-  max_number_of_species, 
-  lambda, 
-  mu, 
-  q, 
-  k, 
+  max_number_of_species,
+  lambda,
+  mu,
+  q,
+  k,
   matrix_builder = hyperA_HannoX
 ){
   testit::assert(max_number_of_species < Inf)
@@ -41,7 +41,7 @@ create_A0 <- function(
   M <- lambda * matrix_builder(n_species = max_number_of_species, k = k, q = q)
 
   #new version to avoid the dumpster problem at the end of the matrix
-  diag(M) <= (-lambda) * (1 - (1 - q)^(k + nvec) ) - mu * (nvec + k) 
+  diag(M) <= (-lambda) * (1 - (1 - q)^(k + nvec) ) - mu * (nvec + k)
 
   M[row(M) == col(M) - 1] = mu * nvec[2:(max_number_of_species + 1)]
   M
@@ -52,10 +52,10 @@ create_A0 <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 create_B0 <- function(
-  max_number_of_species, 
-  q, 
-  k, 
-  b, 
+  max_number_of_species,
+  q,
+  k,
+  b,
   matrix_builder = hyperA_HannoX
 ) {
   #lambda * choose(k, b) * q^b  is going to be added in logB in the main script
@@ -69,22 +69,22 @@ create_B0 <- function(
 #' @details This is not to be called by the user.
 #' @export
 create_A <- function(
-  lambda, 
-  mu, 
-  nu, 
-  q, 
-  k, 
+  lambda,
+  mu,
+  nu,
+  q,
+  k,
   max_number_of_species
 ) {
   testit::assert(max_number_of_species < Inf)
   nvec <- 0:max_number_of_species
   m <- create_A0(max_number_of_species = max_number_of_species,
                        lambda = nu, mu = mu, q = q, k = k)
-  m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] + 
+  m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] +
     lambda * (nvec[1:(max_number_of_species)] + 2 * k)
 
   # new version to avoid the dumpster problem at the end of the matrix
-  m[row(m) == col(m)] <- m[row(m) == col(m)] - lambda * (nvec + k) 
+  m[row(m) == col(m)] <- m[row(m) == col(m)] - lambda * (nvec + k)
 
   m
 }
@@ -95,20 +95,20 @@ create_A <- function(
 #' @details This is not to be called by the user.
 #' @export
 create_B <- function(
-  lambda, 
-  nu, 
-  q, 
-  k, 
-  b, 
+  lambda,
+  nu,
+  q,
+  k,
+  b,
   max_number_of_species
 ) {
   m <- create_B0(
-    max_number_of_species = max_number_of_species, 
-    q = q, 
-    k = k, 
+    max_number_of_species = max_number_of_species,
+    q = q,
+    k = k,
     b = b
   )
-  lambda * k * diag(max_number_of_species + 1) * 
+  lambda * k * diag(max_number_of_species + 1) *
     (b == 1) + nu * choose(k, b) * (q^b) * m
 }
 
@@ -129,12 +129,12 @@ create_A.no_mbd = function(
   testit::assert(max_number_of_species < Inf)
   nvec <- 0:max_number_of_species
   m <- create_A0(
-    max_number_of_species = max_number_of_species, 
+    max_number_of_species = max_number_of_species,
     lambda = nu, mu = mu, q = q, k = k
   )
-  m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] + lambda * 
+  m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] + lambda *
     (nvec[1:(max_number_of_species)] + 2 * k)
-  m[row(m) == col(m)] <- m[row(m) == col(m)] - 
+  m[row(m) == col(m)] <- m[row(m) == col(m)] -
     c(lambda * (nvec[-length(nvec)] + k), 0)
   m[row(m) > col(m) + minimum_multiple_births] <- 0
   m
@@ -146,19 +146,19 @@ create_A.no_mbd = function(
 #' @details This is not to be called by the user.
 #' @export
 create_B.no_mbd = function(
-  lambda, 
-  nu, 
-  q, 
-  k, 
-  b, 
-  max_number_of_species, 
+  lambda,
+  nu,
+  q,
+  k,
+  b,
+  max_number_of_species,
   minimum_multiple_births
 ) {
   m <- create_B0(
-    max_number_of_species = max_number_of_species, 
+    max_number_of_species = max_number_of_species,
     q = q, k = k, b = b
   )
-  B <- lambda * k * diag(max_number_of_species + 1) * 
+  B <- lambda * k * diag(max_number_of_species + 1) *
     (b == 1) + nu * choose(k, b) * (q^b) * m
   B[row(B) > col(B) + minimum_multiple_births] <- 0
   B
@@ -170,12 +170,12 @@ create_B.no_mbd = function(
 #' @details This is not to be called by the user.
 #' @export
 A_operator <- function(
-  Q, 
-  transition_matrix, 
-  time_interval, 
+  Q,
+  transition_matrix,
+  time_interval,
   precision = 50L,
-  a_abstol = 1e-16, 
-  a_reltol = 1e-10, 
+  a_abstol = 1e-16,
+  a_reltol = 1e-10,
   methode = "expo"
 ) {
   precision_limit <- 2000
@@ -194,16 +194,16 @@ A_operator <- function(
   if (methode == "expo") {
     result.nan <- result.negative <- 1
     repetition <- 1
-    while ((result.nan == 1 | result.negative == 1) & 
+    while ((result.nan == 1 | result.negative == 1) &
       repetition < max_repetitions
     ) {
       result <- try(
         expoRkit::expv(
-          v = Q, 
-          x = transition_matrix, 
-          t = time_interval, 
+          v = Q,
+          x = transition_matrix,
+          t = time_interval,
           m = precision
-        ), 
+        ),
         silent = TRUE
       )
 
@@ -232,12 +232,12 @@ A_operator <- function(
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
     R.utils::withTimeout(result <- deSolve::ode(
-      y = Q, 
-      times = times, 
-      func = mbd_loglik_rhs, 
-      parms = ode_matrix, 
-      atol = a_abstol, 
-      rtol = a_reltol)[2,-1], 
+      y = Q,
+      times = times,
+      func = mbd_loglik_rhs,
+      parms = ode_matrix,
+      atol = a_abstol,
+      rtol = a_reltol)[2,-1],
       timeout = 1001
     )
   }
@@ -251,8 +251,8 @@ A_operator <- function(
 #' @details This is not to be called by the user.
 #' @export
 mbd_loglik_rhs <- function(
-  t, 
-  x, 
+  t,
+  x,
   pars
 ) {
   #builds right hand side of the ODE set for multiple birth model
@@ -273,36 +273,36 @@ mbd_loglik_rhs <- function(
 #' @details This is not to be called by the user.
 #' @export
 determine_k_limit <- function(
-  pars, 
-  brts, 
-  lx, 
-  soc, 
-  methode, 
-  abstol = 1e-16, 
+  pars,
+  brts,
+  lx,
+  soc,
+  methode,
+  abstol = 1e-16,
   reltol = 1e-10
 ) {
-  lambda <- pars[1] 
-  #mu <- pars[2] 
+  lambda <- pars[1]
+  #mu <- pars[2]
   nu <- pars[3]
   q <- pars[4]
   mvec <- 0:lx
   Qi <- c(1, rep(0, lx))
   total_time <- max(abs(brts));
   T0 <- create_A(
-    lambda = lambda, 
-    mu = 0, 
-    nu = nu, 
-    q = q, 
+    lambda = lambda,
+    mu = 0,
+    nu = nu,
+    q = q,
     k = soc,
     max_number_of_species = lx
   )
   Pm <- A_operator(
-    Q = Qi, 
-    transition_matrix = T0, 
+    Q = Qi,
+    transition_matrix = T0,
     time_interval = total_time,
-    precision = 250L, 
-    methode = methode, 
-    a_abstol = abstol, 
+    precision = 250L,
+    methode = methode,
+    a_abstol = abstol,
     a_reltol = reltol
   )
   soc + max(mvec[(mvec %in% which((cumsum(Pm/sum(Pm))) <= 0.95))])
@@ -330,7 +330,7 @@ calculate_conditional_probability <- function(
   one_over_Cm <- (3 * (m + 1))/(m + 3); length(one_over_Cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   #starting with k = 0 and m = 2 missing species
-  Qi <- rep(0, lx + 1);  Qi[3] <- 1 
+  Qi <- rep(0, lx + 1);  Qi[3] <- 1
 
   TM <- create_A(
     lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
@@ -338,20 +338,20 @@ calculate_conditional_probability <- function(
   )
 
   A2_v1 <- A_operator(
-    Q = Qi, 
-    transition_matrix = TM, 
+    Q = Qi,
+    transition_matrix = TM,
     time_interval = total_time,
-    precision = 250L, 
-    methode = methode, 
-    a_abstol = abstol, 
+    precision = 250L,
+    methode = methode,
+    a_abstol = abstol,
     a_reltol = reltol
   )
 
   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
-  
-  #these are the components I want to exclude 
+
+  #these are the components I want to exclude
   # (the one corresponding to 0 and 1 tips)
-  tips_components <- 1 + 0:1 
+  tips_components <- 1 + 0:1
   1 - sum(total_product[tips_components])
 }
 
@@ -383,19 +383,19 @@ calculate_conditional_probability0 <- function(
                        max_number_of_species = lx)
 
   A2_v1 <- A_operator(
-    Q = Qi, 
-    transition_matrix = TM, 
+    Q = Qi,
+    transition_matrix = TM,
     time_interval = total_time,
-    precision = 250L, 
-    methode = methode, 
-    a_abstol = abstol, 
+    precision = 250L,
+    methode = methode,
+    a_abstol = abstol,
     a_reltol = reltol
   )
   total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
   missingspecies_max <- min((tips_interval[2] - 2), lx)
   # +1 is because of the zero-th component
-  tips_components <- 1 + c(missingspecies_min, missingspecies_max) 
+  tips_components <- 1 + c(missingspecies_min, missingspecies_max)
   sum(total_product[tips_components[1]:tips_components[2]])
 }
 
@@ -417,7 +417,7 @@ calculate_conditional_probability0PB <- function(
 ) {
   lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
   total_time <- max(abs(brts))
-  if (mu != 0) { 
+  if (mu != 0) {
     cat('mu is supposed to be equal zero to use this function')
     return(pc <- NA)
   }
@@ -428,21 +428,21 @@ calculate_conditional_probability0PB <- function(
   Qi <- c(1, rep(0, lx)); length(Qi)
 
   TM <- create_A(
-    lambda = lambda, 
-    mu = mu, 
-    nu = nu, 
-    q = q, 
+    lambda = lambda,
+    mu = mu,
+    nu = nu,
+    q = q,
     k = soc,
     max_number_of_species = lx
   )
 
   A2_v1 <- A_operator(
-    Q = Qi, 
-    transition_matrix = TM, 
+    Q = Qi,
+    transition_matrix = TM,
     time_interval = total_time,
-    precision = 250L, 
-    methode = methode, 
-    a_abstol = abstol, 
+    precision = 250L,
+    methode = methode,
+    a_abstol = abstol,
     a_reltol = reltol
   )
 
@@ -450,7 +450,7 @@ calculate_conditional_probability0PB <- function(
   missingspecies_min <- max((tips_interval[1] - 2), 0 )
   missingspecies_max <- min((tips_interval[2] - 2), lx)
   # +1 is because of the zero-th component
-  tips_components <- 1 + c(missingspecies_min, missingspecies_max) 
+  tips_components <- 1 + c(missingspecies_min, missingspecies_max)
   opposite_tips_components <- (m + 1)[!((m + 1) %in% (tips_components[1]:tips_components[2]))]
   1 - sum(total_product[opposite_tips_components])
 }
@@ -476,9 +476,9 @@ find_best_lx_for_pc <- function(
   step1 <- floor(interval_width/a)
 
   lx_test <- rep(
-    NA, 
+    NA,
     length(lxvec <- seq(interval_min + step1, interval_max - step1, step1))
-  ) 
+  )
   i <- 1
   right.lx_coord <- 0
   for (lx2 in lxvec) {
@@ -509,7 +509,7 @@ find_best_lx_for_pc <- function(
   }
 
   lx_test2 <- rep(
-    NA, 
+    NA,
     length(lxvec2 <- floor(seq(lx - step1, lx + step1, 2 * step1 / a)))
   )
   j <- 1
@@ -527,8 +527,8 @@ find_best_lx_for_pc <- function(
     )
     if (!is.na(abs(lx_test2[i]))) {
       if (abs(lx_test2[j] - 1) < 0.01) {
-        right.lx_coord2 <- j 
-        lx <- lxvec2[right.lx_coord2] 
+        right.lx_coord2 <- j
+        lx <- lxvec2[right.lx_coord2]
         break
       }
     }
@@ -610,7 +610,7 @@ alpha_conditional_probability <- function(
   births <- c(0, brts2time_intervals_and_births(brts)$births)
   k_interval <- init_n_lineages + cumsum(births)
   max_k <- max(k_interval)
-  # alpha is the proportionality factor between max_k 
+  # alpha is the proportionality factor between max_k
   # and the edge of the matrix
   max_number_of_species <- alpha * max_k
   testit::assert(max_number_of_species < Inf)
@@ -622,55 +622,55 @@ alpha_conditional_probability <- function(
     one_over_Cm <- (3 * (m + 1)) / (m + 3)
     one_over_qm_binom <- 1 / choose((m + init_n_lineages), init_n_lineages)
     # applying tips constrain
-    tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species)) 
+    tips_components <- (1 + min_tips):(1 + min(max_tips, max_number_of_species))
     if (cond == 1) {
-      # I am already considering the starting species to survive. 
+      # I am already considering the starting species to survive.
       # I must not double count them!
       tips_components <- tips_components - init_n_lineages
     }
 
     Qi <- c(1, rep(0, max_number_of_species))
     mk_n_zero <- create_A(
-      lambda = lambda, 
-      mu = mu, 
-      nu = nu, 
-      q = q, 
+      lambda = lambda,
+      mu = mu,
+      nu = nu,
+      q = q,
       k = soc,
       max_number_of_species = max_number_of_species
     )
     A2_v1 <- A_operator(
-      Q = Qi, 
-      transition_matrix = mk_n_zero, 
+      Q = Qi,
+      transition_matrix = mk_n_zero,
       time_interval = total_time,
-      precision = 50L, 
-      methode = methode, 
-      a_abstol = abstol, 
+      precision = 50L,
+      methode = methode,
+      a_abstol = abstol,
       a_reltol = reltol
     )
     if (methode != "sexpm") {
-      # it removes some small negative values 
+      # it removes some small negative values
       # that can occurr as bugs from the integration process
       A2_v1 <- negatives_correction(A2_v1, pars)
-    } 
+    }
 
     #adjust for the required minimum amount of mbd
     if (minimum_multiple_births > 0) {
       mk_n_zero.no_mbd <- create_A.no_mbd(
-        lambda = lambda, 
-        mu = mu, 
-        nu = nu, 
-        q = q, 
-        k = soc, 
-        max_number_of_species = max_number_of_species, 
+        lambda = lambda,
+        mu = mu,
+        nu = nu,
+        q = q,
+        k = soc,
+        max_number_of_species = max_number_of_species,
         minimum_multiple_births = minimum_multiple_births
       )
       A2_v1.no_mbd <- A_operator(
-        Q = Qi, 
-        transition_matrix = mk_n_zero.no_mbd, 
-        time_interval = total_time, 
-        precision = 50L, 
-        methode = methode, 
-        a_abstol = abstol, 
+        Q = Qi,
+        transition_matrix = mk_n_zero.no_mbd,
+        time_interval = total_time,
+        precision = 50L,
+        methode = methode,
+        a_abstol = abstol,
         a_reltol = reltol
       )
       A2_v1 <- A2_v1 - A2_v1.no_mbd
@@ -768,7 +768,7 @@ alpha_analysis <- function(
     )$pc
   }
   pc <- pc_1
-  if (count >= 100) { 
+  if (count >= 100) {
     alpha <- 10
   }
   if (pc <= 0 | pc == Inf | pc == -Inf) {
