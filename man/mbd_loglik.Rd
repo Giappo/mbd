@@ -50,12 +50,12 @@ but missing in the phylogeny_}
 \item{print_errors}{something}
 }
 \value{
-The function returns the natural logarithm 
+The function returns the natural logarithm
   of the likelihood for the process.
 }
 \description{
-mbd_loglik provides the likelihood for a process 
-  in which multiple births (from different parents) at the same time 
+mbd_loglik provides the likelihood for a process
+  in which multiple births (from different parents) at the same time
   are possible, along with usual sympatric speciation and extinction events.
 }
 \examples{

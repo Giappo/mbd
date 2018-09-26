@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_ml.R
 \name{mbd_ml}
 \alias{mbd_ml}
-\title{Maximization of the loglikelihood 
+\title{Maximization of the loglikelihood
   under a multiple birth-death diversification model}
 \usage{
 mbd_ml(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
@@ -16,7 +16,7 @@ mbd_ml(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
 \arguments{
 \item{brts}{A set of branching times of a phylogeny_}
 
-\item{initparsopt}{The initial values of the parameters 
+\item{initparsopt}{The initial values of the parameters
 that must be optimized}
 
 \item{idparsopt}{The ids of the parameters that must be optimized.
@@ -28,7 +28,7 @@ The ids are defined as follows:
   \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{idparsfix}{The ids of the parameters that should not be optimized. 
+\item{idparsfix}{The ids of the parameters that should not be optimized.
 The default is to fix all parameters not specified in idparsopt.}
 
 \item{parsfix}{The values of the parameters that should not be optimized.}
@@ -45,7 +45,7 @@ and non-extinction of the phylogeny_ Set 0 otherwise.}
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
-\item{res}{Sets the maximum number of species for which a probability 
+\item{res}{Sets the maximum number of species for which a probability
 must be computed, must be larger than 1 + length(brts).}
 
 \item{tol}{Sets the tolerances in the optimization. Consists of:
@@ -57,11 +57,11 @@ must be computed, must be larger than 1 + length(brts).}
 
 \item{maxiter}{something}
 
-\item{changeloglikifnoconv}{If TRUE, 
+\item{changeloglikifnoconv}{If TRUE,
 the loglik will be set to -Inf if ML does not converge.}
 
-\item{optimmethod}{Method used in optimization of the likelihood. 
-Current default is 'simplex'. 
+\item{optimmethod}{Method used in optimization of the likelihood.
+Current default is 'simplex'.
 Alternative is 'subplex' (default of previous versions).}
 
 \item{methode}{Specifies how the integration must be performed:
@@ -82,21 +82,21 @@ Alternative is 'subplex' (default of previous versions).}
 \item{...}{Something}
 }
 \value{
-The output is a dataframe containing 
-  estimated parameters and maximum loglikelihood. 
+The output is a dataframe containing
+  estimated parameters and maximum loglikelihood.
   The computed loglikelihood contains the factor q! m! / (q + m)!
   where q is the number of species in the phylogeny and m is the number of
-  missing species, as explained in the supplementary 
+  missing species, as explained in the supplementary
   material to Etienne et al. 2012.
 }
 \description{
-mbd_ml computes the maximum likelihood estimates of 
-  the parameters of a multiple birth-death diversification model 
-  for a given set of phylogenetic branching times. 
-  It also outputs the corresponding loglikelihood 
-  that can be used in model comparisons. 
-  Differently from mbd_ml it can account for three kind of events: 
-  sympatric (single) speciation, multiple (allopatric) speciation 
+mbd_ml computes the maximum likelihood estimates of
+  the parameters of a multiple birth-death diversification model
+  for a given set of phylogenetic branching times.
+  It also outputs the corresponding loglikelihood
+  that can be used in model comparisons.
+  Differently from mbd_ml it can account for three kind of events:
+  sympatric (single) speciation, multiple (allopatric) speciation
   and extinction.
 }
 \examples{
@@ -107,7 +107,7 @@ graphics::plot(simulated_data$tes)
 # @Giappo: does not work
 # mbd_ml(
 #   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
-#   idparsfix = c(1, 2, 3), 
+#   idparsfix = c(1, 2, 3),
 #   parsfix = test_pars[idparsfix],
 #   missnumspec = 0, cond = 1, soc = 2
 # )

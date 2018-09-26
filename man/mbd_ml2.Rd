@@ -11,22 +11,22 @@ mbd_ml2(branching_times, init_param_values, fixed_params, estimated_params,
 \arguments{
 \item{branching_times}{the branching times of the phylogeny}
 
-\item{init_param_values}{initial parameter values, 
+\item{init_param_values}{initial parameter values,
 as created with \code{create_mbd_params}}
 
-\item{fixed_params}{the parameters that are fixed. 
-This can be any subset of 
+\item{fixed_params}{the parameters that are fixed.
+This can be any subset of
 set {\code{"lambda"}, \code{"mu"}, \code{"nu"} and \code{"q"}}}
 
-\item{estimated_params}{the parameters that are estimated. 
-This can be any subset of 
+\item{estimated_params}{the parameters that are estimated.
+This can be any subset of
 set {\code{"lambda"}, \code{"mu"}, \code{"nu"} and \code{"q"}}}
 
 \item{init_n_species}{the number of species at the moment of the
 first branching time. Can be either one or two:
 \itemize{
-  \item 1: stem 
-  \item 2: crown 
+  \item 1: stem
+  \item 2: crown
 }}
 
 \item{n_missing_species}{the number of species missing}
