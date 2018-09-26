@@ -156,7 +156,7 @@ pmb_loglik_choosepar <- function(
     } else {
       pars1 <- trpars1
     }
-    loglik <- pmb_loglik(pars = pars1, brts = brts)
+    loglik <- mbd::pmb_loglik(pars = pars1, brts = brts)
   }
   if (is.nan(loglik) || is.na(loglik)) {
     cat("There are parameter values used which cause numerical problems:", trpars1, "\n")

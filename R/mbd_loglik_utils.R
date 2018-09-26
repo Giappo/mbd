@@ -454,7 +454,7 @@ calculate_conditional_probability0PB <- function(
 #' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-#' @export
+#' @noRd
 find_best_lx_for_pc <- function(
   brts,
   pars,

@@ -76,7 +76,7 @@ mbd_loglik <- function(
       minimum_multiple_births == 0
   ) {
     #using pure birth analytical formula
-    loglik <- pmb_loglik(pars = pars, brts = brts, soc = soc)
+    loglik <- mbd::pmb_loglik(pars = pars, brts = brts, soc = soc)
   } else {
     #MAIN
 

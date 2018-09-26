@@ -127,7 +127,9 @@ heatmap2dataframe = function(
 
 #' Converts branching times to "time intervals between branching times" and "birth at nodes" vectors
 #' @inheritParams default_params_doc
-brts2time_intervals_and_births <- function(brts
+#' @noRd
+brts2time_intervals_and_births <- function(
+  brts
 ) {
   time_points=-unlist(unname(sort(abs(brts), decreasing = T)) )
   branching_times = -sort(abs(as.numeric(time_points)), decreasing = TRUE)
@@ -270,6 +272,7 @@ myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
 #' @inheritParams default_params_doc
 #' @param v sometjing
 #' @param display_output something
+#' @noRd
 negatives_correction <- function(
   v,
   pars,
