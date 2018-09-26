@@ -80,7 +80,6 @@ correlation_analysis <- function(
     graphics::title(main=titolo.pdf, outer = T)
     grDevices::dev.off()
     }
-
 }
 
 #' Percentiles function
