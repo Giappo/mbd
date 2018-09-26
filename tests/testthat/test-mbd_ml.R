@@ -25,6 +25,7 @@ test_that("mbd_ml can be silent", {
 
 test_that("use", {
 
+  skip("Fix @Giappo")
   phylogeny <- ape::read.tree(text = "((A:1, B:1):2, C:3);")  
   # maximize the likelihood only for the parameter q
   brts <- ape::branching.times(phylogeny)
@@ -46,7 +47,7 @@ test_that("use", {
     idparsfix = idparsfix, 
     soc = 2, # Condition on crown age 
     cond = 1, # Condition on stem/crown age and non-extinction
-    verbose = FALSE
+    verbose = TRUE
   )
   expect_equal(lambda, ml_classic$lambda)
   expect_equal(mu, ml_classic$mu)

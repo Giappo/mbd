@@ -185,6 +185,7 @@ mbd_P_eq <- function(
   soc = 2,
   output = 0
 ){
+  testit::assert(max_number_of_species < Inf)
   init_n_lineages <- soc
 
   # Use sim_pars for pars

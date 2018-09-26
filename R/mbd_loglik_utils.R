@@ -36,6 +36,7 @@ create_A0 <- function(
   k, 
   matrix_builder = hyperA_HannoX
 ){
+  testit::assert(max_number_of_species < Inf)
   nvec <- 0:max_number_of_species
   M <- lambda * matrix_builder(n_species = max_number_of_species, k = k, q = q)
 
@@ -67,7 +68,15 @@ create_B0 <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_A <- function(lambda, mu, nu, q, k, max_number_of_species){
+create_A <- function(
+  lambda, 
+  mu, 
+  nu, 
+  q, 
+  k, 
+  max_number_of_species
+) {
+  testit::assert(max_number_of_species < Inf)
   nvec <- 0:max_number_of_species
   m <- create_A0(max_number_of_species = max_number_of_species,
                        lambda = nu, mu = mu, q = q, k = k)
@@ -117,6 +126,7 @@ create_A.no_mbd = function(
   max_number_of_species,
   minimum_multiple_births
 ) {
+  testit::assert(max_number_of_species < Inf)
   nvec <- 0:max_number_of_species
   m <- create_A0(
     max_number_of_species = max_number_of_species, 
@@ -603,6 +613,7 @@ alpha_conditional_probability <- function(
   # alpha is the proportionality factor between max_k 
   # and the edge of the matrix
   max_number_of_species <- alpha * max_k
+  testit::assert(max_number_of_species < Inf)
 
   if (!(cond == 1 | tips_interval[1] > 0 | tips_interval[2] < Inf)) {
     pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))

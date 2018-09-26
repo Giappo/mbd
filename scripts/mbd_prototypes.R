@@ -194,6 +194,7 @@ mbd_loglik0 <- function(
       ) { 
         
         total_time <- max(abs(brts));
+        testit::assert(max_number_of_species < Inf)
         m <- 0:max_number_of_species
         one_over_Cm <- (3 * (m + 1)) / (m + 3)
         one_over_qm_binom <- 1/choose((m + init_n_species),init_n_species)
