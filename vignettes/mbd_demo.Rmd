@@ -70,7 +70,7 @@ Then we set some basic parameters to create a simulated tree:
 
 ```{r}
 soc <- 2 # Use a crown age
-crown_age <- 5
+crown_age <- 1
 cond <- 1 # Condition on non-extinction
 
 sim <- mbd_sim(
