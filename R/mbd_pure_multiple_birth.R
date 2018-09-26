@@ -31,8 +31,8 @@ pmb_loglik <- function(
     time_intervals <- data$time_intervals
     births <- data$births
     k <- init_n_lineages + cumsum(c(0, births))
-    A_term <- rep(1, length(time_intervals))     #branches
-    B_term <- rep(1, length(time_intervals) - 1) #nodes
+    a_term <- rep(1, length(time_intervals))     #branches
+    b_term <- rep(1, length(time_intervals) - 1) #nodes
     #calculating branches contribution
     i <- 0:1e6
     for (t in 1:length(time_intervals))
@@ -44,17 +44,17 @@ pmb_loglik <- function(
       # (1) nu contribution: (1-q)^(k*i) * (nu*(t_k-t_k-1))^i
       #                      * exp(-nu*(t_k-t_k-1))/k!
       # (2) lambda contribution: exp(-k*lambda*(t_k-t_k-1))
-      A_term[t] <- sum( (1 - q)^(ii * k[t]) * poisson_term ) * # (1)
+      a_term[t] <- sum( (1 - q)^(ii * k[t]) * poisson_term ) * # (1)
                    exp(-k[t] * lambda * (time_intervals[t]))   # (2)
     }
     #calculating nodes contribution
     # nu contribution: nu*(k, b)*q^b*(1-q)^(k-b)
-    B_term <- (
+    b_term <- (
       nu * choose(k[-length(k)], births) * q^births *
       (1 - q) ^ (k[-length(k)] - births)
     ) + lambda * k[-length(k)] * (births == 1)                                               # lambda contribution: lambda*k (only if b==1)
   
-    th_loglik <- sum(log(A_term)) + sum(log(B_term))
+    th_loglik <- sum(log(a_term)) + sum(log(b_term))
   }
   th_loglik
 }
@@ -88,24 +88,29 @@ pmb_loglik_Qvector <- function(pars, brts, soc = 2){
     time_intervals <- data$time_intervals
     births <- data$births
     k <- init_n_lineages + cumsum(c(0, births))
-    A_term <- rep(1, length(time_intervals)    ) #branches
-    B_term <- rep(1, length(time_intervals) - 1) #nodes
+    a_term <- rep(1, length(time_intervals)    ) #branches
+    b_term <- rep(1, length(time_intervals) - 1) #nodes
     #calculating branches contribution
     i <- 0:1e6
     for (t in 1:length(time_intervals))
     {
+      #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
       poisson_term <- stats::dpois(
           i, nu * time_intervals[t], log = FALSE
-        )[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0] #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
+        )[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0] 
       ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
-      A_term[t] <- sum( (1 - q)^(ii * k[t]) * poisson_term ) *  # nu contribution: (1-q)^(k*i) * (nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
-                   exp(-k[t] * lambda * (time_intervals[t]))   # lambda contribution: exp(-k*lambda*(t_k-t_k-1))
+      # (1) nu contribution: (1-q)^(k*i) * (nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
+      # (2) lambda contribution: exp(-k*lambda*(t_k-t_k-1))
+      a_term[t] <- sum( (1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)  
+                   exp(-k[t] * lambda * (time_intervals[t]))     # (2)
     }
     #calculating nodes contribution
-    B_term <- (nu * choose(k[-length(k)], births) * q^births * (1 - q)^(k[-length(k)] - births)) + # nu contribution: nu*(k, b)*q^b*(1-q)^(k-b)
-              lambda * k[-length(k)] * (births == 1)                                               # lambda contribution: lambda*k (only if b==1)
+    # nu contribution: nu*(k, b) * q ^ b * (1 - q) ^ (k - b)
+    b_term <- (
+      nu * choose(k[-length(k)], births) * q^births * (1 - q)^(k[-length(k)] - births)
+    ) + lambda * k[-length(k)] * (births == 1)                                               # lambda contribution: lambda*k (only if b==1)
 
-    th_loglik <- sum(log(A_term)) + sum(log(B_term))
+    th_loglik <- sum(log(a_term)) + sum(log(b_term))
   }
   th_loglik
 }

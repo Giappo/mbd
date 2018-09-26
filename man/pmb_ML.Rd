@@ -4,15 +4,25 @@
 \alias{pmb_ML}
 \title{Does something N}
 \usage{
-pmb_ML(brts, initparsopt, soc = 2, res = 10 * (1 + length(brts) +
-  missnumspec), tol = c(0.001, 1e-04, 1e-06), maxiter = 1000 *
-  round((1.25)^length(idparsopt)), changeloglikifnoconv = FALSE,
-  optimmethod = "simplex", pars_transform = 1, missnumspec = 0)
+pmb_ML(brts, initparsopt, idparsopt = c(1, 3, 4), soc = 2, res = 10 *
+  (1 + length(brts) + missnumspec), tol = c(0.001, 1e-04, 1e-06),
+  maxiter = 1000 * round((1.25)^length(idparsopt)),
+  changeloglikifnoconv = FALSE, optimmethod = "simplex",
+  pars_transform = 1, missnumspec = 0)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny_}
 
 \item{initparsopt}{something}
+
+\item{idparsopt}{The ids of the parameters that must be optimized.
+The ids are defined as follows:
+\itemize{
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability_
+}}
 
 \item{soc}{Sets whether stem or crown age should be used (1 or 2).}
 

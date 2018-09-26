@@ -164,39 +164,59 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       #difference between sexpm and expo are not here
       if (
         (
-          cond==1 | 
-          tips_interval[1]>1 | 
-          tips_interval[2]<Inf 
+          cond == 1 | 
+          tips_interval[1] > 1 | 
+          tips_interval[2] < Inf 
         ) & !is.infinite(loglik) 
       ) { 
         
         total_time <- max(abs(brts));
         m <- 0:max_number_of_species
-        one_over_Cm <- (3*(m+1))/(m+3)
-        one_over_qm_binom <- 1/choose((m+init_n_species),init_n_species)
-        tips_components <- (1+min_tips):(1+min(max_tips,max_number_of_species)) #applying tips constrain
+        one_over_Cm <- (3 * (m + 1)) / (m + 3)
+        one_over_qm_binom <- 1/choose((m + init_n_species),init_n_species)
+        tips_components <- (1 + min_tips):(1 + min(max_tips,max_number_of_species)) #applying tips constrain
         
         mk_n_zero <- mbd:::create_A0(max_number_of_species = max_number_of_species,lambda = lambda,mu = mu,q = q,k = init_n_species)
-        A2_v1 <- A_operator(Q = Qt[1,],transition_matrix = mk_n_zero,time_interval = total_time,precision = 50L,methode=methode,a_abstol=abstol,a_reltol=reltol)
-        if (methode != "sexpm"){A2_v1=mbd:::negatives_correction(A2_v1,pars)} #it removes some small negative values that can occurr as bugs from the integration process
-        if (debug_check == 1){print(head(A2_v1, max_tips))}
-        total_product=A2_v1 * one_over_Cm * one_over_qm_binom
+        A2_v1 <- A_operator(
+          Q = Qt[1, ],
+          transition_matrix = mk_n_zero,
+          time_interval = total_time,
+          precision = 50L,
+          methode = methode,
+          a_abstol = abstol,
+          a_reltol = reltol
+        )
+        if (methode != "sexpm") {
+          # it removes some small negative values 
+          # that can occurr as bugs from the integration process
+          A2_v1 <- mbd:::negatives_correction(A2_v1,pars)
+        } 
+        if (debug_check == 1) {
+          print(head(A2_v1, max_tips))
+        }
+        total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
         Pc <- sum(total_product[tips_components])
         
-        if (Pc==0) {
+        if (Pc == 0 ) {
           #slowest and best accuracy
           # ode_matrix=as.matrix(mk_n_zero) #use this only if you use sparsematrices
           ode_matrix <- mk_n_zero
-          times <- c(0,total_time)
-          A2_v1 <- deSolve::ode(y = Qt[1,], times = times, func = mbd:::mbd_loglik_rhs, parms = ode_matrix,atol=abstol,rtol=reltol)[2,-1] #evolving crown species to the present
+          times <- c(0, total_time)
+          A2_v1 <- deSolve::ode(
+            y = Qt[1, ], 
+            times = times, 
+            func = mbd_loglik_rhs, 
+            parms = ode_matrix,
+            atol = abstol,
+            rtol = reltol
+          )[2, -1] #evolving crown species to the present
           total_product <- A2_v1*one_over_Cm*one_over_qm_binom
           Pc <- sum(total_product[tips_components])
         }
-        
       }
       alpha = alpha + 5
     }
-    loglik=loglik-log(Pc) #conditioned likelihood
+    loglik <- loglik - log(Pc) #conditioned likelihood
     
   }
   # loglik=-loglik #Rampal's optimizer uses loglik rather than -loglik

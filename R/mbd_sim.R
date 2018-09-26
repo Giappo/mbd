@@ -236,18 +236,19 @@ mbd_sim0 <- function(
       L[2, 1:4] <- c(t,-1, 2,-1)
       while (t > 0) {
         n_species <- length(pool)
-        deltaT <- stats::rexp(1, rate=(lambda + n_species * mu))
-        outcome=sample(c(-1, 1), size=1, prob = c(n_species * mu, lambda))
-        delta_n <- stats::rbinom(n = 1, size = n_species, prob = q)*(outcome==1)-1*(outcome==-1)
-        t=t-deltaT
-        if (delta_n>0 & t>0)
+        deltaT <- stats::rexp(1, rate = (lambda + n_species * mu))
+        outcome <- sample(c(-1, 1), size = 1, prob = c(n_species * mu, lambda))
+        delta_n <- stats::rbinom(n = 1, size = n_species, prob = q) * 
+          (outcome == 1) - 1 * (outcome == -1)
+        t <- t - deltaT
+        if (delta_n > 0 & t > 0)
         {
-          if (n_species>1) {
+          if (n_species > 1) {
             parents <- sample(pool, replace = FALSE, size = delta_n)
           } else {
             parents <- pool
           }
-          new_interval <- (total_count+1):(total_count+delta_n)
+          new_interval <- (total_count + 1):(total_count + delta_n)
           L[new_interval, 1] <- t#-(delta_n:1)*1e-5 add this if you need separate time points
           L[new_interval, 2] <- parents
           L[new_interval, 3] <- abs(new_interval)*sign(parents)
@@ -334,8 +335,8 @@ mbd_sim_dataset <- function(
   if (edge != Inf && tips_interval == c(0, Inf))
   {
     estimation <- mbd_P_eq(test_parameters = sim_pars, age = age, max_number_of_species = 3000, precision = 50L, soc=soc, output=0);
-    max_tips <- round(estimation$avg_n*(1 + edge));
-    min_tips <- max(0, round(estimation$avg_n * (1 - edge)));
+    max_tips <- round(estimation$avg_n*(1 + edge))
+    min_tips <- max(0, round(estimation$avg_n * (1 - edge)))
     tips_interval <- c(min_tips, max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
   }
 
@@ -426,8 +427,8 @@ mbd_sim_dataset0 <- function(
       soc = soc,
       output = 0
     )
-    max_tips <- round(estimation$avg_n*(1 + edge));
-    min_tips <- max(0, round(estimation$avg_n*(1 - edge)));
+    max_tips <- round(estimation$avg_n * (1 + edge));
+    min_tips <- max(0, round(estimation$avg_n * (1 - edge)))
     tips_interval <- c(min_tips, max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
   }
 

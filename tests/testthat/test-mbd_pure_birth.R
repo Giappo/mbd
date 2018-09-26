@@ -35,18 +35,22 @@ test_that("PureBirth theoretical check", {
       # A_term=A_term*sum( ((1-q)^(ii*k[t]))*poisson_term )
     }
 
-    B_term=prod( lambda*choose(k[-length(k)], births)*q^births*(1-q)^(k[-length(k)]-births) )
+    B_term <- prod(
+      lambda * choose(k[-length(k)], births) * q ^ births * 
+      (1 - q) ^ (k[-length(k)]-births) 
+    )
 
-    loglik=log(A_term*B_term)
+    loglik <- log(A_term * B_term)
     # loglik=-loglik #Rampal's optimizer uses loglik rather than -loglik
     return(loglik)
   }
 
   mbd_test_pure_birth=function(pars, brts, soc=2, cond=0, methode="both"){
 
-    if (pars[2]!=0){
+    if (pars[2] != 0){
       print("This is meant to work only for mu=0")
-      break}
+      break
+    }
 
     theorethicalLL  = mbd_theoretical_loglik(pars=pars, brts = brts, soc = soc)
     computationalLL = mbd_loglik0(pars=pars, brts = brts, soc=soc, cond=cond, missnumspec=0, methode=methode)

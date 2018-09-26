@@ -205,7 +205,7 @@ mbd_P_eq <- function(
     testit::assert(!"Do not call hyperA")
     # M = lambda * hyperA::hyperA(N = max_number_of_species, k = 0, q = q)
     # M[row(M) == col(M) - 1] = mu*nvec[2:(max_number_of_species+1)]
-    # diag(M) = - mu*nvec - lambda*(1-(1-q)^nvec)
+    # diag(M) = - mu * nvec - lambda * (1 - (1 - q) ^ nvec)
     # return(M)
   }
 

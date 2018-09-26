@@ -33,30 +33,39 @@ test_that("PureBirth theoretical check", {
       ii <- i[poisson_term != 0]
       pois_not_zero <- which(poisson_term != 0)
       A_term <- A_term * sum(((1 - q) ^ (ii * k[t])) * poisson_term[pois_not_zero] )
-      # poisson_term=stats::dpois(i, lambda*time_intervals[t], log = FALSE)[dpois(i, lambda*time_intervals[t], log = FALSE)!=0]
-      # ii=i[stats::dpois(i, lambda*time_intervals[t], log = FALSE)!=0]
-      # A_term=A_term*sum( ((1-q)^(ii*k[t]))*poisson_term )
     }
 
-    B_term <- prod(lambda*choose(k[-length(k)], births)*q^births*(1 - q)^(k[-length(k)] - births) )
+    B_term <- prod(lambda*choose(k[-length(k)], births)*q^births * 
+      (1 - q)^(k[-length(k)] - births) )
 
     loglik <- log(A_term*B_term)
     # loglik=-loglik #Rampal's optimizer uses loglik rather than -loglik
     loglik
   }
 
-  mbd_test_pure_birth_small_trees <- function(pars, brts, soc=2, cond=0){
-
-    if (pars[2]!=0){
+  mbd_test_pure_birth_small_trees <- function(
+    pars, 
+    brts, 
+    soc = 2, 
+    cond = 0
+  ) {
+    if (pars[2] != 0) {
       print("This is meant to work only for mu=0")
-      break}
+      break
+    }
 
-    theorethicalLL  = mbd_theoretical_loglik(pars=pars, brts = brts, soc = soc)
-    lsodaLL = mbd_loglik0(pars=pars, brts = brts, soc=soc, cond=cond, missnumspec=0, methode="lsoda")
-    expoLL = mbd_loglik0(pars=pars, brts = brts, soc=soc, cond=cond, missnumspec=0, methode="expo")
+    theorethicalLL <- mbd_theoretical_loglik(pars = pars, brts = brts, soc = soc)
+    lsodaLL <- mbd_loglik0(
+      pars = pars, brts = brts, soc = soc, cond = cond, 
+      missnumspec = 0, methode = "lsoda"
+    )
+    expoLL <- mbd_loglik0(
+      pars = pars, brts = brts, soc = soc, cond = cond, 
+      missnumspec = 0, methode = "expo"
+    )
     #I need to divide to get rid of common factors
-    ctrl_pars=pars/2
-    ctrl_brts=brts
+    ctrl_pars <- pars / 2
+    ctrl_brts <- brts
 
     ctrl_theorethical=mbd_theoretical_loglik(pars=ctrl_pars, brts = ctrl_brts, soc = soc)
     ctrl_lsoda=mbd_loglik0(pars=ctrl_pars, brts = ctrl_brts, soc=soc, cond=cond, missnumspec=0, methode="lsoda")
