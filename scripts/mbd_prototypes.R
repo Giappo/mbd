@@ -44,8 +44,8 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
     print("input parameters are wrong")
     loglik = -Inf
   } else{
-    Pc <- -1
-    while (Pc < 0 && alpha <= max(starting_alpha, 80)) {
+    pc <- -1
+    while (pc < 0 && alpha <= max(starting_alpha, 80)) {
       
       #ADJUSTING DATA
       data <- brts2time_intervals_and_births(brts)
@@ -160,7 +160,7 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
       }
       
       #CONDITIONING THE LIKELIHOOD ON THE SURVIVAL OF CROWN SPECIES
-      Pc <- 1
+      pc <- 1
       #difference between sexpm and expo are not here
       if (
         (
@@ -195,9 +195,9 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
           print(head(A2_v1, max_tips))
         }
         total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
-        Pc <- sum(total_product[tips_components])
+        pc <- sum(total_product[tips_components])
         
-        if (Pc == 0 ) {
+        if (pc == 0 ) {
           #slowest and best accuracy
           # ode_matrix=as.matrix(mk_n_zero) #use this only if you use sparsematrices
           ode_matrix <- mk_n_zero
@@ -211,12 +211,12 @@ mbd_loglik0 <- function(pars, brts, soc = 2, cond = 0, tips_interval = c(0,Inf),
             rtol = reltol
           )[2, -1] #evolving crown species to the present
           total_product <- A2_v1*one_over_Cm*one_over_qm_binom
-          Pc <- sum(total_product[tips_components])
+          pc <- sum(total_product[tips_components])
         }
       }
       alpha = alpha + 5
     }
-    loglik <- loglik - log(Pc) #conditioned likelihood
+    loglik <- loglik - log(pc) #conditioned likelihood
     
   }
   # loglik=-loglik #Rampal's optimizer uses loglik rather than -loglik

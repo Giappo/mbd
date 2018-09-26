@@ -9,10 +9,10 @@ hyperA_HannoX <- function(n_species, k, q) {
   # q ^ (m - n) * (1 - q) ^ (k + 2 * n-m) * 
   #  sum_j 2 ^ j choose(k, j) * choose(n, m - n - j)
   j <- 0:k
-  A1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
+  a_1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
   n_species <- n_species + 1
-  A <- diag(A1[1], nrow = n_species + 2, ncol = n_species + 2)
-  A[1:(k + 1), 1] <- A1
+  A <- diag(a_1[1], nrow = n_species + 2, ncol = n_species + 2)
+  A[1:(k + 1), 1] <- a_1
   for (dst in 2:n_species) {
     src <- dst - 1
     s <- src:min(n_species, 2 * src + k - 1)
@@ -409,7 +409,7 @@ calculate_conditional_probability0PB <- function(
   total_time <- max(abs(brts))
   if (mu != 0) { 
     cat('mu is supposed to be equal zero to use this function')
-    return(Pc <- NA)
+    return(pc <- NA)
   }
 
   m <- 0:lx; length(m)
@@ -450,7 +450,7 @@ calculate_conditional_probability0PB <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-find_best_lx_for_Pc <- function(
+find_best_lx_for_pc <- function(
   brts,
   pars,
   soc = 2,
@@ -549,9 +549,9 @@ calculate_conditional_probability1 <- function(
   reltol = 1e-10
 ){
 
-  lx <- find_best_lx_for_Pc(brts = brts, pars = pars, soc = soc)
+  lx <- find_best_lx_for_pc(brts = brts, pars = pars, soc = soc)
   if (pars[2] == 0) {
-    Pc <- mbd::calculate_conditional_probability0PB(
+    pc <- mbd::calculate_conditional_probability0PB(
       brts = brts,
       pars = pars,
       lx = lx,
@@ -563,7 +563,7 @@ calculate_conditional_probability1 <- function(
     )
   } else {
     # @Giappo: this function does not exist any more
-    # Pc <- mbd::calculate_conditional_probability02(
+    # pc <- mbd::calculate_conditional_probability02(
     #   brts = brts,
     #   pars = pars,
     #   lx = lx,
@@ -575,7 +575,7 @@ calculate_conditional_probability1 <- function(
     # )
     stop("Function 'mbd::calculate_conditional_probability02' is absent")
   }
-  return(list(Pc = Pc, lx = lx))
+  return(list(pc = pc, lx = lx))
 }
 
 #' @title Internal mbd function
@@ -605,7 +605,7 @@ alpha_conditional_probability <- function(
   max_number_of_species <- alpha * max_k
 
   if (!(cond == 1 | tips_interval[1] > 0 | tips_interval[2] < Inf)) {
-    Pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))
+    pc <- 1; A2_v1 <- c(1, rep(0, max_number_of_species))
   } else {
     m <- 0:max_number_of_species;
     one_over_Cm <- (3 * (m + 1)) / (m + 3)
@@ -666,9 +666,9 @@ alpha_conditional_probability <- function(
     }
 
     total_product <- A2_v1 * one_over_Cm * one_over_qm_binom
-    Pc <- sum(total_product[tips_components])
+    pc <- sum(total_product[tips_components])
   }
-  return(list(Pc = Pc, A2_v1 = A2_v1))
+  return(list(pc = pc, A2_v1 = A2_v1))
 }
 
 #' @title Internal mbd function
@@ -689,13 +689,13 @@ alpha_analysis <- function(
   reltol,
   minimum_multiple_births
 ) {
-  deltaAlpha <- 1
+  delta_alpha <- 1
   count <- 0
   same_result_count <- 0
-  Pc.notanumber <- 1
+  pc_notanumber <- 1
   alpha <- alpha0
-  while (Pc.notanumber) {
-    Pc1 <- alpha_conditional_probability(
+  while (pc_notanumber) {
+    pc_1 <- alpha_conditional_probability(
       brts = brts,
       pars = pars,
       tips_interval = tips_interval,
@@ -706,35 +706,35 @@ alpha_analysis <- function(
       abstol = abstol,
       reltol = reltol,
       minimum_multiple_births = minimum_multiple_births
-    )$Pc
-    # Pc1 <- calculate_conditional_probability(alpha = alpha, ...)$Pc
-    Pc.notanumber <- is.nan(Pc1)
-    alpha <- alpha - Pc.notanumber
+    )$pc
+    # pc_1 <- calculate_conditional_probability(alpha = alpha, ...)$pc
+    pc_notanumber <- is.nan(pc_1)
+    alpha <- alpha - pc_notanumber
   }
-  while (deltaAlpha != 0 && count < 100 && same_result_count < 5) {
-    Pc2 <- alpha_conditional_probability(
+  while (delta_alpha != 0 && count < 100 && same_result_count < 5) {
+    pc_2 <- alpha_conditional_probability(
       brts = brts,
       pars = pars,
       tips_interval = tips_interval,
       cond = cond,
       soc = soc,
-      alpha = alpha + deltaAlpha,
+      alpha = alpha + delta_alpha,
       methode = methode,
       abstol = abstol,
       reltol = reltol,
       minimum_multiple_births = minimum_multiple_births
-    )$Pc
-    if (is.nan(Pc2)) {
-      deltaAlpha <- deltaAlpha - 1
-    } else if (Pc2 < Pc1) {
-      deltaAlpha <- deltaAlpha + 1
+    )$pc
+    if (is.nan(pc_2)) {
+      delta_alpha <- delta_alpha - 1
+    } else if (pc_2 < pc_1) {
+      delta_alpha <- delta_alpha + 1
       same_result_count <- same_result_count + 1
     } else {
       same_result_count <- 0
-      deltaPc <- abs(Pc2 - Pc1)/Pc1;
-      deltaAlpha <- floor(10 * deltaPc)
-      alpha <- alpha + deltaAlpha
-      Pc1 <- Pc2
+      delta_pc <- abs(pc_2 - pc_1)/pc_1;
+      delta_alpha <- floor(10 * delta_pc)
+      alpha <- alpha + delta_alpha
+      pc_1 <- pc_2
     }
 
     count = count + 1
@@ -742,8 +742,8 @@ alpha_analysis <- function(
   }
   if (max_k * alpha >= 2000) {
     #check to see whether alpha is too big to be handled without memory issues
-    alpha <- floor(1500/max_k);
-    Pc1 <- alpha_conditional_probability(
+    alpha <- floor(1500 / max_k);
+    pc_1 <- alpha_conditional_probability(
       brts = brts,
       pars = pars,
       tips_interval = tips_interval,
@@ -754,17 +754,17 @@ alpha_analysis <- function(
       abstol = abstol,
       reltol = reltol,
       minimum_multiple_births = minimum_multiple_births
-    )$Pc
+    )$pc
   }
-  Pc <- Pc1
+  pc <- pc_1
   if (count >= 100) { 
     alpha <- 10
   }
-  if (Pc <= 0 | Pc == Inf | Pc == -Inf) {
-    Pc <- 1
-    print("there's a problem with Pc")
+  if (pc <= 0 | pc == Inf | pc == -Inf) {
+    pc <- 1
+    print("there's a problem with pc")
   }
-  return(list(Pc = Pc, alpha = alpha))
+  return(list(pc = pc, alpha = alpha))
 }
 
 

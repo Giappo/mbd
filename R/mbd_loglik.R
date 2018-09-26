@@ -89,7 +89,7 @@ mbd_loglik <- function(
     max_k <- max(k_interval)
 
     #DETERMINE PC AND ALPHA (OR LX)
-    Pc_and_Alpha <- mbd::alpha_analysis(
+    pc_and_alpha <- mbd::alpha_analysis(
       brts = brts,
       pars = pars,
       tips_interval = tips_interval,
@@ -103,14 +103,14 @@ mbd_loglik <- function(
       minimum_multiple_births = minimum_multiple_births
     )
 
-    Pc    <- Pc_and_Alpha$Pc
+    pc    <- pc_and_alpha$pc
     # alpha is the proportionality factor between max_k and 
     # the edge of the matrix
-    alpha <- Pc_and_Alpha$alpha
+    alpha <- pc_and_alpha$alpha
     lx <- max_number_of_species <- alpha * max_k; 
-    Pc <- 1
+    pc <- 1
     if (cond == 1) {
-      Pc <- mbd::calculate_conditional_probability(
+      pc <- mbd::calculate_conditional_probability(
         brts = brts,
         pars = pars,
         soc = soc,
@@ -244,7 +244,7 @@ mbd_loglik <- function(
     if (is.nan(loglik) | is.na(loglik)) {
       loglik <- -Inf
     } else {
-      loglik <- loglik - log(Pc) * (cond == 1) #conditioned likelihood
+      loglik <- loglik - log(pc) * (cond == 1) #conditioned likelihood
     }
   }
   loglik

@@ -13,7 +13,7 @@ sim_pars <- c(lambda, mu, nu, q);
 
 ## ------------------------------------------------------------------------
 soc <- 2 # Use a crown age
-crown_age <- 10
+crown_age <- 1
 cond <- 1 # Condition on non-extinction
 
 sim <- mbd_sim(
