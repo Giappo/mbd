@@ -23,24 +23,24 @@ test_that("PureBirth theoretical check", {
     #LOGLIK COMPUTATION
     init_n_lineages <- soc
     k <- init_n_lineages + cumsum(c(0, births))
-    A_term=1
+    a_term=1
     i=0:1e6
     for (t in 1:length(time_intervals)){
       poisson_term <- stats::dpois(i, lambda*time_intervals[t], log = FALSE)
       ii = i[poisson_term!=0]
       pois_not_zero = which(poisson_term!=0)
-      A_term=A_term*sum( ((1-q)^(ii*k[t]))*poisson_term[pois_not_zero] )
+      a_term=a_term*sum( ((1-q)^(ii*k[t]))*poisson_term[pois_not_zero] )
       # poisson_term=stats::dpois(i, lambda*time_intervals[t], log = FALSE)[dpois(i, lambda*time_intervals[t], log = FALSE)!=0]
       # ii=i[stats::dpois(i, lambda*time_intervals[t], log = FALSE)!=0]
-      # A_term=A_term*sum( ((1-q)^(ii*k[t]))*poisson_term )
+      # a_term=a_term*sum( ((1-q)^(ii*k[t]))*poisson_term )
     }
 
-    B_term <- prod(
+    b_term <- prod(
       lambda * choose(k[-length(k)], births) * q ^ births * 
       (1 - q) ^ (k[-length(k)]-births) 
     )
 
-    loglik <- log(A_term * B_term)
+    loglik <- log(a_term * b_term)
     # loglik=-loglik #Rampal's optimizer uses loglik rather than -loglik
     return(loglik)
   }
