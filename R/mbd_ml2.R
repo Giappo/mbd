@@ -58,5 +58,19 @@ mbd_ml2 <- function(
   if (length(unique(estimated_params)) != length(estimated_params)) {
     stop("'estimated_params' must contain unique entries only")
   }
-  
+  if (length(c(fixed_params, estimated_params)) != 4) {
+    stop(
+      "'fixed_params' and 'estimated_params' together must contain each ",
+      "of the four MBD parameter names"
+    )
+  }
+  if (init_n_species != 1 && init_n_species != 2) {
+    stop("'init_n_species' must be 1 or 2")
+  }
+  if (n_missing_species < 0) {
+    stop("'n_missing_species' must be positive")
+  }
+  if (!conditioned_on %in% c("nothing", "non_extinction")) {
+    stop("'conditioned_on' must be either 'nothing' or 'non_extinction'")
+  }
 }
