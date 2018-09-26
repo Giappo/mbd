@@ -93,7 +93,6 @@ correlation_analysis=function(results,path,titolo=NULL,pdfname,sim_pars=sim_pars
     graphics::title(main=titolo.pdf,outer = T)
     grDevices::dev.off()
     }
-
 }
 
 #percentiles function
