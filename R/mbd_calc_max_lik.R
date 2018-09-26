@@ -25,7 +25,7 @@
 #'   }
 #' @author Richel J.C. Bilderbeek
 #' @export
-mbd_ml2 <- function(
+mbd_calc_max_lik <- function(
   branching_times,
   init_param_values,
   fixed_params,
