@@ -2,7 +2,7 @@
 #' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-hyperA_HannoX <- function(n_species, k, q) {
+hyper_a_hanno <- function(n_species, k, q) {
   # HG function: fast O(N), updated after Moulis meeting
   #this is the matrix builder: helps to create A and B operators
   #it produces the structure
@@ -34,7 +34,7 @@ create_A0 <- function(
   mu,
   q,
   k,
-  matrix_builder = hyperA_HannoX
+  matrix_builder = hyper_a_hanno
 ){
   testit::assert(max_number_of_species < Inf)
   nvec <- 0:max_number_of_species
@@ -56,7 +56,7 @@ create_B0 <- function(
   q,
   k,
   b,
-  matrix_builder = hyperA_HannoX
+  matrix_builder = hyper_a_hanno
 ) {
   #lambda * choose(k, b) * q^b  is going to be added in logB in the main script
   k2 <- k - b
