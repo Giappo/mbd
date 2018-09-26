@@ -1331,7 +1331,7 @@ extract_posterior <- function(
 #   n <- 0
 #   A1=A;B1=B;C1=C
 #   while(max(abs(term)) > tol && (n <- n+1) <= (maxit)) {
-#     term <- term*A1*B1/C1 * z/n
+#     term <- term*A1*B1 / C1 * z/n
 #     partial.sum <- partial.sum + term
 #     A1 <- A1+1
 #     B1 <- B1+1

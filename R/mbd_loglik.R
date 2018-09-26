@@ -118,12 +118,11 @@ mbd_loglik <- function(
     #LIKELIHOOD INTEGRATION
     start_over_again <- 1; iterations <- 0; max_iterations <- 100
     negative_values <- nan_values <- 0;
-    while (start_over_again == 1 & iterations < max_iterations)
-    {
+    while (start_over_again == 1 & iterations < max_iterations) {
       #MATRIX DIMENSION SETUP
       lx <- max_number_of_species <- alpha * max_k; #alpha is the proportionality factor between max_k and the edge of the matrix
       # lx <- 10 * alpha; #bonus line to simplify
-      nvec <- 0:lx
+      # nvec <- 0:lx
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
       Qi <- c(1, rep(0, lx))
@@ -135,12 +134,29 @@ mbd_loglik <- function(
       D <- C <- rep(1, (length(time_intervals)))
 
       #EVOLVING THE INITIAL STATE TO THE LAST BRANCHING POINT
-      while (t <= length(time_intervals))
-      {
+      while (t <= length(time_intervals)) {
         #Applying A operator
-        transition_matrix <- create_A(lambda = lambda, mu = mu, nu = nu, q = q, k = k, max_number_of_species = lx)
-        Qt[t,] <- A_operator(Q = Qt[(t-1),], transition_matrix = transition_matrix, time_interval = time_intervals[t], precision = 50L, methode = methode, a_abstol = abstol, a_reltol = reltol)
-        if (methode != "sexpm"){Qt[t,] <- negatives_correction(Qt[t,], pars)} #it removes some small negative values that can occurr as bugs from the integration process
+        transition_matrix <- create_A(
+          lambda = lambda, 
+          mu = mu, 
+          nu = nu, 
+          q = q, 
+          k = k, 
+          max_number_of_species = lx
+        )
+        Qt[t,] <- A_operator(
+          Q = Qt[(t - 1),], 
+          transition_matrix = transition_matrix, 
+          time_interval = time_intervals[t], 
+          precision = 50L, 
+          methode = methode, 
+          a_abstol = abstol, 
+          a_reltol = reltol
+        )
+        #it removes some small negative values that can occurr as bugs from the integration process
+        if (methode != "sexpm") { 
+          Qt[t,] <- negatives_correction(Qt[t,], pars)
+        } 
         if (any(is.nan(Qt[t,])))
         {
           if (Sys.info()[['sysname']] == "Windows")
@@ -152,7 +168,7 @@ mbd_loglik <- function(
         if (any(Qt[t,] < 0)){negative_values <- 1; break}
 
         #Applying C operator (this is a trick to avoid precision issues)
-        C[t] <- 1/(sum(Qt[t,])); Qt[t,] <- Qt[t,] * C[t]
+        C[t] <- 1 / (sum(Qt[t,])); Qt[t,] <- Qt[t,] * C[t]
 
         if (t < length(time_intervals))
         {
@@ -169,18 +185,30 @@ mbd_loglik <- function(
             }
             nan_values <- 1; break
           }
-          if (any(Qt[t,] < 0)){negative_values <- 1; break}
+          if (any(Qt[t,] < 0)) {
+            negative_values <- 1 
+            break
+          }
 
           #Applying D operator (this works exactly like C)
-          D[t] <- 1/(sum(Qt[t,])); Qt[t,] <- Qt[t,] * D[t]
+          D[t] <- 1 / (sum(Qt[t,])); Qt[t,] <- Qt[t,] * D[t]
 
           #Updating running parameters
           k <- k + births[t]
           t <- t + 1
-        }else{break}
+        } else { 
+          break 
+        }
       }
-      if (negative_values == 1){alpha <- alpha + 2}
-      if (nan_values == 1)     {alpha <- alpha - 5; if(alpha <= 0){alpha <- 6}}
+      if (negative_values == 1) {
+        alpha <- alpha + 2
+      }
+      if (nan_values == 1) {
+        alpha <- alpha - 5; 
+        if (alpha <= 0) {
+          alpha <- 6
+        }
+      }
       iterations <- iterations + 1
       start_over_again <- (nan_values) || (negative_values)
     }

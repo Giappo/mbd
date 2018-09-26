@@ -72,12 +72,14 @@ BD.infer.lambda.from.mutations <- function(n_subs,
 #' Does something E
 #' @inheritParams default_params_doc
 #' @export
-alignments_comparison_single <- function(sim_phylo,
-                                         chain_length = 1e+07,
-                                         sample_interval = 1e+03,
-                                         sequence_length = 1e+03,
-                                         max_repetitions = 10,
-                                         mutation_rate = 1/max(abs(ape::branching.times(sim_phylo)))) {
+alignments_comparison_single <- function(
+  sim_phylo,
+  chain_length = 1e+07,
+  sample_interval = 1e+03,
+  sequence_length = 1e+03,
+  max_repetitions = 10,
+  mutation_rate = 1 / max(abs(ape::branching.times(sim_phylo)))
+) {
 
   #settings
   age <- max(abs(ape::branching.times(sim_phylo)))
@@ -103,7 +105,10 @@ alignments_comparison_single <- function(sim_phylo,
     )
 
     #check esses
-    esses2 <- tracerer::calc_esses(pirouette.out$estimates, sample_interval = sample_interval) #effective sample size: has to be at least 200, try not to be over 1000 otherwise you're overkilling (try to stick to 1/5 rule of thumb)
+    esses2 <- tracerer::calc_esses(
+      pirouette.out$estimates, 
+      sample_interval = sample_interval
+    ) #effective sample size: has to be at least 200, try not to be over 1000 otherwise you're overkilling (try to stick to 1 / 5 rule of thumb)
     esses  <- esses2$posterior
     quality_ratio <- esses/(nrow(pirouette.out$estimates))
 
@@ -144,7 +149,7 @@ alignments_comparison_multiple <- function(
   cond = 1,
   age = 10,
   tips_interval = c(0, Inf),
-  mutation_rate = 1/age
+  mutation_rate = 1 / age
 ) {
   ..count.. <- NULL; rm(..count..) # nolint, fixes warning: no visible binding for global variable
 

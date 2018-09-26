@@ -135,7 +135,7 @@ pmb_loglik_choosepar <- function(
   } else {
     if (pars_transform == 1) {
       #Rampal's transformation
-      pars1 <- trpars1/(1 - trpars1)
+      pars1 <- trpars1 / (1 - trpars1)
     } else {
       pars1 <- trpars1
     }

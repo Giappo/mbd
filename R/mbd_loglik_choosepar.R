@@ -32,19 +32,16 @@ mbd_loglik_choosepar  <- function(
   }
   trpars1 <- rep(0, n_pars)
   trpars1[idparsopt] <- trparsopt
-  if (length(idparsfix) != 0)
-  {
+  if (length(idparsfix) != 0) {
     trpars1[idparsfix] <- trparsfix
   }
   if (min(trpars1[1:n_pars]) < 0) {
     loglik <- -Inf
   } else {
-    if (pars_transform == 1)
-    {
+    if (pars_transform == 1) {
       #Rampal's transformation
       pars1 <- trpars1/(1 - trpars1)
-    }else
-    {
+    } else {
       pars1 <- trpars1
     }
     loglik <- mbd_loglik(
@@ -59,8 +56,7 @@ mbd_loglik_choosepar  <- function(
       ...
     )
   }
-  if (is.nan(loglik) || is.na(loglik))
-  {
+  if (is.nan(loglik) || is.na(loglik)) {
     cat("There are parameter values used which cause numerical problems:", trpars1, "\n")
     loglik <- -Inf
   }
