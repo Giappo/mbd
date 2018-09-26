@@ -329,13 +329,24 @@ mbd_sim_dataset <- function(
   # mbd_sim_dataset creates a full simulated dataset of "max_sims" trees
   #"edge" gives the extent of fluctuations around the mean that i want to consider
 
-  if (sim_pars[2] == 0){cond = 0; tips_interval = c(0, Inf)} #this allows me to use the analytical formula CHECK THIS!
+  if (sim_pars[2] == 0) {
+    #this allows me to use the analytical formula CHECK THIS!
+    cond <- 0
+    tips_interval <- c(0, Inf)
+  } 
 
   init_n_lineages <- soc
   if (edge != Inf && tips_interval == c(0, Inf))
   {
-    estimation <- mbd_P_eq(test_parameters = sim_pars, age = age, max_number_of_species = 3000, precision = 50L, soc=soc, output=0);
-    max_tips <- round(estimation$avg_n*(1 + edge))
+    estimation <- mbd_P_eq(
+      test_parameters = sim_pars, 
+      age = age, 
+      max_number_of_species = 3000, 
+      precision = 50L, 
+      soc = soc, 
+      output = 0
+    )
+    max_tips <- round(estimation$avg_n * (1 + edge))
     min_tips <- max(0, round(estimation$avg_n * (1 - edge)))
     tips_interval <- c(min_tips, max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
   }

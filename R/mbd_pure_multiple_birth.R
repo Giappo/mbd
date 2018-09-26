@@ -37,7 +37,7 @@ pmb_loglik <- function(
     i <- 0:1e6
     for (t in 1:length(time_intervals))
     {
-      #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/k!
+      #(nu*(t_k-t_k-1))^i*exp(-nu * (t_k - t_k - 1)) / k!
       poisson_term <- stats::dpois(i, nu*time_intervals[t], log = FALSE)[
         stats::dpois(i, nu*time_intervals[t], log = FALSE) != 0] 
       ii <- i[stats::dpois(i, nu*time_intervals[t], log = FALSE) != 0 ]
