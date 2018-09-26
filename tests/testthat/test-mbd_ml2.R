@@ -45,31 +45,25 @@ test_that("use", {
 test_that("abuse", {
 
   skip("WIP")
+  
+  mbd_params <- create_mbd_params(0.1, 0.2, 0.3, 0.4)
+  fixed_params <- c("lambda", "mu")
+  estimated_params <- c("nu", "q")
+
   expect_silent(
     mbd_ml2(
       branching_times = c(1, 2, 3),
-      init_param_values = create_mbd_params(
-        lambda = lambda,
-        mu = mu,
-        nu = nu,
-        q = q
-      ),
-      fixed_params = c("lambda", "mu", "nu"),
-      estimated_params = c("q")
+      init_param_values = mbd_params,
+      fixed_params = fixed_params,
+      estimated_params = estimated_params
     )
   )
-
   expect_error(
     mbd_ml2(
       branching_times = "nonsense",
-      init_param_values = create_mbd_params(
-        lambda = lambda,
-        mu = mu,
-        nu = nu,
-        q = q
-      ),
-      fixed_params = c("lambda", "mu", "nu"),
-      estimated_params = c("q")
+      init_param_values = mbd_params,
+      fixed_params = fixed_params,
+      estimated_params = estimated_params
     ),
     "'branching_times' must be numeric"
   )
@@ -77,14 +71,9 @@ test_that("abuse", {
   expect_error(
     mbd_ml2(
       branching_times = c(1, 2, -34.56),
-      init_param_values = create_mbd_params(
-        lambda = lambda,
-        mu = mu,
-        nu = nu,
-        q = q
-      ),
-      fixed_params = c("lambda", "mu", "nu"),
-      estimated_params = c("q")
+      init_param_values = mbd_params,
+      fixed_params = fixed_params,
+      estimated_params = estimated_params
     ),
     "All 'branching_times' must be positive"
   )
@@ -93,15 +82,50 @@ test_that("abuse", {
     mbd_ml2(
       branching_times = c(1, 2, 3),
       init_param_values = "nonsense",
-      fixed_params = c("lambda", "mu", "nu"),
-      estimated_params = c("q")
+      fixed_params = fixed_params,
+      estimated_params = estimated_params
     ),
     paste0(
       "'init_param_values' must be an mbd_params, ",
       "as created by 'create_mbd_params'"
     )
   )
-
+  expect_error(
+    mbd_ml2(
+      branching_times = c(1, 2, 3),
+      init_param_values = mbd_params,
+      fixed_params = "nonsense",
+      estimated_params = estimated_params
+    ),
+    "'fixed_params' must be a set of MBD parameter names"
+  )
+  expect_error(
+    mbd_ml2(
+      branching_times = c(1, 2, 3),
+      init_param_values = mbd_params,
+      fixed_params = c(fixed_params, fixed_params),
+      estimated_params = estimated_params
+    ),
+    "'fixed_params' must contain unique entries only"
+  )
+  expect_error(
+    mbd_ml2(
+      branching_times = c(1, 2, 3),
+      init_param_values = mbd_params,
+      fixed_params = fixed_params,
+      estimated_params = "nonsense"
+    ),
+    "'estimated_params' must be a set of MBD parameter names"
+  )
+  expect_error(
+    mbd_ml2(
+      branching_times = c(1, 2, 3),
+      init_param_values = mbd_params,
+      fixed_params = fixed_params,
+      estimated_params = c(estimated_params, estimated_params) 
+    ),
+    "'estimated_params' must contain unique entries only"
+  )
 })
   
 
