@@ -7,6 +7,10 @@
 \usage{
 is_mbd_params(x)
 }
+\arguments{
+\item{x}{the object to be determined of if
+its an MBD parameter set}
+}
 \value{
 TRUE if yes, else FALSE
 }
