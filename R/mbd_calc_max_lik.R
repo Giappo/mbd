@@ -83,8 +83,7 @@ mbd_calc_max_lik <- function(
   idparsopt <- NULL
   idparsfix <- NULL
   for (i in seq(1, 4)) {
-    param_name <- mbd::get_mbd_param_names()[i]
-    if (param_name %in% estimated_params) {
+    if (estimated_params[[i]]) {
       idparsopt <- c(idparsopt, i)
     } else {
       idparsfix <- c(idparsfix, i)

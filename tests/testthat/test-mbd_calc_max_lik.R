@@ -47,7 +47,6 @@ test_that("compare style", {
 
 test_that("abuse", {
 
-  skip("WIP")
   mbd_params <- create_mbd_params(0.1, 0.2, 0.3, 0.4)
   fixed_params <- create_mbd_params_selector(lambda = TRUE, mu = TRUE)
   estimated_params <- create_mbd_params_selector(nu = TRUE, q = TRUE)
