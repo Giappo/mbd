@@ -35,8 +35,7 @@ pmb_loglik <- function(
     b_term <- rep(1, length(time_intervals) - 1) #nodes
     #calculating branches contribution
     i <- 0:1e6
-    for (t in 1:length(time_intervals))
-    {
+    for (t in 1:length(time_intervals)) {
       #(nu*(t_k-t_k-1))^i*exp(-nu * (t_k - t_k - 1)) / k!
       poisson_term <- stats::dpois(i, nu*time_intervals[t], log = FALSE)[
         stats::dpois(i, nu*time_intervals[t], log = FALSE) != 0]
@@ -92,8 +91,7 @@ pmb_loglik_q_vector <- function(pars, brts, soc = 2){
     b_term <- rep(1, length(time_intervals) - 1) #nodes
     #calculating branches contribution
     i <- 0:1e6
-    for (t in 1:length(time_intervals))
-    {
+    for (t in 1:length(time_intervals)) {
       #(nu*(t_k-t_k-1))^i*exp(-nu*(t_k-t_k-1))/i!
       poisson_term <- stats::dpois(
           i, nu * time_intervals[t], log = FALSE
@@ -272,8 +270,7 @@ pmb_ML <- function(
           )
 
           tobeprint <- "Maximum likelihood parameter estimates:"
-          for (ii in 1:n_pars)
-          {
+          for (ii in 1:n_pars) {
             tobeprint <- paste(
               tobeprint, paste(names(ml_pars1[ii]), ":", sep = ""),ml_pars1[ii]
             )

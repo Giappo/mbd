@@ -70,8 +70,7 @@ mbd_ml <- function(
   print_errors = 0,
   verbose = TRUE,
   ...
-)
-{
+) {
   # - tol = tolerance in optimization
   # - changeloglikifnoconv = if TRUE the loglik
   #     will be set to -Inf if ML does not converge
@@ -80,8 +79,7 @@ mbd_ml <- function(
   #     the loglik will be set to -Inf if ML does not converge
   # - optimmethod = "simplex" (current default)
   #     or 'subplex' (default of previous versions)
-  if (!is.numeric(brts))
-  {
+  if (!is.numeric(brts)) {
     stop("'brts' must be numeric")
   }
   if (length(idparsfix) == 0) {idparsfix <- NULL}
@@ -95,8 +93,7 @@ mbd_ml <- function(
   n_pars <- length(namepars)
   #those are the parameters that you get if something goes sideways
   failpars <- rep(-1, n_pars); names(failpars) <- namepars
-  if (is.numeric(brts) == FALSE)
-  {
+  if (is.numeric(brts) == FALSE) {
     cat("The branching times should be numeric.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     return(invisible(out2))
@@ -210,8 +207,7 @@ mbd_ml <- function(
   )
 
   tobeprint <- "Maximum likelihood parameter estimates:"
-  for (ii in 1:n_pars)
-  {
+  for (ii in 1:n_pars) {
     tobeprint <- paste(
       tobeprint, paste(names(ml_pars1[ii]), ":", sep = ""),ml_pars1[ii]
     )

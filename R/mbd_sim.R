@@ -223,8 +223,7 @@ mbd_sim0 <- function(
   ) {
     total_count <- init_n_lineages
     pool <- 1:init_n_lineages
-    while (total_count == init_n_lineages | length(pool) < init_n_lineages)
-    {
+    while (total_count == init_n_lineages | length(pool) < init_n_lineages) {
       total_count=init_n_lineages
       n_species <- init_n_lineages
       pool <- c(-1, 2)
@@ -241,8 +240,7 @@ mbd_sim0 <- function(
         delta_n <- stats::rbinom(n = 1, size = n_species, prob = q) *
           (outcome == 1) - 1 * (outcome == -1)
         t <- t - deltaT
-        if (delta_n > 0 & t > 0)
-        {
+        if (delta_n > 0 & t > 0) {
           if (n_species > 1) {
             parents <- sample(pool, replace = FALSE, size = delta_n)
           } else {

@@ -7,8 +7,7 @@ create_mbd_params_selector <- function(
   mu = FALSE,
   nu = FALSE,
   q = FALSE
-)
-{
+) {
   if (lambda != TRUE && lambda != FALSE) {
     stop("'lambda' must be either TRUE or FALSE")
   }

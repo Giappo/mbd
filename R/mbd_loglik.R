@@ -169,10 +169,8 @@ mbd_loglik <- function(
           # as bugs from the integration process
           q_t[t,] <- negatives_correction(q_t[t,], pars)
         }
-        if (any(is.nan(q_t[t,])))
-        {
-          if (Sys.info()[["sysname"]] == "Windows")
-          {
+        if (any(is.nan(q_t[t,]))) {
+          if (Sys.info()[["sysname"]] == "Windows") {
             print(pars); print(q_t[t,])
           }
           nan_values <- 1; break
@@ -185,8 +183,7 @@ mbd_loglik <- function(
         #Applying C operator (this is a trick to avoid precision issues)
         C[t] <- 1 / (sum(q_t[t,])); q_t[t,] <- q_t[t,] * C[t]
 
-        if (t < length(time_intervals))
-        {
+        if (t < length(time_intervals)) {
           #Applying B operator
           B <- create_b(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
                               max_number_of_species = lx)
@@ -194,10 +191,8 @@ mbd_loglik <- function(
           if (methode != "sexpm") {
             q_t[t,] <- negatives_correction(q_t[t,], pars)
           }
-          if (any(is.nan(q_t[t,])))
-          {
-            if (Sys.info()[["sysname"]] == "Windows")
-            {
+          if (any(is.nan(q_t[t,]))) {
+            if (Sys.info()[["sysname"]] == "Windows") {
               print(pars); print(q_t[t,])
             }
             nan_values <- 1; break
