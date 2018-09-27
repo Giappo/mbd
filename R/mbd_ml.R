@@ -82,7 +82,9 @@ mbd_ml <- function(
   if (!is.numeric(brts)) {
     stop("'brts' must be numeric")
   }
-  if (length(idparsfix) == 0) {idparsfix <- NULL}
+  if (length(idparsfix) == 0) { 
+    idparsfix <- NULL
+  }
   if (missing(parsfix) && (length(idparsfix) == 0)) {
     parsfix <- idparsfix <- NULL
   }
@@ -128,13 +130,13 @@ mbd_ml <- function(
   }
   if (pars_transform == 1) {
     #Rampal's transformation
-    trparsopt = initparsopt / (1 + initparsopt)
-    trparsopt[which(initparsopt == Inf)] = 1
-    trparsfix = parsfix / (1 + parsfix)
-    trparsfix[which(parsfix == Inf)] = 1
+    trparsopt <- initparsopt / (1 + initparsopt)
+    trparsopt[which(initparsopt == Inf)] <- 1
+    trparsfix <- parsfix / (1 + parsfix)
+    trparsfix[which(parsfix == Inf)] <- 1
   } else {
-    trparsopt  <- initparsopt
-    trparsfix  <- parsfix
+    trparsopt <- initparsopt
+    trparsfix <- parsfix
   }
   optimpars  <- c(tol, maxiter)
 
@@ -197,7 +199,9 @@ mbd_ml <- function(
   }
   ml_pars1 <- rep(0, n_pars); names(ml_pars1) <- namepars
   ml_pars1[idparsopt] <- ml_pars
-  if (length(idparsfix) != 0) {ml_pars1[idparsfix] <- parsfix}
+  if (length(idparsfix) != 0) {
+    ml_pars1[idparsfix] <- parsfix
+  }
   ML <- as.numeric(unlist(out$fvalues))
   out2 <- data.frame(
     t(ml_pars1),

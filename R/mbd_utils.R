@@ -17,39 +17,42 @@ correlation_analysis <- function(
   idparsopt,
   mother_folder
 ) {
-  n_pars=length(sim_pars);#pars_interval=list(c(0, quantile(results[, 1],.95)), c(0, quantile(results[, 2],.95)), c(0, quantile(results[, 3],.95)))
+  n_pars <- length(sim_pars);#pars_interval=list(c(0, quantile(results[, 1],.95)), c(0, quantile(results[, 2],.95)), c(0, quantile(results[, 3],.95)))
   if (missing(idparsopt)){estimated_pars=1:n_pars}else{estimated_pars=idparsopt}
-  par_names = colnames(results)[1:n_pars]
+  par_names <- colnames(results)[1:n_pars]
 
-  truevalues_color="red"; points_color = "azure4"; medians_color = "blue3"#"chartreuse3";
-  medians_color_name = "blue"; truevalues_color_name = "red";
+  truevalues_color <- "red"; points_color = "azure4"; medians_color = "blue3"#"chartreuse3";
+  medians_color_name <- "blue"; truevalues_color_name = "red";
 
-  medians=rep(0, n_pars);for (idpar in 1:n_pars){medians[idpar]=stats::median(results[, idpar])}
-  medians_string=paste0( "MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), sep = "''", collapse = ", "), ")")
-  truevalues_string=paste0( "True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars, 2), sep = "''", collapse = ", "), ")")
-  axislimits=rep(NA, n_pars)
+  medians <- rep(0, n_pars)
+  for (idpar in 1:n_pars) { 
+    medians[idpar] <- stats::median(results[, idpar])
+  }
+  medians_string <- paste0( "MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), sep = "''", collapse = ", "), ")")
+  truevalues_string <- paste0( "True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars, 2), sep = "''", collapse = ", "), ")")
+  axislimits <- rep(NA, n_pars)
   for (i in 1:n_pars){
     axislimits[i] <- stats::quantile(
       results[, i],
-      probs = 1 - percentage_hidden_outliers
+      probs <- 1 - percentage_hidden_outliers
     )
   }
 
   #pdf
   grDevices::pdf(file = paste(path, "/", pdfname, ".pdf", sep=''));#plot.new();
-  graphics::par(mfrow=c(length(estimated_pars), length(estimated_pars)))
-  graphics::par(oma=c(0, 0, 2, 0));
-  for (i in estimated_pars){for (j in estimated_pars){
-    good.lines = results[, i]<axislimits[i] & results[, j]<axislimits[j]
+  graphics::par(mfrow = c(length(estimated_pars), length(estimated_pars)))
+  graphics::par(oma = c(0, 0, 2, 0));
+  for (i in estimated_pars) { for (j in estimated_pars) {
+    good.lines = results[, i] < axislimits[i] & results[, j]<axislimits[j]
     ifelse(any(good.lines)>0, good.results <- results[good.lines, ], good.results <- results)
 
-    if (i==j){graphics::hist((good.results[, i]), main=NULL, xlab = paste(par_names[i]), breaks = 15)
-      graphics::abline(v=sim_pars[i], col = truevalues_color)
-      graphics::abline(v=medians[i], col = medians_color)
+    if ( i== j){graphics::hist((good.results[, i]), main=NULL, xlab = paste(par_names[i]), breaks = 15)
+      graphics::abline(v = sim_pars[i], col = truevalues_color)
+      graphics::abline(v = medians[i], col = medians_color)
     }
-    else{graphics::plot(good.results[, i]~good.results[, j], xlab=par_names[j], ylab=par_names[i], cex=0.3, col=points_color);
-      graphics::points(x=sim_pars[j], y=sim_pars[i], col=truevalues_color, pch=10, cex=1.5)
-      graphics::points(x=medians[j], y=medians[i], col=medians_color, pch=10, cex=1.5)
+    else{graphics::plot(good.results[, i]~good.results[, j], xlab = par_names[j], ylab = par_names[i], cex=0.3, col=points_color);
+      graphics::points(x = sim_pars[j], y = sim_pars[i], col = truevalues_color, pch = 10, cex = 1.5)
+      graphics::points(x = medians[j], y = medians[i], col = medians_color, pch = 10, cex = 1.5)
     }
   }}
   graphics::title(main=(titolo.pdf<-(paste("\n\n", titolo, "\n", medians_string, "\n", truevalues_string, sep = ''))), outer=T)
@@ -211,12 +214,14 @@ myheatmap <- function(
   colormap = grDevices::heat.colors(15),
   ...
 ){
-  if (is.matrix(matrix)==F){matrix=as.matrix(matrix)}
-  T=t(matrix[nrow(matrix):1, 1:ncol(matrix)])
+  if (is.matrix(matrix) == FALSE) {
+    matrix <- as.matrix(matrix)
+  }
+  matrix_t=t(matrix[nrow(matrix):1, 1:ncol(matrix)])
   if (logs ==1 ) {
-  # image(log(T))
-    graphics::image(log(T), col=rev(colormap),...)
-  }else{graphics::image(T)}
+  # image(log(matrix_t))
+    graphics::image(log(matrix_t), col=rev(colormap),...)
+  }else{graphics::image(matrix_t)}
 }
 
 # @Giappo: add doc

@@ -261,10 +261,10 @@ pmb_ml <- function(
           if (length(idparsfix) != 0) {
             ml_pars1[idparsfix] <- parsfix
           }
-          ML <- as.numeric(unlist(out$fvalues))
+          max_lik <- as.numeric(unlist(out$fvalues))
           out2 <- data.frame(
             t(ml_pars1),
-            loglik = ML,
+            loglik = max_lik,
             df = length(initparsopt),
             conv = unlist(out$conv)
           )
@@ -280,7 +280,7 @@ pmb_ml <- function(
           if (out2$conv != 0 & changeloglikifnoconv == T) {
             out2$loglik <- -Inf
           }
-          s2 <- sprintf("Maximum loglikelihood: %f", ML)
+          s2 <- sprintf("Maximum loglikelihood: %f", max_lik)
           cat("\n", s1, "\n", s2, "\n\n")
         }# bracket#5
       }# bracket#4

@@ -185,8 +185,10 @@ mbd_loglik <- function(
 
         if (t < length(time_intervals)) {
           #Applying B operator
-          matrix_b <- create_b(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
-                              max_number_of_species = lx)
+          matrix_b <- create_b(
+            lambda = lambda, nu = nu, q = q, k = k, b = births[t],
+            max_number_of_species = lx
+          )
           q_t[t, ] <- (matrix_b %*% q_t[t, ])
           if (methode != "sexpm") {
             q_t[t, ] <- negatives_correction(q_t[t, ], pars) # nolint internal function
@@ -228,10 +230,10 @@ mbd_loglik <- function(
     #Selecting the state I am interested in
     vm <- 1 / choose((k + missnumspec), k)
     #I have to include +1 because of Q0
-    P  <- vm * q_t[t, (missnumspec + 1)]
+    p_matrix  <- vm * q_t[t, (missnumspec + 1)]
 
     #Removing C and D effects from the LL
-    loglik <- log(P) - sum(log(C)) - sum(log(D))
+    loglik <- log(p_matrix) - sum(log(C)) - sum(log(D))
 
     #Various checks
     loglik <- as.numeric(loglik)
