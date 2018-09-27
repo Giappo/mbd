@@ -128,9 +128,9 @@ mbd_ml <- function(
   }
   if (pars_transform == 1) {
     #Rampal's transformation
-    trparsopt = initparsopt/(1 + initparsopt)
+    trparsopt = initparsopt/ (1 + initparsopt)
     trparsopt[which(initparsopt == Inf)] = 1
-    trparsfix = parsfix/(1 + parsfix)
+    trparsfix = parsfix/ (1 + parsfix)
     trparsfix[which(parsfix == Inf)] = 1
   } else {
     trparsopt  <- initparsopt

@@ -326,7 +326,7 @@ calculate_conditional_probability <- function(
   total_time <- max(abs(brts));
 
   m <- 0:lx; length(m)
-  one_over_cm <- (3 * (m + 1)) /(m + 3); length(one_over_cm)
+  one_over_cm <- (3 * (m + 1)) / (m + 3); length(one_over_cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   #starting with k = 0 and m = 2 missing species
   q_i <- rep(0, lx + 1);  q_i[3] <- 1
@@ -374,7 +374,7 @@ calculate_conditional_probability0 <- function(
   total_time <- max(abs(brts));
 
   m <- 0:lx; length(m)
-  one_over_cm <- (3 * (m + 1)) /(m + 3); length(one_over_cm)
+  one_over_cm <- (3 * (m + 1)) / (m + 3); length(one_over_cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   q_i <- c(1, rep(0, lx)); length(q_i)
 
@@ -422,7 +422,7 @@ calc_cond_prob_zero_p_b <- function(
   }
 
   m <- 0:lx; length(m)
-  one_over_cm <- (3 * (m + 1)) /(m + 3); length(one_over_cm)
+  one_over_cm <- (3 * (m + 1)) / (m + 3); length(one_over_cm)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   q_i <- c(1, rep(0, lx)); length(q_i)
 
