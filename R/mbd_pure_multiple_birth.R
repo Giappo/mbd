@@ -235,7 +235,7 @@ pmb_ML <- function(
         trparsopt = trparsopt, trparsfix = trparsfix, idparsopt = idparsopt,
         idparsfix = idparsfix, brts = brts, soc = soc,
         pars_transform = pars_transform
-      ) 
+      )
       cat("The loglikelihood for the initial parameter values is", initloglik, "\n")
       utils::flush.console()
       if (initloglik == -Inf) {
@@ -265,9 +265,9 @@ pmb_ML <- function(
           }
           ML <- as.numeric(unlist(out$fvalues))
           out2 <- data.frame(
-            t(ml_pars1), 
-            loglik = ML, 
-            df = length(initparsopt), 
+            t(ml_pars1),
+            loglik = ML,
+            df = length(initparsopt),
             conv = unlist(out$conv)
           )
 

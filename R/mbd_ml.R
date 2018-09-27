@@ -203,9 +203,9 @@ mbd_ml <- function(
   if (length(idparsfix) != 0) {ml_pars1[idparsfix] <- parsfix}
   ML <- as.numeric(unlist(out$fvalues))
   out2 <- data.frame(
-    t(ml_pars1), 
-    loglik = ML, 
-    df = length(initparsopt), 
+    t(ml_pars1),
+    loglik = ML,
+    df = length(initparsopt),
     conv = unlist(out$conv)
   )
 

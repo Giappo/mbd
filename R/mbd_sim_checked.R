@@ -1,9 +1,9 @@
 #' More intuitive interface of \code{mbd_sim}
-#' @param mbd_params MBD parameters, 
+#' @param mbd_params MBD parameters,
 #'   as created by \code{create_mbd_params}
-#' @param crown_age the crown age. 
-#'   Either \code{crown_age} or \code{stem_age} must be exclusively set    
-#' @param stem_age the stem age    
+#' @param crown_age the crown age.
+#'   Either \code{crown_age} or \code{stem_age} must be exclusively set
+#' @param stem_age the stem age
 #'   Either \code{crown_age} or \code{stem_age} must be exclusively set
 #' @param conditioned_on conditioning of the simulation, can be:
 #'   \itemize{
@@ -11,7 +11,7 @@
 #'     \item \code{no_extinction} species cannot all go extinct
 #'   }
 mbd_sim_checked <- function(
-  mbd_params, 
+  mbd_params,
   crown_age = NA,
   stem_age = NA,
   conditioned_on = "nothing"
@@ -35,22 +35,22 @@ mbd_sim_checked <- function(
     stop("'conditioned_on' must be either 'nothing' or 'non_extinction'")
   }
   # Data transformation
-  pars <- as.numeric(unlist(mbd_params)) 
+  pars <- as.numeric(unlist(mbd_params))
   soc <- 1
   age <- stem_age
   if (!is.na(crown_age)) {
     soc <- 2
-    age <- crown_age 
+    age <- crown_age
   }
   cond <- 0
   if (conditioned_on == "non_extinction") {
     cond <- 1
   }
   mbd_sim(
-    pars = pars, 
-    soc = soc, 
-    age = age, 
+    pars = pars,
+    soc = soc,
+    age = age,
     cond = cond
   )
-  
+
 }
