@@ -78,7 +78,7 @@ pmb_loglik_q_vector <- function(pars, brts, soc = 2){
   mu <- test_pars[2]
   nu <- test_pars[3]
   q <- test_pars[4];
-  condition1 <- (any(is.nan(test_pars)) != 0 | any(is.infinite(test_pars)) != 0 )
+  condition1 <- (any(is.nan(test_pars)) != 0 | any(is.infinite(test_pars)) != 0)
   condition2 <- (lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
   if (condition1 | condition2) {
     th_loglik <- -Inf
@@ -146,7 +146,7 @@ pmb_loglik_choosepar <- function(
   if (length(idparsfix) != 0) {
     trpars1[idparsfix] <- trparsfix
   }
-  if (min(trpars1[1:n_pars]) < 0 ) {
+  if (min(trpars1[1:n_pars]) < 0) {
     loglik <- -Inf
   } else {
     if (pars_transform == 1) {

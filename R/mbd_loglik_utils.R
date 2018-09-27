@@ -391,7 +391,7 @@ calc_cond_prob0 <- function(
     a_reltol = reltol
   )
   total_product <- a2_v1 * one_over_cm * one_over_qm_binom
-  missingspecies_min <- max((tips_interval[1] - 2), 0 )
+  missingspecies_min <- max((tips_interval[1] - 2), 0)
   missingspecies_max <- min((tips_interval[2] - 2), lx)
   # +1 is because of the zero-th component
   tips_components <- 1 + c(missingspecies_min, missingspecies_max)
@@ -446,7 +446,7 @@ calc_cond_prob_zero_p_b <- function(
   )
 
   total_product <- a2_v1 * one_over_cm * one_over_qm_binom
-  missingspecies_min <- max((tips_interval[1] - 2), 0 )
+  missingspecies_min <- max((tips_interval[1] - 2), 0)
   missingspecies_max <- min((tips_interval[2] - 2), lx)
   # +1 is because of the zero-th component
   tips_components <- 1 + c(missingspecies_min, missingspecies_max)

@@ -225,10 +225,10 @@ myheatmap <- function(
 myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
 
   if (missing(x_splits)) {
-    x_splits <- round( (length(x)) / 10 )
+    x_splits <- round( (length(x)) / 10)
   }
   if (missing(y_splits)) {
-    y_splits <- round( (length(y)) / 10 )
+    y_splits <- round( (length(y)) / 10)
   }
   if (missing(x_name)) {
     x_name <- NULL
