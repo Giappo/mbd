@@ -24,6 +24,13 @@ sim <- mbd_sim(
   tips_interval = c(0, Inf)
 )
 
+## ------------------------------------------------------------------------
+sim <- mbd_sim_checked(
+  mbd_params = create_mbd_params(lambda = lambda, mu = mu, nu = nu, q = q),
+  crown_age = crown_age,
+  conditioned_on = "non_extinction"
+)
+
 ## ---- fig.show='hold', fig.width=7, fig.height=7-------------------------
 graphics::plot(sim$tas)
 
@@ -88,4 +95,15 @@ fixed_params <- create_mbd_params_selector(
 estimated_params <- create_mbd_params_selector(
   q = TRUE
 )
+
+## ------------------------------------------------------------------------
+out <- mbd_calc_max_lik(
+  branching_times = brts,
+  init_param_values = init_param_values,
+  fixed_params = fixed_params,
+  estimated_params = estimated_params,
+  init_n_species = 2,
+  conditioned_on = "non_extinction"
+)
+knitr::kable(out)
 

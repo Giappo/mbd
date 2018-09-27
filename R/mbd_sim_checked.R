@@ -10,6 +10,8 @@
 #'     \item \code{nothing} no conditioning, species can all go extinct
 #'     \item \code{no_extinction} species cannot all go extinct
 #'   }
+#' @export
+#' @author Richel J.C. Bilderbeek
 mbd_sim_checked <- function(
   mbd_params,
   crown_age = NA,

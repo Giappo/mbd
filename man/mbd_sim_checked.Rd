@@ -26,3 +26,6 @@ Either \code{crown_age} or \code{stem_age} must be exclusively set}
 \description{
 More intuitive interface of \code{mbd_sim}
 }
+\author{
+Richel J.C. Bilderbeek
+}

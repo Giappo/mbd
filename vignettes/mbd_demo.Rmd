@@ -1,6 +1,6 @@
 ---
 title: "Using mbd"
-author: "Giovanni Laudanno"
+author: "Giovanni Laudanno and Richel J.C. Bilderbeek"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Introduction
+## 1. Introduction
 
 `mbd` is a package to support multiple birth model. 
 This model accounts for a diversification process in which multiple 
@@ -36,7 +36,7 @@ Here:
 
 Those parameters may be inferred through a maximum likelihood approach using the function mbd_ml.
 
-## Setup
+## 2. Setup
 
 We will need to load the package:
 
@@ -51,7 +51,7 @@ so that this vignette always produces the same results:
 set.seed(14)
 ```
 
-## Simulating an MBD tree
+## 2. Simulating an MBD tree
 
 First we set the parameters of the MBD speciation model:
 
@@ -66,6 +66,8 @@ sim_pars <- c(lambda, mu, nu, q)
 Here "sim_pars" are $\lambda$, $\mu$, $\nu$ and $q$, 
 i.e. the parameters we want to eventually be able to infer. 
 
+### 3.1. Classic interface
+
 Then we set some basic parameters to create a simulated tree:
 
 ```{r}
@@ -77,8 +79,7 @@ sim <- mbd_sim(
   pars = sim_pars, 
   soc = soc, 
   age = crown_age, 
-  cond = cond, 
-  tips_interval = c(0, Inf)
+  cond = cond
 )
 ```
 
@@ -86,6 +87,18 @@ These are additional auxilary parameters
 such as `soc` (equal to 1 if we want a stem, or 2 if we want a crown), 
 `cond` (let us condition the tree on the survival of crown species) 
 and `crown_age` (being the total age of the tree).
+
+### 3.2. Checked interface
+
+```{r}
+sim <- mbd_sim_checked(
+  mbd_params = create_mbd_params(lambda = lambda, mu = mu, nu = nu, q = q),
+  crown_age = crown_age,
+  conditioned_on = "non_extinction"
+)
+```
+
+## 4. Showing the results
 
 The `sim` list contain different objects.
 You can visualize the full tree and keep track of species that die 
@@ -128,7 +141,7 @@ knitr::kable(head(sim$brts))
 In this vector values repeated more than once indicate 
 that a multiple birth process has taken place.
 
-## Likelihood estimation
+## 5. Likelihood estimation
 
 To estimate the likelihood of a phylogeny, one needs
 
@@ -153,7 +166,7 @@ mbd::mbd_loglik(
 )
 ```
 
-## Maximum likelihood estimation
+## 6. Maximum likelihood estimation
 
 You can also ask for an optimization of the likelihood function 
 using the function `mbd_ml` either considering a variation of all 
@@ -175,7 +188,7 @@ nu <- 0.11 # multiple allopatric speciation trigger rate
 q <- 0.15 # single-lineage speciation probability
 ```
 
-### Classic interface
+### 6.1 Classic interface
 
 If you want for example to maximize the likelihood only for the parameter q:
 
@@ -196,44 +209,23 @@ out <- mbd_ml(
 knitr::kable(out)
 ```
 
-### More intuitive interface
+### 6.2. More intuitive interface
 
-If you want for example to maximize the likelihood only for the parameter q:
-
-First, we bundle our initial parameter values:
-
-```{r}
-init_param_values <- create_mbd_params(
-  lambda = lambda, mu = mu, nu = nu, q = q
-)
-```
-
-To indicate which parameters we want to fix:
-
-```{r}
-fixed_params <- create_mbd_params_selector(
-  lambda = TRUE, 
-  mu = TRUE,
-  nu = TRUE
-)
-```
-
-To indicate which parameters we want to optimize:
-
-```{r}
-estimated_params <- create_mbd_params_selector(
-  q = TRUE
-)
-```
-
-Then we can call `mbd_calc_max_lik`:
+If you want for example to maximize the likelihood only for the parameter q,
+using a more type-safe interface, call `mbd_calc_max_lik`:
 
 ```{r}
 out <- mbd_calc_max_lik(
   branching_times = brts,
-  init_param_values = init_param_values,
-  fixed_params = fixed_params,
-  estimated_params = estimated_params,
+  init_param_values = create_mbd_params(
+    lambda = lambda, mu = mu, nu = nu, q = q
+  ),
+  fixed_params = create_mbd_params_selector(
+    lambda = TRUE, mu = TRUE, nu = TRUE
+  ),
+  estimated_params = create_mbd_params_selector(
+    q = TRUE
+  ),
   init_n_species = 2,
   conditioned_on = "non_extinction"
 )
