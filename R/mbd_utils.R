@@ -176,7 +176,7 @@ mbd_P_eq <- function(
     )
     testit::assert(!"Do not call hyperA")
     # my_matrix <- lambda * hyperA::hyperA(N = max_number_of_species, k = 0, q = q)
-    # my_matrix[row(my_matrix) == col(my_matrix) - 1] = mu*nvec[2:(max_number_of_species+1)]
+    # my_matrix[row(my_matrix) == col(my_matrix) - 1] = mu *nvec[2:(max_number_of_species+1)]
     # diag(my_matrix) = - mu * nvec - lambda * (1 - (1 - q) ^ nvec)
     # return(my_matrix)
   }
@@ -194,7 +194,7 @@ mbd_P_eq <- function(
     t = age, m = precision
   )
 
-  nmedio <- sum(nvec*vf)
+  nmedio <- sum(nvec *vf)
   std <- sqrt(sum(nvec^2 * vf) - nmedio^2)
   if (output == 1) {
     graphics::plot(log(vf))
@@ -515,9 +515,9 @@ summarize_beast_posterior <- function(
     Translate.pos=(1:length(subst.tr))[subst.tr=="Translate"]
     comma.pos=which(subst.tr==", ")
     if(length(comma.pos)==0){
-      numbers.pos=seq(Translate.pos+1,Translate.pos+2*ntax, 2)
+      numbers.pos=seq(Translate.pos+1,Translate.pos+2 *ntax, 2)
     } else{
-      numbers.pos=seq(Translate.pos+1,Translate.pos+3*ntax, 3)
+      numbers.pos=seq(Translate.pos+1,Translate.pos+3 *ntax, 3)
     }
     taxa.pos=numbers.pos+1
     numbers=subst.tr[numbers.pos]
