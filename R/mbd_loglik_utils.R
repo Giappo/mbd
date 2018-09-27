@@ -304,7 +304,7 @@ determine_k_limit <- function(
     a_abstol = abstol,
     a_reltol = reltol
   )
-  soc + max(mvec[(mvec %in% which((cumsum(p_m/sum(p_m))) <= 0.95))])
+  soc + max(mvec[(mvec %in% which((cumsum(p_m / sum(p_m))) <= 0.95))])
 }
 
 #' @title Internal mbd function
@@ -472,9 +472,9 @@ find_best_lx_for_pc <- function(
   interval_min = 500,
   interval_max = 1400
 ) {
-  a <- iterations /2
+  a <- iterations / 2
   interval_width <- interval_max - interval_min
-  step1 <- floor(interval_width/ a)
+  step1 <- floor(interval_width / a)
 
   lx_test <- rep(
     NA,
@@ -728,7 +728,7 @@ alpha_analysis <- function(
       same_result_count <- same_result_count + 1
     } else {
       same_result_count <- 0
-      delta_pc <- abs(pc_2 - pc_1) /pc_1;
+      delta_pc <- abs(pc_2 - pc_1) / pc_1;
       delta_alpha <- floor(10 * delta_pc)
       alpha <- alpha + delta_alpha
       pc_1 <- pc_2

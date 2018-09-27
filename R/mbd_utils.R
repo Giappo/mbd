@@ -225,10 +225,10 @@ myheatmap <- function(
 myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
 
   if (missing(x_splits)) {
-    x_splits <- round( (length(x)) /10 )
+    x_splits <- round( (length(x)) / 10 )
   }
   if (missing(y_splits)) {
-    y_splits <- round( (length(y)) /10 )
+    y_splits <- round( (length(y)) / 10 )
   }
   if (missing(x_name)) {
     x_name <- NULL
@@ -499,7 +499,7 @@ summarize_beast_posterior <- function(
     #How many trees?
     n_trees=length(tree.positions)
     if(is.null(subsamp)) subsamp=n_trees
-    samp=sample(n_trees, round(subsamp/length(input_trees_path)), replace=FALSE)
+    samp=sample(n_trees, round(subsamp / length(input_trees_path)), replace=FALSE)
 
     #Get correspondance between numbers and taxa
     #How many taxa?
@@ -651,7 +651,7 @@ extract_posterior <- function(
 #   n_pars <<- length(parnames);
 #   base_path=dirname(dirname(getwd()))
 #   if( !exists("path")  ){ #&& interactive()
-#     path<<-choose.dir(paste(base_path, "/Progress /RQ1 - Multiple Births /Results + Reports /4_parameters /", sep = ''), "Choose a suitable folder")
+#     path<<-choose.dir(paste(base_path, "/Progress /RQ1 - Multiple Births /Results + Reports / 4_parameters /", sep = ''), "Choose a suitable folder")
 #   }
 #   res_files = list.files(pattern=paste('[.]txt', sep = ''), path=path, full.names=TRUE)
 #   for(i in 1:length(res_files)){
@@ -667,8 +667,8 @@ extract_posterior <- function(
 #   print(paste("There are ",Nbad<-dim(bad_results)[1], " bad results.", sep = ''))
 #   print(paste("There are ",N<<-dim(results)[1], " good results.", sep = ''))
 #
-#   load( as.character(paste(path, "/data/general_settings", sep = '')), envir = e <- globalenv())
-#   load( as.character(paste(path, "/data/sim_data", sep = '')), envir = e <- globalenv()  )
+#   load( as.character(paste(path, "/ data / general_settings", sep = '')), envir = e <- globalenv())
+#   load( as.character(paste(path, "/ data / sim_data", sep = '')), envir = e <- globalenv()  )
 #   suppressWarnings( rm(targetTable, all_results, fileData, i))
 #   return(results)
 # }

@@ -103,7 +103,7 @@ mbd_ml <- function(
     (length(initparsopt) != length(idparsopt)) ||
     (length(parsfix) != length(idparsfix))
   ) {
-    cat("The parameters to be optimized and/or fixed are incoherent.\n")
+    cat("The parameters to be optimized and / or fixed are incoherent.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
     return(out2)
   }
@@ -128,9 +128,9 @@ mbd_ml <- function(
   }
   if (pars_transform == 1) {
     #Rampal's transformation
-    trparsopt = initparsopt/ (1 + initparsopt)
+    trparsopt = initparsopt / (1 + initparsopt)
     trparsopt[which(initparsopt == Inf)] = 1
-    trparsfix = parsfix/ (1 + parsfix)
+    trparsfix = parsfix / (1 + parsfix)
     trparsfix[which(parsfix == Inf)] = 1
   } else {
     trparsopt  <- initparsopt

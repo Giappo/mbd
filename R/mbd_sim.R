@@ -381,10 +381,10 @@ mbd_sim_dataset <- function(
   #saving sims and settings
   # simpath=paste("sims /", sim_pars[1], "-", sim_pars[2], "-", sim_pars[3], "-", sim_pars[4], "/", sep = '')
   simpath <- getwd()
-  datapath <- paste0(simpath, "/data")
-  sim_data_name <- paste0(datapath, "/sim_data")
-  general_settings_name <- paste0(datapath, "/general_settings")
-  sim_trees_name <- paste0(datapath, "/sim_trees")
+  datapath <- paste0(simpath, "/ data")
+  sim_data_name <- paste0(datapath, "/ sim_data")
+  general_settings_name <- paste0(datapath, "/ general_settings")
+  sim_trees_name <- paste0(datapath, "/ sim_trees")
   if (file.exists(sim_data_name)){suppressWarnings( file.remove(sim_data_name))}
   save(sim_data, file = sim_data_name)
   if (file.exists(general_settings_name)){suppressWarnings( file.remove(general_settings_name))}
