@@ -40,13 +40,13 @@ create_a_zero <- function(
 ){
   testit::assert(max_number_of_species < Inf)
   nvec <- 0:max_number_of_species
-  M <- lambda * matrix_builder(n_species = max_number_of_species, k = k, q = q)
+  my_matrix <- lambda * matrix_builder(n_species = max_number_of_species, k = k, q = q)
 
   #new version to avoid the dumpster problem at the end of the matrix
-  diag(M) <= (-lambda) * (1 - (1 - q) ^ (k + nvec) ) - mu * (nvec + k)
+  diag(my_matrix) <= (-lambda) * (1 - (1 - q) ^ (k + nvec) ) - mu * (nvec + k)
 
-  M[row(M) == col(M) - 1] <- mu * nvec[2:(max_number_of_species + 1)]
-  M
+  my_matrix[row(my_matrix) == col(my_matrix) - 1] <- mu * nvec[2:(max_number_of_species + 1)]
+  my_matrix
 }
 
 #' @title Internal mbd function
@@ -119,7 +119,7 @@ create_b <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_a.no_mbd <- function(
+create_a_no_mbd <- function(
   lambda,
   mu,
   nu,
@@ -147,7 +147,7 @@ create_a.no_mbd <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-create_b.no_mbd <- function(
+create_b_no_mbd <- function(
   lambda,
   nu,
   q,
@@ -189,9 +189,9 @@ a_operator <- function(
 
   testit::assert(methode != "sexpm")
   if (methode == "expo") {
-    result.nan <- result.negative <- 1
+    result_nan <- result_negative <- 1
     repetition <- 1
-    while ((result.nan == 1 | result.negative == 1) &
+    while ((result_nan == 1 | result_negative == 1) &
       repetition < max_repetitions
     ) {
       result <- try(
@@ -204,12 +204,12 @@ a_operator <- function(
         silent = TRUE
       )
 
-      result.nan <- (any(!is.numeric(result)) || any(is.nan(result)))
-      if (result.nan) {
+      result_nan <- (any(!is.numeric(result)) || any(is.nan(result)))
+      if (result_nan) {
         precision <- precision - precision_step1
       } else {
-        result.negative <- (any(result < 0))
-        if (result.negative) {
+        result_negative <- (any(result < 0))
+        if (result_negative) {
           precision <- precision + precision_step2
           if (precision > precision_limit) {
             break
@@ -292,7 +292,7 @@ determine_k_limit <- function(
     k = soc,
     max_number_of_species = lx
   )
-  Pm <- a_operator(
+  p_m <- a_operator(
     q_matrix = q_i,
     transition_matrix = t_zero,
     time_interval = total_time,
@@ -301,7 +301,7 @@ determine_k_limit <- function(
     a_abstol = abstol,
     a_reltol = reltol
   )
-  soc + max(mvec[(mvec %in% which((cumsum(Pm/sum(Pm))) <= 0.95))])
+  soc + max(mvec[(mvec %in% which((cumsum(p_m/sum(p_m))) <= 0.95))])
 }
 
 #' @title Internal mbd function
@@ -639,7 +639,7 @@ alpha_conditional_probability <- function(
 
     #adjust for the required minimum amount of mbd
     if (minimum_multiple_births > 0) {
-      mk_n_zero_no_mbd <- create_a.no_mbd(
+      mk_n_zero_no_mbd <- create_a_no_mbd(
         lambda = lambda,
         mu = mu,
         nu = nu,

@@ -163,11 +163,11 @@ if (1){
   tree.d.s <- function(d, s, ord.scenarios, triangles) {
     Dist <- vector("list", d)
     BT   <- rep(NA, dmax <- length(ord.scenarios))
-    M    <- ord.scenarios[[d]][[s]]
+    my_matrix    <- ord.scenarios[[d]][[s]]
     bt_index <- 2
     for (r in 1:d)
     {
-      ids <- M[r,!is.infinite(M[r,])]
+      ids <- my_matrix[r,!is.infinite(my_matrix[r,])]
       Dist[[r]] <- merge.triangles.ids(ids = ids, triangles = triangles)
       Dist[[r]] <- Dist[[r]]/ sum(Dist[[r]])
       non.zero.D <- which(Dist[[r]] != 0)
@@ -180,11 +180,11 @@ if (1){
     return(BT)
   }
   area.d.s <- function(d, s, tm, brts, brts.bars, ord.scenarios){
-    M    <- ord.scenarios[[d]][[s]]
-    Nrow <- nrow(M)
+    my_matrix    <- ord.scenarios[[d]][[s]]
+    Nrow <- nrow(my_matrix)
     for (r in 1:d)
     {
-      ids <- M[r,!is.infinite(M[r,])]
+      ids <- my_matrix[r,!is.infinite(my_matrix[r,])]
       Dist[[r]] <- merge.triangles.ids(ids = ids, triangles = triangles)
       right.bins[[r]] <- Dist[[r]] > 0
     }

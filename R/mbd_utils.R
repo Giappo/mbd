@@ -166,16 +166,16 @@ mbd_P_eq <- function(
     mu <- pars[2]
     q <- pars[3]
     nvec <- 0:max_number_of_species
-    M <- matrix(
+    my_matrix <- matrix(
       0,
       nrow = max_number_of_species + 1,
       ncol = max_number_of_species + 1
     )
     testit::assert(!"Do not call hyperA")
-    # M <- lambda * hyperA::hyperA(N = max_number_of_species, k = 0, q = q)
-    # M[row(M) == col(M) - 1] = mu*nvec[2:(max_number_of_species+1)]
-    # diag(M) = - mu * nvec - lambda * (1 - (1 - q) ^ nvec)
-    # return(M)
+    # my_matrix <- lambda * hyperA::hyperA(N = max_number_of_species, k = 0, q = q)
+    # my_matrix[row(my_matrix) == col(my_matrix) - 1] = mu*nvec[2:(max_number_of_species+1)]
+    # diag(my_matrix) = - mu * nvec - lambda * (1 - (1 - q) ^ nvec)
+    # return(my_matrix)
   }
 
   nvec <- 0:max_number_of_species

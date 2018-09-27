@@ -8,10 +8,10 @@ mbd_sim_checked(mbd_params, crown_age = NA, stem_age = NA,
   conditioned_on = "nothing")
 }
 \arguments{
-\item{mbd_params}{MBD parameters, 
+\item{mbd_params}{MBD parameters,
 as created by \code{create_mbd_params}}
 
-\item{crown_age}{the crown age. 
+\item{crown_age}{the crown age.
 Either \code{crown_age} or \code{stem_age} must be exclusively set}
 
 \item{stem_age}{the stem age
