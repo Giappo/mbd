@@ -1,2 +1,3 @@
 #!/bin/bash
 perl -pi -w -e 's/\)\//\) \//g;' *.R
+perl -pi -w -e 's/\/\(/\/ \(/g;' *.R
