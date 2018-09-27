@@ -110,7 +110,7 @@ mbd_sim <- function(
               parents <- pool
             }
             new_interval <- (total_count + 1):(total_count + delta_n)
-            L[new_interval, 1] <- t#-(delta_n:1)*1e-5 add this if you need separate time points
+            L[new_interval, 1] <- t#-(delta_n:1)* 1e-5 add this if you need separate time points
             L[new_interval, 2] <- parents
             L[new_interval, 3] <- abs(new_interval) * sign(parents)
 
@@ -247,11 +247,11 @@ mbd_sim0 <- function(
             parents <- pool
           }
           new_interval <- (total_count + 1):(total_count + delta_n)
-          L[new_interval, 1] <- t#-(delta_n:1)*1e-5 add this if you need separate time points
+          L[new_interval, 1] <- t#-(delta_n:1)* 1e-5 add this if you need separate time points
           L[new_interval, 2] <- parents
-          L[new_interval, 3] <- abs(new_interval)*sign(parents)
+          L[new_interval, 3] <- abs(new_interval)* sign(parents)
 
-          pool <- c(pool, abs(new_interval)*sign(parents))
+          pool <- c(pool, abs(new_interval)* sign(parents))
           total_count <- total_count+delta_n
         }
         if (delta_n < 0 & t > 0) {
@@ -272,7 +272,7 @@ mbd_sim0 <- function(
     #survival of crown check
     alive=L[L[, 4]==-1, ]
     alive=matrix(alive, ncol=4)
-    conditioning_on_survival = ( length( unique(sign(alive[, 3])))!=2 )*cond
+    conditioning_on_survival = ( length( unique(sign(alive[, 3])))!=2 )* cond
     #multiple births check
     #multiple births check
     births.reconstructed_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)))
