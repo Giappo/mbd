@@ -85,7 +85,7 @@ mbd_loglik0 <- function(
       t <- 2  
       C <- rep(1,(length(time_intervals))) 
       D <- C
-      logB <- 0
+      log_b <- 0
       
       #EVOLVING THE INITIAL STATE TO THE LAST BRANCHING POINT
       while (t < length(time_intervals)) {
@@ -131,7 +131,7 @@ mbd_loglik0 <- function(
         if (methode != "sexpm") {
           q_t[t,] <- mbd:::negatives_correction(q_t[t,],pars)
         }
-        logB  <-  logB + log(lambda) + lchoose(k,births[t]) + births[t]*log(q)
+        log_b  <-  log_b + log(lambda) + lchoose(k,births[t]) + births[t]*log(q)
         
         #Applying D operator (this works exactly like C)
         if (debug_check == 1) {
@@ -174,7 +174,7 @@ mbd_loglik0 <- function(
       P <- vm * q_t[t,(missnumspec + 1)] #I have to include +1 because of Q0
       
       #Removing C and D effects from the LL
-      loglik <- log(P) + logB - sum(log(C)) - sum(log(D))
+      loglik <- log(P) + log_b - sum(log(C)) - sum(log(D))
       
       #Various checks
       loglik <- as.numeric(loglik)

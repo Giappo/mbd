@@ -53,13 +53,13 @@ test_that("PureBirth theoretical check", {
     theorethicalLL  = mbd_theoretical_loglik(pars=pars, brts = brts, soc = soc)
     computationalLL = mbd_loglik0(pars=pars, brts = brts, soc=soc, cond=cond, missnumspec=0, methode=methode)
     #I need to divide to get rid of common factors
-    ctrl_pars=pars/2
-    ctrl_brts=brts
-    ctrl_theorethical=mbd_theoretical_loglik(pars=ctrl_pars, brts = ctrl_brts, soc = soc)
-    ctrl_computational=mbd_loglik0(pars=ctrl_pars, brts = ctrl_brts, soc=soc, cond=cond, missnumspec=0, methode=methode)
+    ctrl_pars <- pars/2
+    ctrl_brts <- brts
+    ctrl_theorethical <- mbd_theoretical_loglik(pars=ctrl_pars, brts = ctrl_brts, soc = soc)
+    ctrl_computational <- mbd_loglik0(pars=ctrl_pars, brts = ctrl_brts, soc=soc, cond=cond, missnumspec=0, methode=methode)
 
-    theorethicalLL  =  theorethicalLL  - ctrl_theorethical
-    computationalLL =  computationalLL - ctrl_computational
+    theorethicalLL <- theorethicalLL  - ctrl_theorethical
+    computationalLL <- computationalLL - ctrl_computational
 
     out=list(theorethicalLL=theorethicalLL, computationalLL=computationalLL)
     return(out)
@@ -67,16 +67,16 @@ test_that("PureBirth theoretical check", {
 
   lambda=sample(size = test_size*2, x = (1:18)*0.1, replace = T)
   q=sample(size = test_size*2, x = (1:18)*0.01, replace = T)
-  theorethical_test=rep(0, test_size)
-  computational_test=rep(0, test_size)
+  theorethical_test <- rep(0, test_size)
+  computational_test <- rep(0, test_size)
 
-  for (j in 1:test_size){
-    simpars = c(lambda[j],0, q[j]);
-    brts = mbd:::mbd_sim0( pars=simpars, soc=2, age=10, cond=0 )$brts
-    testpars=c(lambda[test_size+j],0, q[test_size+j])
-    test_PB = mbd_test_pure_birth(testpars, brts, soc=2, cond=0, methode=methode)
-    theorethical_test[j]=test_PB$theorethicalLL
-    computational_test[j]=test_PB$computationalLL
+  for (j in 1:test_size) {
+    simpars <- c(lambda[j],0, q[j]);
+    brts <- mbd:::mbd_sim0(pars = simpars, soc = 2, age = 10, cond = 0)$brts
+    testpars <- c(lambda[test_size+j],0, q[test_size+j])
+    test_p_b <- mbd_test_pure_birth(testpars, brts, soc=2, cond=0, methode=methode)
+    theorethical_test[j] <- test_p_b$theorethicalLL
+    computational_test[j] <- test_p_b$computationalLL
   }
   # all.equal(theorethical_test, computational_test)
   # print(prod(theorethical_test))

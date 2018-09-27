@@ -88,10 +88,10 @@ test_that("PureBirth theoretical check", {
   brts = c(10)
   for (j in 1:test_size){
     testpars=c(lambda[j],0, q[j])
-    test_PB = mbd_test_pure_birth_small_trees(testpars, brts, soc=soc, cond=cond)
-    res_theorethical[j] = test_PB$theorethicalLL
-    res_lsoda[j]        = test_PB$lsodaLL
-    res_expo[j]         = test_PB$expoLL
+    test_p_b = mbd_test_pure_birth_small_trees(testpars, brts, soc=soc, cond=cond)
+    res_theorethical[j] = test_p_b$theorethicalLL
+    res_lsoda[j]        = test_p_b$lsodaLL
+    res_expo[j]         = test_p_b$expoLL
   }
   # all.equal(res_theorethical, res_expo)
   # all.equal(res_theorethical, res_lsoda)

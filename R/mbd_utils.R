@@ -433,7 +433,7 @@ branchLengths <- function(tr)
   }
 
   node.numbers <- sort(unique(tr$edge[, 1]))
-  BL1 <- as.numeric(
+  b_l_1 <- as.numeric(
     stats::na.omit(
       c(
         root.length,
@@ -443,20 +443,20 @@ branchLengths <- function(tr)
   )
 
   tip.numbers <- 1:length(tr$tip)
-  BL2 <- tr$edge.length[match(tip.numbers, tr$edge[, 2])]
+  b_l_2 <- tr$edge.length[match(tip.numbers, tr$edge[, 2])]
 
   if (type=='NAMED') {
     res <- data.frame(
       Number = c(sort(node.numbers), tip.numbers),
       Name = c(tr$node, tr$tip),
-      Lengths = c(BL1,BL2)
+      Lengths = c(b_l_1,b_l_2)
     )
   }
   if (type=='UNNAMED') {
     res <- data.frame(
       Number = c(sort(node.numbers), tip.numbers),
       Name = c(rep(NA, tr$Nnode), tr$tip),
-      Lengths = c(BL1,BL2)
+      Lengths = c(b_l_1,b_l_2)
     )
   }
 

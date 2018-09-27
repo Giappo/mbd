@@ -185,9 +185,9 @@ mbd_loglik <- function(
 
         if (t < length(time_intervals)) {
           #Applying B operator
-          B <- create_b(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
+          matrix_b <- create_b(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
                               max_number_of_species = lx)
-          q_t[t,] <- (B %*% q_t[t,])
+          q_t[t,] <- (matrix_b %*% q_t[t,])
           if (methode != "sexpm") {
             q_t[t,] <- negatives_correction(q_t[t,], pars)
           }

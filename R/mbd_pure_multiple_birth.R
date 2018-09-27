@@ -168,7 +168,7 @@ pmb_loglik_choosepar <- function(
 #' Does something N
 #' @inheritParams default_params_doc
 #' @export
-pmb_ML <- function(
+pmb_ml <- function(
   brts,
   initparsopt,
   idparsopt = c(1, 3, 4), # RJCB: No idea why @Giappo uses that as a default

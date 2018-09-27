@@ -163,10 +163,10 @@ create_b_no_mbd <- function(
     max_number_of_species = max_number_of_species,
     q = q, k = k, b = b
   )
-  B <- lambda * k * diag(max_number_of_species + 1) *
+  b_matrix <- lambda * k * diag(max_number_of_species + 1) *
     (b == 1) + nu * choose(k, b) * (q^b) * m
-  B[row(B) > col(B) + minimum_multiple_births] <- 0
-  B
+  b_matrix[row(b_matrix) > col(b_matrix) + minimum_multiple_births] <- 0
+  b_matrix
 }
 
 #' @title Internal mbd function
@@ -404,7 +404,7 @@ calculate_conditional_probability0 <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability0PB <- function(
+calc_cond_prob_zero_p_b <- function(
   brts,
   pars,
   lx = 200,
@@ -562,7 +562,7 @@ calculate_conditional_probability1 <- function(
 
   lx <- find_best_lx_for_pc(brts = brts, pars = pars, soc = soc)
   testit::assert(pars[2] == 0)
-  pc <- mbd::calculate_conditional_probability0PB(
+  pc <- mbd::calc_cond_prob_zero_p_b(
     brts = brts,
     pars = pars,
     lx = lx,
