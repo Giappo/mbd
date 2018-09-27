@@ -1,3 +1,8 @@
 #!/bin/bash
+# Space before slash
+perl -pi -w -e 's/s\//s \//g;' *.R
 perl -pi -w -e 's/\)\//\) \//g;' *.R
+
+# Space after slash
 perl -pi -w -e 's/\/\(/\/ \(/g;' *.R
+perl -pi -w -e 's/\/a/\/ a/g;' *.R
