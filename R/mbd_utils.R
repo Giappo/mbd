@@ -131,11 +131,11 @@ heatmap2dataframe = function(
 brts2time_intervals_and_births <- function(
   brts
 ) {
-  time_points=-unlist(unname(sort(abs(brts), decreasing = T)) )
+  time_points=-unlist(unname(sort(abs(brts), decreasing = T)))
   branching_times = -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   births=c(0, unname(table(branching_times))[-1])
   unique_branching_times=as.numeric(names(table(branching_times)))
-  time_intervals=c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times, 1))) )
+  time_intervals=c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times, 1))))
   births=births[-1]
   out=list(time_intervals=time_intervals, births=births)
   return(out)
@@ -256,11 +256,11 @@ myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
     xlab = x_name,
     plot.axes = {
       graphics::axis(
-        1, at = seq(0, 1, length.out = length(pretty_X.lab) ),
+        1, at = seq(0, 1, length.out = length(pretty_X.lab)),
         labels = pretty_X.lab
       )
       graphics::axis(
-        2, at = seq(0, 1, length.out = length(pretty_Y.lab) ),
+        2, at = seq(0, 1, length.out = length(pretty_Y.lab)),
         labels = pretty_Y.lab
       )
     },
@@ -281,7 +281,7 @@ negatives_correction <- function(
   problems <- 0
   if (any(is.na(v))) {
     problems <- 1
-    na_components <- which(is.na(v) & !is.nan(v) )
+    na_components <- which(is.na(v) & !is.nan(v))
     nan_components <- which(is.nan(v))
     if (display_output == 1) {
       cat("There are non-numeric components for par values:", pars, "\n")
@@ -314,15 +314,15 @@ compare_functions <- function(
   Atime1=0;Atime2=0;
   for (i in 1:iterations){
     t0=proc.time()
-    Atest1=( function1(...) )
+    Atest1=( function1(...))
     Atime1=Atime1+proc.time()-t0
     t1=proc.time()
-    Atest2=( function2(...) )
+    Atest2=( function2(...))
     Atime2=Atime2+proc.time()-t1
   }
   if (output==1){print(list(Atest1,Atest2))}
   print(Atime1);print(Atime2);
-  print( all.equal(Atest1,Atest2) )
+  print( all.equal(Atest1,Atest2))
   return(invisible(list(Atest1,Atest2)))
 }
 
@@ -396,7 +396,7 @@ matrix_check <- function(
       lower_triangle=(as.matrix(Mlist[[k]]))[lower.tri(Mlist[[k]])]
       if (min(lower_triangle)<0){entries_sign[k]=-1;negative_list[k]=-1}
     }
-    if (min(entries_sign)<0){print(paste("There is a negative entry on k=", which((entries_sign)<0) ))}
+    if (min(entries_sign)<0){print(paste("There is a negative entry on k=", which((entries_sign)<0)))}
   }
   return(list(black_list=black_list, negative_list=negative_list))
 }
@@ -627,7 +627,7 @@ extract_posterior <- function(
   # beast_posterior$branch_info # a list of branch lengths and associated information
   brts <- list()
   for (i in 1:maxtree) {
-    brts[[i]] <- unname(ape::branching.times(beast_posterior$trees[[i]]) )
+    brts[[i]] <- unname(ape::branching.times(beast_posterior$trees[[i]]))
   }
 
   dist <- vector("list")
@@ -667,8 +667,8 @@ extract_posterior <- function(
 #   print(paste("There are ",Nbad<-dim(bad_results)[1], " bad results.", sep = ''))
 #   print(paste("There are ",N<<-dim(results)[1], " good results.", sep = ''))
 #
-#   load( as.character(paste(path, "/data/general_settings", sep = '')), envir = e <- globalenv() )
+#   load( as.character(paste(path, "/data/general_settings", sep = '')), envir = e <- globalenv())
 #   load( as.character(paste(path, "/data/sim_data", sep = '')), envir = e <- globalenv()  )
-#   suppressWarnings( rm(targetTable, all_results, fileData, i) )
+#   suppressWarnings( rm(targetTable, all_results, fileData, i))
 #   return(results)
 # }

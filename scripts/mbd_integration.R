@@ -92,7 +92,7 @@ if (1){
     pippo1 <- get.matrix_columns(combs); pippo1
     pippo2 <- remove.infinites(pippo1); pippo2
     pippo3 <- unique(unlist(lapply(pippo2, FUN = all.subsets),recursive = F)); pippo3
-    pippo4 <- lapply(pippo3, FUN = function(v) c(v, rep(Inf, (N2 - length(v)))) ); pippo4
+    pippo4 <- lapply(pippo3, FUN = function(v) c(v, rep(Inf, (N2 - length(v))))); pippo4
     pippo5 <- lapply(pippo4, sort); pippo5
     combs  <- matrix(unlist(pippo4), nrow = N2); combs
     

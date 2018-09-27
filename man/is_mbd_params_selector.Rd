@@ -21,7 +21,7 @@ as can be created by \code{create_mbd_params_selector}
 \examples{
   s <- create_mbd_params_selector()
   testthat::expect_true(is_mbd_params_selector(s))
-  
+
   testthat::expect_false(is_mbd_params_selector("nonsense"))
 }
 \author{

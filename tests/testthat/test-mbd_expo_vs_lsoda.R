@@ -20,14 +20,7 @@ test_that("PureBirth theoretical check", {
     test_expo[j]  <- mbd::mbd_loglik(pars = testpars, brts = brts, soc = soc, cond = cond, methode = "expo")
     test_lsoda[j] <- mbd::mbd_loglik(pars = testpars, brts = brts, soc = soc, cond = cond, methode = "lsoda")
   }
-  # print(prod(test_lsoda))
-  # print(prod(test_expo) )
-
-  for (i in 1:test_size){
-  expect_equal(test_lsoda[i], test_expo[i])
+  for (i in 1:test_size) {
+    expect_equal(test_lsoda[i], test_expo[i])
   }
 })
-
-# warnings()
-
-

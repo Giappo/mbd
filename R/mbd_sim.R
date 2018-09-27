@@ -114,7 +114,7 @@ mbd_sim <- function(
             L[new_interval, 2] <- parents
             L[new_interval, 3] <- abs(new_interval) * sign(parents)
 
-            pool <- c(pool, abs(new_interval) * sign(parents) )
+            pool <- c(pool, abs(new_interval) * sign(parents))
             total_count <- total_count + delta_n
           }
           if (delta_n < 0 & t > 0) {
@@ -139,19 +139,19 @@ mbd_sim <- function(
     alive <- L[L[,4] == -1,]
     alive <- matrix(alive, ncol = 4)
     #if cond == 0 they will always look like they're alive, because I don't care
-    crown_species_dead <- (length( unique(sign(alive[, 3])) ) != 2 ) * cond
+    crown_species_dead <- (length( unique(sign(alive[, 3]))) != 2 ) * cond
     #multiple births check
-    births.reconstructed_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
-    births.full_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = FALSE), decreasing = TRUE)) )
-    multiple_births.reconstructed_tree <- sum( duplicated(births.reconstructed_tree) )
-    multiple_births.full_tree <- sum( duplicated(births.full_tree) )
+    births.reconstructed_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)))
+    births.full_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = FALSE), decreasing = TRUE)))
+    multiple_births.reconstructed_tree <- sum( duplicated(births.reconstructed_tree))
+    multiple_births.full_tree <- sum( duplicated(births.full_tree))
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multiple_births.full_tree>=minimum_multiple_births)
     multiple_births_check <- (multiple_births.reconstructed_tree >= minimum_multiple_births)
 
     keep_the_sim <- (!crown_species_dead) & (tips >= tips_interval[1] & tips <= tips_interval[2]) #should i keep this simulation?
   }
-  time_points <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)) )
+  time_points <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)))
   brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   tes <- DDD::L2phylo(L, dropextinct = TRUE)
   tas <- DDD::L2phylo(L, dropextinct = FALSE)
@@ -192,7 +192,7 @@ mbd_sim <- function(
 #' }
 #'
 #' @examples
-#' out = mbd_sim0( pars=c(2.5,0.1,0.1), soc=2, age=10, cond=1, tips_interval=c(0,Inf) )
+#' out = mbd_sim0( pars=c(2.5,0.1,0.1), soc=2, age=10, cond=1, tips_interval=c(0,Inf))
 #' graphics::plot(out$tas)
 #' graphics::plot(out$tes)
 #' out$L
@@ -251,7 +251,7 @@ mbd_sim0 <- function(
           L[new_interval, 2] <- parents
           L[new_interval, 3] <- abs(new_interval)*sign(parents)
 
-          pool <- c(pool, abs(new_interval)*sign(parents) )
+          pool <- c(pool, abs(new_interval)*sign(parents))
           total_count <- total_count+delta_n
         }
         if (delta_n < 0 & t > 0) {
@@ -272,18 +272,18 @@ mbd_sim0 <- function(
     #survival of crown check
     alive=L[L[,4]==-1,]
     alive=matrix(alive, ncol=4)
-    conditioning_on_survival = ( length( unique(sign(alive[, 3])) )!=2 )*cond
+    conditioning_on_survival = ( length( unique(sign(alive[, 3])))!=2 )*cond
     #multiple births check
     #multiple births check
-    births.reconstructed_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)) )
-    births.full_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = F), decreasing = T)) )
-    multiple_births.reconstructed_tree = sum( duplicated(births.reconstructed_tree) )
-    multiple_births.full_tree = sum( duplicated(births.full_tree) )
+    births.reconstructed_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)))
+    births.full_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = F), decreasing = T)))
+    multiple_births.reconstructed_tree = sum( duplicated(births.reconstructed_tree))
+    multiple_births.full_tree = sum( duplicated(births.full_tree))
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multiple_births.full_tree>=minimum_multiple_births)
     multiple_births_check = (multiple_births.reconstructed_tree>=minimum_multiple_births)
   }
-  time_points=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)) )
+  time_points=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)))
   brts = -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   tes = DDD::L2phylo(L, dropextinct = T)
   tas = DDD::L2phylo(L, dropextinct = F)
@@ -385,11 +385,11 @@ mbd_sim_dataset <- function(
   sim_data_name <- paste0(datapath, "/sim_data")
   general_settings_name <- paste0(datapath, "/general_settings")
   sim_trees_name <- paste0(datapath, "/sim_trees")
-  if (file.exists(sim_data_name)){suppressWarnings( file.remove(sim_data_name) )}
+  if (file.exists(sim_data_name)){suppressWarnings( file.remove(sim_data_name))}
   save(sim_data, file = sim_data_name)
-  if (file.exists(general_settings_name)){suppressWarnings( file.remove(general_settings_name) )}
+  if (file.exists(general_settings_name)){suppressWarnings( file.remove(general_settings_name))}
   save(sim_pars, soc, age, cond, max_sims, tips_interval, max_k, max_b, ext_species, additional_species, tips, minimum_multiple_births, file=general_settings_name)
-  if (file.exists(sim_trees_name)){suppressWarnings( file.remove(sim_trees_name) )}
+  if (file.exists(sim_trees_name)){suppressWarnings( file.remove(sim_trees_name))}
   save(sim_tas, sim_tes, file = sim_trees_name)
   return(sim_data)
 }

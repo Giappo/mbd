@@ -5,7 +5,7 @@ mbd_data_analysis <- function(sim_pars, max_sims = 1000, account_name = "274829"
   # results = mbd:::mbd_import_data()
   # sim_pars = c(0.2,0.15, 2,0.05); max_sims = 1000; account_name = "cyrus"
   Npars = length(sim_pars);
-  system.time( data <- mbd:::get_all_data_from_cluster(sim_pars = sim_pars, max_sims = max_sims, account_name = account_name) )
+  system.time( data <- mbd:::get_all_data_from_cluster(sim_pars = sim_pars, max_sims = max_sims, account_name = account_name))
   results = data$results
   path = data$path
   working_account = data$working_account
@@ -62,7 +62,7 @@ mbd_results_overview = function(){
     collected = 0
     if (present != 0) {
       right_folder <- folder_list[
-        max( which(grepl(folder_name, folder_list) == 1) ) 
+        max( which(grepl(folder_name, folder_list) == 1)) 
       ]
       collected = length(
         list.files(
@@ -73,7 +73,7 @@ mbd_results_overview = function(){
       account_file <- paste(data_folder,right_folder,"/account_name",sep = '')
     }
     sim_settings[y,6] <- collected
-    sim_settings[y,7] <- (collected >= (0.9*sim_settings[y,5]) )
+    sim_settings[y,7] <- (collected >= (0.9*sim_settings[y,5]))
 
     if (exists("account_file")) {
       if (file.exists(account_file)) {

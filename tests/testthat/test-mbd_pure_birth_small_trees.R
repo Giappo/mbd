@@ -36,7 +36,7 @@ test_that("PureBirth theoretical check", {
     }
 
     b_term <- prod(lambda*choose(k[-length(k)], births)*q^births *
-      (1 - q) ^ (k[-length(k)] - births) )
+      (1 - q) ^ (k[-length(k)] - births))
 
     loglik <- log(a_term*b_term)
     # loglik=-loglik #Rampal's optimizer uses loglik rather than -loglik
