@@ -44,7 +44,7 @@ mbd_sim_dataset produces a full dataset of max_sims simulated trees including mu
 }
 \examples{
 # @Giappo: does not work
-# out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15), soc=2, age=10, cond=1, edge=Inf )
+# out <- mbd_sim_dataset( pars=c(0.4, 0.1, 0.2, 0.15), soc=2, age=10, cond=1, edge=Inf )
 
 }
 \author{

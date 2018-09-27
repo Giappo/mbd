@@ -110,7 +110,7 @@ mbd_loglik <- function(
     lx <- max_number_of_species <- alpha * max_k;
     pc <- 1
     if (cond == 1) {
-      pc <- mbd::calculate_conditional_probability(
+      pc <- mbd::calc_cond_prob(
         brts = brts,
         pars = pars,
         soc = soc,

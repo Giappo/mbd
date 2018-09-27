@@ -312,7 +312,7 @@ determine_k_limit <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability <- function(
+calc_cond_prob <- function(
   brts,
   pars,
   lx = 1000,
@@ -360,7 +360,7 @@ calculate_conditional_probability <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability0 <- function(
+calc_cond_prob0 <- function(
   brts,
   pars,
   lx = 1000,
@@ -483,7 +483,7 @@ find_best_lx_for_pc <- function(
   i <- 1
   right_lx_coord <- 0
   for (lx2 in lxvec) {
-    lx_test[i] <- mbd::calculate_conditional_probability0(
+    lx_test[i] <- mbd::calc_cond_prob0(
       brts = brts,
       pars = c(pars[1], 0, pars[3], pars[4]),
       lx = lx2,
@@ -516,7 +516,7 @@ find_best_lx_for_pc <- function(
   j <- 1
   right_lx_coord2 <- 0
   for (lx2 in lxvec) {
-    lx_test2[j] <- mbd::calculate_conditional_probability0(
+    lx_test2[j] <- mbd::calc_cond_prob0(
       brts = brts,
       pars = c(pars[1], 0, pars[3], pars[4]),
       lx = lx2,
@@ -550,7 +550,7 @@ find_best_lx_for_pc <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
-calculate_conditional_probability1 <- function(
+calc_cond_prob1 <- function(
   brts,
   pars,
   soc = 2,
