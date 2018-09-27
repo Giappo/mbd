@@ -79,7 +79,7 @@ The ids are defined as follows:
 
 \item{k}{something}
 
-\item{lambda}{something}
+\item{lambda}{the sympatric speciation rate}
 
 \item{logs}{something}
 
@@ -117,7 +117,7 @@ The ids are defined as follows:
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny_}
 
-\item{mu}{something}
+\item{mu}{the extinction rate}
 
 \item{mutation_rate}{something}
 
@@ -129,7 +129,7 @@ but missing in the phylogeny_}
 
 \item{n_subs}{something}
 
-\item{nu}{something}
+\item{nu}{the multiple allopatric speciation trigger rate}
 
 \item{optimmethod}{something}
 
@@ -159,7 +159,7 @@ or
 
 \item{q_matrix}{a matrix of something}
 
-\item{q}{a speciation parameter}
+\item{q}{the single-lineage speciation probability at a triggered event}
 
 \item{quantiles_choice}{something}
 

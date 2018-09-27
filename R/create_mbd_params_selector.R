@@ -1,5 +1,7 @@
 #' Create an MBD parameter selector
+#' @inheritParams default_params_doc
 #' @author Richel J.C. Bilderbeek
+#' @export
 create_mbd_params_selector <- function(
   lambda = FALSE,
   mu = FALSE,

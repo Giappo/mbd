@@ -91,8 +91,9 @@ test_that("abuse", {
       fixed_params = "nonsense",
       estimated_params = estimated_params
     ),
-    "'fixed_params' must be an MBD parameter selector, ",
-    "as created by 'create_mbd_params_selector'"
+    paste0("'fixed_params' must be an MBD parameter selector, ",
+      "as created by 'create_mbd_params_selector'"
+    )
   )
   expect_error(
     mbd_calc_max_lik(
@@ -101,8 +102,9 @@ test_that("abuse", {
       fixed_params = fixed_params,
       estimated_params = "nonsense"
     ),
-    "'estimated_params' must be an MBD parameter selector, ",
-    "as created by 'create_mbd_params_selector'"
+    paste0("'estimated_params' must be an MBD parameter selector, ",
+      "as created by 'create_mbd_params_selector'"
+    )
   )
   expect_error(
     mbd_calc_max_lik(
@@ -146,5 +148,4 @@ test_that("abuse", {
     ),
     "'conditioned_on' must be either 'nothing' or 'non_extinction'"
   )
-
 })

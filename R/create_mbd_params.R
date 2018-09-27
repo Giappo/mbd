@@ -1,8 +1,5 @@
 #' Create the MBD parameters
-#' @param lambda the sympatric speciation rate
-#' @param mu, the extinction rate
-#' @param nu, the multiple allopatric speciation trigger rate
-#' @param  q, the single-lineage speciation probability
+#' @inheritParams default_params_doc
 #' @author Richel J.C. Bilderbeek
 #' @export
 create_mbd_params <- function(

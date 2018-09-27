@@ -7,6 +7,15 @@
 create_mbd_params_selector(lambda = FALSE, mu = FALSE, nu = FALSE,
   q = FALSE)
 }
+\arguments{
+\item{lambda}{the sympatric speciation rate}
+
+\item{mu}{the extinction rate}
+
+\item{nu}{the multiple allopatric speciation trigger rate}
+
+\item{q}{the single-lineage speciation probability at a triggered event}
+}
 \description{
 Create an MBD parameter selector
 }

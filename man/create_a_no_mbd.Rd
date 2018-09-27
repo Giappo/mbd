@@ -8,13 +8,13 @@ create_a_no_mbd(lambda, mu, nu, q, k, max_number_of_species,
   minimum_multiple_births)
 }
 \arguments{
-\item{lambda}{something}
+\item{lambda}{the sympatric speciation rate}
 
-\item{mu}{something}
+\item{mu}{the extinction rate}
 
-\item{nu}{something}
+\item{nu}{the multiple allopatric speciation trigger rate}
 
-\item{q}{a speciation parameter}
+\item{q}{the single-lineage speciation probability at a triggered event}
 
 \item{k}{something}
 

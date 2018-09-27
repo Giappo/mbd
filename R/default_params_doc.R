@@ -33,7 +33,7 @@
 #' @param interval_min something
 #' @param iterations something
 #' @param k something
-#' @param lambda something
+#' @param lambda the sympatric speciation rate
 #' @param logs something
 #' @param lx It is the number of ODEs considered for the computation.
 #' @param lx0 something
@@ -56,13 +56,13 @@
 #' @param minimum_multiple_births something
 #' @param missnumspec The number of species that are in the clade,
 #'   but missing in the phylogeny_
-#' @param mu something
+#' @param mu the extinction rate
 #' @param mutation_rate something
 #' @param n_species number of species
 #' @param init_n_lineages the number of lineages at time equals zero
 #' @param n_steps something
 #' @param n_subs something
-#' @param nu something
+#' @param nu the multiple allopatric speciation trigger rate
 #' @param optimmethod something
 #' @param pars vector of parameters:
 #' \itemize{
@@ -83,7 +83,7 @@
 #' @param printit something
 #' @param print_errors something
 #' @param q_matrix a matrix of something
-#' @param q a speciation parameter
+#' @param q the single-lineage speciation probability at a triggered event
 #' @param quantiles_choice something
 #' @param recursive something
 #' @param reltol something

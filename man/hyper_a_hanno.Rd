@@ -11,7 +11,7 @@ hyper_a_hanno(n_species, k, q)
 
 \item{k}{something}
 
-\item{q}{a speciation parameter}
+\item{q}{the single-lineage speciation probability at a triggered event}
 }
 \description{
 Internal mbd function.

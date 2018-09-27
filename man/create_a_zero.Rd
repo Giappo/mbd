@@ -10,11 +10,11 @@ create_a_zero(max_number_of_species, lambda, mu, q, k,
 \arguments{
 \item{max_number_of_species}{something}
 
-\item{lambda}{something}
+\item{lambda}{the sympatric speciation rate}
 
-\item{mu}{something}
+\item{mu}{the extinction rate}
 
-\item{q}{a speciation parameter}
+\item{q}{the single-lineage speciation probability at a triggered event}
 
 \item{k}{something}
 

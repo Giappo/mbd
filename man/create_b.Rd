@@ -7,11 +7,11 @@
 create_b(lambda, nu, q, k, b, max_number_of_species)
 }
 \arguments{
-\item{lambda}{something}
+\item{lambda}{the sympatric speciation rate}
 
-\item{nu}{something}
+\item{nu}{the multiple allopatric speciation trigger rate}
 
-\item{q}{a speciation parameter}
+\item{q}{the single-lineage speciation probability at a triggered event}
 
 \item{k}{something}
 

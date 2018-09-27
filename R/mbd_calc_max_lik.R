@@ -46,22 +46,27 @@ mbd_calc_max_lik <- function(
       "as created by 'create_mbd_params'"
     )
   }
-  if (!all(fixed_params %in% mbd::get_mbd_param_names())) {
-    stop("'fixed_params' must be a set of MBD parameter names")
-  }
-  if (length(unique(fixed_params)) != length(fixed_params)) {
-    stop("'fixed_params' must contain unique entries only")
-  }
-  if (!all(estimated_params %in% mbd::get_mbd_param_names())) {
-    stop("'estimated_params' must be a set of MBD parameter names")
-  }
-  if (length(unique(estimated_params)) != length(estimated_params)) {
-    stop("'estimated_params' must contain unique entries only")
-  }
-  if (length(c(fixed_params, estimated_params)) != 4) {
+  
+  if (!is_mbd_params_selector(fixed_params)) {
     stop(
-      "'fixed_params' and 'estimated_params' together must contain each ",
-      "of the four MBD parameter names"
+      "'fixed_params' must be an MBD parameter selector, ",
+      "as created by 'create_mbd_params_selector'"
+    )
+  }
+  if (!is_mbd_params_selector(estimated_params)) {
+    stop(
+      "'estimated_params' must be an MBD parameter selector, ",
+      "as created by 'create_mbd_params_selector'"
+    )
+  }
+  lambda_once <- xor(fixed_params$lambda, estimated_params$lambda)
+  mu_once <- xor(fixed_params$mu, estimated_params$mu)
+  nu_once <- xor(fixed_params$nu, estimated_params$nu)
+  q_once <- xor(fixed_params$q, estimated_params$q)
+  if (!(lambda_once && mu_once && nu_once && q_once)) {
+    stop(
+      "'fixed_params' and 'estimated_params' together must select each ",
+      "of the MBD parameters exactly once"
     )
   }
   if (init_n_species != 1 && init_n_species != 2) {

@@ -73,15 +73,19 @@ out <- mbd_ml(
 knitr::kable(out)
 
 ## ------------------------------------------------------------------------
-out <- mbd_calc_max_lik(
-  branching_times = brts,
-  init_param_values = create_mbd_params(
-    lambda = lambda, mu = mu, nu = nu, q = q
-  ),
-  fixed_params = c("lambda", "mu", "nu"),
-  estimated_params = "q",
-  init_n_species = 2,
-  conditioned_on = "non_extinction"
+init_param_values <- create_mbd_params(
+  lambda = lambda, mu = mu, nu = nu, q = q
 )
-knitr::kable(out)
+
+## ------------------------------------------------------------------------
+fixed_params <- create_mbd_params_selector(
+  lambda = TRUE, 
+  mu = TRUE,
+  nu = TRUE
+)
+
+## ------------------------------------------------------------------------
+estimated_params <- create_mbd_params_selector(
+  q = TRUE
+)
 
