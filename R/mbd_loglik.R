@@ -107,7 +107,7 @@ mbd_loglik <- function(
     # alpha is the proportionality factor between max_k and
     # the edge of the matrix
     alpha <- pc_and_alpha$alpha
-    lx <- max_number_of_species <- alpha * max_k;
+    lx <- alpha * max_k;
     pc <- 1
     if (cond == 1) {
       pc <- mbd::calc_cond_prob(
@@ -129,7 +129,7 @@ mbd_loglik <- function(
       #MATRIX DIMENSION SETUP
       # alpha is the proportionality factor between max_k
       # and the edge of the matrix
-      lx <- max_number_of_species <- alpha * max_k;
+      lx <- alpha * max_k;
 
       #SETTING INITIAL CONDITIONS (there's always a +1 because of Q0)
       q_i <- c(1, rep(0, lx))

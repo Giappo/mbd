@@ -418,7 +418,7 @@ calc_cond_prob_zero_p_b <- function(
   total_time <- max(abs(brts))
   if (mu != 0) {
     cat("mu is supposed to be equal zero to use this function")
-    return(pc <- NA)
+    return(NA)
   }
 
   m <- 0:lx; length(m)

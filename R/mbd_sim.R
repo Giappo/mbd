@@ -144,9 +144,9 @@ mbd_sim <- function(
     births.reconstructed_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)))
     births.full_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = FALSE), decreasing = TRUE)))
     multiple_births.reconstructed_tree <- sum( duplicated(births.reconstructed_tree))
-    multiple_births.full_tree <- sum( duplicated(births.full_tree))
+    multi_births_full_tree <- sum( duplicated(births.full_tree))
     #should i consider the full tree or the reconstructed one???
-    # multiple_births_check = (multiple_births.full_tree>=minimum_multiple_births)
+    # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
     multiple_births_check <- (multiple_births.reconstructed_tree >= minimum_multiple_births)
 
     keep_the_sim <- (!crown_species_dead) & (tips >= tips_interval[1] & tips <= tips_interval[2]) #should i keep this simulation?
@@ -161,7 +161,7 @@ mbd_sim <- function(
     tas = tas,
     extinct_species = extinct_species,
     L = L,
-    minimum_multiple_births = multiple_births.full_tree
+    minimum_multiple_births = multi_births_full_tree
   )
 }
 
@@ -278,9 +278,9 @@ mbd_sim0 <- function(
     births.reconstructed_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)))
     births.full_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = F), decreasing = T)))
     multiple_births.reconstructed_tree = sum( duplicated(births.reconstructed_tree))
-    multiple_births.full_tree = sum( duplicated(births.full_tree))
+    multi_births_full_tree = sum( duplicated(births.full_tree))
     #should i consider the full tree or the reconstructed one???
-    # multiple_births_check = (multiple_births.full_tree>=minimum_multiple_births)
+    # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
     multiple_births_check = (multiple_births.reconstructed_tree>=minimum_multiple_births)
   }
   time_points=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)))
