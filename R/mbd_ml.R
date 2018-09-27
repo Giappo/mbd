@@ -82,7 +82,7 @@ mbd_ml <- function(
   if (!is.numeric(brts)) {
     stop("'brts' must be numeric")
   }
-  if (length(idparsfix) == 0) { 
+  if (length(idparsfix) == 0) {
     idparsfix <- NULL
   }
   if (missing(parsfix) && (length(idparsfix) == 0)) {

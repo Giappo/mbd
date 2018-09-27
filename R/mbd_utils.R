@@ -25,7 +25,7 @@ correlation_analysis <- function(
   medians_color_name <- "blue"; truevalues_color_name = "red";
 
   medians <- rep(0, n_pars)
-  for (idpar in 1:n_pars) { 
+  for (idpar in 1:n_pars) {
     medians[idpar] <- stats::median(results[, idpar])
   }
   medians_string <- paste0( "MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), sep = "''", collapse = ", "), ")")
@@ -47,7 +47,7 @@ correlation_analysis <- function(
     ifelse(any(good.lines) > 0, good.results <- results[good.lines, ], good.results <- results)
 
     if (i == j) {
-      graphics::hist((good.results[, i]), main = NULL, 
+      graphics::hist((good.results[, i]), main = NULL,
         xlab = paste(par_names[i]), breaks = 15
       )
       graphics::abline(v = sim_pars[i], col = truevalues_color)
@@ -55,10 +55,10 @@ correlation_analysis <- function(
     }
     else {
       graphics::plot(
-        good.results[, i] ~ good.results[, j], 
-        xlab = par_names[j], 
-        ylab = par_names[i], 
-        cex = 0.3, 
+        good.results[, i] ~ good.results[, j],
+        xlab = par_names[j],
+        ylab = par_names[i],
+        cex = 0.3,
         col = points_color
       )
       graphics::points(x = sim_pars[j], y = sim_pars[i], col = truevalues_color, pch = 10, cex = 1.5)
@@ -86,24 +86,24 @@ correlation_analysis <- function(
         graphics::abline(v = medians[i], col = medians_color)
       } else {
         graphics::plot(
-          good.results[, i] ~ good.results[, j], 
-          xlab = par_names[j], 
-          ylab = par_names[i], 
-          cex = 0.3, 
+          good.results[, i] ~ good.results[, j],
+          xlab = par_names[j],
+          ylab = par_names[i],
+          cex = 0.3,
           col = points_color
         )
         graphics::points(
-          x = sim_pars[j], 
-          y = sim_pars[i], 
-          col = truevalues_color, 
-          pch = 10, 
+          x = sim_pars[j],
+          y = sim_pars[i],
+          col = truevalues_color,
+          pch = 10,
           cex = 1.5
         )
         graphics::points(
-          x = medians[j], 
-          y = medians[i], 
-          col = medians_color, 
-          pch = 10, 
+          x = medians[j],
+          y = medians[i],
+          col = medians_color,
+          pch = 10,
           cex = 1.5
         )
       }
