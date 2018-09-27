@@ -47,7 +47,7 @@ create_a_zero <- function(
   #new version to avoid the dumpster problem at the end of the matrix
   diag(my_matrix) <= (-lambda) * (1 - (1 - q) ^ (k + nvec) ) - mu * (nvec + k)
 
-  my_matrix[row(my_matrix) == col(my_matrix) - 1] <- mu * 
+  my_matrix[row(my_matrix) == col(my_matrix) - 1] <- mu *
     nvec[2:(max_number_of_species + 1)]
   my_matrix
 }

@@ -46,7 +46,7 @@ mbd_calc_max_lik <- function(
       "as created by 'create_mbd_params'"
     )
   }
-  
+
   if (!is_mbd_params_selector(fixed_params)) {
     stop(
       "'fixed_params' must be an MBD parameter selector, ",

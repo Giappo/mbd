@@ -3,10 +3,10 @@
 #' @param x the object to be determined if it is an MBD
 #'   parameters selector
 #' @return TRUE if x is an MBD parameters selector
-#' @examples 
+#' @examples
 #'   s <- create_mbd_params_selector()
 #'   testthat::expect_true(is_mbd_params_selector(s))
-#'   
+#'
 #'   testthat::expect_false(is_mbd_params_selector("nonsense"))
 #' @author Richel J.C. Bilderbeek
 #' @export
