@@ -237,7 +237,7 @@ a_operator <- function(
       func = mbd_loglik_rhs,
       parms = ode_matrix,
       atol = a_abstol,
-      rtol = a_reltol)[2,-1],
+      rtol = a_reltol)[2, -1],
       timeout = 1001
     )
   }

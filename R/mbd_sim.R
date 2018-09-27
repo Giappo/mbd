@@ -90,10 +90,10 @@ mbd_sim <- function(
       pool <- c(-1, 2)
       t <- age
       L <- matrix(0, nrow = 1e6, 4)
-      L[,4] <- -1
+      L[, 4] <- -1
       L[, 3] <- 0
-      L[1, 1:4] <- c(t, 0,-1, -1)
-      L[2, 1:4] <- c(t,-1, 2, -1)
+      L[1, 1:4] <- c(t, 0, -1, -1)
+      L[2, 1:4] <- c(t, -1, 2, -1)
       while (t > 0) {
         n_species <- length(pool)
         total_rate <- n_species * (lambda + mu) + nu
@@ -123,7 +123,7 @@ mbd_sim <- function(
             } else {
               dead <- pool
             }
-            L[abs(dead),4] <- t
+            L[abs(dead), 4] <- t
             pool <- pool[pool != dead]
           }
         } else {
@@ -131,12 +131,12 @@ mbd_sim <- function(
         }
       }
     }
-    L <- L[(1:total_count),]
-    extinct_species <- sum(L[,4] != -1)
+    L <- L[(1:total_count), ]
+    extinct_species <- sum(L[, 4] != -1)
     #tips check
-    tips <- length(L[,4][L[,4] == -1])
+    tips <- length(L[, 4][L[, 4] == -1])
     #survival of crown check
-    alive <- L[L[,4] == -1,]
+    alive <- L[L[, 4] == -1, ]
     alive <- matrix(alive, ncol = 4)
     #if cond == 0 they will always look like they're alive, because I don't care
     crown_species_dead <- (length( unique(sign(alive[, 3]))) != 2 ) * cond
@@ -192,7 +192,7 @@ mbd_sim <- function(
 #' }
 #'
 #' @examples
-#' out = mbd_sim0( pars=c(2.5,0.1,0.1), soc=2, age=10, cond=1, tips_interval=c(0,Inf))
+#' out = mbd_sim0( pars=c(2.5, 0.1, 0.1), soc=2, age=10, cond=1, tips_interval=c(0,Inf))
 #' graphics::plot(out$tas)
 #' graphics::plot(out$tes)
 #' out$L
@@ -228,11 +228,11 @@ mbd_sim0 <- function(
       n_species <- init_n_lineages
       pool <- c(-1, 2)
       t <- age
-      L <- matrix(0, nrow=1e6,4)
-      L[,4] <- -1
+      L <- matrix(0, nrow=1e6, 4)
+      L[, 4] <- -1
       L[, 3] <- 0
-      L[1, 1:4] <- c(t,0,-1,-1)
-      L[2, 1:4] <- c(t,-1, 2,-1)
+      L[1, 1:4] <- c(t, 0, -1, -1)
+      L[2, 1:4] <- c(t, -1, 2, -1)
       while (t > 0) {
         n_species <- length(pool)
         deltaT <- stats::rexp(1, rate = (lambda + n_species * mu))
@@ -260,17 +260,17 @@ mbd_sim0 <- function(
           } else {
             dead <- pool
           }
-          L[abs(dead),4] <- t
+          L[abs(dead), 4] <- t
           pool <- pool[pool!=dead]
         }
       }
     }
-    L=L[(1:total_count),]
-    extinct_species = sum(L[,4]!=-1)
+    L=L[(1:total_count), ]
+    extinct_species = sum(L[, 4]!=-1)
     #tips check
-    tips=length(L[,4][L[,4]==-1])
+    tips=length(L[, 4][L[, 4]==-1])
     #survival of crown check
-    alive=L[L[,4]==-1,]
+    alive=L[L[, 4]==-1, ]
     alive=matrix(alive, ncol=4)
     conditioning_on_survival = ( length( unique(sign(alive[, 3])))!=2 )*cond
     #multiple births check
@@ -311,11 +311,11 @@ mbd_sim0 <- function(
 #'
 #' @examples
 #' # @Giappo: does not work
-#' # out <- mbd_sim_dataset( pars=c(0.4,0.1,0.2,0.15), soc=2, age=10, cond=1, edge=Inf )
+#' # out <- mbd_sim_dataset( pars=c(0.4, 0.1, 0.2, 0.15), soc=2, age=10, cond=1, edge=Inf )
 #'
 #' @export
 mbd_sim_dataset <- function(
-  sim_pars = c(0.5,0.1,0.3,0.15),
+  sim_pars = c(0.5, 0.1, 0.3, 0.15),
   soc = 2,
   cond = 1,
   age = 10,
@@ -346,7 +346,7 @@ mbd_sim_dataset <- function(
     )
     max_tips <- round(estimation$avg_n * (1 + edge))
     min_tips <- max(0, round(estimation$avg_n * (1 - edge)))
-    tips_interval <- c(min_tips, max_tips) #c(10,45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
+    tips_interval <- c(min_tips, max_tips) #c(10, 45) #setting the upper limit over 50 may be a problem #min and max number of tips for simulated trees
   }
 
   #simulate trees

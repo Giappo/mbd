@@ -135,7 +135,7 @@ mbd_loglik <- function(
       q_i <- c(1, rep(0, lx))
       #do I need a +1 in nrow?
       q_t <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals))
-      q_t[1,] <- q_i
+      q_t[1, ] <- q_i
       dimnames(q_t)[[2]] <- paste0("Q", 0:lx)
       # init_n_lineages is the number of species at t = 1
       k <- init_n_lineages
@@ -155,8 +155,8 @@ mbd_loglik <- function(
           k = k,
           max_number_of_species = lx
         )
-        q_t[t,] <- a_operator(
-          q_matrix = q_t[(t - 1),],
+        q_t[t, ] <- a_operator(
+          q_matrix = q_t[(t - 1), ],
           transition_matrix = transition_matrix,
           time_interval = time_intervals[t],
           precision = 50L,
@@ -167,43 +167,43 @@ mbd_loglik <- function(
         if (methode != "sexpm") {
           # it removes some small negative values that can occur
           # as bugs from the integration process
-          q_t[t,] <- negatives_correction(q_t[t,], pars)
+          q_t[t, ] <- negatives_correction(q_t[t, ], pars)
         }
-        if (any(is.nan(q_t[t,]))) {
+        if (any(is.nan(q_t[t, ]))) {
           if (Sys.info()[["sysname"]] == "Windows") {
-            print(pars); print(q_t[t,])
+            print(pars); print(q_t[t, ])
           }
           nan_values <- 1; break
         }
-        if (any(q_t[t,] < 0)) {
+        if (any(q_t[t, ] < 0)) {
           negative_values <- 1
           break
         }
 
         #Applying C operator (this is a trick to avoid precision issues)
-        C[t] <- 1 / (sum(q_t[t,])); q_t[t,] <- q_t[t,] * C[t]
+        C[t] <- 1 / (sum(q_t[t, ])); q_t[t, ] <- q_t[t, ] * C[t]
 
         if (t < length(time_intervals)) {
           #Applying B operator
           matrix_b <- create_b(lambda = lambda, nu = nu, q = q, k = k, b = births[t],
                               max_number_of_species = lx)
-          q_t[t,] <- (matrix_b %*% q_t[t,])
+          q_t[t, ] <- (matrix_b %*% q_t[t, ])
           if (methode != "sexpm") {
-            q_t[t,] <- negatives_correction(q_t[t,], pars)
+            q_t[t, ] <- negatives_correction(q_t[t, ], pars)
           }
-          if (any(is.nan(q_t[t,]))) {
+          if (any(is.nan(q_t[t, ]))) {
             if (Sys.info()[["sysname"]] == "Windows") {
-              print(pars); print(q_t[t,])
+              print(pars); print(q_t[t, ])
             }
             nan_values <- 1; break
           }
-          if (any(q_t[t,] < 0)) {
+          if (any(q_t[t, ] < 0)) {
             negative_values <- 1
             break
           }
 
           #Applying D operator (this works exactly like C)
-          D[t] <- 1 / (sum(q_t[t,])); q_t[t,] <- q_t[t,] * D[t]
+          D[t] <- 1 / (sum(q_t[t, ])); q_t[t, ] <- q_t[t, ] * D[t]
 
           #Updating running parameters
           k <- k + births[t]

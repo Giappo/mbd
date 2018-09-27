@@ -209,7 +209,7 @@ mbd_ml <- function(
   tobeprint <- "Maximum likelihood parameter estimates:"
   for (ii in 1:n_pars) {
     tobeprint <- paste(
-      tobeprint, paste(names(ml_pars1[ii]), ":", sep = ""),ml_pars1[ii]
+      tobeprint, paste(names(ml_pars1[ii]), ":", sep = ""), ml_pars1[ii]
     )
   }
   if (verbose == TRUE) {
