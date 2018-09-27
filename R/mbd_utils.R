@@ -39,50 +39,78 @@ correlation_analysis <- function(
   }
 
   #pdf
-  grDevices::pdf(file = paste(path, "/", pdfname, ".pdf", sep=''));#plot.new();
+  grDevices::pdf(file = paste(path, "/", pdfname, ".pdf", sep = ""))
   graphics::par(mfrow = c(length(estimated_pars), length(estimated_pars)))
   graphics::par(oma = c(0, 0, 2, 0));
   for (i in estimated_pars) { for (j in estimated_pars) {
-    good.lines = results[, i] < axislimits[i] & results[, j]<axislimits[j]
-    ifelse(any(good.lines)>0, good.results <- results[good.lines, ], good.results <- results)
+    good.lines = results[, i] < axislimits[i] & results[, j] < axislimits[j]
+    ifelse(any(good.lines) > 0, good.results <- results[good.lines, ], good.results <- results)
 
-    if ( i== j){graphics::hist((good.results[, i]), main=NULL, xlab = paste(par_names[i]), breaks = 15)
+    if (i == j) {
+      graphics::hist((good.results[, i]), main = NULL, 
+        xlab = paste(par_names[i]), breaks = 15
+      )
       graphics::abline(v = sim_pars[i], col = truevalues_color)
       graphics::abline(v = medians[i], col = medians_color)
     }
-    else{graphics::plot(good.results[, i]~good.results[, j], xlab = par_names[j], ylab = par_names[i], cex=0.3, col=points_color);
+    else {
+      graphics::plot(
+        good.results[, i] ~ good.results[, j], 
+        xlab = par_names[j], 
+        ylab = par_names[i], 
+        cex = 0.3, 
+        col = points_color
+      )
       graphics::points(x = sim_pars[j], y = sim_pars[i], col = truevalues_color, pch = 10, cex = 1.5)
       graphics::points(x = medians[j], y = medians[i], col = medians_color, pch = 10, cex = 1.5)
     }
   }}
-  graphics::title(main=(titolo.pdf<-(paste("\n\n", titolo, "\n", medians_string, "\n", truevalues_string, sep = ''))), outer=T)
+  graphics::title(main = (titolo.pdf<-(paste("\n\n", titolo, "\n", medians_string, "\n", truevalues_string, sep = ''))), outer=T)
   grDevices::dev.off()
 
-  if (openit==1){
-    file.show(normalizePath(paste(path, "/", pdfname, ".pdf", sep='')))
+  if (openit == 1) {
+    file.show(normalizePath(paste(path, "/", pdfname, ".pdf", sep = "")))
   }
 
-  if (!missing(mother_folder))
-    {
-    grDevices::pdf(file = paste(mother_folder, "/", pdfname, ".pdf", sep=''));#plot.new();
-    graphics::par(mfrow=c(length(estimated_pars), length(estimated_pars)))
-    graphics::par(oma=c(0, 0, 2, 0));
-    for (i in estimated_pars){for (j in estimated_pars){
-      good.lines = results[, i]<axislimits[i] & results[, j]<axislimits[j]
-      ifelse(any(good.lines)>0, good.results <- results[good.lines, ], good.results <- results)
+  if (!missing(mother_folder)) {
+    grDevices::pdf(file = paste(mother_folder, "/", pdfname, ".pdf", sep = ""))
+    graphics::par(mfrow = c(length(estimated_pars), length(estimated_pars)))
+    graphics::par(oma = c(0, 0, 2, 0));
+    for (i in estimated_pars) { for (j in estimated_pars) {
+      good.lines = results[, i] < axislimits[i] & results[, j] < axislimits[j]
+      ifelse(any(good.lines) > 0, good.results <- results[good.lines, ], good.results <- results)
 
-      if (i==j){graphics::hist((good.results[, i]), main=NULL, xlab = paste(par_names[i]), breaks = 15)
-        graphics::abline(v=sim_pars[i], col = truevalues_color)
-        graphics::abline(v=medians[i], col = medians_color)
-      }
-      else{graphics::plot(good.results[, i]~good.results[, j], xlab=par_names[j], ylab=par_names[i], cex=0.3, col=points_color);
-        graphics::points(x=sim_pars[j], y=sim_pars[i], col=truevalues_color, pch=10, cex=1.5)
-        graphics::points(x=medians[j], y=medians[i], col=medians_color, pch=10, cex=1.5)
+      if (i == j) {
+        graphics::hist((good.results[, i]), main = NULL, xlab = paste(par_names[i]), breaks = 15)
+        graphics::abline(v = sim_pars[i], col = truevalues_color)
+        graphics::abline(v = medians[i], col = medians_color)
+      } else {
+        graphics::plot(
+          good.results[, i] ~ good.results[, j], 
+          xlab = par_names[j], 
+          ylab = par_names[i], 
+          cex = 0.3, 
+          col = points_color
+        )
+        graphics::points(
+          x = sim_pars[j], 
+          y = sim_pars[i], 
+          col = truevalues_color, 
+          pch = 10, 
+          cex = 1.5
+        )
+        graphics::points(
+          x = medians[j], 
+          y = medians[i], 
+          col = medians_color, 
+          pch = 10, 
+          cex = 1.5
+        )
       }
     }}
-    graphics::title(main=titolo.pdf, outer = T)
+    graphics::title(main = titolo.pdf, outer = TRUE)
     grDevices::dev.off()
-    }
+  }
 }
 
 #' Percentiles function
@@ -97,11 +125,10 @@ percentiles_function <- function(
   n_pars <- length(sim_pars);#pars_interval=list(c(0, stats::quantile(results[, 1],.95)), c(0, quantile(results[, 2],.95)), c(0, quantile(results[, 3],.95)))
   parnames <-  colnames(results)[1:n_pars]
   percentiles <- vector("list", 3)
-  for (idpar in 1:n_pars){percentiles[[idpar]] <- stats::quantile(results[, idpar], quantiles_choice)}
+  for (idpar in 1:n_pars) { percentiles[[idpar]] <- stats::quantile(results[, idpar], quantiles_choice)}
   percentiles <- t(matrix(unlist(percentiles), nrow = 3, ncol = n_pars));
   colnames(percentiles) <- quantiles_names; rownames(percentiles) <- parnames
-  if (printit==1)
-  {
+  if (printit == 1) {
     print(percentiles); print(sim_pars)
   }
   out <- percentiles
@@ -109,23 +136,22 @@ percentiles_function <- function(
 
 #' Converts a matrix in a dataframe that can be used with ggplot
 #' @inheritParams default_params_doc
-#' @param Matrix something
+#' @param matrix something
 #' @param heatmap.name heatmap name
 heatmap2dataframe = function(
   x,
   y,
-  Matrix,
+  matrix,
   x_name="x",
   y_name="y",
   heatmap.name="HeatMap"
-){
-  Matrix2=matrix(Matrix, nrow = length(x)* length(y))
-  df=data.frame(expand.grid(x=x, y=y),HeatMap=Matrix2)
-  #names(df$x)=names(x);names(df$y)=names(y);names(df$HeatMap)=names(Matrix);
-  colnames(df)[1] <- x_name;
-  colnames(df)[2] <- y_name;
-  colnames(df)[3] <- heatmap.name;
-  return(df)
+) {
+  matrix_2 <- matrix(matrix, nrow = length(x) * length(y))
+  df <- data.frame(expand.grid(x = x, y = y),HeatMap = matrix_2)
+  colnames(df)[1] <- x_name
+  colnames(df)[2] <- y_name
+  colnames(df)[3] <- heatmap.name
+  df
 }
 
 #' Converts branching times to "time intervals between branching times" and "birth at nodes" vectors
@@ -134,13 +160,13 @@ heatmap2dataframe = function(
 brts2time_intervals_and_births <- function(
   brts
 ) {
-  time_points=-unlist(unname(sort(abs(brts), decreasing = T)))
-  branching_times = -sort(abs(as.numeric(time_points)), decreasing = TRUE)
-  births=c(0, unname(table(branching_times))[-1])
-  unique_branching_times=as.numeric(names(table(branching_times)))
-  time_intervals=c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times, 1))))
-  births=births[-1]
-  out=list(time_intervals=time_intervals, births=births)
+  time_points <- -unlist(unname(sort(abs(brts), decreasing = T)))
+  branching_times <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
+  births <- c(0, unname(table(branching_times))[-1])
+  unique_branching_times <- as.numeric(names(table(branching_times)))
+  time_intervals <- c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times, 1))))
+  births <- births[-1]
+  out <- list(time_intervals=time_intervals, births=births)
   return(out)
 }
 
@@ -148,7 +174,7 @@ brts2time_intervals_and_births <- function(
 #' @inheritParams default_params_doc
 #' @param test_parameters something
 #' @param output something
-mbd_P_eq <- function(
+mbd_p_eq <- function(
   test_parameters,
   age=15,
   max_number_of_species = 2000,

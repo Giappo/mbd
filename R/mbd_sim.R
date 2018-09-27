@@ -336,7 +336,7 @@ mbd_sim_dataset <- function(
   init_n_lineages <- soc
   if (edge != Inf && tips_interval == c(0, Inf))
   {
-    estimation <- mbd_P_eq(
+    estimation <- mbd_p_eq(
       test_parameters = sim_pars,
       age = age,
       max_number_of_species = 3000,

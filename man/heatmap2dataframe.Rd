@@ -4,7 +4,7 @@
 \alias{heatmap2dataframe}
 \title{Converts a matrix in a dataframe that can be used with ggplot}
 \usage{
-heatmap2dataframe(x, y, Matrix, x_name = "x", y_name = "y",
+heatmap2dataframe(x, y, matrix, x_name = "x", y_name = "y",
   heatmap.name = "HeatMap")
 }
 \arguments{
@@ -12,7 +12,7 @@ heatmap2dataframe(x, y, Matrix, x_name = "x", y_name = "y",
 
 \item{y}{something}
 
-\item{Matrix}{something}
+\item{matrix}{something}
 
 \item{x_name}{something}
 
