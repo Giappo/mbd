@@ -81,7 +81,7 @@ mbd_loglik <- function(
     #MAIN
 
     #ADJUSTING DATA
-    data <- brts2time_intervals_and_births(brts)
+    data <- brts2time_intervals_and_births(brts) # nolint internal function
     time_intervals <- c(0, data$time_intervals)
     births <- c(0, data$births)
     init_n_lineages <- soc #number of starting species
@@ -167,7 +167,7 @@ mbd_loglik <- function(
         if (methode != "sexpm") {
           # it removes some small negative values that can occur
           # as bugs from the integration process
-          q_t[t, ] <- negatives_correction(q_t[t, ], pars)
+          q_t[t, ] <- negatives_correction(q_t[t, ], pars) # nolint internal function
         }
         if (any(is.nan(q_t[t, ]))) {
           if (Sys.info()[["sysname"]] == "Windows") {
@@ -189,7 +189,7 @@ mbd_loglik <- function(
                               max_number_of_species = lx)
           q_t[t, ] <- (matrix_b %*% q_t[t, ])
           if (methode != "sexpm") {
-            q_t[t, ] <- negatives_correction(q_t[t, ], pars)
+            q_t[t, ] <- negatives_correction(q_t[t, ], pars) # nolint internal function
           }
           if (any(is.nan(q_t[t, ]))) {
             if (Sys.info()[["sysname"]] == "Windows") {

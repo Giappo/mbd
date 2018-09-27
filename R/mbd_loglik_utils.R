@@ -560,7 +560,7 @@ calc_cond_prob1 <- function(
   reltol = 1e-10
 ){
 
-  lx <- find_best_lx_for_pc(brts = brts, pars = pars, soc = soc)
+  lx <- find_best_lx_for_pc(brts = brts, pars = pars, soc = soc) # nolint internal function
   testit::assert(pars[2] == 0)
   pc <- mbd::calc_cond_prob_zero_p_b(
     brts = brts,
@@ -594,7 +594,7 @@ alpha_conditional_probability <- function(
   min_tips <- max(min_tips, soc * cond) #check this
   init_n_lineages <- soc
   total_time <- max(abs(brts));
-  births <- c(0, brts2time_intervals_and_births(brts)$births)
+  births <- c(0, brts2time_intervals_and_births(brts)$births) # nolint internal function
   k_interval <- init_n_lineages + cumsum(births)
   max_k <- max(k_interval)
   # alpha is the proportionality factor between max_k
@@ -637,7 +637,7 @@ alpha_conditional_probability <- function(
     if (methode != "sexpm") {
       # it removes some small negative values
       # that can occurr as bugs from the integration process
-      a2_v1 <- negatives_correction(a2_v1, pars)
+      a2_v1 <- negatives_correction(a2_v1, pars) # nolint internal function
     }
 
     #adjust for the required minimum amount of mbd

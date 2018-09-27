@@ -27,7 +27,7 @@ pmb_loglik <- function(
   if (condition1 | condition2) {
     th_loglik <- -Inf
   } else {
-    data <- brts2time_intervals_and_births(test_brts)
+    data <- brts2time_intervals_and_births(test_brts)  # nolint internal function
     time_intervals <- data$time_intervals
     births <- data$births
     k <- init_n_lineages + cumsum(c(0, births))
@@ -83,7 +83,7 @@ pmb_loglik_q_vector <- function(pars, brts, soc = 2){
   if (condition1 | condition2) {
     th_loglik <- -Inf
   } else {
-    data <- brts2time_intervals_and_births(test_brts)
+    data <- brts2time_intervals_and_births(test_brts) # nolint internal function
     time_intervals <- data$time_intervals
     births <- data$births
     k <- init_n_lineages + cumsum(c(0, births))

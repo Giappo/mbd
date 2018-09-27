@@ -366,9 +366,13 @@ mbd_sim_dataset <- function(
   max_k <- (init_n_lineages - 1) + (is.list(sim_data)) * max(sapply(sim_data, length)) + (1 - is.list(sim_data)) * length(sim_data)
   if (is.list(sim_data))
   {
-    all_the_births=sapply(sim_data, FUN = function(brts){return(brts2time_intervals_and_births(brts)$births)})
-  }else{
-    all_the_births=brts2time_intervals_and_births(sim_data)$births
+    all_the_births <- sapply(
+      sim_data, FUN = function(brts) {
+        return(brts2time_intervals_and_births(brts)$births) # nolint internal function
+      }
+    )
+  } else{
+    all_the_births <- brts2time_intervals_and_births(sim_data)$births  # nolint internal function
   }
   max_b <- max(unlist(all_the_births))
 
