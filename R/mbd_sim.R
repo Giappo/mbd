@@ -379,7 +379,7 @@ mbd_sim_dataset <- function(
     tips[s] <- length(sim_data[[s]]) + 1
   }
   #saving sims and settings
-  # simpath=paste("sims/", sim_pars[1], "-", sim_pars[2], "-", sim_pars[3], "-", sim_pars[4], "/", sep = '')
+  # simpath=paste("sims /", sim_pars[1], "-", sim_pars[2], "-", sim_pars[3], "-", sim_pars[4], "/", sep = '')
   simpath <- getwd()
   datapath <- paste0(simpath, "/data")
   sim_data_name <- paste0(datapath, "/sim_data")

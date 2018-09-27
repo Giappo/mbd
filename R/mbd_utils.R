@@ -293,7 +293,7 @@ negatives_correction <- function(
   if (any(v < 0) & (problems) == 0) {
     #negatives <- v[v < 0]
     #maximum <- max(v)
-    v[v < 0 & (abs(v) /abs(max(v))) < 1e-10] <- 0
+    v[v < 0 & (abs(v) / abs(max(v))) < 1e-10] <- 0
   }
   v
 }
@@ -651,7 +651,7 @@ extract_posterior <- function(
 #   n_pars <<- length(parnames);
 #   base_path=dirname(dirname(getwd()))
 #   if( !exists("path")  ){ #&& interactive()
-#     path<<-choose.dir(paste(base_path, "/Progress/RQ1 - Multiple Births/Results + Reports/4_parameters/", sep = ''), "Choose a suitable folder")
+#     path<<-choose.dir(paste(base_path, "/Progress /RQ1 - Multiple Births /Results + Reports /4_parameters /", sep = ''), "Choose a suitable folder")
 #   }
 #   res_files = list.files(pattern=paste('[.]txt', sep = ''), path=path, full.names=TRUE)
 #   for(i in 1:length(res_files)){

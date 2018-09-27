@@ -251,7 +251,7 @@ pmb_ml <- function(
         } else {
           mltrpars <- as.numeric(unlist(out$par))
           if (pars_transform == 1) {
-            ml_pars <- mltrpars/ (1 - mltrpars)
+            ml_pars <- mltrpars / (1 - mltrpars)
           } else {
             ml_pars <- mltrpars
           }

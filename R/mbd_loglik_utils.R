@@ -472,9 +472,9 @@ find_best_lx_for_pc <- function(
   interval_min = 500,
   interval_max = 1400
 ) {
-  a <- iterations/2
+  a <- iterations /2
   interval_width <- interval_max - interval_min
-  step1 <- floor(interval_width/a)
+  step1 <- floor(interval_width/ a)
 
   lx_test <- rep(
     NA,
