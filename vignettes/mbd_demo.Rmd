@@ -60,26 +60,19 @@ lambda <- 0.2 # sympatric speciation rate
 mu <- 0.15 # extinction rate;
 nu <- 2.0 # multiple allopatric speciation trigger rate
 q <- 0.1 # single-lineage speciation probability
-sim_pars <- c(lambda, mu, nu, q)
 ```
-
-Here "sim_pars" are $\lambda$, $\mu$, $\nu$ and $q$, 
-i.e. the parameters we want to eventually be able to infer. 
 
 ### 3.1. Classic interface
 
 Then we set some basic parameters to create a simulated tree:
 
 ```{r}
-soc <- 2 # Use a crown age
 crown_age <- 1
-cond <- 1 # Condition on non-extinction
-
 sim <- mbd_sim(
-  pars = sim_pars, 
-  soc = soc, 
-  age = crown_age, 
-  cond = cond
+  pars = c(lambda, mu, nu, q), 
+  soc = 2, # Use a crown age 
+  age = crown_age,
+  cond = 1 # Condition on non-extinction
 )
 ```
 
@@ -158,11 +151,10 @@ generated the branching times:
 
 ```{r}
 mbd::mbd_loglik(
-  pars = sim_pars, 
+  pars = c(lambda, mu, nu, q), 
   brts = sim$brts, 
-  soc = soc, 
-  cond = cond, 
-  missnumspec = 0
+  soc = 2, # Crown age 
+  cond = 1  # Non-extinction 
 )
 ```
 
@@ -203,8 +195,8 @@ out <- mbd_ml(
   idparsopt = idparsopt, 
   parsfix = parsfix, 
   idparsfix = idparsfix, 
-  soc = soc, 
-  cond = cond
+  soc = 2, # Crown age 
+  cond = 1 # Conditioned on non-exitnction
 )
 knitr::kable(out)
 ```
