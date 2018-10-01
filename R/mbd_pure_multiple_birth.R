@@ -39,7 +39,7 @@ pmb_loglik <- function(
       #(nu *(t_k-t_k-1))^i * exp(-nu * (t_k - t_k - 1)) / k!
       poisson_term <- stats::dpois(i, nu * time_intervals[t], log = FALSE)[
         stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
-      ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0 ]
+      ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
       # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i
       #                      * exp(-nu *(t_k-t_k-1)) / k!
       # (2) lambda contribution: exp(-k * lambda *(t_k-t_k-1))
