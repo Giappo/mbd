@@ -97,7 +97,8 @@ pmb_loglik_q_vector <- function(pars, brts, soc = 2){
           i, nu * time_intervals[t], log = FALSE
         )[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
       ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
-      # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i * exp(-nu *(t_k-t_k-1)) / i!
+      # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i 
+      #     * exp(-nu *(t_k-t_k-1)) / i!
       # (2) lambda contribution: exp(-k * lambda *(t_k-t_k-1))
       a_term[t] <- sum((1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)
                    exp(-k[t] * lambda * (time_intervals[t]))     # (2)
@@ -158,7 +159,10 @@ pmb_loglik_choosepar <- function(
     loglik <- mbd::pmb_loglik(pars = pars1, brts = brts)
   }
   if (is.nan(loglik) || is.na(loglik)) {
-    cat("There are parameter values used which cause numerical problems:", trpars1, "\n")
+    cat(
+      "There are parameter values used which cause numerical problems:", 
+      trpars1, "\n"
+    )
     loglik <- -Inf
   }
   return(loglik)
@@ -182,16 +186,20 @@ pmb_ml <- function(
   missnumspec = 0
 ) {
   # - tol = tolerance in optimization
-  # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
+  # - changeloglikifnoconv = if T the loglik will be set 
+  #   to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization
-  # - changeloglikifnoconv = if T the loglik will be set to -Inf if ML does not converge
-  # - optimmethod = "simplex" (current default) or 'subplex' (default of previous versions)
+  # - changeloglikifnoconv = if T the loglik will be set 
+  #   to -Inf if ML does not converge
+  # - optimmethod = "simplex" (current default) or 'subplex' 
+  #   (default of previous versions)
   idparsfix <- 2
   parsfix   <- 0
   options(warn = -1)
   namepars <- mbd::get_mbd_param_names()
-  n_pars <- length(namepars); #if you add more parameters to your model just change this
-  failpars <- rep(-1, n_pars); names(failpars) <- namepars; #those are the parameters that you get if something goes sideways
+  n_pars <- length(namepars)
+  #those are the parameters that you get if something goes sideways
+  failpars <- rep(-1, n_pars); names(failpars) <- namepars 
   if (is.numeric(brts) == FALSE) {
     cat("The branching times should be numeric.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
@@ -234,19 +242,36 @@ pmb_ml <- function(
         idparsfix = idparsfix, brts = brts, soc = soc,
         pars_transform = pars_transform
       )
-      cat("The loglikelihood for the initial parameter values is", initloglik, "\n")
+      cat(
+        "The loglikelihood for the initial parameter values is", 
+        initloglik, 
+        "\n"
+      )
       utils::flush.console()
       if (initloglik == -Inf) {
-        cat("The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n")
+        cat(
+          paste0(
+            "The initial parameter values have a likelihood that is equal to ",
+            "0 or below machine precision. ",
+            "Try again with different initial values.\n"
+          )
+        )
         out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
       } else {
-        out <- DDD::optimizer(optimmethod = optimmethod, optimpars = optimpars,
-                               fun = pmb_loglik_choosepar, trparsopt = trparsopt,
-                               trparsfix = trparsfix, idparsopt = idparsopt,
-                               idparsfix = idparsfix, brts = brts, soc = soc,
-                               pars_transform = pars_transform)
+        out <- DDD::optimizer(
+          optimmethod = optimmethod, optimpars = optimpars,
+          fun = pmb_loglik_choosepar, trparsopt = trparsopt,
+          trparsfix = trparsfix, idparsopt = idparsopt,
+          idparsfix = idparsfix, brts = brts, soc = soc,
+          pars_transform = pars_transform
+        )
         if (out$conv != 0) {
-          cat("Optimization has not converged. Try again with different initial values.\n")
+          cat(
+            paste0(
+              "Optimization has not converged. ", 
+              "Try again with different initial values.\n"
+            )
+          )
           out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
         } else {
           mltrpars <- as.numeric(unlist(out$par))
