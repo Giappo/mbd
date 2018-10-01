@@ -50,18 +50,18 @@ test_that("PureBirth theoretical check", {
       break
     }
 
-    theorethicalLL  = mbd_theoretical_loglik(pars=pars, brts = brts, soc = soc)
-    computationalLL = mbd_loglik0(pars=pars, brts = brts, soc=soc, cond=cond, missnumspec=0, methode=methode)
+    theo_log_lik  = mbd_theoretical_loglik(pars=pars, brts = brts, soc = soc)
+    comp_log_lik = mbd_loglik0(pars=pars, brts = brts, soc=soc, cond=cond, missnumspec=0, methode=methode)
     #I need to divide to get rid of common factors
     ctrl_pars <- pars/2
     ctrl_brts <- brts
     ctrl_theorethical <- mbd_theoretical_loglik(pars=ctrl_pars, brts = ctrl_brts, soc = soc)
     ctrl_computational <- mbd_loglik0(pars=ctrl_pars, brts = ctrl_brts, soc=soc, cond=cond, missnumspec=0, methode=methode)
 
-    theorethicalLL <- theorethicalLL  - ctrl_theorethical
-    computationalLL <- computationalLL - ctrl_computational
+    theo_log_lik <- theo_log_lik  - ctrl_theorethical
+    comp_log_lik <- comp_log_lik - ctrl_computational
 
-    out=list(theorethicalLL=theorethicalLL, computationalLL=computationalLL)
+    out=list(theo_log_lik=theo_log_lik, comp_log_lik=comp_log_lik)
     return(out)
   }
 
@@ -75,8 +75,8 @@ test_that("PureBirth theoretical check", {
     brts <- mbd:::mbd_sim0(pars = simpars, soc = 2, age = 10, cond = 0)$brts
     testpars <- c(lambda[test_size+j],0, q[test_size+j])
     test_p_b <- mbd_test_pure_birth(testpars, brts, soc=2, cond=0, methode=methode)
-    theorethical_test[j] <- test_p_b$theorethicalLL
-    computational_test[j] <- test_p_b$computationalLL
+    theorethical_test[j] <- test_p_b$theo_log_lik
+    computational_test[j] <- test_p_b$comp_log_lik
   }
   # all.equal(theorethical_test, computational_test)
   # print(prod(theorethical_test))

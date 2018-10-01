@@ -89,11 +89,11 @@ mbd_sim <- function(
       n_species <- init_n_lineages
       pool <- c(-1, 2)
       t <- age
-      L <- matrix(0, nrow = 1e6, 4)
-      L[, 4] <- -1
-      L[, 3] <- 0
-      L[1, 1:4] <- c(t, 0, -1, -1)
-      L[2, 1:4] <- c(t, -1, 2, -1)
+      l_matrix <- matrix(0, nrow = 1e6, 4)
+      l_matrix[, 4] <- -1
+      l_matrix[, 3] <- 0
+      l_matrix[1, 1:4] <- c(t, 0, -1, -1)
+      l_matrix[2, 1:4] <- c(t, -1, 2, -1)
       while (t > 0) {
         n_species <- length(pool)
         total_rate <- n_species * (lambda + mu) + nu
@@ -110,9 +110,9 @@ mbd_sim <- function(
               parents <- pool
             }
             new_interval <- (total_count + 1):(total_count + delta_n)
-            L[new_interval, 1] <- t#-(delta_n:1)* 1e-5 add this if you need separate time points
-            L[new_interval, 2] <- parents
-            L[new_interval, 3] <- abs(new_interval) * sign(parents)
+            l_matrix[new_interval, 1] <- t#-(delta_n:1)* 1e-5 add this if you need separate time points
+            l_matrix[new_interval, 2] <- parents
+            l_matrix[new_interval, 3] <- abs(new_interval) * sign(parents)
 
             pool <- c(pool, abs(new_interval) * sign(parents))
             total_count <- total_count + delta_n
@@ -123,7 +123,7 @@ mbd_sim <- function(
             } else {
               dead <- pool
             }
-            L[abs(dead), 4] <- t
+            l_matrix[abs(dead), 4] <- t
             pool <- pool[pool != dead]
           }
         } else {
@@ -131,36 +131,36 @@ mbd_sim <- function(
         }
       }
     }
-    L <- L[(1:total_count), ]
-    extinct_species <- sum(L[, 4] != -1)
+    l_matrix <- l_matrix[(1:total_count), ]
+    extinct_species <- sum(l_matrix[, 4] != -1)
     #tips check
-    tips <- length(L[, 4][L[, 4] == -1])
+    tips <- length(l_matrix[, 4][l_matrix[, 4] == -1])
     #survival of crown check
-    alive <- L[L[, 4] == -1, ]
+    alive <- l_matrix[l_matrix[, 4] == -1, ]
     alive <- matrix(alive, ncol = 4)
     #if cond == 0 they will always look like they're alive, because I don't care
     crown_species_dead <- (length(unique(sign(alive[, 3]))) != 2 ) * cond
     #multiple births check
-    births.reconstructed_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)))
-    births.full_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = FALSE), decreasing = TRUE)))
-    multiple_births.reconstructed_tree <- sum(duplicated(births.reconstructed_tree))
-    multi_births_full_tree <- sum(duplicated(births.full_tree))
+    births_rec_tree <- unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE)))
+    births_full_tree <- unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = FALSE), decreasing = TRUE)))
+    multiple_births_rec_tree <- sum(duplicated(births_rec_tree))
+    multi_births_full_tree <- sum(duplicated(births_full_tree))
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
-    multiple_births_check <- (multiple_births.reconstructed_tree >= minimum_multiple_births)
+    multiple_births_check <- (multiple_births_rec_tree >= minimum_multiple_births)
 
     keep_the_sim <- (!crown_species_dead) & (tips >= tips_interval[1] & tips <= tips_interval[2]) #should i keep this simulation?
   }
-  time_points <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)))
+  time_points <- unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE)))
   brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
-  tes <- DDD::L2phylo(L, dropextinct = TRUE)
-  tas <- DDD::L2phylo(L, dropextinct = FALSE)
+  tes <- DDD::L2phylo(l_matrix, dropextinct = TRUE)
+  tas <- DDD::L2phylo(l_matrix, dropextinct = FALSE)
   list(
     brts = brts,
     tes = tes,
     tas = tas,
     extinct_species = extinct_species,
-    L = L,
+    l_matrix = l_matrix,
     minimum_multiple_births = multi_births_full_tree
   )
 }
@@ -228,11 +228,11 @@ mbd_sim0 <- function(
       n_species <- init_n_lineages
       pool <- c(-1, 2)
       t <- age
-      L <- matrix(0, nrow=1e6, 4)
-      L[, 4] <- -1
-      L[, 3] <- 0
-      L[1, 1:4] <- c(t, 0, -1, -1)
-      L[2, 1:4] <- c(t, -1, 2, -1)
+      l_matrix <- matrix(0, nrow=1e6, 4)
+      l_matrix[, 4] <- -1
+      l_matrix[, 3] <- 0
+      l_matrix[1, 1:4] <- c(t, 0, -1, -1)
+      l_matrix[2, 1:4] <- c(t, -1, 2, -1)
       while (t > 0) {
         n_species <- length(pool)
         deltaT <- stats::rexp(1, rate = (lambda + n_species * mu))
@@ -247,9 +247,9 @@ mbd_sim0 <- function(
             parents <- pool
           }
           new_interval <- (total_count + 1):(total_count + delta_n)
-          L[new_interval, 1] <- t#-(delta_n:1)* 1e-5 add this if you need separate time points
-          L[new_interval, 2] <- parents
-          L[new_interval, 3] <- abs(new_interval)* sign(parents)
+          l_matrix[new_interval, 1] <- t#-(delta_n:1)* 1e-5 add this if you need separate time points
+          l_matrix[new_interval, 2] <- parents
+          l_matrix[new_interval, 3] <- abs(new_interval)* sign(parents)
 
           pool <- c(pool, abs(new_interval)* sign(parents))
           total_count <- total_count+delta_n
@@ -260,33 +260,33 @@ mbd_sim0 <- function(
           } else {
             dead <- pool
           }
-          L[abs(dead), 4] <- t
+          l_matrix[abs(dead), 4] <- t
           pool <- pool[pool!=dead]
         }
       }
     }
-    L=L[(1:total_count), ]
-    extinct_species = sum(L[, 4]!=-1)
+    l_matrix=l_matrix[(1:total_count), ]
+    extinct_species = sum(l_matrix[, 4]!=-1)
     #tips check
-    tips=length(L[, 4][L[, 4]==-1])
+    tips=length(l_matrix[, 4][l_matrix[, 4]==-1])
     #survival of crown check
-    alive=L[L[, 4]==-1, ]
+    alive=l_matrix[l_matrix[, 4]==-1, ]
     alive=matrix(alive, ncol=4)
     conditioning_on_survival = (length(unique(sign(alive[, 3])))!=2 )* cond
     #multiple births check
     #multiple births check
-    births.reconstructed_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)))
-    births.full_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = F), decreasing = T)))
-    multiple_births.reconstructed_tree = sum(duplicated(births.reconstructed_tree))
-    multi_births_full_tree = sum(duplicated(births.full_tree))
+    births_rec_tree=unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = T), decreasing = T)))
+    births_full_tree=unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = F), decreasing = T)))
+    multiple_births_rec_tree = sum(duplicated(births_rec_tree))
+    multi_births_full_tree = sum(duplicated(births_full_tree))
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
-    multiple_births_check = (multiple_births.reconstructed_tree>=minimum_multiple_births)
+    multiple_births_check = (multiple_births_rec_tree>=minimum_multiple_births)
   }
-  time_points=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)))
+  time_points=unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = T), decreasing = T)))
   brts = -sort(abs(as.numeric(time_points)), decreasing = TRUE)
-  tes = DDD::L2phylo(L, dropextinct = T)
-  tas = DDD::L2phylo(L, dropextinct = F)
+  tes = DDD::L2phylo(l_matrix, dropextinct = T)
+  tas = DDD::L2phylo(l_matrix, dropextinct = F)
   #   graphics::plot(tas)
   #   graphics::plot(tes)
   list(
@@ -294,7 +294,7 @@ mbd_sim0 <- function(
     tes = tes,
     tas = tas,
     extinct_species = extinct_species,
-    L = L,
+    l_matrix = l_matrix,
     minimum_multiple_births = minimum_multiple_births
   )
 }

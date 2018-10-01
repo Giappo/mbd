@@ -12,23 +12,23 @@ test_that("Sims are ok", {
   for (j in 1:test_size) {
     test_sim[[j]] <- mbd::mbd_sim0(
       pars = c(lambda[j], mu[j], q[j]), soc = soc, age = 10, cond = 1
-    )$L
+    )$l_matrix
   }
 
   #check if all the species are born before their parents die
   back_to_the_future_test  <-  1
   for (j in 1:test_size) {
-    L <- test_sim[[j]]
-    parents <- abs(L[, 2])
+    l_matrix <- test_sim[[j]]
+    parents <- abs(l_matrix[, 2])
     back_to_the_future_test <- back_to_the_future_test *
-      prod(L[-c(1:soc), 1] >= L[parents[-c(1:soc)], 4])
+      prod(l_matrix[-c(1:soc), 1] >= l_matrix[parents[-c(1:soc)], 4])
   }
 
   #check if the conditioning on survival works
   conditioning_test = 1
   for (j in 1:test_size) {
-    L <- test_sim[[j]]
-    check_signs <- sort(unique(sign(L[, 3])))
+    l_matrix <- test_sim[[j]]
+    check_signs <- sort(unique(sign(l_matrix[, 3])))
     conditioning_test <- conditioning_test * prod(check_signs == c(-1, 1))
   }
 

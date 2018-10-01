@@ -54,12 +54,12 @@ test_that("PureBirth theoretical check", {
       break
     }
 
-    theorethicalLL <- mbd_theoretical_loglik(pars = pars, brts = brts, soc = soc)
-    lsodaLL <- mbd_loglik0(
+    theo_log_lik <- mbd_theoretical_loglik(pars = pars, brts = brts, soc = soc)
+    lsoda_log_lik <- mbd_loglik0(
       pars = pars, brts = brts, soc = soc, cond = cond,
       missnumspec = 0, methode = "lsoda"
     )
-    expoLL <- mbd_loglik0(
+    expo_log_lik <- mbd_loglik0(
       pars = pars, brts = brts, soc = soc, cond = cond,
       missnumspec = 0, methode = "expo"
     )
@@ -71,11 +71,11 @@ test_that("PureBirth theoretical check", {
     ctrl_lsoda=mbd_loglik0(pars=ctrl_pars, brts = ctrl_brts, soc=soc, cond=cond, missnumspec=0, methode="lsoda")
     ctrl_expo=mbd_loglik0(pars=ctrl_pars, brts = ctrl_brts, soc=soc, cond=cond, missnumspec=0, methode="expo")
 
-    theorethicalLL  =  theorethicalLL  - ctrl_theorethical
-    lsodaLL =  lsodaLL - ctrl_lsoda
-    expoLL = expoLL - ctrl_expo
+    theo_log_lik  =  theo_log_lik  - ctrl_theorethical
+    lsoda_log_lik =  lsoda_log_lik - ctrl_lsoda
+    expo_log_lik = expo_log_lik - ctrl_expo
 
-    out=list(theorethicalLL=theorethicalLL, lsodaLL=lsodaLL, expoLL=expoLL)
+    out=list(theo_log_lik=theo_log_lik, lsoda_log_lik=lsoda_log_lik, expo_log_lik=expo_log_lik)
     return(out)
   }
 
@@ -89,9 +89,9 @@ test_that("PureBirth theoretical check", {
   for (j in 1:test_size){
     testpars=c(lambda[j],0, q[j])
     test_p_b = mbd_test_pure_birth_small_trees(testpars, brts, soc=soc, cond=cond)
-    res_theorethical[j] = test_p_b$theorethicalLL
-    res_lsoda[j]        = test_p_b$lsodaLL
-    res_expo[j]         = test_p_b$expoLL
+    res_theorethical[j] = test_p_b$theo_log_lik
+    res_lsoda[j]        = test_p_b$lsoda_log_lik
+    res_expo[j]         = test_p_b$expo_log_lik
   }
   # all.equal(res_theorethical, res_expo)
   # all.equal(res_theorethical, res_lsoda)
