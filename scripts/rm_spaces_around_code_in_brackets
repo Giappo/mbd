@@ -1,5 +1,9 @@
 #!/bin/bash
-# Space before slash
+
+# Space after opening round bracket
+perl -pi -w -e 's/\( /\(/g;' *.R
+
+# Space before closing round bracket
 perl -pi -w -e 's/0 \)/0\)/g;' *.R
 
 # Space before block

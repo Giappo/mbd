@@ -43,7 +43,7 @@ pmb_loglik <- function(
       # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i
       #                      * exp(-nu *(t_k-t_k-1)) / k!
       # (2) lambda contribution: exp(-k * lambda *(t_k-t_k-1))
-      a_term[t] <- sum( (1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)
+      a_term[t] <- sum((1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)
                    exp(-k[t] * lambda * (time_intervals[t]))   # (2)
     }
     #calculating nodes contribution
@@ -99,7 +99,7 @@ pmb_loglik_q_vector <- function(pars, brts, soc = 2){
       ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
       # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i * exp(-nu *(t_k-t_k-1)) / i!
       # (2) lambda contribution: exp(-k * lambda *(t_k-t_k-1))
-      a_term[t] <- sum( (1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)
+      a_term[t] <- sum((1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)
                    exp(-k[t] * lambda * (time_intervals[t]))     # (2)
     }
     #calculating nodes contribution

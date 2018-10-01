@@ -139,12 +139,12 @@ mbd_sim <- function(
     alive <- L[L[, 4] == -1, ]
     alive <- matrix(alive, ncol = 4)
     #if cond == 0 they will always look like they're alive, because I don't care
-    crown_species_dead <- (length( unique(sign(alive[, 3]))) != 2 ) * cond
+    crown_species_dead <- (length(unique(sign(alive[, 3]))) != 2 ) * cond
     #multiple births check
     births.reconstructed_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = TRUE), decreasing = TRUE)))
     births.full_tree <- unlist(unname(sort(DDD::L2brts(L, dropextinct = FALSE), decreasing = TRUE)))
-    multiple_births.reconstructed_tree <- sum( duplicated(births.reconstructed_tree))
-    multi_births_full_tree <- sum( duplicated(births.full_tree))
+    multiple_births.reconstructed_tree <- sum(duplicated(births.reconstructed_tree))
+    multi_births_full_tree <- sum(duplicated(births.full_tree))
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
     multiple_births_check <- (multiple_births.reconstructed_tree >= minimum_multiple_births)
@@ -192,7 +192,7 @@ mbd_sim <- function(
 #' }
 #'
 #' @examples
-#' out = mbd_sim0( pars=c(2.5, 0.1, 0.1), soc=2, age=10, cond=1, tips_interval=c(0,Inf))
+#' out = mbd_sim0(pars=c(2.5, 0.1, 0.1), soc=2, age=10, cond=1, tips_interval=c(0,Inf))
 #' graphics::plot(out$tas)
 #' graphics::plot(out$tes)
 #' out$L
@@ -272,13 +272,13 @@ mbd_sim0 <- function(
     #survival of crown check
     alive=L[L[, 4]==-1, ]
     alive=matrix(alive, ncol=4)
-    conditioning_on_survival = ( length( unique(sign(alive[, 3])))!=2 )* cond
+    conditioning_on_survival = (length(unique(sign(alive[, 3])))!=2 )* cond
     #multiple births check
     #multiple births check
     births.reconstructed_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = T), decreasing = T)))
     births.full_tree=unlist(unname(sort(DDD::L2brts(L, dropextinct = F), decreasing = T)))
-    multiple_births.reconstructed_tree = sum( duplicated(births.reconstructed_tree))
-    multi_births_full_tree = sum( duplicated(births.full_tree))
+    multiple_births.reconstructed_tree = sum(duplicated(births.reconstructed_tree))
+    multi_births_full_tree = sum(duplicated(births.full_tree))
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
     multiple_births_check = (multiple_births.reconstructed_tree>=minimum_multiple_births)
@@ -311,7 +311,7 @@ mbd_sim0 <- function(
 #'
 #' @examples
 #' # @Giappo: does not work
-#' # out <- mbd_sim_dataset( pars=c(0.4, 0.1, 0.2, 0.15), soc=2, age=10, cond=1, edge=Inf )
+#' # out <- mbd_sim_dataset(pars=c(0.4, 0.1, 0.2, 0.15), soc=2, age=10, cond=1, edge=Inf )
 #'
 #' @export
 mbd_sim_dataset <- function(
@@ -389,11 +389,11 @@ mbd_sim_dataset <- function(
   sim_data_name <- paste0(datapath, "/ sim_data")
   general_settings_name <- paste0(datapath, "/ general_settings")
   sim_trees_name <- paste0(datapath, "/ sim_trees")
-  if (file.exists(sim_data_name)){suppressWarnings( file.remove(sim_data_name))}
+  if (file.exists(sim_data_name)){suppressWarnings(file.remove(sim_data_name))}
   save(sim_data, file = sim_data_name)
-  if (file.exists(general_settings_name)){suppressWarnings( file.remove(general_settings_name))}
+  if (file.exists(general_settings_name)){suppressWarnings(file.remove(general_settings_name))}
   save(sim_pars, soc, age, cond, max_sims, tips_interval, max_k, max_b, ext_species, additional_species, tips, minimum_multiple_births, file=general_settings_name)
-  if (file.exists(sim_trees_name)){suppressWarnings( file.remove(sim_trees_name))}
+  if (file.exists(sim_trees_name)){suppressWarnings(file.remove(sim_trees_name))}
   save(sim_tas, sim_tes, file = sim_trees_name)
   return(sim_data)
 }

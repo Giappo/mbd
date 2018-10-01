@@ -28,8 +28,8 @@ correlation_analysis <- function(
   for (idpar in 1:n_pars) {
     medians[idpar] <- stats::median(results[, idpar])
   }
-  medians_string <- paste0( "MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), sep = "''", collapse = ", "), ")")
-  truevalues_string <- paste0( "True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars, 2), sep = "''", collapse = ", "), ")")
+  medians_string <- paste0("MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), sep = "''", collapse = ", "), ")")
+  truevalues_string <- paste0("True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars, 2), sep = "''", collapse = ", "), ")")
   axislimits <- rep(NA, n_pars)
   for (i in 1:n_pars){
     axislimits[i] <- stats::quantile(
@@ -256,10 +256,10 @@ myheatmap <- function(
 myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
 
   if (missing(x_splits)) {
-    x_splits <- round( (length(x)) / 10)
+    x_splits <- round((length(x)) / 10)
   }
   if (missing(y_splits)) {
-    y_splits <- round( (length(y)) / 10)
+    y_splits <- round((length(y)) / 10)
   }
   if (missing(x_name)) {
     x_name <- NULL
@@ -345,15 +345,15 @@ compare_functions <- function(
   Atime1=0;Atime2=0;
   for (i in 1:iterations){
     t0=proc.time()
-    Atest1=( function1(...))
+    Atest1=(function1(...))
     Atime1=Atime1+proc.time()-t0
     t1=proc.time()
-    Atest2=( function2(...))
+    Atest2=(function2(...))
     Atime2=Atime2+proc.time()-t1
   }
   if (output==1){print(list(Atest1,Atest2))}
   print(Atime1);print(Atime2);
-  print( all.equal(Atest1,Atest2))
+  print(all.equal(Atest1,Atest2))
   return(invisible(list(Atest1,Atest2)))
 }
 
@@ -410,7 +410,7 @@ matrix_check <- function(
   negative_list=rep(0, max_k)
   for (k in 1:max_k){
     matrix=as.matrix(Mlist[[k]])
-    if( (max(is.infinite(matrix))>0) |
+    if((max(is.infinite(matrix))>0) |
         (max(is.nan(matrix))>0)          |
         (max(is.na(matrix))>0)           )
     {black_list[k]=black_list[k]+1}
@@ -681,7 +681,7 @@ extract_posterior <- function(
 #   parnames <<- parnames
 #   n_pars <<- length(parnames);
 #   base_path=dirname(dirname(getwd()))
-#   if( !exists("path")  ){ #&& interactive()
+#   if(!exists("path")  ){ #&& interactive()
 #     path<<-choose.dir(paste(base_path, "/Progress /RQ1 - Multiple Births /Results + Reports / 4_parameters /", sep = ''), "Choose a suitable folder")
 #   }
 #   res_files = list.files(pattern=paste('[.]txt', sep = ''), path=path, full.names=TRUE)
@@ -698,8 +698,8 @@ extract_posterior <- function(
 #   print(paste("There are ",Nbad<-dim(bad_results)[1], " bad results.", sep = ''))
 #   print(paste("There are ",N<<-dim(results)[1], " good results.", sep = ''))
 #
-#   load( as.character(paste(path, "/ data / general_settings", sep = '')), envir = e <- globalenv())
-#   load( as.character(paste(path, "/ data / sim_data", sep = '')), envir = e <- globalenv()  )
-#   suppressWarnings( rm(targetTable, all_results, fileData, i))
+#   load(as.character(paste(path, "/ data / general_settings", sep = '')), envir = e <- globalenv())
+#   load(as.character(paste(path, "/ data / sim_data", sep = '')), envir = e <- globalenv()  )
+#   suppressWarnings(rm(targetTable, all_results, fileData, i))
 #   return(results)
 # }
