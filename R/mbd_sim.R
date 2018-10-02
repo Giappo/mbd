@@ -238,7 +238,9 @@ mbd_sim0 <- function(
   if (tips_interval[2] < tips_interval[1]) {
     stop("ERROR! Check again your settings.")
   }
-  lambda <- pars[1]
+  # @Giappo: shouldn't this be nu ('nu <- pars[1]'), 
+  # as the documentation says it is?
+  lambda <- pars[1] 
   mu <- pars[2]
   q <- pars[3]
   init_n_lineages <- soc
