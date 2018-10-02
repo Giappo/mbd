@@ -2,14 +2,14 @@
 #' @inheritParams default_params_doc
 #' @noRd
 mbd_calc_alpha_cond_prob <- function(
-  brts, 
-  pars, 
-  alpha, 
+  brts,
+  pars,
+  alpha,
   tips_interval = c(0, Inf),
-  cond = 1, 
-  soc = 2, 
+  cond = 1,
+  soc = 2,
   methode = "expo",
-  abstol = 1e-16, 
+  abstol = 1e-16,
   reltol = 1e-10,
   minimum_multiple_births = 0
 ) {

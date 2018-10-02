@@ -244,9 +244,9 @@ mbd_sim0 <- function(
   if (tips_interval[2] < tips_interval[1]) {
     stop("ERROR! Check again your settings.")
   }
-  # @Giappo: shouldn't this be nu ('nu <- pars[1]'), 
+  # @Giappo: shouldn't this be nu ('nu <- pars[1]'),
   # as the documentation says it is?
-  lambda <- pars[1] 
+  lambda <- pars[1]
   mu <- pars[2]
   q <- pars[3]
   init_n_lineages <- soc
@@ -386,7 +386,7 @@ mbd_sim_dataset <- function(
 
   init_n_lineages <- soc
   # Would call hyperA function
-  testit::assert(!(edge != Inf && tips_interval == c(0, Inf))) 
+  testit::assert(!(edge != Inf && tips_interval == c(0, Inf)))
 
   #simulate trees
   sim_data <- sim_tes <- sim_tas <- vector("list", max_sims)
