@@ -9,19 +9,14 @@ lambda <- 0.2 # sympatric speciation rate
 mu <- 0.15 # extinction rate;
 nu <- 2.0 # multiple allopatric speciation trigger rate
 q <- 0.1 # single-lineage speciation probability
-sim_pars <- c(lambda, mu, nu, q)
 
 ## ------------------------------------------------------------------------
-soc <- 2 # Use a crown age
 crown_age <- 1
-cond <- 1 # Condition on non-extinction
-
 sim <- mbd_sim(
-  pars = sim_pars, 
-  soc = soc, 
-  age = crown_age, 
-  cond = cond, 
-  tips_interval = c(0, Inf)
+  pars = c(lambda, mu, nu, q), 
+  soc = 2, # Use a crown age 
+  age = crown_age,
+  cond = 1 # Condition on non-extinction
 )
 
 ## ------------------------------------------------------------------------
@@ -45,11 +40,10 @@ knitr::kable(head(sim$brts))
 
 ## ------------------------------------------------------------------------
 mbd::mbd_loglik(
-  pars = sim_pars, 
+  pars = c(lambda, mu, nu, q), 
   brts = sim$brts, 
-  soc = soc, 
-  cond = cond, 
-  missnumspec = 0
+  soc = 2, # Crown age 
+  cond = 1  # Non-extinction 
 )
 
 ## ------------------------------------------------------------------------
@@ -74,34 +68,23 @@ out <- mbd_ml(
   idparsopt = idparsopt, 
   parsfix = parsfix, 
   idparsfix = idparsfix, 
-  soc = soc, 
-  cond = cond
+  soc = 2, # Crown age 
+  cond = 1 # Conditioned on non-exitnction
 )
 knitr::kable(out)
 
 ## ------------------------------------------------------------------------
-init_param_values <- create_mbd_params(
-  lambda = lambda, mu = mu, nu = nu, q = q
-)
-
-## ------------------------------------------------------------------------
-fixed_params <- create_mbd_params_selector(
-  lambda = TRUE, 
-  mu = TRUE,
-  nu = TRUE
-)
-
-## ------------------------------------------------------------------------
-estimated_params <- create_mbd_params_selector(
-  q = TRUE
-)
-
-## ------------------------------------------------------------------------
 out <- mbd_calc_max_lik(
   branching_times = brts,
-  init_param_values = init_param_values,
-  fixed_params = fixed_params,
-  estimated_params = estimated_params,
+  init_param_values = create_mbd_params(
+    lambda = lambda, mu = mu, nu = nu, q = q
+  ),
+  fixed_params = create_mbd_params_selector(
+    lambda = TRUE, mu = TRUE, nu = TRUE
+  ),
+  estimated_params = create_mbd_params_selector(
+    q = TRUE
+  ),
   init_n_species = 2,
   conditioned_on = "non_extinction"
 )
