@@ -18,7 +18,7 @@ correlation_analysis <- function(
   mother_folder
 ) {
   n_pars <- length(sim_pars);#pars_interval=list(c(0, quantile(results[, 1],.95)), c(0, quantile(results[, 2],.95)), c(0, quantile(results[, 3],.95)))
-  if (missing(idparsopt)) { 
+  if (missing(idparsopt)) {
     estimated_pars <- 1:n_pars
   } else {
     estimated_pars <- idparsopt
@@ -390,7 +390,7 @@ called_functions <- function(
               # Split up according to anything that can't be in a function name.
               # split = not alphanumeric, not '_', and not '.'
               words <- c(unlist(strsplit(x, split = "[^[:alnum:]_.]")))
-      
+
               last.word <- utils::tail(words, 1)
               last.word.is.function <- tryCatch(
                 is.function(get(last.word)),
@@ -432,10 +432,10 @@ matrix_check <- function(
   negative_list <- rep(0, max_k)
   for (k in 1:max_k) {
     matrix <- as.matrix(Mlist[[k]])
-    if ((max(is.infinite(matrix)) > 0) | 
+    if ((max(is.infinite(matrix)) > 0) |
       (max(is.nan(matrix)) > 0) |
       (max(is.na(matrix)) > 0)
-    ) { 
+    ) {
       black_list[k] <- black_list[k] + 1
     }
     if (max(diag(matrix)) > 0) {
@@ -462,7 +462,7 @@ matrix_check <- function(
     entries_sign <- rep(1, max_k)
     for (k in 1:max_k) {
       lower_triangle <- (as.matrix(Mlist[[k]]))[lower.tri(Mlist[[k]])]
-      if (min(lower_triangle) < 0) { 
+      if (min(lower_triangle) < 0) {
         entries_sign[k] <- -1
         negative_list[k] <- -1
       }
@@ -470,7 +470,7 @@ matrix_check <- function(
     if (min(entries_sign) < 0) {
       print(
         paste(
-          "There is a negative entry on k=", 
+          "There is a negative entry on k=",
           which((entries_sign) < 0)
         )
       )
@@ -583,7 +583,7 @@ summarize_beast_posterior <- function(
     n_trees <- length(tree.positions)
     if (is.null(subsamp)) subsamp <- n_trees
     samp <- sample(
-      n_trees, round(subsamp / length(input_trees_path)), 
+      n_trees, round(subsamp / length(input_trees_path)),
       replace = FALSE
     )
 

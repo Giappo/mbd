@@ -100,10 +100,10 @@ mbd_sim <- function(
         if (total_rate > 0) {
           delta_t <- stats::rexp(1, rate = total_rate)
           outcome <- sample(
-            c(-1, 1, 2), size = 1, 
+            c(-1, 1, 2), size = 1,
             prob = c(n_species * mu, n_species * lambda, nu)
           )
-          delta_n <- -1 * (outcome == -1) + 1 * (outcome == 1) + 
+          delta_n <- -1 * (outcome == -1) + 1 * (outcome == 1) +
             (outcome == 2) * stats::rbinom(n = 1, size = n_species, prob = q)
           t <- t - delta_t
 
@@ -115,7 +115,7 @@ mbd_sim <- function(
             }
             new_interval <- (total_count + 1):(total_count + delta_n)
             #-(delta_n:1)* 1e-5 add this if you need separate time points
-            l_matrix[new_interval, 1] <- t 
+            l_matrix[new_interval, 1] <- t
             l_matrix[new_interval, 2] <- parents
             l_matrix[new_interval, 3] <- abs(new_interval) * sign(parents)
 
@@ -282,13 +282,13 @@ mbd_sim0 <- function(
     #multiple births check
     births_rec_tree <- unlist(
       unname(
-        sort(DDD::L2brts(l_matrix, dropextinct = TRUE), 
+        sort(DDD::L2brts(l_matrix, dropextinct = TRUE),
         decreasing = TRUE)
       )
     )
     # births_full_tree <- unlist(
     #   unname(
-    #     sort(DDD::L2brts(l_matrix, dropextinct = FALSE), 
+    #     sort(DDD::L2brts(l_matrix, dropextinct = FALSE),
     #     decreasing = TRUE)
     #   )
     # )
@@ -296,7 +296,7 @@ mbd_sim0 <- function(
     #  multi_births_full_tree <- sum(duplicated(births_full_tree))
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
-    multiple_births_check <- (multiple_births_rec_tree >= 
+    multiple_births_check <- (multiple_births_rec_tree >=
       minimum_multiple_births
     )
   }
@@ -414,11 +414,11 @@ mbd_sim_dataset <- function(
     suppressWarnings(file.remove(general_settings_name))
   }
   save(
-    sim_pars, soc, age, cond, max_sims, tips_interval, max_k, 
-    max_b, ext_species, additional_species, tips, 
+    sim_pars, soc, age, cond, max_sims, tips_interval, max_k,
+    max_b, ext_species, additional_species, tips,
     minimum_multiple_births, file = general_settings_name
   )
-  if (file.exists(sim_trees_name)) { 
+  if (file.exists(sim_trees_name)) {
     suppressWarnings(file.remove(sim_trees_name))
   }
   save(sim_tas, sim_tes, file = sim_trees_name)
