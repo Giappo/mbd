@@ -1,4 +1,4 @@
-context("ExpovsLsoda")
+context("mbd_loglik")
 
 test_that("likelihoods using expo and lsoda are identical", {
   soc <- 2
