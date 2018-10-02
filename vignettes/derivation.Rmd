@@ -1,0 +1,26 @@
+---
+title: "mbd derivation"
+author: "Richel J.C. Bilderbeek"
+header-includes:
+   - \usepackage{bbm}
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mbd derivation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Likelihood:
+
+$$
+L = L_{branches} \cdot L_{nodes}
+$$
+
