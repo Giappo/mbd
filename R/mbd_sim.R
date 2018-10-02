@@ -98,10 +98,14 @@ mbd_sim <- function(
         n_species <- length(pool)
         total_rate <- n_species * (lambda + mu) + nu
         if (total_rate > 0) {
-          deltaT <- stats::rexp(1, rate = total_rate)
-          outcome <- sample(c(-1, 1, 2), size = 1, prob = c(n_species * mu, n_species * lambda, nu))
-          delta_n <- -1 * (outcome == -1) + 1 * (outcome == 1) + (outcome == 2) * stats::rbinom(n = 1, size = n_species, prob = q)
-          t <- t - deltaT
+          delta_t <- stats::rexp(1, rate = total_rate)
+          outcome <- sample(
+            c(-1, 1, 2), size = 1, 
+            prob = c(n_species * mu, n_species * lambda, nu)
+          )
+          delta_n <- -1 * (outcome == -1) + 1 * (outcome == 1) + 
+            (outcome == 2) * stats::rbinom(n = 1, size = n_species, prob = q)
+          t <- t - delta_t
 
           if (delta_n > 0 & t > 0) {
             if (n_species > 1) {
@@ -110,7 +114,8 @@ mbd_sim <- function(
               parents <- pool
             }
             new_interval <- (total_count + 1):(total_count + delta_n)
-            l_matrix[new_interval, 1] <- t#-(delta_n:1)* 1e-5 add this if you need separate time points
+            #-(delta_n:1)* 1e-5 add this if you need separate time points
+            l_matrix[new_interval, 1] <- t 
             l_matrix[new_interval, 2] <- parents
             l_matrix[new_interval, 3] <- abs(new_interval) * sign(parents)
 
@@ -224,22 +229,22 @@ mbd_sim0 <- function(
     total_count <- init_n_lineages
     pool <- 1:init_n_lineages
     while (total_count == init_n_lineages | length(pool) < init_n_lineages) {
-      total_count=init_n_lineages
+      total_count <- init_n_lineages
       n_species <- init_n_lineages
       pool <- c(-1, 2)
       t <- age
-      l_matrix <- matrix(0, nrow=1e6, 4)
+      l_matrix <- matrix(0, nrow = 1e6, 4)
       l_matrix[, 4] <- -1
       l_matrix[, 3] <- 0
       l_matrix[1, 1:4] <- c(t, 0, -1, -1)
       l_matrix[2, 1:4] <- c(t, -1, 2, -1)
       while (t > 0) {
         n_species <- length(pool)
-        deltaT <- stats::rexp(1, rate = (lambda + n_species * mu))
+        delta_t <- stats::rexp(1, rate = (lambda + n_species * mu))
         outcome <- sample(c(-1, 1), size = 1, prob = c(n_species * mu, lambda))
         delta_n <- stats::rbinom(n = 1, size = n_species, prob = q) *
           (outcome == 1) - 1 * (outcome == -1)
-        t <- t - deltaT
+        t <- t - delta_t
         if (delta_n > 0 & t > 0) {
           if (n_species > 1) {
             parents <- sample(pool, replace = FALSE, size = delta_n)
@@ -249,41 +254,53 @@ mbd_sim0 <- function(
           new_interval <- (total_count + 1):(total_count + delta_n)
           l_matrix[new_interval, 1] <- t#-(delta_n:1)* 1e-5 add this if you need separate time points
           l_matrix[new_interval, 2] <- parents
-          l_matrix[new_interval, 3] <- abs(new_interval)* sign(parents)
+          l_matrix[new_interval, 3] <- abs(new_interval) * sign(parents)
 
-          pool <- c(pool, abs(new_interval)* sign(parents))
-          total_count <- total_count+delta_n
+          pool <- c(pool, abs(new_interval) * sign(parents))
+          total_count <- total_count + delta_n
         }
         if (delta_n < 0 & t > 0) {
           if (n_species > 1) {
-            dead <- sample(pool, replace = F, size=1)
+            dead <- sample(pool, replace = F, size = 1)
           } else {
             dead <- pool
           }
           l_matrix[abs(dead), 4] <- t
-          pool <- pool[pool!=dead]
+          pool <- pool[pool != dead]
         }
       }
     }
-    l_matrix=l_matrix[(1:total_count), ]
-    extinct_species = sum(l_matrix[, 4]!=-1)
+    l_matrix <- l_matrix[(1:total_count), ]
+    extinct_species <- sum(l_matrix[, 4] != -1)
     #tips check
-    tips=length(l_matrix[, 4][l_matrix[, 4]==-1])
+    tips <- length(l_matrix[, 4][l_matrix[, 4] == -1])
     #survival of crown check
-    alive=l_matrix[l_matrix[, 4]==-1, ]
-    alive=matrix(alive, ncol=4)
-    conditioning_on_survival = (length(unique(sign(alive[, 3])))!=2 )* cond
+    alive <- l_matrix[l_matrix[, 4] == -1, ]
+    alive <- matrix(alive, ncol = 4)
+    conditioning_on_survival <- (length(unique(sign(alive[, 3]))) != 2) * cond
     #multiple births check
     #multiple births check
-    births_rec_tree=unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = T), decreasing = T)))
-    births_full_tree=unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = F), decreasing = T)))
-    multiple_births_rec_tree = sum(duplicated(births_rec_tree))
-    multi_births_full_tree = sum(duplicated(births_full_tree))
+    births_rec_tree <- unlist(
+      unname(
+        sort(DDD::L2brts(l_matrix, dropextinct = TRUE), 
+        decreasing = TRUE)
+      )
+    )
+    # births_full_tree <- unlist(
+    #   unname(
+    #     sort(DDD::L2brts(l_matrix, dropextinct = FALSE), 
+    #     decreasing = TRUE)
+    #   )
+    # )
+    multiple_births_rec_tree <- sum(duplicated(births_rec_tree))
+    #  multi_births_full_tree <- sum(duplicated(births_full_tree))
     #should i consider the full tree or the reconstructed one???
     # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
-    multiple_births_check = (multiple_births_rec_tree>=minimum_multiple_births)
+    multiple_births_check <- (multiple_births_rec_tree >= 
+      minimum_multiple_births
+    )
   }
-  time_points=unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = T), decreasing = T)))
+  time_points <- unlist(unname(sort(DDD::L2brts(l_matrix, dropextinct = T), decreasing = T)))
   brts = -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   tes = DDD::L2phylo(l_matrix, dropextinct = T)
   tas = DDD::L2phylo(l_matrix, dropextinct = F)
@@ -389,11 +406,21 @@ mbd_sim_dataset <- function(
   sim_data_name <- paste0(datapath, "/ sim_data")
   general_settings_name <- paste0(datapath, "/ general_settings")
   sim_trees_name <- paste0(datapath, "/ sim_trees")
-  if (file.exists(sim_data_name)){suppressWarnings(file.remove(sim_data_name))}
+  if (file.exists(sim_data_name)) {
+    suppressWarnings(file.remove(sim_data_name))
+  }
   save(sim_data, file = sim_data_name)
-  if (file.exists(general_settings_name)){suppressWarnings(file.remove(general_settings_name))}
-  save(sim_pars, soc, age, cond, max_sims, tips_interval, max_k, max_b, ext_species, additional_species, tips, minimum_multiple_births, file=general_settings_name)
-  if (file.exists(sim_trees_name)){suppressWarnings(file.remove(sim_trees_name))}
+  if (file.exists(general_settings_name)) {
+    suppressWarnings(file.remove(general_settings_name))
+  }
+  save(
+    sim_pars, soc, age, cond, max_sims, tips_interval, max_k, 
+    max_b, ext_species, additional_species, tips, 
+    minimum_multiple_births, file = general_settings_name
+  )
+  if (file.exists(sim_trees_name)) { 
+    suppressWarnings(file.remove(sim_trees_name))
+  }
   save(sim_tas, sim_tes, file = sim_trees_name)
   return(sim_data)
 }

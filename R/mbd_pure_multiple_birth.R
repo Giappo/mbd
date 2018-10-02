@@ -43,7 +43,7 @@ pmb_loglik <- function(
       # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i
       #                      * exp(-nu *(t_k-t_k-1)) / k!
       # (2) lambda contribution: exp(-k * lambda *(t_k-t_k-1))
-      a_term[t] <- sum((1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)
+      a_term[t] <- sum((1 - q) ^ (ii * k[t]) * poisson_term) * # (1)
                    exp(-k[t] * lambda * (time_intervals[t]))   # (2)
     }
     #calculating nodes contribution
@@ -87,7 +87,7 @@ pmb_loglik_q_vector <- function(pars, brts, soc = 2){
     time_intervals <- data$time_intervals
     births <- data$births
     k <- init_n_lineages + cumsum(c(0, births))
-    a_term <- rep(1, length(time_intervals)    ) #branches
+    a_term <- rep(1, length(time_intervals)) #branches
     b_term <- rep(1, length(time_intervals) - 1) #nodes
     #calculating branches contribution
     i <- 0:1e6
@@ -97,18 +97,18 @@ pmb_loglik_q_vector <- function(pars, brts, soc = 2){
           i, nu * time_intervals[t], log = FALSE
         )[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
       ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
-      # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i 
+      # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i
       #     * exp(-nu *(t_k-t_k-1)) / i!
       # (2) lambda contribution: exp(-k * lambda *(t_k-t_k-1))
-      a_term[t] <- sum((1 - q) ^ (ii * k[t]) * poisson_term ) * # (1)
-                   exp(-k[t] * lambda * (time_intervals[t]))     # (2)
+      a_term[t] <- sum((1 - q) ^ (ii * k[t]) * poisson_term) * # (1)
+                   exp(-k[t] * lambda * (time_intervals[t]))   # (2)
     }
     #calculating nodes contribution
     # (1) nu contribution: nu *(k, b) * q ^ b * (1 - q) ^ (k - b)
     # (2) lambda contribution: lambda * k (only if b==1)
     b_term <- (
       nu * choose(k[-length(k)], births) * q ^ births *  # (1)
-        (1 - q)^(k[-length(k)] - births)                 # (1)
+        (1 - q) ^ (k[-length(k)] - births)                 # (1)
     ) + lambda * k[-length(k)] * (births == 1)           # (2)
 
     th_loglik <- sum(log(a_term)) + sum(log(b_term))
@@ -160,7 +160,7 @@ pmb_loglik_choosepar <- function(
   }
   if (is.nan(loglik) || is.na(loglik)) {
     cat(
-      "There are parameter values used which cause numerical problems:", 
+      "There are parameter values used which cause numerical problems:",
       trpars1, "\n"
     )
     loglik <- -Inf
@@ -186,12 +186,12 @@ pmb_ml <- function(
   missnumspec = 0
 ) {
   # - tol = tolerance in optimization
-  # - changeloglikifnoconv = if T the loglik will be set 
+  # - changeloglikifnoconv = if T the loglik will be set
   #   to -Inf if ML does not converge
   # - maxiter = the maximum number of iterations in the optimization
-  # - changeloglikifnoconv = if T the loglik will be set 
+  # - changeloglikifnoconv = if T the loglik will be set
   #   to -Inf if ML does not converge
-  # - optimmethod = "simplex" (current default) or 'subplex' 
+  # - optimmethod = "simplex" (current default) or 'subplex'
   #   (default of previous versions)
   idparsfix <- 2
   parsfix   <- 0
@@ -199,7 +199,7 @@ pmb_ml <- function(
   namepars <- mbd::get_mbd_param_names()
   n_pars <- length(namepars)
   #those are the parameters that you get if something goes sideways
-  failpars <- rep(-1, n_pars); names(failpars) <- namepars 
+  failpars <- rep(-1, n_pars); names(failpars) <- namepars
   if (is.numeric(brts) == FALSE) {
     cat("The branching times should be numeric.\n")
     out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
@@ -243,8 +243,8 @@ pmb_ml <- function(
         pars_transform = pars_transform
       )
       cat(
-        "The loglikelihood for the initial parameter values is", 
-        initloglik, 
+        "The loglikelihood for the initial parameter values is",
+        initloglik,
         "\n"
       )
       utils::flush.console()
@@ -268,7 +268,7 @@ pmb_ml <- function(
         if (out$conv != 0) {
           cat(
             paste0(
-              "Optimization has not converged. ", 
+              "Optimization has not converged. ",
               "Try again with different initial values.\n"
             )
           )

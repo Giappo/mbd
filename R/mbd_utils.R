@@ -18,7 +18,11 @@ correlation_analysis <- function(
   mother_folder
 ) {
   n_pars <- length(sim_pars);#pars_interval=list(c(0, quantile(results[, 1],.95)), c(0, quantile(results[, 2],.95)), c(0, quantile(results[, 3],.95)))
-  if (missing(idparsopt)){estimated_pars=1:n_pars}else{estimated_pars=idparsopt}
+  if (missing(idparsopt)) { 
+    estimated_pars <- 1:n_pars
+  } else {
+    estimated_pars <- idparsopt
+  }
   par_names <- colnames(results)[1:n_pars]
 
   truevalues_color <- "red"; points_color = "azure4"; medians_color = "blue3"#"chartreuse3";
@@ -31,10 +35,10 @@ correlation_analysis <- function(
   medians_string <- paste0("MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), sep = "''", collapse = ", "), ")")
   truevalues_string <- paste0("True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars, 2), sep = "''", collapse = ", "), ")")
   axislimits <- rep(NA, n_pars)
-  for (i in 1:n_pars){
+  for (i in 1:n_pars) {
     axislimits[i] <- stats::quantile(
       results[, i],
-      probs <- 1 - percentage_hidden_outliers
+      probs = 1 - percentage_hidden_outliers # BUG? Used to be with arrow operator
     )
   }
 
@@ -65,7 +69,10 @@ correlation_analysis <- function(
       graphics::points(x = medians[j], y = medians[i], col = medians_color, pch = 10, cex = 1.5)
     }
   }}
-  graphics::title(main = (titolo.pdf<-(paste("\n\n", titolo, "\n", medians_string, "\n", truevalues_string, sep = ''))), outer=T)
+  titolo_pdf <- paste0(
+    "\n\n", titolo, "\n", medians_string, "\n", truevalues_string
+  )
+  graphics::title(main = titolo_pdf, outer = TRUE)
   grDevices::dev.off()
 
   if (openit == 1) {
@@ -108,7 +115,7 @@ correlation_analysis <- function(
         )
       }
     }}
-    graphics::title(main = titolo.pdf, outer = TRUE)
+    graphics::title(main = titolo_pdf, outer = TRUE)
     grDevices::dev.off()
   }
 }
@@ -131,7 +138,7 @@ percentiles_function <- function(
   if (printit == 1) {
     print(percentiles); print(sim_pars)
   }
-  out <- percentiles
+  percentiles
 }
 
 #' Converts a matrix in a dataframe that can be used with ggplot
@@ -166,8 +173,7 @@ brts2time_intervals_and_births <- function(
   unique_branching_times <- as.numeric(names(table(branching_times)))
   time_intervals <- c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times, 1))))
   births <- births[-1]
-  out <- list(time_intervals=time_intervals, births=births)
-  return(out)
+  list(time_intervals = time_intervals, births = births)
 }
 
 #' Provides estimated number of species integrating the P-equation
@@ -243,11 +249,12 @@ myheatmap <- function(
   if (is.matrix(matrix) == FALSE) {
     matrix <- as.matrix(matrix)
   }
-  matrix_t=t(matrix[nrow(matrix):1, 1:ncol(matrix)])
-  if (logs ==1 ) {
-  # image(log(matrix_t))
-    graphics::image(log(matrix_t), col=rev(colormap),...)
-  }else{graphics::image(matrix_t)}
+  matrix_t <- t(matrix[nrow(matrix):1, 1:ncol(matrix)])
+  if (logs == 1 ) {
+    graphics::image(log(matrix_t), col = rev(colormap), ...)
+  } else {
+    graphics::image(matrix_t)
+  }
 }
 
 # @Giappo: add doc
@@ -342,17 +349,21 @@ compare_functions <- function(
   output = 1,
   ...
 ){
-  Atime1=0;Atime2=0;
-  for (i in 1:iterations){
-    t0=proc.time()
-    Atest1=(function1(...))
-    Atime1=Atime1+proc.time()-t0
-    t1=proc.time()
-    Atest2=(function2(...))
-    Atime2=Atime2+proc.time()-t1
+  a_time1 <- 0
+  a_time2 <- 0
+  for (i in 1:iterations) {
+    t0 <- proc.time()
+    Atest1 <- (function1(...))
+    a_time1 <- a_time1 + proc.time() - t0
+    t1 <- proc.time()
+    Atest2 <- (function2(...))
+    a_time2 <- a_time2 + proc.time() - t1
   }
-  if (output==1){print(list(Atest1,Atest2))}
-  print(Atime1);print(Atime2);
+  if (output == 1) {
+    print(list(Atest1, Atest2))
+  }
+  print(a_time1);
+  print(a_time2);
   print(all.equal(Atest1,Atest2))
   return(invisible(list(Atest1,Atest2)))
 }
@@ -369,24 +380,35 @@ called_functions <- function(
     function.code <- deparse(get(function_name))
 
     # break code up into sections preceding left brackets:
-    left.brackets <- c(unlist(strsplit(function.code, split="[[:space:]]*\\(")))
+    left.brackets <- c(unlist(strsplit(function.code, split = "[[:space:]]*\\(")))
 
-    called.functions <- unique(c(unlist(sapply(left.brackets, function(x) {
-        # Split up according to anything that can't be in a function name.
-        # split = not alphanumeric, not '_', and not '.'
-        words <- c(unlist(strsplit(x, split="[^[:alnum:]_.]")))
+    called.functions <- unique(
+      c(
+        unlist(
+          sapply(
+            left.brackets, function(x) {
+              # Split up according to anything that can't be in a function name.
+              # split = not alphanumeric, not '_', and not '.'
+              words <- c(unlist(strsplit(x, split = "[^[:alnum:]_.]")))
+      
+              last.word <- utils::tail(words, 1)
+              last.word.is.function <- tryCatch(
+                is.function(get(last.word)),
+                error = function(e) return(FALSE)
+              )
+              return(last.word[last.word.is.function])
+            }
+          )
+        )
+      )
+    )
 
-        last.word <- utils::tail(words, 1)
-        last.word.is.function <- tryCatch(is.function(get(last.word)),
-                                      error=function(e) return(FALSE))
-        return(last.word[last.word.is.function])
-    }))))
+    if (recursive) {
 
-    if (recursive){
-
+        testit::assert(!"Obsolete check due to commenting out below")
         # checked_functions: We need to keep track of which functions
         # we've checked to avoid infinite loops.
-        functs.to.check <- called.functions[!(called.functions %in% checked_functions)]
+        # functs.to.check <- called.functions[!(called.functions %in% checked_functions)]
 
         testit::assert(!"Should never call listFunctions, whatever it is")
         # called.functions <- unique(c(called.functions,
@@ -405,31 +427,56 @@ matrix_check <- function(
   Mlist,
   sign_check = 0
 ) {
-  max_k=length(Mlist)
-  black_list=as.complex(rep(0, max_k))
-  negative_list=rep(0, max_k)
-  for (k in 1:max_k){
-    matrix=as.matrix(Mlist[[k]])
-    if((max(is.infinite(matrix))>0) |
-        (max(is.nan(matrix))>0)          |
-        (max(is.na(matrix))>0)           )
-    {black_list[k]=black_list[k]+1}
-    if (max(diag(matrix))>0)
-    {black_list[k]=black_list[k]+2i}
-  }
-  if (sum(Re(black_list))!=0)
-  {print(paste("We have non-numeric values for k=",(1:length(black_list))[(Re(black_list)>0)]))}
-  if (sum(Im(black_list))!=0)
-  {print(paste("We have positive diagonal values for k=",(1:length(black_list))[(Im(black_list)>0)]))}
-  if (sign_check==1){
-    entries_sign=rep(1, max_k)
-    for (k in 1:max_k){
-      lower_triangle=(as.matrix(Mlist[[k]]))[lower.tri(Mlist[[k]])]
-      if (min(lower_triangle)<0){entries_sign[k]=-1;negative_list[k]=-1}
+  max_k <- length(Mlist)
+  black_list <- as.complex(rep(0, max_k))
+  negative_list <- rep(0, max_k)
+  for (k in 1:max_k) {
+    matrix <- as.matrix(Mlist[[k]])
+    if ((max(is.infinite(matrix)) > 0) | 
+      (max(is.nan(matrix)) > 0) |
+      (max(is.na(matrix)) > 0)
+    ) { 
+      black_list[k] <- black_list[k] + 1
     }
-    if (min(entries_sign)<0){print(paste("There is a negative entry on k=", which((entries_sign)<0)))}
+    if (max(diag(matrix)) > 0) {
+      black_list[k] <- black_list[k] + 2i
+    }
   }
-  return(list(black_list=black_list, negative_list=negative_list))
+  if (sum(Re(black_list)) != 0) {
+    print(
+      paste(
+        "We have non-numeric values for k=",
+        (1:length(black_list))[(Re(black_list) > 0)]
+      )
+    )
+  }
+  if (sum(Im(black_list)) != 0) {
+    print(
+      paste(
+        "We have positive diagonal values for k=",
+        (1:length(black_list))[(Im(black_list) > 0)]
+      )
+    )
+  }
+  if (sign_check == 1) {
+    entries_sign <- rep(1, max_k)
+    for (k in 1:max_k) {
+      lower_triangle <- (as.matrix(Mlist[[k]]))[lower.tri(Mlist[[k]])]
+      if (min(lower_triangle) < 0) { 
+        entries_sign[k] <- -1
+        negative_list[k] <- -1
+      }
+    }
+    if (min(entries_sign) < 0) {
+      print(
+        paste(
+          "There is a negative entry on k=", 
+          which((entries_sign) < 0)
+        )
+      )
+    }
+  }
+  list(black_list = black_list, negative_list = negative_list)
 }
 
 #' Does something
@@ -439,11 +486,16 @@ append_multiple <- function(
   values,
   after
 ) {
-  if(!is.list(values) & length(values)!=length(after)) stop("In append_multiple: values must be a list unless it has the same length as after")
+  if (!is.list(values) & length(values) != length(after)) {
+    stop(
+      "In append_multiple: values must be a list ",
+      "unless it has the same length as after"
+    )
+  }
 
   x2 <- x
-  for(i in 1:length(values)) {
-    x2 <- append(x2, values[[i]], after[i]+length(x2)-length(x))
+  for (i in 1:length(values)) {
+    x2 <- append(x2, values[[i]], after[i] + length(x2) - length(x))
   }
   x2
 }
@@ -476,14 +528,14 @@ branchLengths <- function(tr)
   tip.numbers <- 1:length(tr$tip)
   b_l_2 <- tr$edge.length[match(tip.numbers, tr$edge[, 2])]
 
-  if (type=='NAMED') {
+  if (type == "NAMED") {
     res <- data.frame(
       Number = c(sort(node.numbers), tip.numbers),
       Name = c(tr$node, tr$tip),
       Lengths = c(b_l_1, b_l_2)
     )
   }
-  if (type=='UNNAMED') {
+  if (type == "UNNAMED") {
     res <- data.frame(
       Number = c(sort(node.numbers), tip.numbers),
       Name = c(rep(NA, tr$Nnode), tr$tip),
@@ -504,138 +556,146 @@ summarize_beast_posterior <- function(
 
 
   #If an XML with a starting tree is provided, get the node names from that tree
-  node_names_xml=NULL
-  if(!is.null(input_xml)){
-    subst.xml=scan(input_xml, what="raw")
-    where.starting.tree=which(subst.xml=="id=\"startingTree\">")+1
-    start.tr <- ape::read.tree(text=subst.xml[where.starting.tree])
-    node_names_xml=start.tr$node.label
+  node_names_xml <- NULL
+  if (!is.null(input_xml)) {
+    subst.xml <- scan(input_xml, what = "raw")
+    where.starting.tree <- which(subst.xml == "id=\"startingTree\">") + 1
+    start.tr <- ape::read.tree(text = subst.xml[where.starting.tree])
+    node_names_xml <- start.tr$node.label
   }
 
-  branch_info_tot=tree_tot=list()
-  subsamps=c()
+  branch_info_tot <- tree_tot <- list()
+  subsamps <- c()
 
-  for(t in 1:length(input_trees_path)){
+  for (t in 1:length(input_trees_path)) {
 
     #Read the trees
-    subst.tr=scan(input_trees_path[t], what="raw")
+    subst.tr <- scan(input_trees_path[t], what = "raw")
 
     #Find the equal signs in tree file
-    equals=(1:length(subst.tr))[subst.tr=="="]
+    equals <- (1:length(subst.tr))[subst.tr == "="]
 
     #Use position of equal signs to find position of trees and their names
-    tree.positions=equals+2
-    tree.names.pos=equals-2
+    tree.positions <- equals + 2
+    # tree.names.pos <- equals - 2
 
     #How many trees?
-    n_trees=length(tree.positions)
-    if(is.null(subsamp)) subsamp=n_trees
-    samp=sample(n_trees, round(subsamp / length(input_trees_path)), replace=FALSE)
+    n_trees <- length(tree.positions)
+    if (is.null(subsamp)) subsamp <- n_trees
+    samp <- sample(
+      n_trees, round(subsamp / length(input_trees_path)), 
+      replace = FALSE
+    )
 
     #Get correspondance between numbers and taxa
     #How many taxa?
-    split1=strsplit(subst.tr[5], "=")[[1]][2]
-    ntax=as.numeric(strsplit(split1, ";")[[1]])
+    split1 <- strsplit(subst.tr[5], "=")[[1]][2]
+    ntax <- as.numeric(strsplit(split1, ";")[[1]])
 
     #Find the "Translate"
-    Translate.pos=(1:length(subst.tr))[subst.tr=="Translate"]
-    comma.pos=which(subst.tr==", ")
-    if(length(comma.pos)==0){
-      numbers.pos=seq(Translate.pos+1,Translate.pos+2 * ntax, 2)
-    } else{
-      numbers.pos=seq(Translate.pos+1,Translate.pos+3 * ntax, 3)
+    Translate.pos <- (1:length(subst.tr))[subst.tr == "Translate"]
+    comma.pos <- which(subst.tr == ", ")
+    if (length(comma.pos) == 0) {
+      numbers.pos <- seq(Translate.pos + 1, Translate.pos + 2 * ntax, 2)
+    } else {
+      numbers.pos <- seq(Translate.pos + 1, Translate.pos + 3 * ntax, 3)
     }
-    taxa.pos=numbers.pos+1
-    numbers=subst.tr[numbers.pos]
-    taxa=array(, length(taxa.pos))
-    for(i in 1:length(taxa.pos)) taxa[i]=strsplit(subst.tr[taxa.pos[i]], ", ")[[1]][1]
+    taxa.pos <- numbers.pos + 1
+    numbers <- subst.tr[numbers.pos]
+    taxa <- array(data = NA, length(taxa.pos)) # BUG?
+    for (i in 1:length(taxa.pos)) {
+      taxa[i] <- strsplit(subst.tr[taxa.pos[i]], ", ")[[1]][1]
+    }
 
-
-    for(i in 1:length(samp)){
+    for (i in 1:length(samp)) {
 
       #Isolate the trees and tree names
-      tree1=subst.tr[tree.positions[samp[i]]]
+      tree1 <- subst.tr[tree.positions[samp[i]]]
 
       #Break the character string
-      tree_sub=substring(tree1, 0:100000, 0:100000)
+      tree_sub <- substring(tree1, 0:100000, 0:100000)
 
       #Trim the end
-      tree_sub2=tree_sub[tree_sub!=""]
+      tree_sub2 <- tree_sub[tree_sub != ""]
 
-      colons=which(tree_sub2==":")
-      parenthesis_colons=(colons-1)[tree_sub2[colons-1]==")"]
-      if(is.null(node_names_xml)){
-        node_names=paste("Node", seq_along(c(NA, parenthesis_colons)), sep="")
+      colons <- which(tree_sub2 == ":")
+      parenthesis_colons <- (colons - 1)[tree_sub2[colons - 1] == ")"]
+      if (is.null(node_names_xml)) {
+        node_names <- paste0("Node", seq_along(c(NA, parenthesis_colons)))
       } else {
         node_names <- node_names_xml
       }
-      tree_sub2=append_multiple(tree_sub2, node_names, c(parenthesis_colons, length(tree_sub2)-1))
+      tree_sub2 <- append_multiple(
+        tree_sub2, node_names, c(parenthesis_colons, length(tree_sub2) - 1)
+      )
 
       #Find positions of opening and closing brackets
-      croch1.pos=(1:length(tree_sub2))[tree_sub2=="["]
-      croch2.pos=(1:length(tree_sub2))[tree_sub2=="]"]
+      croch1.pos <- (1:length(tree_sub2))[tree_sub2 == "["]
+      croch2.pos <- (1:length(tree_sub2))[tree_sub2 == "]"]
 
       #Trim the brackets and the information in-between
 
-      remove=c()
-      for (k in 1:length(croch1.pos))
-      {
-        commas=which(tree_sub2[croch1.pos[k]:croch2.pos[k]]==", ")
-        commas=c(croch1.pos[k], commas+croch1.pos[k]-1, croch2.pos[k])
-        node_name_k=tree_sub2[croch1.pos[k]-2]
-        name_arg=value_arg=array(, length(commas)-1)
-        for(j in 1:(length(commas)-1)){
+      remove <- c()
+      for (k in 1:length(croch1.pos)) {
+        commas <- which(tree_sub2[croch1.pos[k]:croch2.pos[k]] == ", ")
+        commas <- c(croch1.pos[k], commas + croch1.pos[k] - 1, croch2.pos[k])
+        node_name_k <- tree_sub2[croch1.pos[k] - 2]
+        name_arg <- value_arg <- array(data = NA, length(commas) - 1)
+        for (j in 1:(length(commas) - 1)) {
 
-          arg_j=tree_sub2[(commas[j]+1):(commas[j+1]-1)]
-          equal=which(arg_j=="=")
-          name_arg[j]=paste(arg_j[2:(equal-1)], collapse="")
-          value_arg[j]=paste(arg_j[(equal+1):length(arg_j)], collapse="")
-
+          arg_j <- tree_sub2[(commas[j] + 1):(commas[j + 1] - 1)]
+          equal <- which(arg_j == "=")
+          name_arg[j] <- paste(arg_j[2:(equal - 1)], collapse = "")
+          value_arg[j] <- paste(arg_j[(equal + 1):length(arg_j)], collapse = "")
         }
 
-        if(k==1){
-          res=array(, c(length(croch1.pos), length(value_arg)+1))
-          colnames(res)=c("name", name_arg)
+        if (k == 1) {
+          res <- array(data = NA, c(length(croch1.pos), length(value_arg) + 1))
+          colnames(res) <- c("name", name_arg)
         }
 
-        res[k, ]=c(node_name_k, value_arg)
-        remove=c(remove, croch1.pos[k]:croch2.pos[k])
+        res[k, ] <- c(node_name_k, value_arg)
+        remove <- c(remove, croch1.pos[k]:croch2.pos[k])
       }
 
-      res[res[, "name"]%in%numbers, "name"]=taxa[match(res[res[, "name"]%in%numbers, "name"], numbers)]
+      res[res[, "name"] %in% numbers, "name"] <- taxa[
+        match(res[res[, "name"] %in% numbers, "name"], numbers)
+      ]
 
       #Re-paste the new tree into a single character string
-      tree.text=paste(tree_sub2[-remove], collapse="")
+      tree.text <- paste(tree_sub2[-remove], collapse = "")
 
-      tr <- ape::read.tree(text=tree.text)
-      tr$tip.label=taxa[as.numeric(tr$tip.label)]
+      tr <- ape::read.tree(text = tree.text)
+      tr$tip.label <- taxa[as.numeric(tr$tip.label)]
 
       #trees[[i]]=tr
-      branch_info=branchLengths(tr)[-1, ]
-      res=res[match(branch_info[, "Name"], res[, "name"]), ]
-      branch_info=cbind(tr$edge[match(branch_info[, "Number"], tr$edge[, 2]), ],
-                        #tr$edge.length[match(branch_info[, "Number"], tr$edge[, 2])],
-                        branch_info[, -1], res[, -1, drop=FALSE])
-      colnames(branch_info)[1:2]=c("Ancestor", "Descendant")
+      branch_info <- branchLengths(tr)[-1, ]
+      res <- res[match(branch_info[, "Name"], res[, "name"]), ]
+      branch_info <- cbind(
+        tr$edge[match(branch_info[, "Number"], tr$edge[, 2]), ],
+        #tr$edge.length[match(branch_info[, "Number"], tr$edge[, 2])],
+        branch_info[, -1], res[, -1, drop = FALSE]
+      )
+      colnames(branch_info)[1:2] <- c("Ancestor", "Descendant")
 
-      if(i==1) {
-        branch_infos=array(, c(dim(branch_info), length(samp)))
-        dimnames(branch_infos)=list(NULL, dimnames(branch_info)[[2]], 1:length(samp))
+      if (i == 1) {
+        branch_infos <- array(data = NA, c(dim(branch_info), length(samp)))
+        dimnames(branch_infos) <- list(NULL, dimnames(branch_info)[[2]], 1:length(samp))
       }
 
-      branch_infos[,, i]=as.matrix(branch_info)
-      tree_tot[[length(tree_tot)+1]]=tr
+      branch_infos[,, i] <- as.matrix(branch_info)
+      tree_tot[[length(tree_tot) + 1]] <- tr
 
     }
 
-    branch_info_tot[[t]]=branch_infos
-    subsamps[t]=length(samp)
+    branch_info_tot[[t]] <- branch_infos
+    subsamps[t] <- length(samp)
   }
 
 
-  branch_info_out <- abind::abind(branch_info_tot, along = 3)
+  # branch_info_out <- abind::abind(branch_info_tot, along = 3)
 
-  return(list(branch_info=branch_infos, trees=tree_tot))
+  list(branch_info = branch_infos, trees = tree_tot)
 }
 
 #' Does something
@@ -651,7 +711,7 @@ extract_posterior <- function(
 
   beast_posterior <- summarize_beast_posterior(
       input_trees_path = names_i,
-      subsamp=maxtree #Number of samples to keep
+      subsamp = maxtree #Number of samples to keep
     )
 
   # beast_posterior$trees # a list of the trees in phylo format
@@ -664,11 +724,11 @@ extract_posterior <- function(
   dist <- vector("list")
   maxindex <- max(unlist(lapply(brts, length)))
 
-  for (i in 1:maxindex){
+  for (i in 1:maxindex) {
     dist[[i]] <- unlist(lapply(brts, "[[", i))
   }
 
-  return(list(brts=brts, dist=dist))
+  list(brts = brts, dist = dist)
 }
 
 #' Imports data
