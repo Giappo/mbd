@@ -2,7 +2,8 @@
 % Please edit documentation in R/mbd_sim.R
 \name{mbd_sim_dataset}
 \alias{mbd_sim_dataset}
-\title{Creates a full simulated dataset of trees under the multiple birth death process}
+\title{Creates a full simulated dataset of trees under the multiple birth
+  death process}
 \usage{
 mbd_sim_dataset(sim_pars = c(0.5, 0.1, 0.3, 0.15), soc = 2, cond = 1,
   age = 10, max_sims = 1000, tips_interval = c(0, 100), edge = Inf,
@@ -30,21 +31,29 @@ and non-extinction of the phylogeny_ Set 0 otherwise.}
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
-\item{edge}{the program automatically detects the (estimated) average number of tips. "edge" defines the width of the spread around the mean.}
+\item{edge}{the program automatically detects the (estimated) average
+number of tips. "edge" defines the width of the spread around the mean.}
 
 \item{minimum_multiple_births}{something}
 }
 \value{
-The function returns a list of brts vectors, one for each of the max_sims simulations.
-It also saves those in a file called "sim_data" and saves all the settings in a "general_settings" file.
-N.B.: At each call of the function you overwrite the previous files.
+The function returns a list of brts vectors, one for each of the
+  max_sims simulations.
+  It also saves those in a file called "sim_data" and saves all the settings
+  in a "general_settings" file.
+  N.B.: At each call of the function you overwrite the previous files.
 }
 \description{
-mbd_sim_dataset produces a full dataset of max_sims simulated trees including multiple speciations at the same time. This second version takes into account the possibility both of allopatric and sympatric speciation.
+mbd_sim_dataset produces a full dataset of max_sims simulated
+  trees including multiple speciations at the same time. This second version
+  takes into account the possibility both of allopatric and sympatric
+  speciation.
 }
 \examples{
 # @Giappo: does not work
-# out <- mbd_sim_dataset( pars=c(0.4, 0.1, 0.2, 0.15), soc=2, age=10, cond=1, edge=Inf )
+# out <- mbd_sim_dataset(
+#  pars=c(0.4, 0.1, 0.2, 0.15), soc=2, age=10, cond=1, edge=Inf
+#)
 
 }
 \author{

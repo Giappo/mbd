@@ -29,26 +29,37 @@ do with a standard usage of mbd_sim.}
 \item{minimum_multiple_births}{something}
 }
 \value{
-The function returns a list of L table, branching times and number of extinct species.
+The function returns a list of L table, branching times and number
+  of extinct species.
 \itemize{
   \item brts are the branching times;
-  \item tes is a tree-object corresponding to the reconstructed phylogenetic tree;
+  \item tes is a tree-object corresponding to the reconstructed phylogenetic
+    tree;
   \item tas is a tree-object corresponding to the full phylogenetic tree;
-  \item extinct_species is the number of species gone extinct before the present time;
+  \item extinct_species is the number of species gone extinct before the
+    present time;
   \item L is a matrix of all species where the columns are:
   \itemize{
      \item first is the time at which a species is born;
-     \item second is the label of the parent of the species; positive and negative values only indicate whether the species belongs to the left or right crown lineage;
-     \item third is the label of the daughter species itself; positive and negative values only indicate whether the species belongs to the left or right crown lineage;
-     \item fourth is the time of extinction of the species. If this is equal to -1, then the species is still extant.
+     \item second is the label of the parent of the species; positive and
+       negative values only indicate whether the species belongs to the left
+       or right crown lineage;
+     \item third is the label of the daughter species itself; positive and
+       negative values only indicate whether the species belongs to the
+       left or right crown lineage;
+     \item fourth is the time of extinction of the species. If this is
+       equal to -1, then the species is still extant.
   }
 }
 }
 \description{
-mbd_sim0 produces simulated trees including multiple speciations at the same time.
+mbd_sim0 produces simulated trees including multiple
+  speciations at the same time.
 }
 \examples{
-out = mbd_sim0( pars=c(2.5, 0.1, 0.1), soc=2, age=10, cond=1, tips_interval=c(0,Inf))
+out = mbd_sim0(
+  pars=c(2.5, 0.1, 0.1), soc=2, age=10, cond=1, tips_interval=c(0,Inf)
+)
 graphics::plot(out$tas)
 graphics::plot(out$tes)
 out$L

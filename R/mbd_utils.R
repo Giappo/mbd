@@ -47,8 +47,8 @@ correlation_analysis <- function(
   graphics::par(mfrow = c(length(estimated_pars), length(estimated_pars)))
   graphics::par(oma = c(0, 0, 2, 0));
   for (i in estimated_pars) { for (j in estimated_pars) {
-    good.lines = results[, i] < axislimits[i] & results[, j] < axislimits[j]
-    ifelse(any(good.lines) > 0, good.results <- results[good.lines, ], good.results <- results)
+    good_lines <- results[, i] < axislimits[i] & results[, j] < axislimits[j]
+    ifelse(any(good_lines) > 0, good.results <- results[good_lines, ], good.results <- results)
 
     if (i == j) {
       graphics::hist((good.results[, i]), main = NULL,
@@ -84,8 +84,8 @@ correlation_analysis <- function(
     graphics::par(mfrow = c(length(estimated_pars), length(estimated_pars)))
     graphics::par(oma = c(0, 0, 2, 0));
     for (i in estimated_pars) { for (j in estimated_pars) {
-      good.lines = results[, i] < axislimits[i] & results[, j] < axislimits[j]
-      ifelse(any(good.lines) > 0, good.results <- results[good.lines, ], good.results <- results)
+      good_lines <- results[, i] < axislimits[i] & results[, j] < axislimits[j]
+      ifelse(any(good_lines) > 0, good.results <- results[good_lines, ], good.results <- results)
 
       if (i == j) {
         graphics::hist((good.results[, i]), main = NULL, xlab = paste(par_names[i]), breaks = 15)
@@ -144,20 +144,20 @@ percentiles_function <- function(
 #' Converts a matrix in a dataframe that can be used with ggplot
 #' @inheritParams default_params_doc
 #' @param matrix something
-#' @param heatmap.name heatmap name
+#' @param heatmap_name heatmap name
 heatmap2dataframe = function(
   x,
   y,
   matrix,
   x_name="x",
   y_name="y",
-  heatmap.name="HeatMap"
+  heatmap_name="HeatMap"
 ) {
   matrix_2 <- matrix(matrix, nrow = length(x) * length(y))
-  df <- data.frame(expand.grid(x = x, y = y),HeatMap = matrix_2)
+  df <- data.frame(expand.grid(x = x, y = y), HeatMap = matrix_2)
   colnames(df)[1] <- x_name
   colnames(df)[2] <- y_name
-  colnames(df)[3] <- heatmap.name
+  colnames(df)[3] <- heatmap_name
   df
 }
 
@@ -280,10 +280,10 @@ myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
 
   lX <- x
   lY <- y
-  pretty_X.at	<-	pretty(range(lX), n = x_splits)
-  pretty_X.lab	<-	round(pretty_X.at, 2)
-  pretty_Y.at	<-	pretty(range(lY), n = y_splits)
-  pretty_Y.lab	<-	round(pretty_Y.at, 2)
+  pretty_x_at	<-	pretty(range(lX), n = x_splits)
+  pretty_x_lab	<-	round(pretty_x_at, 2)
+  pretty_y_at	<-	pretty(range(lY), n = y_splits)
+  pretty_y_lab	<-	round(pretty_y_at, 2)
 
   jet.colors <- grDevices::colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
   graphics::filled.contour(
@@ -294,12 +294,12 @@ myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
     xlab = x_name,
     plot.axes = {
       graphics::axis(
-        1, at = seq(0, 1, length.out = length(pretty_X.lab)),
-        labels = pretty_X.lab
+        1, at = seq(0, 1, length.out = length(pretty_x_lab)),
+        labels = pretty_x_lab
       )
       graphics::axis(
-        2, at = seq(0, 1, length.out = length(pretty_Y.lab)),
-        labels = pretty_Y.lab
+        2, at = seq(0, 1, length.out = length(pretty_y_lab)),
+        labels = pretty_y_lab
       )
     },
     key_title = graphics::title(main = z_name)
