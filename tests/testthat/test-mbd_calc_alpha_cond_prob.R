@@ -1,4 +1,4 @@
-context("alpha_conditional_probability")
+context("mbd_calc_alpha_cond_prob")
 
 test_that("abuse", {
   

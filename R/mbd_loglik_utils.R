@@ -608,7 +608,7 @@ alpha_analysis <- function(
   pc_notanumber <- 1
   alpha <- alpha0
   while (pc_notanumber) {
-    pc_1 <- alpha_conditional_probability(
+    pc_1 <- mbd_calc_alpha_cond_prob(
       brts = brts,
       pars = pars,
       tips_interval = tips_interval,
@@ -624,7 +624,7 @@ alpha_analysis <- function(
     alpha <- alpha - pc_notanumber
   }
   while (delta_alpha != 0 && count < 100 && same_result_count < 5) {
-    pc_2 <- alpha_conditional_probability(
+    pc_2 <- mbd_calc_alpha_cond_prob(
       brts = brts,
       pars = pars,
       tips_interval = tips_interval,
@@ -654,7 +654,7 @@ alpha_analysis <- function(
   if (max_k * alpha >= 2000) {
     #check to see whether alpha is too big to be handled without memory issues
     alpha <- floor(1500 / max_k)
-    pc_1 <- alpha_conditional_probability(
+    pc_1 <- mbd_calc_alpha_cond_prob(
       brts = brts,
       pars = pars,
       tips_interval = tips_interval,
