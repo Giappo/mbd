@@ -302,7 +302,7 @@ pmb_ml <- function(
           }
           s1 <- sprintf(tobeprint)
 
-          if (out2$conv != 0 & changeloglikifnoconv == T) {
+          if (out2$conv != 0 & changeloglikifnoconv == TRUE) {
             out2$loglik <- -Inf
           }
           s2 <- sprintf("Maximum loglikelihood: %f", max_lik)

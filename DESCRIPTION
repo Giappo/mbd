@@ -7,24 +7,12 @@ Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
 Depends: 
   R (>= 3.2.0)
 Imports: 
-  abind,
   ape, 
-  beastier, 
-  beautier,
   DDD,
   deSolve,
   expoRkit,
-  ggplot2, 
-  methods,
-  nLTT,
-  pirouette,
   R.utils, 
-  RCurl,  
-  subplex, 
-  testit,
-  tracerer,
-  maps, 
-  msm
+  testit
 Suggests: 
   knitr, 
   rmarkdown, 

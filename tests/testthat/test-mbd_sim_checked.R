@@ -3,7 +3,7 @@ context("mbd_sim_checked")
 test_that("same as classic interface", {
 
   lambda <- 0.2 # sympatric speciation rate
-  mu <- 0.15 # extinction rate;
+  mu <- 0.15 # extinction rate
   nu <- 2.0 # multiple allopatric speciation trigger rate
   q <- 0.1 # single-lineage speciation probability
   sim_pars <- c(lambda, mu, nu, q)

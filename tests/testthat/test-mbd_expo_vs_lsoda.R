@@ -1,32 +1,45 @@
 context("ExpovsLsoda")
 
-test_that("PureBirth theoretical check", {
-  skip("PureBirth theoretical check takes too long")
-  test_size <- 10;
+test_that("likelihoods using expo and lsoda are identical", {
+  soc <- 2
+  cond <- 1
+  lambda <- 0.12
+  mu <- 0.23
+  nu <- 0.34
+  q <- 0.45
+  simpars <- c(lambda, mu, nu, q)
+  brts <- c(1, 2, 2)
+  loglik_expo  <- mbd::mbd_loglik(
+    pars = simpars, brts = brts, soc = soc, cond = cond, methode = "expo"
+  )
+  loglik_lsoda <- mbd::mbd_loglik(
+    pars = simpars, brts = brts, soc = soc, cond = cond, methode = "lsoda"
+  )
+  expect_equal(loglik_expo, loglik_lsoda)
+})
 
-  soc <- 2; cond <- 1
-  lambda <- sample(size = test_size * 2, x = (1:10) * 0.1, replace = TRUE)
-  mu <- sample(size = test_size * 2, x = (1:10) * 0.01, replace = TRUE)
-  nu <- sample(size = test_size * 2, x = (1:10) * 0.5, replace = TRUE)
-  q <- sample(size = test_size * 2, x = (2:14) * 0.01, replace = TRUE)
-  test_expo <- rep(0, test_size)
-  test_lsoda <- rep(0, test_size)
-
-  for (j in 1:test_size) {
-    simpars <- c(lambda[j], mu[j], nu[j], q[j]);
-    brts <- mbd:::mbd_sim(pars = simpars, soc = soc, age = 10, cond = cond)$brts
-    testpars <- c(
-      lambda[test_size + j], mu[test_size + j],
-      nu[test_size + j], q[test_size + j]
+test_that("Bug? result would be too long a vector", {
+  skip("@Giappo: is this a bug?")
+  lambda <- 0.1
+  mu <- 0.2
+  nu <- 0.3
+  q <- 0.4
+  pars <- c(lambda, mu, nu, q)
+  crown <- 2
+  expect_silent(
+    mbd::mbd_loglik(
+      pars = pars, 
+      brts = c(1, 2, 2), # OK
+      soc = crown
     )
-    test_expo[j]  <- mbd::mbd_loglik(
-      pars = testpars, brts = brts, soc = soc, cond = cond, methode = "expo"
-    )
-    test_lsoda[j] <- mbd::mbd_loglik(
-      pars = testpars, brts = brts, soc = soc, cond = cond, methode = "lsoda"
-    )
-  }
-  for (i in 1:test_size) {
-    expect_equal(test_lsoda[i], test_expo[i])
-  }
+  )
+  # Is this really what is intended?
+  expect_error(
+    mbd::mbd_loglik(
+      pars = pars, 
+      brts = c(1, 2, 3), # Not OK
+      soc = crown
+    ),
+    "result would be too long a vector"
+  )
 })

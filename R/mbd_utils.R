@@ -202,7 +202,7 @@ heatmap2dataframe <- function(
 brts2time_intervals_and_births <- function(
   brts
 ) {
-  time_points <- -unlist(unname(sort(abs(brts), decreasing = T)))
+  time_points <- -unlist(unname(sort(abs(brts), decreasing = TRUE)))
   branching_times <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   births <- c(0, unname(table(branching_times))[-1])
   unique_branching_times <- as.numeric(names(table(branching_times)))

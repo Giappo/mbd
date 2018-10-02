@@ -320,8 +320,8 @@ mbd_sim0 <- function(
     unname(sort(DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE))
   )
   brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
-  tes <- DDD::L2phylo(l_matrix, dropextinct = T)
-  tas <- DDD::L2phylo(l_matrix, dropextinct = F)
+  tes <- DDD::L2phylo(l_matrix, dropextinct = TRUE)
+  tas <- DDD::L2phylo(l_matrix, dropextinct = FALSE)
   list(
     brts = brts,
     tes = tes,
@@ -377,21 +377,8 @@ mbd_sim_dataset <- function(
   }
 
   init_n_lineages <- soc
-  if (edge != Inf && tips_interval == c(0, Inf)) {
-    estimation <- mbd_p_eq(
-      test_parameters = sim_pars,
-      age = age,
-      max_number_of_species = 3000,
-      precision = 50L,
-      soc = soc,
-      output = 0
-    )
-    max_tips <- round(estimation$avg_n * (1 + edge))
-    min_tips <- max(0, round(estimation$avg_n * (1 - edge)))
-    # min and max number of tips for simulated trees
-    # setting the upper limit over 50 may be a problem
-    tips_interval <- c(min_tips, max_tips)
-  }
+  # Would call hyperA function
+  testit::assert(!(edge != Inf && tips_interval == c(0, Inf))) 
 
   #simulate trees
   sim_data <- sim_tes <- sim_tas <- vector("list", max_sims)
