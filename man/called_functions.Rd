@@ -4,13 +4,10 @@
 \alias{called_functions}
 \title{Checks function calls within a function}
 \usage{
-called_functions(function_name, recursive = FALSE,
-  checked_functions = NULL)
+called_functions(function_name, checked_functions = NULL)
 }
 \arguments{
 \item{function_name}{something}
-
-\item{recursive}{something}
 
 \item{checked_functions}{something}
 }
