@@ -1,13 +1,23 @@
-#' @title Internal mbd function
-#' @description Internal mbd function.
+#' Function to build a matrix, used in creating the A and B operators.
+#' It produces the structure
+#'  q ^ (m - n) * (1 - q) ^ (k + 2 * n-m) *
+#'  sum_j 2 ^ j choose(k, j) * choose(n, m - n - j)
 #' @inheritParams default_params_doc
-#' @details This is not to be called by the user.
+#' @examples
+#'   m <- hyper_a_hanno(n_species = 2, k = 2, q = 0.1)
+#'   testthat::expect_equal(m[1, 1], 0.81)
+#'   testthat::expect_equal(m[1, 2], 0.00)
+#'   testthat::expect_equal(m[1, 3], 0.00)
+#'   testthat::expect_equal(m[2, 1], 0.36)
+#'   testthat::expect_equal(m[2, 2], 0.729)
+#'   testthat::expect_equal(m[2, 3], 0.00)
+#'   testthat::expect_equal(m[3, 1], 0.04)
+#'   testthat::expect_equal(m[3, 2], 0.405)
+#'   testthat::expect_equal(m[3, 3], 0.6561)
+#' @noRd
+#' @author Hanno Hildenbrand
 hyper_a_hanno <- function(n_species, k, q) {
   # HG function: fast O(N), updated after Moulis meeting
-  #this is the matrix builder: helps to create A and B operators
-  #it produces the structure
-  # q ^ (m - n) * (1 - q) ^ (k + 2 * n-m) *
-  #  sum_j 2 ^ j choose(k, j) * choose(n, m - n - j)
   j <- 0:k
   a_1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
   n_species <- n_species + 1
@@ -38,7 +48,7 @@ create_a_zero <- function(
   k,
   matrix_builder = hyper_a_hanno
 ){
-  testit::assert(max_number_of_species < Inf)
+  testit::assert(max_number_of_species < 2 ^ 31)
   nvec <- 0:max_number_of_species
   my_matrix <- lambda * matrix_builder(
     n_species = max_number_of_species, k = k, q = q
@@ -81,7 +91,7 @@ create_a <- function(
   k,
   max_number_of_species
 ) {
-  testit::assert(max_number_of_species < Inf)
+  testit::assert(max_number_of_species < 2 ^ 31)
   nvec <- 0:max_number_of_species
   m <- create_a_zero(max_number_of_species = max_number_of_species,
                        lambda = nu, mu = mu, q = q, k = k)
@@ -131,7 +141,7 @@ create_a_no_mbd <- function(
   max_number_of_species,
   minimum_multiple_births
 ) {
-  testit::assert(max_number_of_species < Inf)
+  testit::assert(max_number_of_species < 2 ^ 31)
   nvec <- 0:max_number_of_species
   m <- create_a_zero(
     max_number_of_species = max_number_of_species,

@@ -1,5 +1,31 @@
 context("mbd_loglik")
 
+test_that("silent if verbose is FALSE", {
+
+  skip("fix")
+  expect_silent(
+    mbd::mbd_loglik(
+      pars = c(0.2, 0.15, 2.0, 0.1), 
+      brts = c(1, 2, 3, 4), 
+      soc = 2, # Crown age 
+      cond = 1  # Non-extinction
+    )
+  )
+})
+
+test_that("uninformative error message", {
+
+  skip("fix")
+  expect_silent(
+    mbd::mbd_loglik(
+      pars = c(0.2, 0.15, 2.0, 0.1), 
+      brts = c(1, 2, 2, 2, 3), 
+      soc = 2, # Crown age 
+      cond = 1  # Non-extinction
+    )
+  )
+})
+
 test_that("likelihoods using expo and lsoda are identical", {
   soc <- 2
   cond <- 1

@@ -1,36 +1,30 @@
 context("TestSims")
 
-test_that("Sims are ok", {
+test_that("Run sim for lambda = 0.0", {
 
-  test_size <- 40
+  test_size <- 1
   test_sim <- vector("list")
   soc <- 2
-  lambda <- sample(size = test_size, x = (1:18) * 0.1, replace = TRUE)
-  mu <- sample(size = test_size, x = (1:18) * 0.01, replace = TRUE)
-  q <- sample(size = test_size, x = (1:16) * 0.01, replace = TRUE)
+  nu <- 0.2
+  mu <- 0.1
+  q <- 0.3
 
-  for (j in 1:test_size) {
-    test_sim[[j]] <- mbd::mbd_sim0(
-      pars = c(lambda[j], mu[j], q[j]), soc = soc, age = 10, cond = 1
-    )$l_matrix
-  }
+  test_sim <- mbd::mbd_sim0(
+    pars = c(nu, mu, q), soc = soc, age = 10, cond = 1
+  )$l_matrix
 
   #check if all the species are born before their parents die
   back_to_the_future_test  <-  1
-  for (j in 1:test_size) {
-    l_matrix <- test_sim[[j]]
-    parents <- abs(l_matrix[, 2])
-    back_to_the_future_test <- back_to_the_future_test *
-      prod(l_matrix[-c(1:soc), 1] >= l_matrix[parents[-c(1:soc)], 4])
-  }
+  l_matrix <- test_sim
+  parents <- abs(l_matrix[, 2])
+  back_to_the_future_test <- back_to_the_future_test *
+    prod(l_matrix[-c(1:soc), 1] >= l_matrix[parents[-c(1:soc)], 4])
 
   #check if the conditioning on survival works
   conditioning_test <- 1
-  for (j in 1:test_size) {
-    l_matrix <- test_sim[[j]]
-    check_signs <- sort(unique(sign(l_matrix[, 3])))
-    conditioning_test <- conditioning_test * prod(check_signs == c(-1, 1))
-  }
+  l_matrix <- test_sim
+  check_signs <- sort(unique(sign(l_matrix[, 3])))
+  conditioning_test <- conditioning_test * prod(check_signs == c(-1, 1))
 
   expect_equal(back_to_the_future_test, 1)
   expect_equal(conditioning_test, 1)
