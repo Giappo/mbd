@@ -159,7 +159,7 @@ mbd_sim <- function(
     multiple_births_rec_tree <- sum(duplicated(births_rec_tree))
     multi_births_full_tree <- sum(duplicated(births_full_tree))
     #should i consider the full tree or the reconstructed one???
-    multiple_births_check <- (multiple_births_rec_tree >= minimum_multiple_births)
+    multiple_births_check <- multiple_births_rec_tree >= minimum_multiple_births
 
      #should i keep this simulation?
     keep_the_sim <- (!crown_species_dead) &
@@ -319,11 +319,9 @@ mbd_sim0 <- function(
   time_points <- unlist(
     unname(sort(DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE))
   )
-  brts = -sort(abs(as.numeric(time_points)), decreasing = TRUE)
-  tes = DDD::L2phylo(l_matrix, dropextinct = T)
-  tas = DDD::L2phylo(l_matrix, dropextinct = F)
-  #   graphics::plot(tas)
-  #   graphics::plot(tes)
+  brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
+  tes <- DDD::L2phylo(l_matrix, dropextinct = T)
+  tas <- DDD::L2phylo(l_matrix, dropextinct = F)
   list(
     brts = brts,
     tes = tes,
@@ -379,8 +377,7 @@ mbd_sim_dataset <- function(
   }
 
   init_n_lineages <- soc
-  if (edge != Inf && tips_interval == c(0, Inf))
-  {
+  if (edge != Inf && tips_interval == c(0, Inf)) {
     estimation <- mbd_p_eq(
       test_parameters = sim_pars,
       age = age,
@@ -399,8 +396,7 @@ mbd_sim_dataset <- function(
   #simulate trees
   sim_data <- sim_tes <- sim_tas <- vector("list", max_sims)
   ext_species <- rep(NA, max_sims)
-  for (s in 1:max_sims)
-  {
+  for (s in 1:max_sims) {
     set.seed(s)
     simulation <- mbd_sim(
       pars = sim_pars,
@@ -430,8 +426,7 @@ mbd_sim_dataset <- function(
   max_b <- max(unlist(all_the_births))
 
   additional_species <- tips <- rep(0, max_sims)
-  for (s in 1:max_sims)
-  {
+  for (s in 1:max_sims) {
     additional_species[s] <- sum(duplicated(sim_data[[s]]))
     tips[s] <- length(sim_data[[s]]) + 1
   }

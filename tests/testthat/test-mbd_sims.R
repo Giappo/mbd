@@ -5,9 +5,9 @@ test_that("Sims are ok", {
   test_size <- 40
   test_sim <- vector("list")
   soc <- 2
-  lambda <- sample(size = test_size, x = (1:18)*0.1, replace = T)
-  mu <- sample(size = test_size, x = (1:18)*0.01, replace = T)
-  q <- sample(size = test_size, x = (1:16)*0.01, replace = T)
+  lambda <- sample(size = test_size, x = (1:18) * 0.1, replace = TRUE)
+  mu <- sample(size = test_size, x = (1:18) * 0.01, replace = TRUE)
+  q <- sample(size = test_size, x = (1:16) * 0.01, replace = TRUE)
 
   for (j in 1:test_size) {
     test_sim[[j]] <- mbd::mbd_sim0(
@@ -25,7 +25,7 @@ test_that("Sims are ok", {
   }
 
   #check if the conditioning on survival works
-  conditioning_test = 1
+  conditioning_test <- 1
   for (j in 1:test_size) {
     l_matrix <- test_sim[[j]]
     check_signs <- sort(unique(sign(l_matrix[, 3])))
@@ -34,5 +34,4 @@ test_that("Sims are ok", {
 
   expect_equal(back_to_the_future_test, 1)
   expect_equal(conditioning_test, 1)
-  # warnings()
 })

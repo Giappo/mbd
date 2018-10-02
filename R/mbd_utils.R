@@ -56,39 +56,41 @@ correlation_analysis <- function(
   grDevices::pdf(file = paste(path, "/", pdfname, ".pdf", sep = ""))
   graphics::par(mfrow = c(length(estimated_pars), length(estimated_pars)))
   graphics::par(oma = c(0, 0, 2, 0));
-  for (i in estimated_pars) { for (j in estimated_pars) {
-    good_lines <- results[, i] < axislimits[i] & results[, j] < axislimits[j]
-    if (any(good_lines) > 0) {
-      good.results <- results[good_lines, ]
-    } else {
-      good.results <- results
+  for (i in estimated_pars) { 
+    for (j in estimated_pars) {
+      good_lines <- results[, i] < axislimits[i] & results[, j] < axislimits[j]
+      if (any(good_lines) > 0) {
+        good_results <- results[good_lines, ]
+      } else {
+        good_results <- results
+      }
+  
+      if (i == j) {
+        graphics::hist((good_results[, i]), main = NULL,
+          xlab = paste(par_names[i]), breaks = 15
+        )
+        graphics::abline(v = sim_pars[i], col = truevalues_color)
+        graphics::abline(v = medians[i], col = medians_color)
+      }
+      else {
+        graphics::plot(
+          good_results[, i] ~ good_results[, j],
+          xlab = par_names[j],
+          ylab = par_names[i],
+          cex = 0.3,
+          col = points_color
+        )
+        graphics::points(
+          x = sim_pars[j], y = sim_pars[i], col = truevalues_color, pch = 10,
+          cex = 1.5
+        )
+        graphics::points(
+          x = medians[j], y = medians[i], col = medians_color, pch = 10,
+          cex = 1.5
+        )
+      }
     }
-
-    if (i == j) {
-      graphics::hist((good.results[, i]), main = NULL,
-        xlab = paste(par_names[i]), breaks = 15
-      )
-      graphics::abline(v = sim_pars[i], col = truevalues_color)
-      graphics::abline(v = medians[i], col = medians_color)
-    }
-    else {
-      graphics::plot(
-        good.results[, i] ~ good.results[, j],
-        xlab = par_names[j],
-        ylab = par_names[i],
-        cex = 0.3,
-        col = points_color
-      )
-      graphics::points(
-        x = sim_pars[j], y = sim_pars[i], col = truevalues_color, pch = 10,
-        cex = 1.5
-      )
-      graphics::points(
-        x = medians[j], y = medians[i], col = medians_color, pch = 10,
-        cex = 1.5
-      )
-    }
-  }}
+  }
   titolo_pdf <- paste0(
     "\n\n", titolo, "\n", medians_string, "\n", truevalues_string
   )
@@ -103,45 +105,48 @@ correlation_analysis <- function(
     grDevices::pdf(file = paste(mother_folder, "/", pdfname, ".pdf", sep = ""))
     graphics::par(mfrow = c(length(estimated_pars), length(estimated_pars)))
     graphics::par(oma = c(0, 0, 2, 0));
-    for (i in estimated_pars) { for (j in estimated_pars) {
-      good_lines <- results[, i] < axislimits[i] & results[, j] < axislimits[j]
-      if (any(good_lines) > 0) {
-        good.results <- results[good_lines, ]
-      } else {
-        good.results <- results
+    for (i in estimated_pars) { 
+      for (j in estimated_pars) {
+        good_lines <- results[, i] < axislimits[i] & 
+          results[, j] < axislimits[j]
+        if (any(good_lines) > 0) {
+          good_results <- results[good_lines, ]
+        } else {
+          good_results <- results
+        }
+  
+        if (i == j) {
+          graphics::hist(
+            good_results[, i],
+            main = NULL, xlab = paste(par_names[i]), breaks = 15
+          )
+          graphics::abline(v = sim_pars[i], col = truevalues_color)
+          graphics::abline(v = medians[i], col = medians_color)
+        } else {
+          graphics::plot(
+            good_results[, i] ~ good_results[, j],
+            xlab = par_names[j],
+            ylab = par_names[i],
+            cex = 0.3,
+            col = points_color
+          )
+          graphics::points(
+            x = sim_pars[j],
+            y = sim_pars[i],
+            col = truevalues_color,
+            pch = 10,
+            cex = 1.5
+          )
+          graphics::points(
+            x = medians[j],
+            y = medians[i],
+            col = medians_color,
+            pch = 10,
+            cex = 1.5
+          )
+        }
       }
-
-      if (i == j) {
-        graphics::hist(
-          good.results[, i],
-          main = NULL, xlab = paste(par_names[i]), breaks = 15
-        )
-        graphics::abline(v = sim_pars[i], col = truevalues_color)
-        graphics::abline(v = medians[i], col = medians_color)
-      } else {
-        graphics::plot(
-          good.results[, i] ~ good.results[, j],
-          xlab = par_names[j],
-          ylab = par_names[i],
-          cex = 0.3,
-          col = points_color
-        )
-        graphics::points(
-          x = sim_pars[j],
-          y = sim_pars[i],
-          col = truevalues_color,
-          pch = 10,
-          cex = 1.5
-        )
-        graphics::points(
-          x = medians[j],
-          y = medians[i],
-          col = medians_color,
-          pch = 10,
-          cex = 1.5
-        )
-      }
-    }}
+    }
     graphics::title(main = titolo_pdf, outer = TRUE)
     grDevices::dev.off()
   }
@@ -178,9 +183,9 @@ heatmap2dataframe = function(
   x,
   y,
   matrix,
-  x_name="x",
-  y_name="y",
-  heatmap_name="HeatMap"
+  x_name = "x",
+  y_name = "y",
+  heatmap_name = "HeatMap"
 ) {
   matrix_2 <- matrix(matrix, nrow = length(x) * length(y))
   df <- data.frame(expand.grid(x = x, y = y), HeatMap = matrix_2)
@@ -190,7 +195,8 @@ heatmap2dataframe = function(
   df
 }
 
-#' Converts branching times to "time intervals between branching times" and "birth at nodes" vectors
+#' Converts branching times to "time intervals between branching times" 
+#'   and "birth at nodes" vectors
 #' @inheritParams default_params_doc
 #' @noRd
 brts2time_intervals_and_births <- function(
@@ -227,12 +233,7 @@ mbd_p_eq <- function(
   create_mbd_P_matrix <- function(
     pars,
     max_number_of_species
-  )
-  {
-    lambda <- pars[1]
-    mu <- pars[2]
-    q <- pars[3]
-    nvec <- 0:max_number_of_species
+  ) {
     my_matrix <- matrix(
       0,
       nrow = max_number_of_species + 1,
@@ -320,14 +321,14 @@ myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits
     z_name <- NULL
   }
 
-  lX <- x
-  lY <- y
-  pretty_x_at	<-	pretty(range(lX), n = x_splits)
+  l_x <- x
+  l_y <- y
+  pretty_x_at	<-	pretty(range(l_x), n = x_splits)
   pretty_x_lab	<-	round(pretty_x_at, 2)
-  pretty_y_at	<-	pretty(range(lY), n = y_splits)
+  pretty_y_at	<-	pretty(range(l_y), n = y_splits)
   pretty_y_lab	<-	round(pretty_y_at, 2)
 
-  jet.colors <- grDevices::colorRampPalette(
+  jet_colors <- grDevices::colorRampPalette(
     c(
       "#00007F", "blue", "#007FFF", "cyan",
       "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"
@@ -335,7 +336,7 @@ myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits
   )
   graphics::filled.contour(
     t(z),
-    color = jet.colors,
+    color = jet_colors,
     nlevels = 100,
     ylab = y_name,
     xlab = x_name,
@@ -379,9 +380,8 @@ negatives_correction <- function(
     }
   }
 
-  if (any(v < 0) & (problems) == 0) {
-    #negatives <- v[v < 0]
-    #maximum <- max(v)
+  # BUG? Used to be 'any(v < 0) & (problems) == 0'
+  if (any(v < 0) && problems == 0) {
     v[v < 0 & (abs(v) / abs(max(v))) < 1e-10] <- 0
   }
   v
@@ -413,10 +413,10 @@ compare_functions <- function(
   if (output == 1) {
     print(list(Atest1, Atest2))
   }
-  print(a_time1);
-  print(a_time2);
-  print(all.equal(Atest1,Atest2))
-  return(invisible(list(Atest1,Atest2)))
+  print(a_time1)
+  print(a_time2)
+  print(all.equal(Atest1, Atest2))
+  return(invisible(list(Atest1, Atest2)))
 }
 
 #' Checks function calls within a function
@@ -428,11 +428,11 @@ called_functions <- function(
 ) {
 
     # Get the function's code:
-    function.code <- deparse(get(function_name))
+    function_code <- deparse(get(function_name))
 
     # break code up into sections preceding left brackets:
     left.brackets <- c(
-      unlist(strsplit(function.code, split = "[[:space:]]*\\("))
+      unlist(strsplit(function_code, split = "[[:space:]]*\\("))
     )
 
     called.functions <- unique(
@@ -444,12 +444,12 @@ called_functions <- function(
               # split = not alphanumeric, not '_', and not '.'
               words <- c(unlist(strsplit(x, split = "[^[:alnum:]_.]")))
 
-              last.word <- utils::tail(words, 1)
-              last.word.is.function <- tryCatch(
-                is.function(get(last.word)),
+              last_word <- utils::tail(words, 1)
+              last_word_is_function <- tryCatch(
+                is.function(get(last_word)),
                 error = function(e) return(FALSE)
               )
-              return(last.word[last.word.is.function])
+              return(last_word[last_word_is_function])
             }
           )
         )
@@ -468,7 +468,8 @@ called_functions <- function(
         testit::assert(!"Should never call listFunctions, whatever it is")
         # called.functions <- unique(c(called.functions,
         #     do.call(c, lapply(functs.to.check, function(x) {
-        #         listFunctions(x, recursive = T, checked_functions = c(checked_functions, called.functions))
+        #         listFunctions(x, recursive = T, 
+        #         checked_functions = c(checked_functions, called.functions))
         #         }))))
     }
     called.functions
@@ -477,17 +478,17 @@ called_functions <- function(
 #' Checks if some matrix entries are infinite, NaN, NA
 #'   or (only in the lower triangle) negative
 #' @inheritParams default_params_doc
-#' @param Mlist something
+#' @param m_list something
 #' @param sign_check something
 matrix_check <- function(
-  Mlist,
+  m_list,
   sign_check = 0
 ) {
-  max_k <- length(Mlist)
+  max_k <- length(m_list)
   black_list <- as.complex(rep(0, max_k))
   negative_list <- rep(0, max_k)
   for (k in 1:max_k) {
-    matrix <- as.matrix(Mlist[[k]])
+    matrix <- as.matrix(m_list[[k]])
     if ((max(is.infinite(matrix)) > 0) |
       (max(is.nan(matrix)) > 0) |
       (max(is.na(matrix)) > 0)
@@ -517,7 +518,7 @@ matrix_check <- function(
   if (sign_check == 1) {
     entries_sign <- rep(1, max_k)
     for (k in 1:max_k) {
-      lower_triangle <- (as.matrix(Mlist[[k]]))[lower.tri(Mlist[[k]])]
+      lower_triangle <- (as.matrix(m_list[[k]]))[lower.tri(m_list[[k]])]
       if (min(lower_triangle) < 0) {
         entries_sign[k] <- -1
         negative_list[k] <- -1
@@ -558,42 +559,41 @@ append_multiple <- function(
 
 #' Function returning branch lengths named by ending node
 #' @inheritParams default_params_doc
-branchLengths <- function(tr)
-{
+get_branch_lengths <- function(tr) {
   if (length(tr$node) > 0) {
-    type <- 'NAMED'
+    type <- "NAMED"
   } else {
-    type <- 'UNNAMED'
+    type <- "UNNAMED"
   }
   if (length(tr$root) > 0) {
-    root.length <- tr$root
+    root_length <- tr$root
   } else{
-    root.length <- 0
+    root_length <- 0
   }
 
-  node.numbers <- sort(unique(tr$edge[, 1]))
+  node_numbers <- sort(unique(tr$edge[, 1]))
   b_l_1 <- as.numeric(
     stats::na.omit(
       c(
-        root.length,
-        tr$edge.length[match(node.numbers, tr$edge[, 2])]
+        root_length,
+        tr$edge.length[match(node_numbers, tr$edge[, 2])]
       )
     )
   )
 
-  tip.numbers <- 1:length(tr$tip)
-  b_l_2 <- tr$edge.length[match(tip.numbers, tr$edge[, 2])]
+  tip_numbers <- 1:length(tr$tip)
+  b_l_2 <- tr$edge.length[match(tip_numbers, tr$edge[, 2])]
 
   if (type == "NAMED") {
     res <- data.frame(
-      Number = c(sort(node.numbers), tip.numbers),
+      Number = c(sort(node_numbers), tip_numbers),
       Name = c(tr$node, tr$tip),
       Lengths = c(b_l_1, b_l_2)
     )
   }
   if (type == "UNNAMED") {
     res <- data.frame(
-      Number = c(sort(node.numbers), tip.numbers),
+      Number = c(sort(node_numbers), tip_numbers),
       Name = c(rep(NA, tr$Nnode), tr$tip),
       Lengths = c(b_l_1, b_l_2)
     )
@@ -725,7 +725,7 @@ summarize_beast_posterior <- function(
       tr$tip.label <- taxa[as.numeric(tr$tip.label)]
 
       #trees[[i]]=tr
-      branch_info <- branchLengths(tr)[-1, ]
+      branch_info <- get_branch_lengths(tr)[-1, ]
       res <- res[match(branch_info[, "Name"], res[, "name"]), ]
       branch_info <- cbind(
         tr$edge[match(branch_info[, "Number"], tr$edge[, 2]), ],

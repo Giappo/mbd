@@ -54,5 +54,4 @@ mbd_sim_checked <- function(
     age = age,
     cond = cond
   )
-
 }
