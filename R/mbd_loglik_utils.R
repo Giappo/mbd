@@ -589,9 +589,15 @@ calc_cond_prob1 <- function(
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 alpha_conditional_probability <- function(
-  brts, pars, alpha, tips_interval = c(0, Inf),
-  cond = 1, soc = 2, methode = "expo",
-  abstol = 1e-16, reltol = 1e-10,
+  brts, 
+  pars, 
+  alpha, 
+  tips_interval = c(0, Inf),
+  cond = 1, 
+  soc = 2, 
+  methode = "expo",
+  abstol = 1e-16, 
+  reltol = 1e-10,
   minimum_multiple_births = 0
 ) {
   lambda <- pars[1]
@@ -609,12 +615,19 @@ alpha_conditional_probability <- function(
   # alpha is the proportionality factor between max_k
   # and the edge of the matrix
   max_number_of_species <- alpha * max_k
-  testit::assert(max_number_of_species < Inf)
+  if (max_number_of_species >= 2^31) {
+    stop(
+      "Maximum number of species exceeds R's memory limits. ",
+      "max_number_of_species = ", max_number_of_species,
+      ", alpha = ", alpha,
+      ", max_k = ", max_k
+    )
+  }
 
   if (!(cond == 1 | tips_interval[1] > 0 | tips_interval[2] < Inf)) {
     pc <- 1; a2_v1 <- c(1, rep(0, max_number_of_species))
   } else {
-    m <- 0:max_number_of_species;
+    m <- 0:max_number_of_species
     one_over_cm <- (3 * (m + 1)) / (m + 3)
     one_over_qm_binom <- 1 / choose((m + init_n_lineages), init_n_lineages)
     # applying tips constrain

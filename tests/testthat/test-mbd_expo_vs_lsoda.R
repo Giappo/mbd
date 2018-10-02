@@ -18,14 +18,14 @@ test_that("likelihoods using expo and lsoda are identical", {
   expect_equal(loglik_expo, loglik_lsoda)
 })
 
-test_that("Bug? result would be too long a vector", {
-  skip("@Giappo: is this a bug?")
+test_that("Convergence fail?", {
   lambda <- 0.1
   mu <- 0.2
   nu <- 0.3
   q <- 0.4
   pars <- c(lambda, mu, nu, q)
   crown <- 2
+  # Here it works
   expect_silent(
     mbd::mbd_loglik(
       pars = pars, 
@@ -40,6 +40,6 @@ test_that("Bug? result would be too long a vector", {
       brts = c(1, 2, 3), # Not OK
       soc = crown
     ),
-    "result would be too long a vector"
+    "Maximum number of species exceeds R's memory limits"
   )
 })
