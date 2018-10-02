@@ -1,7 +1,7 @@
 Package: mbd
 Type: Package
 Title: Multiple Birth Death Diversification
-Version: 0.1
+Version: 0.2
 Author: Giovanni Laudanno <glaudanno@gmail.com>
 Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
 Depends: 
