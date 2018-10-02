@@ -170,16 +170,16 @@ create_b_no_mbd <- function(
 }
 
 #' The A operator is given by the integration of a set of differential equations
-#' between two consecutive nodes. So, defined the set in the time interval 
+#' between two consecutive nodes. So, defined the set in the time interval
 #' [t_{i-1}, t_i], where k species are present in the phylogeny, as:
-#' 
-#' d  
-#' --Q^k_m(t) = SUM_n(M^k_m,n * Q^k_n(t) 
-#' dt  
-#' 
+#'
+#' d
+#' --Q^k_m(t) = SUM_n(M^k_m,n * Q^k_n(t)
+#' dt
+#'
 #' where m, n, label the amount of unseen species in the phylogeny,
 #' A is thus defined as:
-#' 
+#'
 #' A(t_i - t_{i-1}) = exp(M(t_k - t_{k-1})
 #' @inheritParams default_params_doc
 #' @noRd
