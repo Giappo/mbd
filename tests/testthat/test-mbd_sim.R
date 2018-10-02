@@ -27,4 +27,18 @@ test_that("abuse", {
     mbd_sim(pars = c(1.0, 1.0, 1.0, -12.34)),
     "The single-lineage speciation probability 'pars\\[4\\]' must be positive"
   )
+  expect_error(
+    mbd_sim(
+      pars = c(1.0, 1.0, 1.0, 1.0), 
+      tips_interval = c(2, 1)
+    ),
+    "'tips_interval' must contain two values, of which the second is larger"
+  )
+  expect_error(
+    mbd_sim(
+      pars = c(1.0, 1.0, 1.0, 1.0), 
+      tips_interval = c(-12, -11)
+    ),
+    "'tips_interval' must contain two positive values"
+  )
 })

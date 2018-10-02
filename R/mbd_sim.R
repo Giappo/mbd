@@ -72,7 +72,13 @@ mbd_sim <- function(
     stop("The single-lineage speciation probability 'pars[4]' must be positive")
   }
   if (tips_interval[2] < tips_interval[1]) {
-    stop("ERROR! Check again your settings.")
+    stop(
+      "'tips_interval' must contain two values, ",
+      "of which the second is larger"
+    )
+  }
+  if (any(tips_interval < 0)) {
+    stop("'tips_interval' must contain two positive values")
   }
   lambda <- pars[1]
   mu <- pars[2]
