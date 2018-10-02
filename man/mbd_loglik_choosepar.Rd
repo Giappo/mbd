@@ -2,7 +2,9 @@
 % Please edit documentation in R/mbd_loglik_choosepar.R
 \name{mbd_loglik_choosepar}
 \alias{mbd_loglik_choosepar}
-\title{Internal mbd function}
+\title{This function provides a likelihood for a subset of parameters.
+This is built to work inside mbd_minusLL_vs_single_parameter
+or any optimizer like simplex, optim or subplex}
 \usage{
 mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
   idparsfix = (1:4)[-idparsopt], brts, cond = 1, soc = 2,
@@ -56,7 +58,9 @@ but missing in the phylogeny_}
 \item{...}{something}
 }
 \description{
-Internal mbd function.
+This function provides a likelihood for a subset of parameters.
+This is built to work inside mbd_minusLL_vs_single_parameter
+or any optimizer like simplex, optim or subplex
 }
 \details{
 This is not to be called by the user.
