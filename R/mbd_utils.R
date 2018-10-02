@@ -17,7 +17,7 @@ correlation_analysis <- function(
   idparsopt,
   mother_folder
 ) {
-  n_pars <- length(sim_pars);#pars_interval=list(c(0, quantile(results[, 1],.95)), c(0, quantile(results[, 2],.95)), c(0, quantile(results[, 3],.95)))
+  n_pars <- length(sim_pars)
   if (missing(idparsopt)) {
     estimated_pars <- 1:n_pars
   } else {
@@ -25,20 +25,30 @@ correlation_analysis <- function(
   }
   par_names <- colnames(results)[1:n_pars]
 
-  truevalues_color <- "red"; points_color = "azure4"; medians_color = "blue3"#"chartreuse3";
-  medians_color_name <- "blue"; truevalues_color_name = "red";
+  truevalues_color <- "red"
+  points_color <- "azure4"
+  medians_color <- "blue3" #"chartreuse3";
+  medians_color_name <- "blue"
+  truevalues_color_name <- "red"
 
   medians <- rep(0, n_pars)
   for (idpar in 1:n_pars) {
     medians[idpar] <- stats::median(results[, idpar])
   }
-  medians_string <- paste0("MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), sep = "''", collapse = ", "), ")")
-  truevalues_string <- paste0("True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars, 2), sep = "''", collapse = ", "), ")")
+  medians_string <- paste0(
+    "MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), 
+    sep = "''", collapse = ", "), ")"
+  )
+  truevalues_string <- paste0(
+    "True Values (", truevalues_color_name, ") = (", paste(signif(sim_pars, 2),
+      sep = "''", collapse = ", "), ")"
+  )
   axislimits <- rep(NA, n_pars)
+  # BUG? 'probs = 1 - percentage_hidden_outliers' used to be with arrow operator
   for (i in 1:n_pars) {
     axislimits[i] <- stats::quantile(
       results[, i],
-      probs = 1 - percentage_hidden_outliers # BUG? Used to be with arrow operator
+      probs = 1 - percentage_hidden_outliers 
     )
   }
 
@@ -48,7 +58,11 @@ correlation_analysis <- function(
   graphics::par(oma = c(0, 0, 2, 0));
   for (i in estimated_pars) { for (j in estimated_pars) {
     good_lines <- results[, i] < axislimits[i] & results[, j] < axislimits[j]
-    ifelse(any(good_lines) > 0, good.results <- results[good_lines, ], good.results <- results)
+    if (any(good_lines) > 0) {
+      good.results <- results[good_lines, ]
+    } else {
+      good.results <- results
+    }
 
     if (i == j) {
       graphics::hist((good.results[, i]), main = NULL,
@@ -65,8 +79,14 @@ correlation_analysis <- function(
         cex = 0.3,
         col = points_color
       )
-      graphics::points(x = sim_pars[j], y = sim_pars[i], col = truevalues_color, pch = 10, cex = 1.5)
-      graphics::points(x = medians[j], y = medians[i], col = medians_color, pch = 10, cex = 1.5)
+      graphics::points(
+        x = sim_pars[j], y = sim_pars[i], col = truevalues_color, pch = 10, 
+        cex = 1.5
+      )
+      graphics::points(
+        x = medians[j], y = medians[i], col = medians_color, pch = 10, 
+        cex = 1.5
+      )
     }
   }}
   titolo_pdf <- paste0(
@@ -85,10 +105,17 @@ correlation_analysis <- function(
     graphics::par(oma = c(0, 0, 2, 0));
     for (i in estimated_pars) { for (j in estimated_pars) {
       good_lines <- results[, i] < axislimits[i] & results[, j] < axislimits[j]
-      ifelse(any(good_lines) > 0, good.results <- results[good_lines, ], good.results <- results)
+      if (any(good_lines) > 0) {
+        good.results <- results[good_lines, ]
+      } else { 
+        good.results <- results
+      }
 
       if (i == j) {
-        graphics::hist((good.results[, i]), main = NULL, xlab = paste(par_names[i]), breaks = 15)
+        graphics::hist(
+          good.results[, i], 
+          main = NULL, xlab = paste(par_names[i]), breaks = 15
+        )
         graphics::abline(v = sim_pars[i], col = truevalues_color)
         graphics::abline(v = medians[i], col = medians_color)
       } else {
@@ -129,10 +156,12 @@ percentiles_function <- function(
   quantiles_choice = c(.25, .50, .75)
 ) {
   quantiles_names <- format(round(quantiles_choice, 2), nsmall = 2)
-  n_pars <- length(sim_pars);#pars_interval=list(c(0, stats::quantile(results[, 1],.95)), c(0, quantile(results[, 2],.95)), c(0, quantile(results[, 3],.95)))
+  n_pars <- length(sim_pars)
   parnames <-  colnames(results)[1:n_pars]
   percentiles <- vector("list", 3)
-  for (idpar in 1:n_pars) { percentiles[[idpar]] <- stats::quantile(results[, idpar], quantiles_choice)}
+  for (idpar in 1:n_pars) { 
+    percentiles[[idpar]] <- stats::quantile(results[, idpar], quantiles_choice)
+  }
   percentiles <- t(matrix(unlist(percentiles), nrow = 3, ncol = n_pars));
   colnames(percentiles) <- quantiles_names; rownames(percentiles) <- parnames
   if (printit == 1) {
@@ -171,7 +200,10 @@ brts2time_intervals_and_births <- function(
   branching_times <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   births <- c(0, unname(table(branching_times))[-1])
   unique_branching_times <- as.numeric(names(table(branching_times)))
-  time_intervals <- c((diff(unique_branching_times)),(abs(utils::tail(unique_branching_times, 1))))
+  time_intervals <- c(
+    diff(unique_branching_times),
+    abs(utils::tail(unique_branching_times, 1))
+  )
   births <- births[-1]
   list(time_intervals = time_intervals, births = births)
 }
@@ -207,8 +239,10 @@ mbd_p_eq <- function(
       ncol = max_number_of_species + 1
     )
     testit::assert(!"Do not call hyperA")
-    # my_matrix <- lambda * hyperA::hyperA(N = max_number_of_species, k = 0, q = q)
-    # my_matrix[row(my_matrix) == col(my_matrix) - 1] = mu * nvec[2:(max_number_of_species+1)]
+    # my_matrix <- lambda * 
+    # hyperA::hyperA(N = max_number_of_species, k = 0, q = q)
+    # my_matrix[row(my_matrix) == col(my_matrix) - 1] = mu * 
+    #   nvec[2:(max_number_of_species+1)]
     # diag(my_matrix) = - mu * nvec - lambda * (1 - (1 - q) ^ nvec)
     # return(my_matrix)
   }
@@ -230,7 +264,15 @@ mbd_p_eq <- function(
   std <- sqrt(sum(nvec^2 * vf) - nmedio^2)
   if (output == 1) {
     graphics::plot(log(vf))
-    print(paste("Sim pars are:", test_parameters[1], test_parameters[2], test_parameters[3], ". Average n is", nmedio, "with std:", std))
+    print(
+      paste(
+        "Sim pars are:", 
+        test_parameters[1], 
+        test_parameters[2], 
+        test_parameters[3], 
+        ". Average n is", nmedio, "with std:", std
+      )
+    )
   }
   list(avg_n = nmedio, std_n = std)
 }
@@ -260,8 +302,8 @@ myheatmap <- function(
 # @Giappo: add doc
 #' Does something J
 #' @inheritParams default_params_doc
-myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
-
+myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits
+) {
   if (missing(x_splits)) {
     x_splits <- round((length(x)) / 10)
   }
@@ -285,7 +327,12 @@ myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits){
   pretty_y_at	<-	pretty(range(lY), n = y_splits)
   pretty_y_lab	<-	round(pretty_y_at, 2)
 
-  jet.colors <- grDevices::colorRampPalette(c("#00007F", "blue", "#007FFF", "cyan", "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"))
+  jet.colors <- grDevices::colorRampPalette(
+    c(
+      "#00007F", "blue", "#007FFF", "cyan", 
+      "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"
+    )
+  )
   graphics::filled.contour(
     t(z),
     color = jet.colors,
@@ -323,8 +370,12 @@ negatives_correction <- function(
     nan_components <- which(is.nan(v))
     if (display_output == 1) {
       cat("There are non-numeric components for par values:", pars, "\n")
-      if (length(na_components) > 0) { cat("NA component are:", na_components)}
-      if (length(nan_components) > 0) { cat("NaN component are:", nan_components)}
+      if (length(na_components) > 0) { 
+        cat("NA component are:", na_components)
+      }
+      if (length(nan_components) > 0) { 
+        cat("NaN component are:", nan_components)
+      }
     }
   }
 
@@ -380,7 +431,9 @@ called_functions <- function(
     function.code <- deparse(get(function_name))
 
     # break code up into sections preceding left brackets:
-    left.brackets <- c(unlist(strsplit(function.code, split = "[[:space:]]*\\(")))
+    left.brackets <- c(
+      unlist(strsplit(function.code, split = "[[:space:]]*\\("))
+    )
 
     called.functions <- unique(
       c(
@@ -408,7 +461,9 @@ called_functions <- function(
         testit::assert(!"Obsolete check due to commenting out below")
         # checked_functions: We need to keep track of which functions
         # we've checked to avoid infinite loops.
-        # functs.to.check <- called.functions[!(called.functions %in% checked_functions)]
+        # functs.to.check <- called.functions[
+        #   !(called.functions %in% checked_functions)
+        # ]
 
         testit::assert(!"Should never call listFunctions, whatever it is")
         # called.functions <- unique(c(called.functions,
@@ -416,10 +471,11 @@ called_functions <- function(
         #         listFunctions(x, recursive = T, checked_functions = c(checked_functions, called.functions))
         #         }))))
     }
-    return(called.functions)
+    called.functions
 }
 
-#' Checks if some matrix entries are infinite, NaN, NA or (only in the lower triangle) negative
+#' Checks if some matrix entries are infinite, NaN, NA 
+#'   or (only in the lower triangle) negative
 #' @inheritParams default_params_doc
 #' @param Mlist something
 #' @param sign_check something
@@ -680,7 +736,9 @@ summarize_beast_posterior <- function(
 
       if (i == 1) {
         branch_infos <- array(data = NA, c(dim(branch_info), length(samp)))
-        dimnames(branch_infos) <- list(NULL, dimnames(branch_info)[[2]], 1:length(samp))
+        dimnames(branch_infos) <- list(
+          NULL, dimnames(branch_info)[[2]], 1:length(samp)
+        )
       }
 
       branch_infos[,, i] <- as.matrix(branch_info)
@@ -715,7 +773,8 @@ extract_posterior <- function(
     )
 
   # beast_posterior$trees # a list of the trees in phylo format
-  # beast_posterior$branch_info # a list of branch lengths and associated information
+  # beast_posterior$branch_info # a list of branch lengths and 
+  # associated information
   brts <- list()
   for (i in 1:maxtree) {
     brts[[i]] <- unname(ape::branching.times(beast_posterior$trees[[i]]))

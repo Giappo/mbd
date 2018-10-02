@@ -36,4 +36,3 @@ test_that("Sims are ok", {
   expect_equal(conditioning_test, 1)
   # warnings()
 })
-

@@ -159,7 +159,6 @@ mbd_sim <- function(
     multiple_births_rec_tree <- sum(duplicated(births_rec_tree))
     multi_births_full_tree <- sum(duplicated(births_full_tree))
     #should i consider the full tree or the reconstructed one???
-    # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
     multiple_births_check <- (multiple_births_rec_tree >= minimum_multiple_births)
 
      #should i keep this simulation?
@@ -305,23 +304,14 @@ mbd_sim0 <- function(
     alive <- matrix(alive, ncol = 4)
     conditioning_on_survival <- (length(unique(sign(alive[, 3]))) != 2) * cond
     #multiple births check
-    #multiple births check
     births_rec_tree <- unlist(
       unname(
         sort(DDD::L2brts(l_matrix, dropextinct = TRUE),
         decreasing = TRUE)
       )
     )
-    # births_full_tree <- unlist(
-    #   unname(
-    #     sort(DDD::L2brts(l_matrix, dropextinct = FALSE),
-    #     decreasing = TRUE)
-    #   )
-    # )
     multiple_births_rec_tree <- sum(duplicated(births_rec_tree))
-    #  multi_births_full_tree <- sum(duplicated(births_full_tree))
     #should i consider the full tree or the reconstructed one???
-    # multiple_births_check = (multi_births_full_tree>=minimum_multiple_births)
     multiple_births_check <- (multiple_births_rec_tree >=
       minimum_multiple_births
     )
