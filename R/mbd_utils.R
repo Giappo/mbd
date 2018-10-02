@@ -36,7 +36,7 @@ correlation_analysis <- function(
     medians[idpar] <- stats::median(results[, idpar])
   }
   medians_string <- paste0(
-    "MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2), 
+    "MLE Medians (", medians_color_name, ") = (", paste(signif(medians, 2),
     sep = "''", collapse = ", "), ")"
   )
   truevalues_string <- paste0(
@@ -48,7 +48,7 @@ correlation_analysis <- function(
   for (i in 1:n_pars) {
     axislimits[i] <- stats::quantile(
       results[, i],
-      probs = 1 - percentage_hidden_outliers 
+      probs = 1 - percentage_hidden_outliers
     )
   }
 
@@ -80,11 +80,11 @@ correlation_analysis <- function(
         col = points_color
       )
       graphics::points(
-        x = sim_pars[j], y = sim_pars[i], col = truevalues_color, pch = 10, 
+        x = sim_pars[j], y = sim_pars[i], col = truevalues_color, pch = 10,
         cex = 1.5
       )
       graphics::points(
-        x = medians[j], y = medians[i], col = medians_color, pch = 10, 
+        x = medians[j], y = medians[i], col = medians_color, pch = 10,
         cex = 1.5
       )
     }
@@ -107,13 +107,13 @@ correlation_analysis <- function(
       good_lines <- results[, i] < axislimits[i] & results[, j] < axislimits[j]
       if (any(good_lines) > 0) {
         good.results <- results[good_lines, ]
-      } else { 
+      } else {
         good.results <- results
       }
 
       if (i == j) {
         graphics::hist(
-          good.results[, i], 
+          good.results[, i],
           main = NULL, xlab = paste(par_names[i]), breaks = 15
         )
         graphics::abline(v = sim_pars[i], col = truevalues_color)
@@ -159,7 +159,7 @@ percentiles_function <- function(
   n_pars <- length(sim_pars)
   parnames <-  colnames(results)[1:n_pars]
   percentiles <- vector("list", 3)
-  for (idpar in 1:n_pars) { 
+  for (idpar in 1:n_pars) {
     percentiles[[idpar]] <- stats::quantile(results[, idpar], quantiles_choice)
   }
   percentiles <- t(matrix(unlist(percentiles), nrow = 3, ncol = n_pars));
@@ -239,9 +239,9 @@ mbd_p_eq <- function(
       ncol = max_number_of_species + 1
     )
     testit::assert(!"Do not call hyperA")
-    # my_matrix <- lambda * 
+    # my_matrix <- lambda *
     # hyperA::hyperA(N = max_number_of_species, k = 0, q = q)
-    # my_matrix[row(my_matrix) == col(my_matrix) - 1] = mu * 
+    # my_matrix[row(my_matrix) == col(my_matrix) - 1] = mu *
     #   nvec[2:(max_number_of_species+1)]
     # diag(my_matrix) = - mu * nvec - lambda * (1 - (1 - q) ^ nvec)
     # return(my_matrix)
@@ -266,10 +266,10 @@ mbd_p_eq <- function(
     graphics::plot(log(vf))
     print(
       paste(
-        "Sim pars are:", 
-        test_parameters[1], 
-        test_parameters[2], 
-        test_parameters[3], 
+        "Sim pars are:",
+        test_parameters[1],
+        test_parameters[2],
+        test_parameters[3],
         ". Average n is", nmedio, "with std:", std
       )
     )
@@ -329,7 +329,7 @@ myheatmap2 <- function(x, y, z, x_name, y_name, z_name, x_splits, y_splits
 
   jet.colors <- grDevices::colorRampPalette(
     c(
-      "#00007F", "blue", "#007FFF", "cyan", 
+      "#00007F", "blue", "#007FFF", "cyan",
       "#7FFF7F", "yellow", "#FF7F00", "red", "#7F0000"
     )
   )
@@ -370,10 +370,10 @@ negatives_correction <- function(
     nan_components <- which(is.nan(v))
     if (display_output == 1) {
       cat("There are non-numeric components for par values:", pars, "\n")
-      if (length(na_components) > 0) { 
+      if (length(na_components) > 0) {
         cat("NA component are:", na_components)
       }
-      if (length(nan_components) > 0) { 
+      if (length(nan_components) > 0) {
         cat("NaN component are:", nan_components)
       }
     }
@@ -474,7 +474,7 @@ called_functions <- function(
     called.functions
 }
 
-#' Checks if some matrix entries are infinite, NaN, NA 
+#' Checks if some matrix entries are infinite, NaN, NA
 #'   or (only in the lower triangle) negative
 #' @inheritParams default_params_doc
 #' @param Mlist something
@@ -773,7 +773,7 @@ extract_posterior <- function(
     )
 
   # beast_posterior$trees # a list of the trees in phylo format
-  # beast_posterior$branch_info # a list of branch lengths and 
+  # beast_posterior$branch_info # a list of branch lengths and
   # associated information
   brts <- list()
   for (i in 1:maxtree) {
