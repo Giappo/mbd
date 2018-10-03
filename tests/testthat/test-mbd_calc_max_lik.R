@@ -45,6 +45,37 @@ test_that("compare style", {
   expect_equal(out_classic, out_new)
 })
 
+test_that("can estimate BD trees", {
+
+  skip("Cannot do ML estimation on BD trees, Issue #4, #4")
+  # Simulate a BD tree
+  set.seed(10)
+  lambda <- 0.3
+  mu <- 0.1
+  phylogeny <- mbd_sim_checked(
+    mbd_params = create_mbd_params(lambda = lambda, mu = mu, nu = 0.0, q = 0.0),
+    crown_age = 2,
+    conditioned_on = "non_extinction"
+  )$tes
+  
+  # Maximum likelihood of BD tree
+  ml_est <- mbd_calc_max_lik(
+    branching_times = ape::branching.times(phylogeny),
+    init_param_values = create_mbd_params(
+      lambda = lambda,
+      mu = mu,
+      nu = 0.0,
+      q = 0.0
+    ),
+    estimated_params = create_mbd_params_selector(lambda = TRUE, mu = TRUE),
+    fixed_params = create_mbd_params_selector(nu = TRUE, q = TRUE),
+    init_n_species = 2,
+    n_missing_species = 0,
+    conditioned_on = "non_extinction"
+  )
+  expect_true(ml_est$lambda >= 0)
+})
+
 test_that("abuse", {
 
   mbd_params <- create_mbd_params(0.1, 0.2, 0.3, 0.4)

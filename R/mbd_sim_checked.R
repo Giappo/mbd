@@ -1,6 +1,6 @@
-#' More intuitive interface of \code{mbd_sim}
+#' More intuitive interface of \link{mbd_sim}
 #' @param mbd_params MBD parameters,
-#'   as created by \code{create_mbd_params}
+#'   as created by \link{create_mbd_params}
 #' @param crown_age the crown age.
 #'   Either \code{crown_age} or \code{stem_age} must be exclusively set
 #' @param stem_age the stem age

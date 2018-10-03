@@ -2,14 +2,14 @@
 % Please edit documentation in R/mbd_sim_checked.R
 \name{mbd_sim_checked}
 \alias{mbd_sim_checked}
-\title{More intuitive interface of \code{mbd_sim}}
+\title{More intuitive interface of \link{mbd_sim}}
 \usage{
 mbd_sim_checked(mbd_params, crown_age = NA, stem_age = NA,
   conditioned_on = "nothing")
 }
 \arguments{
 \item{mbd_params}{MBD parameters,
-as created by \code{create_mbd_params}}
+as created by \link{create_mbd_params}}
 
 \item{crown_age}{the crown age.
 Either \code{crown_age} or \code{stem_age} must be exclusively set}
@@ -24,7 +24,7 @@ Either \code{crown_age} or \code{stem_age} must be exclusively set}
 }}
 }
 \description{
-More intuitive interface of \code{mbd_sim}
+More intuitive interface of \link{mbd_sim}
 }
 \author{
 Richel J.C. Bilderbeek
