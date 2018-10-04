@@ -11,6 +11,42 @@ test_that("use", {
   expect_equal(loglik, -3.6017356241900162495)
 })
 
+test_that("q is zero", {
+
+  # pars[2] must be zero
+  # pars[4] = q
+  loglik <- mbd::pmb_loglik(
+    pars = c(0.2, 0.0, 2.0, 0.0),
+    brts = c(1, 2, 3),
+    soc = 2 # Crown age
+  )
+  expect_equal(loglik, -3.2271163556401454287)
+})
+
+test_that("nu is zero", {
+
+  # pars[2] must be zero
+  # pars[3] = nu
+  loglik <- mbd::pmb_loglik(
+    pars = c(0.2, 0.0, 0.0, 0.1),
+    brts = c(1, 2, 3),
+    soc = 2 # Crown age
+  )
+  expect_equal(loglik, -3.2271163556401454287)
+})
+
+test_that("nu and q are zero", {
+
+  # pars[2] must be zero
+  # pars[3] = nu
+  loglik <- mbd::pmb_loglik(
+    pars = c(0.2, 0.0, 0.0, 0.0),
+    brts = c(1, 2, 3),
+    soc = 2 # Crown age
+  )
+  expect_equal(loglik, -3.2271163556401454287)
+})
+
 test_that("abuse", {
 
   lambda <- 0.2
