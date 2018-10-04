@@ -14,7 +14,7 @@ test_that("use", {
 test_that("q is zero", {
 
   # pars[2] must be zero
-  # pars[4] = q
+  # pars[4] is q
   loglik <- mbd::pmb_loglik(
     pars = c(0.2, 0.0, 2.0, 0.0),
     brts = c(1, 2, 3),
@@ -26,7 +26,7 @@ test_that("q is zero", {
 test_that("nu is zero", {
 
   # pars[2] must be zero
-  # pars[3] = nu
+  # pars[3] is nu
   loglik <- mbd::pmb_loglik(
     pars = c(0.2, 0.0, 0.0, 0.1),
     brts = c(1, 2, 3),
@@ -38,7 +38,7 @@ test_that("nu is zero", {
 test_that("nu and q are zero", {
 
   # pars[2] must be zero
-  # pars[3] = nu
+  # pars[3] is nu
   loglik <- mbd::pmb_loglik(
     pars = c(0.2, 0.0, 0.0, 0.0),
     brts = c(1, 2, 3),
