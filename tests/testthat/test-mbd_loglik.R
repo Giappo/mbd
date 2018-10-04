@@ -6,16 +6,16 @@ test_that("silent if verbose is FALSE", {
   expect_silent(
     mbd::mbd_loglik(
       pars = c(0.2, 0.15, 2.0, 0.1),
-      brts = c(1, 2, 3, 4),
+      brts = c(1, 2, 3),
       soc = 2, # Crown age
       cond = 1  # Non-extinction
     )
   )
 })
 
-test_that("uninformative error message", {
+test_that("number of items to replace is not a multiple of replacement length", {
 
-  skip("fix")
+  skip("number of items to replace is not a multiple of replacement length, #5")
   expect_silent(
     mbd::mbd_loglik(
       pars = c(0.2, 0.15, 2.0, 0.1),
