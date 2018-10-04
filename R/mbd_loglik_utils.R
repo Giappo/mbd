@@ -15,8 +15,11 @@
 #'   testthat::expect_equal(m[3, 2], 0.405)
 #'   testthat::expect_equal(m[3, 3], 0.6561)
 #' @noRd
-#' @author Hanno Hildenbrand
+#' @author Hanno Hildenbrand, adapted by Richel J.C. Bilderbeek
 hyper_a_hanno <- function(n_species, k, q) {
+  if (n_species > 46340) {
+    stop("Cannot allocate matrix with 2^31 elements")
+  }
   # HG function: fast O(N), updated after Moulis meeting
   j <- 0:k
   a_1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
