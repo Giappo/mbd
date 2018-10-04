@@ -20,7 +20,7 @@ test_that("use", {
   expect_equal(0.3, out$lambda)
   expect_equal(0.1, out$mu)
   expect_equal(0.1, out$nu)
-  expect_equal(0.0010006043479098515256, out$q)
+  expect_equal(1.2312452488755977663e-13, out$q)
 })
 
 test_that("abuse", {
