@@ -9,8 +9,7 @@
 #' @param alpha something
 #' @param alpha0 something
 #' @param b something
-#' @param brts A set of branching times of a phylogeny_
-#' @param chain_length something
+#' @param brts A set of branching times of a phylogeny
 #' @param changeloglikifnoconv something
 #' @param checked_functions something
 #' @param colormap something
@@ -100,7 +99,8 @@
 #'   \item id == 4 corresponds to q (single-lineage speciation probability)
 #' }
 #' @param sim_phylo something
-#' @param soc Sets whether stem or crown age should be used (1 or 2).
+#' @param soc Sets whether stem or crown age should be used. Use '1' for stem,
+#'   use '2' for crown.
 #' @param subsamp something
 #' @param t something
 #' @param t1 something
@@ -140,7 +140,6 @@ default_params_doc <- function(
   alpha0,
   b,
   brts,
-  chain_length,
   changeloglikifnoconv,
   checked_functions,
   colormap,

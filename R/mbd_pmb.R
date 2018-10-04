@@ -21,10 +21,18 @@ pmb_loglik <- function(
   lambda <- test_pars[1]
   mu <- test_pars[2]
   nu <- test_pars[3]
-  q <- test_pars[4];
-  condition1 <- (any(is.nan(test_pars)) != 0 |
-    any(is.infinite(test_pars)) != 0
-  )
+  q <- test_pars[4]
+  if (any(is.nan(pars))) {
+    stop("'pars' cannot contain NaNs")
+  }
+  if (any(is.infinite(pars))) {
+    stop("'pars' cannot contain Infs")
+  }
+  if (lambda < 0.0) {
+    stop("'lambda' must be positive")
+  }
+  
+  condition1 <- FALSE
   condition2 <- (lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
   if (condition1 | condition2) {
     th_loglik <- -Inf
