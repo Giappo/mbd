@@ -148,7 +148,7 @@ mbd_ml <- function(
     methode = methode,
     minimum_multiple_births = minimum_multiple_births,
     pars_transform = pars_transform,
-    print_errors = print_errors, 
+    print_errors = print_errors,
     ...
   )
   if (verbose == TRUE) {
