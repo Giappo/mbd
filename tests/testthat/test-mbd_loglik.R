@@ -13,7 +13,8 @@ test_that("silent if verbose is FALSE", {
   )
 })
 
-test_that("number of items to replace is not a multiple of replacement length", {
+test_that(
+  "number of items to replace is not a multiple of replacement length", {
 
   skip("number of items to replace is not a multiple of replacement length, #5")
   expect_silent(
