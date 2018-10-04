@@ -332,11 +332,10 @@ determine_k_limit <- function(
   soc + max(mvec[(mvec %in% which((cumsum(p_m / sum(p_m))) <= 0.95))])
 }
 
-#' @title Internal mbd function
-#' @description Internal mbd function.
+#' Called by \link{mbd_loglik} if and only if conditioned on non-extinction
 #' @inheritParams default_params_doc
-#' @details This is not to be called by the user.
-#' @export
+#' @author Giovanni Laudanno
+#' @noRd
 calc_cond_prob <- function(
   brts,
   pars,
