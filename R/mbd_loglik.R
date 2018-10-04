@@ -133,6 +133,11 @@ mbd_loglik <- function(
       reltol = reltol
     )
   }
+  if (is.nan(log(pc))) {
+    # Whatever happens in the future, if pc is NaN,
+    # the result will be NaN
+    return(NaN)
+  }
 
   #LIKELIHOOD INTEGRATION
   start_over_again <- 1; iterations <- 0; max_iterations <- 100

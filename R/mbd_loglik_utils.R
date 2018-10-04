@@ -334,6 +334,8 @@ determine_k_limit <- function(
 
 #' Called by \link{mbd_loglik} if and only if conditioned on non-extinction
 #' @inheritParams default_params_doc
+#' @return the pc. If \code{is.nan(log(pc))} the log-likleihood estimation
+#'   by \link{mbd_loglik} failed
 #' @author Giovanni Laudanno
 #' @noRd
 calc_cond_prob <- function(
