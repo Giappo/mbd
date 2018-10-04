@@ -179,10 +179,8 @@ mbd_loglik <- function(
         q_t[t, ] <- negatives_correction(q_t[t, ], pars) # nolint internal function
       }
       if (any(is.nan(q_t[t, ]))) {
-        if (Sys.info()[["sysname"]] == "Windows") {
-          print(pars); print(q_t[t, ])
-        }
-        nan_values <- 1; break
+        nan_values <- 1
+        break
       }
       if (any(q_t[t, ] < 0)) {
         negative_values <- 1
