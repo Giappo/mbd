@@ -28,12 +28,13 @@ The ids are defined as follows:
 
 \item{idparsfix}{something}
 
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually

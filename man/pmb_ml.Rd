@@ -11,7 +11,7 @@ pmb_ml(brts, initparsopt, idparsopt = c(1, 3, 4), soc = 2, res = 10 *
   pars_transform = 1, missnumspec = 0)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
 \item{initparsopt}{something}
 
@@ -24,7 +24,8 @@ The ids are defined as follows:
   \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{res}{something}
 
@@ -45,7 +46,7 @@ but missing in the phylogeny_}
 Perform a maximum likelihood estimation for a Pure Multiple Birth model.
 }
 \seealso{
-use \link{mbd_ml} to perform a maximum likelihood estimation 
+use \link{mbd_ml} to perform a maximum likelihood estimation
   for a Multiple Birth Death model.
 }
 \author{

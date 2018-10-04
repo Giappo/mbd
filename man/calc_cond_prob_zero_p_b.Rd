@@ -9,7 +9,7 @@ calc_cond_prob_zero_p_b(brts, pars, lx = 200, soc = 2,
   reltol = 1e-10)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
 \item{pars}{vector of parameters:
 \itemize{
@@ -27,7 +27,8 @@ or
 
 \item{lx}{It is the number of ODEs considered for the computation.}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually

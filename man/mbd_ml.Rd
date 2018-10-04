@@ -14,7 +14,7 @@ mbd_ml(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
   print_errors = 0, verbose = TRUE, ...)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
 \item{initparsopt}{The initial values of the parameters
 that must be optimized}
@@ -39,7 +39,8 @@ but missing in the phylogeny_}
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
@@ -113,7 +114,7 @@ graphics::plot(simulated_data$tes)
 # )
 }
 \seealso{
-use \link{pmb_ml} to perform a maximum likelihood estimation 
+use \link{pmb_ml} to perform a maximum likelihood estimation
   for a Pure Multiple Birth model.
 }
 \author{

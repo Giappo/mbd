@@ -22,9 +22,10 @@ or
   \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 }
 \description{
 Get the Q vector for a Pure Multiple Birth model's likelihood
