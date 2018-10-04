@@ -42,4 +42,45 @@ test_that("abuse", {
     ),
     "'pars' cannot contain Infs"
   )
+  expect_error(
+    mbd::pmb_loglik(
+      pars = c(-123, 0.0, 2.0, 0.1),
+      brts = c(1, 2, 3),
+      soc = 2 # Crown age
+    ),
+    "'lambda' must be positive"
+  )
+  expect_error(
+    mbd::pmb_loglik(
+      pars = c(0.2, 12.34, 2.0, 0.1),
+      brts = c(1, 2, 3),
+      soc = 2 # Crown age
+    ),
+    "'mu' must be zero"
+  )
+  expect_error(
+    mbd::pmb_loglik(
+      pars = c(0.2, 0.0, -12.34, 0.1),
+      brts = c(1, 2, 3),
+      soc = 2 # Crown age
+    ),
+    "'nu' must be positive"
+  )
+  expect_error(
+    mbd::pmb_loglik(
+      pars = c(0.2, 0.0, 2.0, -12.34),
+      brts = c(1, 2, 3),
+      soc = 2 # Crown age
+    ),
+    "'q' must be positive"
+  )
+  expect_error(
+    mbd::pmb_loglik(
+      pars = c(0.2, 0.0, 2.0, 12.34),
+      brts = c(1, 2, 3),
+      soc = 2 # Crown age
+    ),
+    "'q' must be less or equal to one"
+  )
+  
 })
