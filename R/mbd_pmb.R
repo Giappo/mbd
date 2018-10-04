@@ -9,19 +9,11 @@ pmb_loglik <- function(
   brts,
   soc = 2
 ) {
-
-  #BOTH LAmbdA AND NU
-  #setup
-  test_pars <- pars
-  test_brts <- brts
-  #numerical loglik
-
-  #theoretical loglik
   init_n_lineages <- soc
-  lambda <- test_pars[1]
-  mu <- test_pars[2]
-  nu <- test_pars[3]
-  q <- test_pars[4]
+  lambda <- pars[1]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4]
   if (any(is.nan(pars))) {
     stop("'pars' cannot contain NaNs")
   }
@@ -43,7 +35,7 @@ pmb_loglik <- function(
   if (q > 1.0) {
     stop("'q' must be less or equal to one")
   }
-  data <- brts2time_intervals_and_births(test_brts)  # nolint internal function
+  data <- brts2time_intervals_and_births(brts)  # nolint internal function
   time_intervals <- data$time_intervals
   births <- data$births
   k <- init_n_lineages + cumsum(c(0, births))
