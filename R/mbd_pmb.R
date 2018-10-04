@@ -173,7 +173,7 @@ pmb_loglik_choosepar <- function(
 #' Perform a maximum likelihood estimation for a Pure Multiple Birth model.
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
-#' @seealso use \link{mbd_ml} to perform a maximum likelihood estimation 
+#' @seealso use \link{mbd_ml} to perform a maximum likelihood estimation
 #'   for a Multiple Birth Death model.
 #' @export
 pmb_ml <- function(

@@ -60,7 +60,7 @@ test_that("can estimate BD trees", {
     crown_age = 2,
     conditioned_on = "non_extinction"
   )$tes
-  
+
   # Maximum likelihood of BD tree
   ml_est <- mbd_calc_max_lik(
     branching_times = ape::branching.times(phylogeny),

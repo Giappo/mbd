@@ -5,9 +5,9 @@ test_that("silent if verbose is FALSE", {
   skip("fix")
   expect_silent(
     mbd::mbd_loglik(
-      pars = c(0.2, 0.15, 2.0, 0.1), 
-      brts = c(1, 2, 3, 4), 
-      soc = 2, # Crown age 
+      pars = c(0.2, 0.15, 2.0, 0.1),
+      brts = c(1, 2, 3, 4),
+      soc = 2, # Crown age
       cond = 1  # Non-extinction
     )
   )
@@ -18,9 +18,9 @@ test_that("uninformative error message", {
   skip("fix")
   expect_silent(
     mbd::mbd_loglik(
-      pars = c(0.2, 0.15, 2.0, 0.1), 
-      brts = c(1, 2, 2, 2, 3), 
-      soc = 2, # Crown age 
+      pars = c(0.2, 0.15, 2.0, 0.1),
+      brts = c(1, 2, 2, 2, 3),
+      soc = 2, # Crown age
       cond = 1  # Non-extinction
     )
   )
@@ -54,7 +54,7 @@ test_that("Convergence fail?", {
   # Here it works
   expect_silent(
     mbd::mbd_loglik(
-      pars = pars, 
+      pars = pars,
       brts = c(1, 2, 2), # OK
       soc = crown
     )
@@ -62,7 +62,7 @@ test_that("Convergence fail?", {
   # Is this really what is intended?
   expect_error(
     mbd::mbd_loglik(
-      pars = pars, 
+      pars = pars,
       brts = c(1, 2, 3), # Not OK
       soc = crown
     ),
