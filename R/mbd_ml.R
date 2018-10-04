@@ -97,11 +97,6 @@ mbd_ml <- function(
   n_pars <- length(namepars)
   #those are the parameters that you get if something goes sideways
   failpars <- rep(-1, n_pars); names(failpars) <- namepars
-  if (is.numeric(brts) == FALSE) {
-    cat("The branching times should be numeric.\n")
-    out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
-    return(invisible(out2))
-  }
   idpars <- sort(c(idparsopt, idparsfix))
   if ((sum(idpars == (1:n_pars)) != n_pars) ||
     (length(initparsopt) != length(idparsopt)) ||

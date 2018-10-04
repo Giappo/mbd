@@ -49,7 +49,7 @@ test_that("can estimate BD trees", {
 
   skip("Cannot do ML estimation on BD trees, Issue #4, #4")
   # Simulate a BD tree
-  set.seed(11)
+  set.seed(12)
   lambda <- 0.3
   mu <- 0.1
   nu <- 0.0
