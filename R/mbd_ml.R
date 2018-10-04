@@ -98,7 +98,7 @@ mbd_ml <- function(
       "in either 'idparsfix' or 'idparsopt'"
     )
   }
-  
+
   if (length(idparsfix) == 0) {
     idparsfix <- NULL
   }

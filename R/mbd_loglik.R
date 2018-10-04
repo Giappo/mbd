@@ -119,7 +119,7 @@ mbd_loglik <- function(
   lx <- alpha * max_k;
   pc <- 1
   if (cond == 1) {
-    pc <- mbd::calc_cond_prob(
+    pc <- calc_cond_prob(
       brts = brts,
       pars = pars,
       soc = soc,

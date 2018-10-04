@@ -71,6 +71,44 @@ test_that("Convergence fail?", {
   )
 })
 
+test_that("q is zero", {
+
+  skip("Cannot do ML estimation on BD trees, Issue #4, #4")
+  # pars[4] is q
+  loglik <- mbd::mbd_loglik(
+    pars = c(0.2, 0.1, 2.0, 0.0),
+    brts = c(1, 2, 3),
+    soc = 2 # Crown age
+  )
+  expect_equal(loglik, -2.6008336107847660479)
+})
+
+test_that("nu is zero", {
+
+  # pars[3] is nu
+  loglik <- mbd::mbd_loglik(
+    pars = c(0.2, 0.1, 0.0, 0.1),
+    brts = c(1, 2, 3),
+    soc = 2 # Crown age
+  )
+  expect_equal(loglik, -2.6008336107847660479)
+})
+
+test_that("nu and q are zero", {
+
+  # pars[3] is nu
+  # pars[4] is q
+  loglik <- mbd::mbd_loglik(
+    pars = c(0.2, 0.1, 0.0, 0.0),
+    brts = c(1, 2, 3),
+    soc = 2 # Crown age
+  )
+  expect_equal(loglik, -2.6008336107847660479)
+})
+
+
+
+
 test_that("abuse", {
 
   expect_error(
