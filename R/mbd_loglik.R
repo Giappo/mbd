@@ -27,6 +27,8 @@
 #' #   soc = 2, cond = 1, missnumspec = 0
 #' # )
 #'
+#' @seealso use \link{pmb_loglik} to calculate the log-likelihood for
+#'   a Pure Multiple Birth model.
 #' @export
 mbd_loglik <- function(
     pars,

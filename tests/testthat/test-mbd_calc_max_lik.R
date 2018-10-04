@@ -52,8 +52,11 @@ test_that("can estimate BD trees", {
   set.seed(10)
   lambda <- 0.3
   mu <- 0.1
+  nu <- 0.0
+  q <- 0.0
+  mbd_params <- create_mbd_params(lambda = lambda, mu = mu, nu = nu, q = q)
   phylogeny <- mbd_sim_checked(
-    mbd_params = create_mbd_params(lambda = lambda, mu = mu, nu = 0.0, q = 0.0),
+    mbd_params = mbd_params,
     crown_age = 2,
     conditioned_on = "non_extinction"
   )$tes
@@ -61,18 +64,14 @@ test_that("can estimate BD trees", {
   # Maximum likelihood of BD tree
   ml_est <- mbd_calc_max_lik(
     branching_times = ape::branching.times(phylogeny),
-    init_param_values = create_mbd_params(
-      lambda = lambda,
-      mu = mu,
-      nu = 0.0,
-      q = 0.0
-    ),
+    init_param_values = mbd_params,
     estimated_params = create_mbd_params_selector(lambda = TRUE, mu = TRUE),
     fixed_params = create_mbd_params_selector(nu = TRUE, q = TRUE),
     init_n_species = 2,
     n_missing_species = 0,
     conditioned_on = "non_extinction"
   )
+  ml_est
   expect_true(ml_est$lambda >= 0)
 })
 

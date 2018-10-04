@@ -72,6 +72,10 @@ graphics::plot(simulated_data$tas)
 # )
 
 }
+\seealso{
+use \link{pmb_loglik} to calculate the log-likelihood for
+  a Pure Multiple Birth model.
+}
 \author{
 Giovanni Laudanno
 }

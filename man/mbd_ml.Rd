@@ -112,6 +112,10 @@ graphics::plot(simulated_data$tes)
 #   missnumspec = 0, cond = 1, soc = 2
 # )
 }
+\seealso{
+use \link{pmb_ml} to perform a maximum likelihood estimation 
+  for a Pure Multiple Birth model.
+}
 \author{
 Giovanni Laudanno
 }

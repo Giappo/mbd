@@ -1,6 +1,8 @@
-# @Giappo: add doc
-#' Does something K
+#' Calculate the log-likelihood for a Pure Multiple Birth model
 #' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @seealso use \link{mbd_loglik} to calculate the log-likelihood for
+#'   a Multiple Birth Death model.
 #' @export
 pmb_loglik <- function(
   pars,
@@ -59,12 +61,12 @@ pmb_loglik <- function(
   th_loglik
 }
 
-# @Giappo: add doc
-#' Does something L
+#' Get the Q vector for a Pure Multiple Birth model's likelihood
+#' estimation.
 #' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
 #' @export
 pmb_loglik_q_vector <- function(pars, brts, soc = 2){
-  #I would like to get the entire Q vector out of this...
 
   #BOTH LAmbdA AND NU
   #setup
@@ -116,9 +118,12 @@ pmb_loglik_q_vector <- function(pars, brts, soc = 2){
   th_loglik
 }
 
-# @Giappo: add doc
-#' Does something M
+#' Provides a likelihood for a subset of parameters for
+#' a Pure Multiple Birth model.
+#' This function is built to work inside mbd_minusLL_vs_single_parameter
+#' or any optimizer like optim or simplex
 #' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
 #' @export
 pmb_loglik_choosepar <- function(
   trparsopt,
@@ -129,9 +134,6 @@ pmb_loglik_choosepar <- function(
   soc = 2,
   pars_transform = 0
 ) {
-  #This function provides a likelihood for a subset of parameters.
-  # This is built to work inside mbd_minusLL_vs_single_parameter
-  # or any optimizer like optim or simplex
   #idparsopt are the ids of the parameters you want to analyze
   #trparsopt are the values for parameters you want to analyze
   #idparsfix are the ids of the parameters you want to fix
@@ -168,9 +170,11 @@ pmb_loglik_choosepar <- function(
   return(loglik)
 }
 
-# @Giappo: add doc
-#' Does something N
+#' Perform a maximum likelihood estimation for a Pure Multiple Birth model.
 #' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @seealso use \link{mbd_ml} to perform a maximum likelihood estimation 
+#'   for a Multiple Birth Death model.
 #' @export
 pmb_ml <- function(
   brts,
