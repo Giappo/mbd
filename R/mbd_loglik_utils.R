@@ -346,14 +346,17 @@ calc_cond_prob <- function(
   abstol = 1e-16,
   reltol = 1e-10
 ) {
-  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
-  total_time <- max(abs(brts));
-
-  m <- 0:lx; length(m)
-  one_over_cm <- (3 * (m + 1)) / (m + 3); length(one_over_cm)
+  lambda <- pars[1]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4];
+  total_time <- max(abs(brts))
+  m <- 0:lx
+  one_over_cm <- (3 * (m + 1)) / (m + 3)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   #starting with k = 0 and m = 2 missing species
-  q_i <- rep(0, lx + 1);  q_i[3] <- 1
+  q_i <- rep(0, lx + 1)
+  q_i[3] <- 1
 
   t_matrix <- create_a(
     lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
@@ -369,7 +372,6 @@ calc_cond_prob <- function(
     a_abstol = abstol,
     a_reltol = reltol
   )
-
   total_product <- a2_v1 * one_over_cm * one_over_qm_binom
 
   #these are the components I want to exclude
