@@ -118,5 +118,4 @@ test_that("abuse", {
     ),
     "'q' must be less or equal to one"
   )
-  
 })
