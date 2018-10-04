@@ -42,11 +42,14 @@ mbd_loglik <- function(
     safety_threshold = 1e-3,
     methode = "expo",
     minimum_multiple_births = 0,
-    print_errors = TRUE
+    abstol = 1e-16, 
+    reltol = 1e-10
 ) {
   #BASIC SETTINGS AND CHECKS
-  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4]
-  abstol <- 1e-16; reltol <- 1e-10
+  lambda <- pars[1]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4]
   if (cond == 0) {
     tips_interval <- c(0, Inf)
   }

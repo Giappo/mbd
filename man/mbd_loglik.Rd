@@ -7,7 +7,7 @@
 mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
   tips_interval = c(0, Inf), missnumspec = 0,
   safety_threshold = 0.001, methode = "expo",
-  minimum_multiple_births = 0, print_errors = TRUE)
+  minimum_multiple_births = 0, abstol = 1e-16, reltol = 1e-10)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -48,7 +48,9 @@ but missing in the phylogeny_}
 
 \item{minimum_multiple_births}{something}
 
-\item{print_errors}{something}
+\item{abstol}{something}
+
+\item{reltol}{something}
 }
 \value{
 The function returns the natural logarithm
