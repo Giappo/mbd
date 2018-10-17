@@ -1,15 +1,15 @@
 ---
 title: "Using mbd"
-author: "Giovanni Laudanno"
+author: "Giovanni Laudanno and Richel J.C. Bilderbeek"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: rmarkdown::pdf_document
 vignette: >
   %\VignetteIndexEntry{"Using mbd"}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-## Introduction
+## 1. Introduction
 
 `mbd` is a package to support multiple birth model. 
 This model accounts for a diversification process in which multiple 
@@ -34,9 +34,9 @@ Here:
 
 - $q$ is the single-lineage speciation probability.
 
-Those parameters may be inferred through a maximum likelihood approach using the function mbd_ML.
+Those parameters may be inferred through a maximum likelihood approach using the function mbd_ml.
 
-## Setup
+## 2. Setup
 
 We will need to load the package:
 
@@ -51,7 +51,7 @@ so that this vignette always produces the same results:
 set.seed(14)
 ```
 
-## Simulating an MBD tree
+## 2. Simulating an MBD tree
 
 First we set the parameters of the MBD speciation model:
 
@@ -60,25 +60,19 @@ lambda <- 0.2 # sympatric speciation rate
 mu <- 0.15 # extinction rate;
 nu <- 2.0 # multiple allopatric speciation trigger rate
 q <- 0.1 # single-lineage speciation probability
-sim_pars <- c(lambda, mu, nu, q); 
 ```
 
-Here "sim_pars" are $\lambda$, $\mu$, $\nu$ and $q$, 
-i.e. the parameters we want to eventually be able to infer. 
+### 3.1. Classic interface
 
 Then we set some basic parameters to create a simulated tree:
 
 ```{r}
-soc <- 2 # Use a crown age
-crown_age <- 10
-cond <- 1 # Condition on non-extinction
-
-sim <- mbd:::mbd_sim(
-  pars = sim_pars, 
-  soc = soc, 
-  age = crown_age, 
-  cond = cond, 
-  tips_interval = c(0, Inf)
+crown_age <- 1
+sim <- mbd_sim(
+  pars = c(lambda, mu, nu, q), 
+  soc = 2, # Use a crown age 
+  age = crown_age,
+  cond = 1 # Condition on non-extinction
 )
 ```
 
@@ -86,6 +80,18 @@ These are additional auxilary parameters
 such as `soc` (equal to 1 if we want a stem, or 2 if we want a crown), 
 `cond` (let us condition the tree on the survival of crown species) 
 and `crown_age` (being the total age of the tree).
+
+### 3.2. Checked interface
+
+```{r}
+sim <- mbd_sim_checked(
+  mbd_params = create_mbd_params(lambda = lambda, mu = mu, nu = nu, q = q),
+  crown_age = crown_age,
+  conditioned_on = "non_extinction"
+)
+```
+
+## 4. Showing the results
 
 The `sim` list contain different objects.
 You can visualize the full tree and keep track of species that die 
@@ -128,7 +134,7 @@ knitr::kable(head(sim$brts))
 In this vector values repeated more than once indicate 
 that a multiple birth process has taken place.
 
-## Likelihood estimation
+## 5. Likelihood estimation
 
 To estimate the likelihood of a phylogeny, one needs
 
@@ -145,48 +151,75 @@ generated the branching times:
 
 ```{r}
 mbd::mbd_loglik(
-  pars = sim_pars, 
+  pars = c(lambda, mu, nu, q), 
   brts = sim$brts, 
-  soc = soc, 
-  cond = cond, 
-  missnumspec = 0
+  soc = 2, # Crown age 
+  cond = 1  # Non-extinction 
 )
 ```
 
-## Maximum likelihood estimation
+## 6. Maximum likelihood estimation
 
 You can also ask for an optimization of the likelihood function 
-using the function `mbd_ML` either considering a variation of all 
+using the function `mbd_ml` either considering a variation of all 
 the parameters ($\lambda, \mu, \nu, q$) or any their subset of your choice. 
 
 Because this is a heavy calculation, we'll use a simpler tree:
 
 ```{r}
-sim <- mbd:::mbd_sim(
-  pars = sim_pars, 
-  soc = soc, 
-  age = crown_age / 10, 
-  cond = cond, 
-  tips_interval = c(0, Inf)
-)
-ape::plot.phylo(sim$tes)
+phylogeny <- ape::read.tree(text = "((A:1, B:1):2, C:3);")  
+ape::plot.phylo(phylogeny)
+brts <- ape::branching.times(phylogeny)
 ```
+
+
+```{r}
+lambda <- 0.3 # sympatric speciation rate
+mu <- 0.1 # extinction rate
+nu <- 0.11 # multiple allopatric speciation trigger rate
+q <- 0.15 # single-lineage speciation probability
+```
+
+### 6.1 Classic interface
 
 If you want for example to maximize the likelihood only for the parameter q:
 
 ```{r}
 idparsopt <- 4 # Only optimize the fourth parameter, q
-ids <- 1:4
-idparsfix <- ids[-idparsopt] # Fix all parameters except q
-parsfix <- sim_pars[idparsfix] # Use the known values for the fixed parameters
-initparsopt <- 0.15 # Set an initial guess for q
-mbd:::mbd_ML(
-  brts = sim$brts, 
+idparsfix <- c(1, 2, 3) # Fix all parameters except q
+parsfix <- c(lambda, mu, nu) # Use the known values for the fixed parameters
+initparsopt <- q # Set an initial guess for q
+out <- mbd_ml(
+  brts = brts, 
   initparsopt = initparsopt, 
   idparsopt = idparsopt, 
   parsfix = parsfix, 
   idparsfix = idparsfix, 
-  soc = soc, 
-  cond = cond
+  soc = 2, # Crown age 
+  cond = 1 # Conditioned on non-exitnction
 )
+knitr::kable(out)
+```
+
+### 6.2. More intuitive interface
+
+If you want for example to maximize the likelihood only for the parameter q,
+using a more type-safe interface, call `mbd_calc_max_lik`:
+
+```{r}
+out <- mbd_calc_max_lik(
+  branching_times = brts,
+  init_param_values = create_mbd_params(
+    lambda = lambda, mu = mu, nu = nu, q = q
+  ),
+  fixed_params = create_mbd_params_selector(
+    lambda = TRUE, mu = TRUE, nu = TRUE
+  ),
+  estimated_params = create_mbd_params_selector(
+    q = TRUE
+  ),
+  init_n_species = 2,
+  conditioned_on = "non_extinction"
+)
+knitr::kable(out)
 ```

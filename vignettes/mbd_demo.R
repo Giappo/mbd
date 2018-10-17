@@ -9,19 +9,21 @@ lambda <- 0.2 # sympatric speciation rate
 mu <- 0.15 # extinction rate;
 nu <- 2.0 # multiple allopatric speciation trigger rate
 q <- 0.1 # single-lineage speciation probability
-sim_pars <- c(lambda, mu, nu, q); 
 
 ## ------------------------------------------------------------------------
-soc <- 2 # Use a crown age
-crown_age <- 10
-cond <- 1 # Condition on non-extinction
+crown_age <- 1
+sim <- mbd_sim(
+  pars = c(lambda, mu, nu, q), 
+  soc = 2, # Use a crown age 
+  age = crown_age,
+  cond = 1 # Condition on non-extinction
+)
 
-sim <- mbd:::mbd_sim(
-  pars = sim_pars, 
-  soc = soc, 
-  age = crown_age, 
-  cond = cond, 
-  tips_interval = c(0, Inf)
+## ------------------------------------------------------------------------
+sim <- mbd_sim_checked(
+  mbd_params = create_mbd_params(lambda = lambda, mu = mu, nu = nu, q = q),
+  crown_age = crown_age,
+  conditioned_on = "non_extinction"
 )
 
 ## ---- fig.show='hold', fig.width=7, fig.height=7-------------------------
@@ -38,36 +40,53 @@ knitr::kable(head(sim$brts))
 
 ## ------------------------------------------------------------------------
 mbd::mbd_loglik(
-  pars = sim_pars, 
+  pars = c(lambda, mu, nu, q), 
   brts = sim$brts, 
-  soc = soc, 
-  cond = cond, 
-  missnumspec = 0
+  soc = 2, # Crown age 
+  cond = 1  # Non-extinction 
 )
 
 ## ------------------------------------------------------------------------
-sim <- mbd:::mbd_sim(
-  pars = sim_pars, 
-  soc = soc, 
-  age = crown_age / 10, 
-  cond = cond, 
-  tips_interval = c(0, Inf)
-)
-ape::plot.phylo(sim$tes)
+phylogeny <- ape::read.tree(text = "((A:1, B:1):2, C:3);")  
+ape::plot.phylo(phylogeny)
+brts <- ape::branching.times(phylogeny)
+
+## ------------------------------------------------------------------------
+lambda <- 0.3 # sympatric speciation rate
+mu <- 0.1 # extinction rate
+nu <- 0.11 # multiple allopatric speciation trigger rate
+q <- 0.15 # single-lineage speciation probability
 
 ## ------------------------------------------------------------------------
 idparsopt <- 4 # Only optimize the fourth parameter, q
-ids <- 1:4
-idparsfix <- ids[-idparsopt] # Fix all parameters except q
-parsfix <- sim_pars[idparsfix] # Use the known values for the fixed parameters
-initparsopt <- 0.15 # Set an initial guess for q
-mbd:::mbd_ML(
-  brts = sim$brts, 
+idparsfix <- c(1, 2, 3) # Fix all parameters except q
+parsfix <- c(lambda, mu, nu) # Use the known values for the fixed parameters
+initparsopt <- q # Set an initial guess for q
+out <- mbd_ml(
+  brts = brts, 
   initparsopt = initparsopt, 
   idparsopt = idparsopt, 
   parsfix = parsfix, 
   idparsfix = idparsfix, 
-  soc = soc, 
-  cond = cond
+  soc = 2, # Crown age 
+  cond = 1 # Conditioned on non-exitnction
 )
+knitr::kable(out)
+
+## ------------------------------------------------------------------------
+out <- mbd_calc_max_lik(
+  branching_times = brts,
+  init_param_values = create_mbd_params(
+    lambda = lambda, mu = mu, nu = nu, q = q
+  ),
+  fixed_params = create_mbd_params_selector(
+    lambda = TRUE, mu = TRUE, nu = TRUE
+  ),
+  estimated_params = create_mbd_params_selector(
+    q = TRUE
+  ),
+  init_n_species = 2,
+  conditioned_on = "non_extinction"
+)
+knitr::kable(out)
 

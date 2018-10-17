@@ -9,8 +9,7 @@
 #' @param alpha something
 #' @param alpha0 something
 #' @param b something
-#' @param brts A set of branching times of a phylogeny_
-#' @param chain_length something
+#' @param brts A set of branching times of a phylogeny
 #' @param changeloglikifnoconv something
 #' @param checked_functions something
 #' @param colormap something
@@ -33,7 +32,7 @@
 #' @param interval_min something
 #' @param iterations something
 #' @param k something
-#' @param lambda something
+#' @param lambda the sympatric speciation rate
 #' @param logs something
 #' @param lx It is the number of ODEs considered for the computation.
 #' @param lx0 something
@@ -56,13 +55,13 @@
 #' @param minimum_multiple_births something
 #' @param missnumspec The number of species that are in the clade,
 #'   but missing in the phylogeny_
-#' @param mu something
+#' @param mu the extinction rate
 #' @param mutation_rate something
-#' @param N something
+#' @param n_species number of species
 #' @param init_n_lineages the number of lineages at time equals zero
 #' @param n_steps something
 #' @param n_subs something
-#' @param nu something
+#' @param nu the multiple allopatric speciation trigger rate
 #' @param optimmethod something
 #' @param pars vector of parameters:
 #' \itemize{
@@ -82,8 +81,8 @@
 #' @param precision something
 #' @param printit something
 #' @param print_errors something
-#' @param Q something
-#' @param q something
+#' @param q_matrix a matrix of something
+#' @param q the single-lineage speciation probability at a triggered event
 #' @param quantiles_choice something
 #' @param recursive something
 #' @param reltol something
@@ -100,7 +99,8 @@
 #'   \item id == 4 corresponds to q (single-lineage speciation probability)
 #' }
 #' @param sim_phylo something
-#' @param soc Sets whether stem or crown age should be used (1 or 2).
+#' @param soc Sets whether stem or crown age should be used. Use '1' for stem,
+#'   use '2' for crown.
 #' @param subsamp something
 #' @param t something
 #' @param t1 something
@@ -140,7 +140,6 @@ default_params_doc <- function(
   alpha0,
   b,
   brts,
-  chain_length,
   changeloglikifnoconv,
   checked_functions,
   colormap,
@@ -173,7 +172,7 @@ default_params_doc <- function(
   missnumspec,
   mu,
   mutation_rate,
-  N,
+  n_species,
   init_n_lineages,
   n_steps,
   n_subs,
@@ -185,7 +184,7 @@ default_params_doc <- function(
   precision,
   print_errors,
   printit,
-  Q,
+  q_matrix,
   q,
   quantiles_choice,
   recursive,

@@ -5,8 +5,8 @@
 \title{Creates simulated trees under the multiple birth death process,
   including both sympatric and allopatric speciation}
 \usage{
-mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0,
-  Inf), minimum_multiple_births = 0)
+mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0, Inf),
+  minimum_multiple_births = 0)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -17,7 +17,8 @@ mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0,
   \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{age}{The age of the tree.}
 

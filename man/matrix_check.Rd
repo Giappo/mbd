@@ -2,15 +2,17 @@
 % Please edit documentation in R/mbd_utils.R
 \name{matrix_check}
 \alias{matrix_check}
-\title{Checks if some matrix entries are infinite, NaN, NA or (only in the lower triangle) negative}
+\title{Checks if some matrix entries are infinite, NaN, NA
+  or (only in the lower triangle) negative}
 \usage{
-matrix_check(Mlist, sign_check = 0)
+matrix_check(m_list, sign_check = 0)
 }
 \arguments{
-\item{Mlist}{something}
+\item{m_list}{something}
 
 \item{sign_check}{something}
 }
 \description{
-Checks if some matrix entries are infinite, NaN, NA or (only in the lower triangle) negative
+Checks if some matrix entries are infinite, NaN, NA
+  or (only in the lower triangle) negative
 }

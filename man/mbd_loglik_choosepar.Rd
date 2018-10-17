@@ -2,7 +2,9 @@
 % Please edit documentation in R/mbd_loglik_choosepar.R
 \name{mbd_loglik_choosepar}
 \alias{mbd_loglik_choosepar}
-\title{Internal mbd function}
+\title{This function provides a likelihood for a subset of parameters.
+This is built to work inside mbd_minusLL_vs_single_parameter
+or any optimizer like simplex, optim or subplex}
 \usage{
 mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
   idparsfix = (1:4)[-idparsopt], brts, cond = 1, soc = 2,
@@ -26,12 +28,13 @@ The ids are defined as follows:
 
 \item{idparsfix}{something}
 
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
@@ -56,7 +59,9 @@ but missing in the phylogeny_}
 \item{...}{something}
 }
 \description{
-Internal mbd function.
+This function provides a likelihood for a subset of parameters.
+This is built to work inside mbd_minusLL_vs_single_parameter
+or any optimizer like simplex, optim or subplex
 }
 \details{
 This is not to be called by the user.

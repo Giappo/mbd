@@ -7,7 +7,7 @@
 mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
   tips_interval = c(0, Inf), missnumspec = 0,
   safety_threshold = 0.001, methode = "expo",
-  minimum_multiple_births = 0, print_errors = TRUE)
+  minimum_multiple_births = 0, abstol = 1e-16, reltol = 1e-10)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -18,9 +18,10 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
   \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
@@ -47,17 +48,24 @@ but missing in the phylogeny_}
 
 \item{minimum_multiple_births}{something}
 
-\item{print_errors}{something}
+\item{abstol}{something}
+
+\item{reltol}{something}
 }
 \value{
-The function returns the natural logarithm of the likelihood for the process.
+The function returns the natural logarithm
+  of the likelihood for the process.
 }
 \description{
-mbd_loglik provides the likelihood for a process in which multiple births (from different parents) at the same time are possible, along with usual sympatric speciation and extinction events.
+mbd_loglik provides the likelihood for a process
+  in which multiple births (from different parents) at the same time
+  are possible, along with usual sympatric speciation and extinction events.
 }
 \examples{
 set.seed(11)
-simulated_data = mbd_sim(pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1)
+simulated_data = mbd_sim(
+  pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1
+)
 graphics::plot(simulated_data$tas)
 # @Giappo: too big too run
 # mbd::mbd_loglik(
@@ -66,6 +74,10 @@ graphics::plot(simulated_data$tas)
 #   soc = 2, cond = 1, missnumspec = 0
 # )
 
+}
+\seealso{
+use \link{pmb_loglik} to calculate the log-likelihood for
+  a Pure Multiple Birth model.
 }
 \author{
 Giovanni Laudanno
