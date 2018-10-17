@@ -12,7 +12,7 @@
 
 <meta name="author" content="Richel J.C. Bilderbeek" />
 
-<meta name="date" content="2018-10-03" />
+<meta name="date" content="2018-10-17" />
 
 <title>mbd derivation</title>
 
@@ -71,7 +71,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">mbd derivation</h1>
 <h4 class="author"><em>Richel J.C. Bilderbeek</em></h4>
-<h4 class="date"><em>2018-10-03</em></h4>
+<h4 class="date"><em>2018-10-17</em></h4>
 
 
 
@@ -83,7 +83,7 @@ L = L_{branches} \cdot L_{nodes}
 <h2>1. A operator</h2>
 <p>The A operator is given by the integration of a set of differential equations between two consecutive nodes. So, defined the set in the time interval <span class="math inline">\([t_{i-1}, t_i]\)</span>, where k species are present in the phylogeny, as:</p>
 <p><span class="math display">\[
-\frac{d}{dt}Q^k_m(t) = \Sigma_n(M^k_m,n \cdot Q^k_n(t))
+\frac{d}{dt}Q^k_m(t) = \Sigma_n(M^k_{m,n} \cdot Q^k_n(t))
 dt
 \]</span> where m, n, label the amount of unseen species in the phylogeny, A is thus defined as:</p>
 <p><span class="math display">\[

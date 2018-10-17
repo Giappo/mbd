@@ -5,12 +5,26 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
+<<<<<<< HEAD
+default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age, alpha,
+  alpha0, b, brts, chain_length, changeloglikifnoconv, checked_functions,
+=======
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, changeloglikifnoconv, checked_functions,
+>>>>>>> f3726527a7671dbea5ea55fb3b01633dab491a7d
   colormap, cond, function_name, idparsfix, idparsopt, initparsopt,
   input_trees_path, input_xml, interval_max, interval_min, iterations, k,
   lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
   max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
+<<<<<<< HEAD
+  methode, minimum_multiple_births, missnumspec, mu, mutation_rate, n_species,
+  init_n_lineages, n_steps, n_subs, nu, optimmethod, pars, pars_transform,
+  parsfix, precision, print_errors, printit, q_matrix, q, quantiles_choice,
+  recursive, reltol, res, results, s, sample_interval, sequence_length,
+  sim_pars, sim_phylo, soc, subsamp, t, t1, t2, tips_interval, time_interval,
+  tol, tr, transition_matrix, trparsfix, trparsopt, values, verbose, x, x_name,
+  x_splits, y, y_name, y_splits, z, z_name)
+=======
   methode, minimum_multiple_births, missnumspec, mu, mutation_rate,
   n_species, init_n_lineages, n_steps, n_subs, nu, optimmethod, pars,
   pars_transform, parsfix, precision, print_errors, printit, q_matrix, q,
@@ -19,6 +33,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
   trparsopt, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
   z_name)
+>>>>>>> f3726527a7671dbea5ea55fb3b01633dab491a7d
 }
 \arguments{
 \item{a_abstol}{something}
