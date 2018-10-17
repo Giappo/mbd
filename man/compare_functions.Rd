@@ -4,7 +4,8 @@
 \alias{compare_functions}
 \title{Compares two functions that accept same arguments args=(...)}
 \usage{
-compare_functions(function1, function2, iterations = 1, output = 1, ...)
+compare_functions(function1, function2, iterations = 1, output = 1,
+  ...)
 }
 \arguments{
 \item{function1}{something}

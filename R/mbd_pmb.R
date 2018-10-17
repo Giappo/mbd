@@ -66,63 +66,6 @@ pmb_loglik <- function(
   th_loglik
 }
 
-#' Get the Q vector for a Pure Multiple Birth model's likelihood
-#' estimation.
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-pmb_loglik_q_vector <- function(pars, brts, soc = 2){
-
-  #BOTH LAmbdA AND NU
-  #setup
-  test_pars <- pars
-  test_brts <- brts
-  #numerical loglik
-
-  #theoretical loglik
-  init_n_lineages <- soc
-  lambda <- test_pars[1]
-  mu <- test_pars[2]
-  nu <- test_pars[3]
-  q <- test_pars[4];
-  condition1 <- (any(is.nan(test_pars)) != 0 | any(is.infinite(test_pars)) != 0)
-  condition2 <- (lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
-  if (condition1 | condition2) {
-    th_loglik <- -Inf
-  } else {
-    data <- brts2time_intervals_and_births(test_brts) # nolint internal function
-    time_intervals <- data$time_intervals
-    births <- data$births
-    k <- init_n_lineages + cumsum(c(0, births))
-    a_term <- rep(1, length(time_intervals)) #branches
-    b_term <- rep(1, length(time_intervals) - 1) #nodes
-    #calculating branches contribution
-    i <- 0:1e6
-    for (t in 1:length(time_intervals)) {
-      #(nu *(t_k-t_k-1))^i * exp(-nu *(t_k-t_k-1)) / i!
-      poisson_term <- stats::dpois(
-          i, nu * time_intervals[t], log = FALSE
-        )[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
-      ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
-      # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i
-      #     * exp(-nu *(t_k-t_k-1)) / i!
-      # (2) lambda contribution: exp(-k * lambda *(t_k-t_k-1))
-      a_term[t] <- sum((1 - q) ^ (ii * k[t]) * poisson_term) * # (1)
-                   exp(-k[t] * lambda * (time_intervals[t]))   # (2)
-    }
-    #calculating nodes contribution
-    # (1) nu contribution: nu *(k, b) * q ^ b * (1 - q) ^ (k - b)
-    # (2) lambda contribution: lambda * k (only if b==1)
-    b_term <- (
-      nu * choose(k[-length(k)], births) * q ^ births *  # (1)
-        (1 - q) ^ (k[-length(k)] - births)                 # (1)
-    ) + lambda * k[-length(k)] * (births == 1)           # (2)
-
-    th_loglik <- sum(log(a_term)) + sum(log(b_term))
-  }
-  th_loglik
-}
-
 #' Provides a likelihood for a subset of parameters for
 #' a Pure Multiple Birth model.
 #' This function is built to work inside mbd_minusLL_vs_single_parameter
@@ -321,4 +264,64 @@ pmb_ml <- function(
     }# bracket#3
   }# bracket#2
   invisible(out2)
+}
+
+#' Get the Q vector for a Pure Multiple Birth model's likelihood
+#' estimation.
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+pmb_loglik_q_vector <- function(
+  pars, 
+  brts, 
+  soc = 2
+){
+  
+  #BOTH LAmbdA AND NU
+  #setup
+  test_pars <- pars
+  test_brts <- brts
+  #numerical loglik
+  
+  #theoretical loglik
+  init_n_lineages <- soc
+  lambda <- test_pars[1]
+  mu <- test_pars[2]
+  nu <- test_pars[3]
+  q <- test_pars[4];
+  condition1 <- (any(is.nan(test_pars)) != 0 | any(is.infinite(test_pars)) != 0)
+  condition2 <- (lambda < 0 | mu != 0 | nu < 0 | q <= 0 | q >= 1)
+  if (condition1 | condition2) {
+    th_loglik <- -Inf
+  } else {
+    data <- brts2time_intervals_and_births(test_brts) # nolint internal function
+    time_intervals <- data$time_intervals
+    births <- data$births
+    k <- init_n_lineages + cumsum(c(0, births))
+    a_term <- rep(1, length(time_intervals)) #branches
+    b_term <- rep(1, length(time_intervals) - 1) #nodes
+    #calculating branches contribution
+    i <- 0:1e6
+    for (t in 1:length(time_intervals)) {
+      #(nu *(t_k-t_k-1))^i * exp(-nu *(t_k-t_k-1)) / i!
+      poisson_term <- stats::dpois(
+        i, nu * time_intervals[t], log = FALSE
+      )[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
+      ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
+      # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i
+      #     * exp(-nu *(t_k-t_k-1)) / i!
+      # (2) lambda contribution: exp(-k * lambda *(t_k-t_k-1))
+      a_term[t] <- sum((1 - q) ^ (ii * k[t]) * poisson_term) * # (1)
+        exp(-k[t] * lambda * (time_intervals[t]))   # (2)
+    }
+    #calculating nodes contribution
+    # (1) nu contribution: nu *(k, b) * q ^ b * (1 - q) ^ (k - b)
+    # (2) lambda contribution: lambda * k (only if b==1)
+    b_term <- (
+      nu * choose(k[-length(k)], births) * q ^ births *  # (1)
+        (1 - q) ^ (k[-length(k)] - births)                 # (1)
+    ) + lambda * k[-length(k)] * (births == 1)           # (2)
+    
+    th_loglik <- sum(log(a_term)) + sum(log(b_term))
+  }
+  th_loglik
 }

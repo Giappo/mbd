@@ -9,7 +9,8 @@ or any optimizer like simplex, optim or subplex}
 mbd_loglik_choosepar(trparsopt, trparsfix, idparsopt = 1:4,
   idparsfix = (1:4)[-idparsopt], brts, cond = 1, soc = 2,
   tips_interval = c(0, Inf), missnumspec = 0, methode = "expo",
-  minimum_multiple_births = 0, pars_transform = 0, print_errors = 0, ...)
+  minimum_multiple_births = 0, pars_transform = 0, print_errors = 0,
+  ...)
 }
 \arguments{
 \item{trparsopt}{something}
