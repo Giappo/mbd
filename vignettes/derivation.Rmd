@@ -31,7 +31,7 @@ between two consecutive nodes. So, defined the set in the time interval
 $[t_{i-1}, t_i]$, where k species are present in the phylogeny, as:
 
 $$
-\frac{d}{dt}Q^k_m(t) = \Sigma_n(M^k_m,n \cdot Q^k_n(t))
+\frac{d}{dt}Q^k_m(t) = \Sigma_n(M^k_{m,n} \cdot Q^k_n(t))
 dt
 $$
 where m, n, label the amount of unseen species in the phylogeny,
