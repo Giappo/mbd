@@ -17,7 +17,8 @@ mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0, Inf),
   \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{age}{The age of the tree.}
 

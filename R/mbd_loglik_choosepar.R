@@ -49,7 +49,6 @@ mbd_loglik_choosepar  <- function(
       tips_interval = tips_interval,
       methode = methode,
       minimum_multiple_births = minimum_multiple_births,
-      print_errors = print_errors,
       ...
     )
   }

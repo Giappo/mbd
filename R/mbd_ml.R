@@ -48,6 +48,8 @@
 #' #   parsfix = test_pars[idparsfix],
 #' #   missnumspec = 0, cond = 1, soc = 2
 #' # )
+#' @seealso use \link{pmb_ml} to perform a maximum likelihood estimation
+#'   for a Pure Multiple Birth model.
 #' @export
 mbd_ml <- function(
   brts,
@@ -82,6 +84,21 @@ mbd_ml <- function(
   if (!is.numeric(brts)) {
     stop("'brts' must be numeric")
   }
+  if (length(initparsopt) != length(idparsopt)) {
+    stop("lengths of 'idparsopt' and'initparsopt' must match")
+  }
+  if (length(parsfix) != length(idparsfix)) {
+    stop("lengths of 'idparsfix' and'parsfix' must match")
+  }
+  namepars <- mbd::get_mbd_param_names()
+  n_pars <- length(namepars)
+  if (!all(sort(c(idparsopt, idparsfix)) == 1:n_pars)) {
+    stop(
+      "IDs 1 to 4 must be present exactly once ",
+      "in either 'idparsfix' or 'idparsopt'"
+    )
+  }
+
   if (length(idparsfix) == 0) {
     idparsfix <- NULL
   }
@@ -90,26 +107,8 @@ mbd_ml <- function(
   }
 
   options(warn = -1)
-  namepars <- mbd::get_mbd_param_names()
-  #if you add more parameters to your model just change this
-  n_pars <- length(namepars)
-  #those are the parameters that you get if something goes sideways
-  failpars <- rep(-1, n_pars); names(failpars) <- namepars
-  if (is.numeric(brts) == FALSE) {
-    cat("The branching times should be numeric.\n")
-    out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
-    return(invisible(out2))
-  }
-  idpars <- sort(c(idparsopt, idparsfix))
-  if ((sum(idpars == (1:n_pars)) != n_pars) ||
-    (length(initparsopt) != length(idparsopt)) ||
-    (length(parsfix) != length(idparsfix))
-  ) {
-    cat("The parameters to be optimized and / or fixed are incoherent.\n")
-    out2 <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
-    return(out2)
-  }
-
+  failpars <- rep(-1, n_pars)
+  names(failpars) <- namepars
   if (length(namepars[idparsopt]) == 0) {
     optstr <- "nothing"
   } else {
@@ -149,7 +148,8 @@ mbd_ml <- function(
     methode = methode,
     minimum_multiple_births = minimum_multiple_births,
     pars_transform = pars_transform,
-    print_errors = print_errors, ...
+    print_errors = print_errors,
+    ...
   )
   if (verbose == TRUE) {
     cat(

@@ -23,7 +23,7 @@ test_that("big but not too big", {
 test_that("abuse", {
   expect_error(
     mbd:::hyper_a_hanno(n_species = 100000, k = 2, q = 0.1),
-    "cannot allocate vector of size"
+    "'n_species' must be below 46340"
   )
   gc()
 })

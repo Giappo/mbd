@@ -5,8 +5,14 @@
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
 mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
+<<<<<<< HEAD
   tips_interval = c(0, Inf), missnumspec = 0, safety_threshold = 0.001,
   methode = "expo", minimum_multiple_births = 0, print_errors = TRUE)
+=======
+  tips_interval = c(0, Inf), missnumspec = 0,
+  safety_threshold = 0.001, methode = "expo",
+  minimum_multiple_births = 0, abstol = 1e-16, reltol = 1e-10)
+>>>>>>> f3726527a7671dbea5ea55fb3b01633dab491a7d
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -17,9 +23,10 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
   \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
@@ -46,7 +53,9 @@ but missing in the phylogeny_}
 
 \item{minimum_multiple_births}{something}
 
-\item{print_errors}{something}
+\item{abstol}{something}
+
+\item{reltol}{something}
 }
 \value{
 The function returns the natural logarithm
@@ -70,6 +79,10 @@ graphics::plot(simulated_data$tas)
 #   soc = 2, cond = 1, missnumspec = 0
 # )
 
+}
+\seealso{
+use \link{pmb_loglik} to calculate the log-likelihood for
+  a Pure Multiple Birth model.
 }
 \author{
 Giovanni Laudanno

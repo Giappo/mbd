@@ -8,7 +8,7 @@ alpha_analysis(brts, pars, tips_interval, cond, soc, alpha0, max_k,
   methode = "expo", abstol, reltol, minimum_multiple_births)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
 \item{pars}{vector of parameters:
 \itemize{
@@ -31,7 +31,8 @@ do with a standard usage of mbd_sim.}
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{alpha0}{something}
 

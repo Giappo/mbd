@@ -22,11 +22,12 @@ or
   \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{brts}{A set of branching times of a phylogeny_}
+\item{brts}{A set of branching times of a phylogeny}
 
 \item{lx}{It is the number of ODEs considered for the computation.}
 
-\item{soc}{Sets whether stem or crown age should be used (1 or 2).}
+\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{

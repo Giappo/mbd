@@ -15,8 +15,14 @@
 #'   testthat::expect_equal(m[3, 2], 0.405)
 #'   testthat::expect_equal(m[3, 3], 0.6561)
 #' @noRd
-#' @author Hanno Hildenbrand
+#' @author Hanno Hildenbrand, adapted by Richel J.C. Bilderbeek
 hyper_a_hanno <- function(n_species, k, q) {
+  if (n_species > 46340) {
+    stop(
+      "'n_species' must be below 46340. ",
+      "Cannot allocate matrix with 2^31 elements"
+    )
+  }
   # HG function: fast O(N), updated after Moulis meeting
   j <- 0:k
   a_1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
@@ -326,11 +332,12 @@ determine_k_limit <- function(
   soc + max(mvec[(mvec %in% which((cumsum(p_m / sum(p_m))) <= 0.95))])
 }
 
-#' @title Internal mbd function
-#' @description Internal mbd function.
+#' Called by \link{mbd_loglik} if and only if conditioned on non-extinction
 #' @inheritParams default_params_doc
-#' @details This is not to be called by the user.
-#' @export
+#' @return the pc. If \code{is.nan(log(pc))} the log-likleihood estimation
+#'   by \link{mbd_loglik} failed
+#' @author Giovanni Laudanno
+#' @noRd
 calc_cond_prob <- function(
   brts,
   pars,
@@ -341,14 +348,17 @@ calc_cond_prob <- function(
   abstol = 1e-16,
   reltol = 1e-10
 ) {
-  lambda <- pars[1]; mu <- pars[2]; nu <- pars[3]; q <- pars[4];
-  total_time <- max(abs(brts));
-
-  m <- 0:lx; length(m)
-  one_over_cm <- (3 * (m + 1)) / (m + 3); length(one_over_cm)
+  lambda <- pars[1]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4];
+  total_time <- max(abs(brts))
+  m <- 0:lx
+  one_over_cm <- (3 * (m + 1)) / (m + 3)
   one_over_qm_binom <- 1 / choose((m + soc), soc)
   #starting with k = 0 and m = 2 missing species
-  q_i <- rep(0, lx + 1);  q_i[3] <- 1
+  q_i <- rep(0, lx + 1)
+  q_i[3] <- 1
 
   t_matrix <- create_a(
     lambda = lambda, mu = mu, nu = nu, q = q, k = 0,
@@ -364,7 +374,6 @@ calc_cond_prob <- function(
     a_abstol = abstol,
     a_reltol = reltol
   )
-
   total_product <- a2_v1 * one_over_cm * one_over_qm_binom
 
   #these are the components I want to exclude
