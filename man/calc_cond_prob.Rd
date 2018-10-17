@@ -4,8 +4,8 @@
 \alias{calc_cond_prob}
 \title{Internal mbd function}
 \usage{
-calc_cond_prob(brts, pars, lx = 1000, soc = 2, tips_interval = c(0,
-  Inf), methode = "expo", abstol = 1e-16, reltol = 1e-10)
+calc_cond_prob(brts, pars, lx = 1000, soc = 2, tips_interval = c(0, Inf),
+  methode = "expo", abstol = 1e-16, reltol = 1e-10)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny_}

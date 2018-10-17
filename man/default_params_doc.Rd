@@ -5,20 +5,19 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
-default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
-  alpha, alpha0, b, brts, chain_length, changeloglikifnoconv,
-  checked_functions, colormap, cond, function_name, idparsfix, idparsopt,
-  initparsopt, input_trees_path, input_xml, interval_max, interval_min,
-  iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
-  max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
-  mbd_lambda, methode, minimum_multiple_births, missnumspec, mu,
-  mutation_rate, n_species, init_n_lineages, n_steps, n_subs, nu,
-  optimmethod, pars, pars_transform, parsfix, precision, print_errors,
-  printit, q_matrix, q, quantiles_choice, recursive, reltol, res, results,
-  s, sample_interval, sequence_length, sim_pars, sim_phylo, soc, subsamp,
-  t, t1, t2, tips_interval, time_interval, tol, tr, transition_matrix,
-  trparsfix, trparsopt, values, verbose, x, x_name, x_splits, y, y_name,
-  y_splits, z, z_name)
+default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age, alpha,
+  alpha0, b, brts, chain_length, changeloglikifnoconv, checked_functions,
+  colormap, cond, function_name, idparsfix, idparsopt, initparsopt,
+  input_trees_path, input_xml, interval_max, interval_min, iterations, k,
+  lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
+  max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
+  methode, minimum_multiple_births, missnumspec, mu, mutation_rate, n_species,
+  init_n_lineages, n_steps, n_subs, nu, optimmethod, pars, pars_transform,
+  parsfix, precision, print_errors, printit, q_matrix, q, quantiles_choice,
+  recursive, reltol, res, results, s, sample_interval, sequence_length,
+  sim_pars, sim_phylo, soc, subsamp, t, t1, t2, tips_interval, time_interval,
+  tol, tr, transition_matrix, trparsfix, trparsopt, values, verbose, x, x_name,
+  x_splits, y, y_name, y_splits, z, z_name)
 }
 \arguments{
 \item{a_abstol}{something}

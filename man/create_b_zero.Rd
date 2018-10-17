@@ -4,8 +4,7 @@
 \alias{create_b_zero}
 \title{Internal mbd function}
 \usage{
-create_b_zero(max_number_of_species, q, k, b,
-  matrix_builder = hyper_a_hanno)
+create_b_zero(max_number_of_species, q, k, b, matrix_builder = hyper_a_hanno)
 }
 \arguments{
 \item{max_number_of_species}{something}

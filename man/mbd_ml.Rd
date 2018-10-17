@@ -5,13 +5,13 @@
 \title{Maximization of the loglikelihood
   under a multiple birth-death diversification model}
 \usage{
-mbd_ml(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
-  parsfix, missnumspec = 0, cond = 1, soc = 2, tips_interval = c(0,
-  Inf), res = 10 * (1 + length(brts) + missnumspec), tol = c(0.001,
-  1e-04, 1e-06), maxiter = 1000 * round((1.25)^length(idparsopt)),
-  changeloglikifnoconv = FALSE, optimmethod = "simplex",
-  methode = "expo", minimum_multiple_births = 0, pars_transform = 1,
-  print_errors = 0, verbose = TRUE, ...)
+mbd_ml(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt], parsfix,
+  missnumspec = 0, cond = 1, soc = 2, tips_interval = c(0, Inf),
+  res = 10 * (1 + length(brts) + missnumspec), tol = c(0.001, 1e-04, 1e-06),
+  maxiter = 1000 * round((1.25)^length(idparsopt)),
+  changeloglikifnoconv = FALSE, optimmethod = "simplex", methode = "expo",
+  minimum_multiple_births = 0, pars_transform = 1, print_errors = 0,
+  verbose = TRUE, ...)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny_}

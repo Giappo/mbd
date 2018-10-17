@@ -5,8 +5,8 @@
 \title{Creates simulated trees under the multiple birth death process,
   including both sympatric and allopatric speciation}
 \usage{
-mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0,
-  Inf), minimum_multiple_births = 0)
+mbd_sim(pars, soc = 2, age = 10, cond = 1, tips_interval = c(0, Inf),
+  minimum_multiple_births = 0)
 }
 \arguments{
 \item{pars}{vector of parameters:
