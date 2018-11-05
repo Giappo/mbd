@@ -5,42 +5,27 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
-<<<<<<< HEAD
-default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age, alpha,
-  alpha0, b, brts, chain_length, changeloglikifnoconv, checked_functions,
-=======
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, changeloglikifnoconv, checked_functions,
->>>>>>> f3726527a7671dbea5ea55fb3b01633dab491a7d
   colormap, cond, function_name, idparsfix, idparsopt, initparsopt,
   input_trees_path, input_xml, interval_max, interval_min, iterations, k,
   lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
   max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
-<<<<<<< HEAD
-  methode, minimum_multiple_births, missnumspec, mu, mutation_rate, n_species,
-  init_n_lineages, n_steps, n_subs, nu, optimmethod, pars, pars_transform,
-  parsfix, precision, print_errors, printit, q_matrix, q, quantiles_choice,
-  recursive, reltol, res, results, s, sample_interval, sequence_length,
-  sim_pars, sim_phylo, soc, subsamp, t, t1, t2, tips_interval, time_interval,
-  tol, tr, transition_matrix, trparsfix, trparsopt, values, verbose, x, x_name,
-  x_splits, y, y_name, y_splits, z, z_name)
-=======
   methode, minimum_multiple_births, missnumspec, mu, mutation_rate,
   n_species, init_n_lineages, n_steps, n_subs, nu, optimmethod, pars,
-  pars_transform, parsfix, precision, print_errors, printit, q_matrix, q,
+  pars_transform, parsfix, precision, print_errors, printit, q_vector, q,
   quantiles_choice, recursive, reltol, res, results, s, sample_interval,
   sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
   trparsopt, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
   z_name)
->>>>>>> f3726527a7671dbea5ea55fb3b01633dab491a7d
 }
 \arguments{
 \item{a_abstol}{something}
 
 \item{a_reltol}{something}
 
-\item{abstol}{something}
+\item{abstol}{absolute error tolerance for the numerical integration using deSolve.}
 
 \item{account_name}{something}
 
@@ -52,9 +37,9 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
 
 \item{alpha0}{something}
 
-\item{b}{something}
+\item{b}{the number of simultaneous births on a given branching time.}
 
-\item{brts}{A set of branching times of a phylogeny}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{changeloglikifnoconv}{something}
 
@@ -80,7 +65,7 @@ The ids are defined as follows:
 
 \item{initparsopt}{something}
 
-\item{input_trees_path}{Path to \code{.trees} file}
+\item{input_trees_path}{Path to \code{.trees} file.}
 
 \item{input_xml}{something}
 
@@ -90,9 +75,9 @@ The ids are defined as follows:
 
 \item{iterations}{something}
 
-\item{k}{something}
+\item{k}{the number of visible species in the phylogeny at a given time.}
 
-\item{lambda}{the sympatric speciation rate}
+\item{lambda}{the sympatric speciation rate.}
 
 \item{logs}{something}
 
@@ -102,7 +87,7 @@ The ids are defined as follows:
 
 \item{matrix}{something}
 
-\item{matrix_builder}{something}
+\item{matrix_builder}{function used to build the transition matrix. Default option is \code{hyper_a_hanno}}
 
 \item{max_iter}{Sets the maximum number of iterations in the optimization}
 
@@ -128,36 +113,30 @@ The ids are defined as follows:
 \item{minimum_multiple_births}{something}
 
 \item{missnumspec}{The number of species that are in the clade,
-but missing in the phylogeny_}
+but missing in the phylogeny.}
 
-\item{mu}{the extinction rate}
+\item{mu}{the extinction rate.}
 
 \item{mutation_rate}{something}
 
-\item{n_species}{number of species}
+\item{n_species}{number of species.}
 
-\item{init_n_lineages}{the number of lineages at time equals zero}
+\item{init_n_lineages}{the number of lineages at time equals zero.}
 
 \item{n_steps}{something}
 
 \item{n_subs}{something}
 
-\item{nu}{the multiple allopatric speciation trigger rate}
+\item{nu}{the multiple allopatric speciation trigger rate.}
 
 \item{optimmethod}{something}
 
 \item{pars}{vector of parameters:
 \itemize{
-  \item pars[1] is the multiple speciation trigger rate;
-  \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability_
-}
-or
-\itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability_
+  \item pars[4] is q, the single-lineage speciation probability;
 }}
 
 \item{pars_transform}{something}
@@ -170,15 +149,15 @@ or
 
 \item{printit}{something}
 
-\item{q_matrix}{a matrix of something}
+\item{q_vector}{the q vector from "Etienne et al. 2012 - Proc. R. Soc. B".}
 
-\item{q}{the single-lineage speciation probability at a triggered event}
+\item{q}{the single-lineage speciation probability at a triggered event.}
 
 \item{quantiles_choice}{something}
 
 \item{recursive}{something}
 
-\item{reltol}{something}
+\item{reltol}{relative error tolerance for the numerical integration using deSolve.}
 
 \item{res}{something}
 
@@ -246,6 +225,8 @@ do with a standard usage of mbd_sim.}
 \item{z}{something}
 
 \item{z_name}{something}
+
+\item{N0}{the number of lineages at time equals zero.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

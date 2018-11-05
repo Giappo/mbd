@@ -2,26 +2,33 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{create_b}
 \alias{create_b}
-\title{Internal mbd function}
+\title{B matrix}
 \usage{
-create_b(lambda, nu, q, k, b, max_number_of_species)
+create_b(pars, k, b, lx, matrix_builder = mbd:::hyper_a_hanno)
 }
 \arguments{
-\item{lambda}{the sympatric speciation rate}
+\item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability;
+}}
 
-\item{nu}{the multiple allopatric speciation trigger rate}
+\item{k}{the number of visible species in the phylogeny at a given time.}
 
-\item{q}{the single-lineage speciation probability at a triggered event}
+\item{b}{the number of simultaneous births on a given branching time.}
 
-\item{k}{something}
+\item{lx}{It is the number of ODEs considered for the computation.}
 
-\item{b}{something}
-
-\item{max_number_of_species}{something}
+\item{matrix_builder}{function used to build the transition matrix. Default option is \code{hyper_a_hanno}}
 }
 \description{
-Internal mbd function.
+Creates the B matrix, used to modify the likelihood on branching times.
 }
 \details{
 This is not to be called by the user.
+}
+\author{
+Giovanni Laudanno
 }

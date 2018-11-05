@@ -112,7 +112,7 @@ The dataframe containing all the information related to this tree
 is labeled as L (or L-table). You can access it by typing:
 
 ```{r}
-knitr::kable(head(sim$L))
+knitr::kable(head(sim$l_matrix))
 ```
 
 In this table:

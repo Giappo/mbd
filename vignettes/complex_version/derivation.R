@@ -6,7 +6,7 @@ knitr::opts_chunk$set(
 
 ## ------------------------------------------------------------------------
 a <- mbd:::a_operator(
-  q_matrix = c(1),
+  q_vector = c(1),
   transition_matrix = c(1),
   time_interval = 0.1
 )

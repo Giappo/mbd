@@ -26,7 +26,7 @@ The ids are defined as follows:
 
 \item{idparsfix}{something}
 
-\item{brts}{A set of branching times of a phylogeny}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
 use '2' for crown.}

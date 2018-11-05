@@ -4,27 +4,20 @@
 \alias{pmb_loglik}
 \title{Calculate the log-likelihood for a Pure Multiple Birth model}
 \usage{
-pmb_loglik(pars, brts, soc = 2)
+pmb_loglik(pars, brts, N0 = 2)
 }
 \arguments{
 \item{pars}{vector of parameters:
 \itemize{
-  \item pars[1] is the multiple speciation trigger rate;
-  \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability_
-}
-or
-\itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability_
+  \item pars[4] is q, the single-lineage speciation probability;
 }}
 
-\item{brts}{A set of branching times of a phylogeny}
+\item{brts}{A set of branching times of a phylogeny.}
 
-\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
-use '2' for crown.}
+\item{N0}{the number of lineages at time equals zero.}
 }
 \description{
 Calculate the log-likelihood for a Pure Multiple Birth model

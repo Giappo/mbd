@@ -2,32 +2,21 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{mbd_loglik_rhs}
 \alias{mbd_loglik_rhs}
-\title{Internal mbd function}
+\title{Builds the right hand side of the ODE set for multiple birth model}
 \usage{
-mbd_loglik_rhs(t, x, pars)
+mbd_loglik_rhs(t, x, params)
 }
 \arguments{
 \item{t}{something}
 
 \item{x}{something}
-
-\item{pars}{vector of parameters:
-\itemize{
-  \item pars[1] is the multiple speciation trigger rate;
-  \item pars[2] is the extinction rate;
-  \item pars[3] is the single-lineage speciation probability_
-}
-or
-\itemize{
-  \item pars[1] is lambda, the sympatric speciation rate;
-  \item pars[2] is mu, the extinction rate;
-  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability_
-}}
 }
 \description{
-Internal mbd function.
+Builds the right hand side of the ODE set for multiple birth model
 }
 \details{
 This is not to be called by the user.
+}
+\author{
+Giovanni Laudanno
 }

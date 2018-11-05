@@ -4,13 +4,14 @@
 \alias{pmb_ml}
 \title{Perform a maximum likelihood estimation for a Pure Multiple Birth model.}
 \usage{
-pmb_ml(brts, initparsopt, idparsopt = c(1, 3, 4), soc = 2, res = 10 * (1 +
-  length(brts) + missnumspec), tol = c(0.001, 1e-04, 1e-06), maxiter = 1000
-  * round((1.25)^length(idparsopt)), changeloglikifnoconv = FALSE,
-  optimmethod = "simplex", pars_transform = 1, missnumspec = 0)
+pmb_ml(brts, initparsopt, idparsopt = c(1, 3, 4), soc = 2, res = 10 *
+  (1 + length(brts) + missnumspec), tol = c(0.001, 1e-04, 1e-06),
+  maxiter = 1000 * round((1.25)^length(idparsopt)),
+  changeloglikifnoconv = FALSE, optimmethod = "simplex",
+  pars_transform = 1, missnumspec = 0)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{initparsopt}{something}
 
@@ -39,7 +40,7 @@ use '2' for crown.}
 \item{pars_transform}{something}
 
 \item{missnumspec}{The number of species that are in the clade,
-but missing in the phylogeny_}
+but missing in the phylogeny.}
 }
 \description{
 Perform a maximum likelihood estimation for a Pure Multiple Birth model.
