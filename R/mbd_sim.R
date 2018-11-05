@@ -53,6 +53,12 @@ mbd_sim <- function(
   if (any(tips_interval < 0)) {
     stop("'tips_interval' must contain two positive values")
   }
+  if (!is.numeric(soc)) {
+    stop("'soc' must be numeric")
+  }
+  if (is.numeric(soc) != 1 && soc != 2) {
+    stop("'soc' must be '1' of '2'")
+  }
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]

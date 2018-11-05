@@ -39,6 +39,20 @@ test_that("abuse", {
     ),
     "'tips_interval' must contain two positive values"
   )
+  expect_error(
+    mbd_sim(
+      pars = c(1.0, 1.0, 1.0, 1.0),
+      soc = "nonsense"
+    ),
+    "'soc' must be numeric"
+  )
+  expect_error(
+    mbd_sim(
+      pars = c(1.0, 1.0, 1.0, 1.0),
+      soc = 42
+    ),
+    "'soc' must be '1' or '2'"
+  )
 })
 
 # mbd_sim ----
