@@ -11,14 +11,13 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   input_trees_path, input_xml, interval_max, interval_min, iterations, k,
   lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
   max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
-  methode, minimum_multiple_births, missnumspec, mu, mutation_rate,
+  methode, minimum_multiple_births, missnumspec, mu, mutation_rate, n_0,
   n_species, init_n_lineages, n_steps, n_subs, nu, optimmethod, pars,
   pars_transform, parsfix, precision, print_errors, printit, q_vector, q,
   quantiles_choice, recursive, reltol, res, results, s, sample_interval,
-  sequence_length, sim_pars, sim_phylo, n_0, subsamp, t, t1, t2,
-  tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
-  trparsopt, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
-  z_name)
+  sequence_length, sim_pars, sim_phylo, subsamp, t, t1, t2, tips_interval,
+  time_interval, tol, tr, transition_matrix, trparsfix, trparsopt, values,
+  verbose, x, x_name, x_splits, y, y_name, y_splits, z, z_name)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -121,6 +120,8 @@ but missing in the phylogeny.}
 
 \item{mutation_rate}{something}
 
+\item{n_0}{the number of lineages at time equals zero.}
+
 \item{n_species}{number of species.}
 
 \item{init_n_lineages}{the number of lineages at time equals zero.}
@@ -182,8 +183,6 @@ the numerical integration using deSolve.}
 
 \item{sim_phylo}{something}
 
-\item{n_0}{the number of lineages at time equals zero.}
-
 \item{subsamp}{something}
 
 \item{t}{something}
@@ -227,9 +226,6 @@ do with a standard usage of mbd_sim.}
 \item{z}{something}
 
 \item{z_name}{something}
-
-\item{n_0}{Sets whether stem or crown age should be used. Use '1' for stem,
-use '2' for crown.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

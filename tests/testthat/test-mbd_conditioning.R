@@ -3,8 +3,6 @@ context("mbd_loglik - conditioning")
 # conditioned likelihood is lesser than unconditioned likelihood ----
 test_that("conditioned likelihood is lesser than unconditioned likelihood", {
 
-  skip("Just testing style now")
-
   pars <- c(0.2, 0.15, 2.0, 0.1)
   brts <- c(5, 4, 3, 3, 1)
   n_0   <- 2
@@ -27,8 +25,6 @@ test_that("conditioned likelihood is lesser than unconditioned likelihood", {
 
 # right conditioning ----
 test_that("right conditioning", {
-
-  skip("Just testing style now")
 
   pars <- c(0.2, 0.15, 0, 0.1)
   brts <- c(5, 4, 1)
@@ -76,8 +72,6 @@ test_that("right conditioning", {
 
 # abuse ----
 test_that("abuse", {
-
-  skip("Just testing style now")
 
   expect_error(
     mbd::mbd_loglik(

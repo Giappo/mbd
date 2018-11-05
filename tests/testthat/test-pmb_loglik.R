@@ -3,8 +3,6 @@ context("pmb_loglik")
 # use ----
 test_that("use", {
 
-  skip("Just testing style now")
-
   # pars[2] must be zero
   loglik <- mbd::pmb_loglik(
     pars = c(0.2, 0.0, 2.0, 0.1),
@@ -16,8 +14,6 @@ test_that("use", {
 
 # q is zero ----
 test_that("q is zero", {
-
-  skip("Just testing style now")
 
   # pars[2] must be zero
   # pars[4] is q
@@ -32,8 +28,6 @@ test_that("q is zero", {
 # nu is zero ----
 test_that("nu is zero", {
 
-  skip("Just testing style now")
-
   # pars[2] must be zero
   # pars[3] is nu
   loglik <- mbd::pmb_loglik(
@@ -47,8 +41,6 @@ test_that("nu is zero", {
 # nu and q are zero ----
 test_that("nu and q are zero", {
 
-  skip("Just testing style now")
-
   # pars[2] must be zero
   # pars[3] is nu
   loglik <- mbd::pmb_loglik(
@@ -61,8 +53,6 @@ test_that("nu and q are zero", {
 
 # abuse ----
 test_that("abuse", {
-
-  skip("Just testing style now")
 
   lambda <- 0.2
   mu <- 0.0 # Must be zero
@@ -137,8 +127,6 @@ test_that("abuse", {
 
 # pmb_loglik is called correctly by mbd_loglik ----
 test_that("pmb_loglik is called correctly by mbd_loglik", {
-
-  skip("Just testing style now")
 
   pars <- c(0.2, 0, 1.5, 0.2)
   brts <- c(5, 4, 3, 3, 2, 2)

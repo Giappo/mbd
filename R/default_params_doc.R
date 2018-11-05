@@ -97,8 +97,6 @@
 #'   \item id == 4 corresponds to q (single-lineage speciation probability)
 #' }
 #' @param sim_phylo something
-#' @param n_0 Sets whether stem or crown age should be used. Use '1' for stem,
-#'   use '2' for crown.
 #' @param subsamp something
 #' @param t something
 #' @param t1 something
@@ -170,6 +168,7 @@ default_params_doc <- function(
   missnumspec,
   mu,
   mutation_rate,
+  n_0,
   n_species,
   init_n_lineages,
   n_steps,
@@ -194,7 +193,6 @@ default_params_doc <- function(
   sequence_length,
   sim_pars,
   sim_phylo,
-  n_0,
   subsamp,
   t,
   t1,
