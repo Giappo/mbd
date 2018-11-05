@@ -21,10 +21,12 @@ create_b(pars, k, b, lx, matrix_builder = mbd:::hyper_a_hanno)
 
 \item{lx}{It is the number of ODEs considered for the computation.}
 
-\item{matrix_builder}{function used to build the transition matrix. Default option is \code{hyper_a_hanno}}
+\item{matrix_builder}{function used to build the transition matrix.
+Default option is \code{hyper_a_hanno}}
 }
 \description{
-Creates the B matrix, used to modify the likelihood on branching times.
+Creates the B matrix,
+used to modify the likelihood on branching times.
 }
 \details{
 This is not to be called by the user.

@@ -43,9 +43,11 @@ but missing in the phylogeny.}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
-\item{abstol}{absolute error tolerance for the numerical integration using deSolve.}
+\item{abstol}{absolute error tolerance for
+the numerical integration using deSolve.}
 
-\item{reltol}{relative error tolerance for the numerical integration using deSolve.}
+\item{reltol}{relative error tolerance for
+the numerical integration using deSolve.}
 }
 \value{
 The function returns the natural logarithm

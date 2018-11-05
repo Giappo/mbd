@@ -15,7 +15,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   n_species, init_n_lineages, n_steps, n_subs, nu, optimmethod, pars,
   pars_transform, parsfix, precision, print_errors, printit, q_vector, q,
   quantiles_choice, recursive, reltol, res, results, s, sample_interval,
-  sequence_length, sim_pars, sim_phylo, soc, subsamp, t, t1, t2,
+  sequence_length, sim_pars, sim_phylo, n_0, subsamp, t, t1, t2,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
   trparsopt, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
   z_name)
@@ -25,7 +25,8 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
 
 \item{a_reltol}{something}
 
-\item{abstol}{absolute error tolerance for the numerical integration using deSolve.}
+\item{abstol}{absolute error tolerance for
+the numerical integration using deSolve.}
 
 \item{account_name}{something}
 
@@ -87,7 +88,8 @@ The ids are defined as follows:
 
 \item{matrix}{something}
 
-\item{matrix_builder}{function used to build the transition matrix. Default option is \code{hyper_a_hanno}}
+\item{matrix_builder}{function used to build the transition matrix.
+Default option is \code{hyper_a_hanno}}
 
 \item{max_iter}{Sets the maximum number of iterations in the optimization}
 
@@ -157,7 +159,8 @@ but missing in the phylogeny.}
 
 \item{recursive}{something}
 
-\item{reltol}{relative error tolerance for the numerical integration using deSolve.}
+\item{reltol}{relative error tolerance for
+the numerical integration using deSolve.}
 
 \item{res}{something}
 
@@ -179,8 +182,7 @@ but missing in the phylogeny.}
 
 \item{sim_phylo}{something}
 
-\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
-use '2' for crown.}
+\item{n_0}{the number of lineages at time equals zero.}
 
 \item{subsamp}{something}
 
@@ -226,7 +228,8 @@ do with a standard usage of mbd_sim.}
 
 \item{z_name}{something}
 
-\item{n_0}{the number of lineages at time equals zero.}
+\item{n_0}{Sets whether stem or crown age should be used. Use '1' for stem,
+use '2' for crown.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

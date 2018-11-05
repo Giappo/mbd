@@ -19,10 +19,12 @@ create_a(pars, k, lx, matrix_builder = mbd:::hyper_a_hanno)
 
 \item{lx}{It is the number of ODEs considered for the computation.}
 
-\item{matrix_builder}{function used to build the transition matrix. Default option is \code{hyper_a_hanno}}
+\item{matrix_builder}{function used to build the transition matrix.
+Default option is \code{hyper_a_hanno}}
 }
 \description{
-Creates the A matrix, used for likelihood integration between branching times.
+Creates the A matrix,
+used for likelihood integration between branching times.
 }
 \details{
 This is not to be called by the user.

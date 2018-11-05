@@ -7,12 +7,15 @@
 #' @inheritParams default_params_doc
 #' @examples
 #' out <- mbd_sim(
-#'   pars = c(0.6, 0.1, 0.4, 0.1), n_0 = 2, age = 10, cond = 1,
+#'   pars = c(0.6, 0.1, 0.4, 0.1),
+#'   n_0 = 2,
+#'   age = 10,
+#'   cond = 1,
 #'   tips_interval = c(0, Inf)
 #' )
-#' graphics::plot(out$tas)
-#' graphics::plot(out$tes)
-#' out$L
+#' graphics::plot(out$full_tree)
+#' graphics::plot(out$reconstructed_tree)
+#' out$l_matrix
 #'
 #' @export
 mbd_sim <- function(
@@ -22,8 +25,7 @@ mbd_sim <- function(
   cond = 1,
   tips_interval = c(0, Inf),
   minimum_multiple_births = 0
-) 
-{
+) {
   if (length(pars) != 4) {
     stop("'pars' must have four parameters")
   }
@@ -83,7 +85,7 @@ mbd_sim <- function(
           delta_n <- -1 * (outcome == -1) + 1 * (outcome == 1) +
             (outcome == 2) * stats::rbinom(n = 1, size = n_species, prob = q)
           t <- t - delta_t
-          
+
           if (delta_n > 0 & t > 0) {
             if (n_species > 1) {
               parents <- sample(pool, replace = FALSE, size = delta_n)
@@ -95,7 +97,7 @@ mbd_sim <- function(
             l_matrix[new_interval, 1] <- t
             l_matrix[new_interval, 2] <- parents
             l_matrix[new_interval, 3] <- abs(new_interval) * sign(parents)
-            
+
             pool <- c(pool, abs(new_interval) * sign(parents))
             total_count <- total_count + delta_n
           }
@@ -136,7 +138,7 @@ mbd_sim <- function(
     multi_births_full_tree <- sum(duplicated(births_full_tree))
     #should i consider the full tree or the reconstructed one???
     multiple_births_check <- multiple_births_rec_tree >= minimum_multiple_births
-    
+
     #should i keep this simulation?
     keep_the_sim <- (!crown_species_dead) &
       (tips >= tips_interval[1] &
@@ -146,12 +148,12 @@ mbd_sim <- function(
   time_points <- unlist(
     unname(sort(DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE))
   )
-  
+
   colnames(l_matrix) <- c("birth_time",
                           "parent",
                           "id",
                           "death_time")
-  
+
   brts <- sort(abs(as.numeric(time_points)), decreasing = TRUE)
   reconstructed_tree <- DDD::L2phylo(unname(l_matrix), dropextinct = TRUE)
   full_tree <- DDD::L2phylo(l_matrix, dropextinct = FALSE)

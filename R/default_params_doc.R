@@ -2,7 +2,8 @@
 #' documentation.
 #' @param a_abstol something
 #' @param a_reltol something
-#' @param abstol absolute error tolerance for the numerical integration using deSolve.
+#' @param abstol absolute error tolerance for
+#' the numerical integration using deSolve.
 #' @param account_name something
 #' @param after something
 #' @param age The age of the tree.
@@ -37,7 +38,8 @@
 #' @param lx It is the number of ODEs considered for the computation.
 #' @param lx0 something
 #' @param matrix something
-#' @param matrix_builder function used to build the transition matrix. Default option is \code{hyper_a_hanno}
+#' @param matrix_builder function used to build the transition matrix.
+#' Default option is \code{hyper_a_hanno}
 #' @param max_iter Sets the maximum number of iterations in the optimization
 #' @param max_k something
 #' @param max_number_of_species something
@@ -80,7 +82,8 @@
 #' @param q the single-lineage speciation probability at a triggered event.
 #' @param quantiles_choice something
 #' @param recursive something
-#' @param reltol relative error tolerance for the numerical integration using deSolve.
+#' @param reltol relative error tolerance for
+#' the numerical integration using deSolve.
 #' @param res something
 #' @param results something
 #' @param s something
@@ -94,7 +97,7 @@
 #'   \item id == 4 corresponds to q (single-lineage speciation probability)
 #' }
 #' @param sim_phylo something
-#' @param soc Sets whether stem or crown age should be used. Use '1' for stem,
+#' @param n_0 Sets whether stem or crown age should be used. Use '1' for stem,
 #'   use '2' for crown.
 #' @param subsamp something
 #' @param t something
@@ -191,7 +194,7 @@ default_params_doc <- function(
   sequence_length,
   sim_pars,
   sim_phylo,
-  soc,
+  n_0,
   subsamp,
   t,
   t1,

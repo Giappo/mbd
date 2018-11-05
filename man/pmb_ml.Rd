@@ -4,7 +4,7 @@
 \alias{pmb_ml}
 \title{Perform a maximum likelihood estimation for a Pure Multiple Birth model.}
 \usage{
-pmb_ml(brts, initparsopt, idparsopt = c(1, 3, 4), soc = 2, res = 10 *
+pmb_ml(brts, initparsopt, idparsopt = c(1, 3, 4), n_0 = 2, res = 10 *
   (1 + length(brts) + missnumspec), tol = c(0.001, 1e-04, 1e-06),
   maxiter = 1000 * round((1.25)^length(idparsopt)),
   changeloglikifnoconv = FALSE, optimmethod = "simplex",
@@ -24,8 +24,7 @@ The ids are defined as follows:
   \item pars[4] is q, the single-lineage speciation probability_
 }}
 
-\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
-use '2' for crown.}
+\item{n_0}{the number of lineages at time equals zero.}
 
 \item{res}{something}
 

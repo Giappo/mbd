@@ -12,7 +12,8 @@ mbd_loglik_rhs(t, x, params)
 \item{x}{something}
 }
 \description{
-Builds the right hand side of the ODE set for multiple birth model
+Builds the right hand side of the ODE set
+for multiple birth model
 }
 \details{
 This is not to be called by the user.
