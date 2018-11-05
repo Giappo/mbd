@@ -4,10 +4,10 @@
 \alias{mbd_loglik}
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
-mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
-  tips_interval = c(0, Inf), missnumspec = 0,
-  safety_threshold = 0.001, methode = "expo",
-  minimum_multiple_births = 0, abstol = 1e-16, reltol = 1e-10)
+mbd_loglik(pars, brts, n_0 = 2, cond = 1, lx = 1 + 2 * (length(brts)
+  + length(missnumspec)), tips_interval = c(0, Inf), missnumspec = 0,
+  safety_threshold = 0.001, methode = "expo", abstol = 1e-16,
+  reltol = 1e-10)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -15,27 +15,24 @@ mbd_loglik(pars, brts, soc = 2, cond = 1, lx0 = 900, alpha = 10,
   \item pars[1] is lambda, the sympatric speciation rate;
   \item pars[2] is mu, the extinction rate;
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability_
+  \item pars[4] is q, the single-lineage speciation probability;
 }}
 
-\item{brts}{A set of branching times of a phylogeny}
+\item{brts}{A set of branching times of a phylogeny.}
 
-\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
-use '2' for crown.}
+\item{n_0}{the number of lineages at time equals zero.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{lx0}{something}
-
-\item{alpha}{something}
+\item{lx}{It is the number of ODEs considered for the computation.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
 \item{missnumspec}{The number of species that are in the clade,
-but missing in the phylogeny_}
+but missing in the phylogeny.}
 
 \item{safety_threshold}{It determines the precision on the parameters.}
 
@@ -46,38 +43,20 @@ but missing in the phylogeny_}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
-\item{minimum_multiple_births}{something}
+\item{abstol}{absolute error tolerance for
+the numerical integration using deSolve.}
 
-\item{abstol}{something}
-
-\item{reltol}{something}
+\item{reltol}{relative error tolerance for
+the numerical integration using deSolve.}
 }
 \value{
 The function returns the natural logarithm
   of the likelihood for the process.
 }
 \description{
-mbd_loglik provides the likelihood for a process
+mbd_loglik_basic provides the likelihood for a process
   in which multiple births (from different parents) at the same time
   are possible, along with usual sympatric speciation and extinction events.
-}
-\examples{
-set.seed(11)
-simulated_data = mbd_sim(
-  pars = c(0.6, 0.1, 2.2, 0.1), soc = 2, age = 10, cond = 1
-)
-graphics::plot(simulated_data$tas)
-# @Giappo: too big too run
-# mbd::mbd_loglik(
-#   pars = c(0.8, 0.05, 2.2, 0.1),
-#   brts = simulated_data$brts,
-#   soc = 2, cond = 1, missnumspec = 0
-# )
-
-}
-\seealso{
-use \link{pmb_loglik} to calculate the log-likelihood for
-  a Pure Multiple Birth model.
 }
 \author{
 Giovanni Laudanno

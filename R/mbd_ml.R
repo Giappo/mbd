@@ -39,14 +39,20 @@
 #' @examples
 #' set.seed(10)
 #' test_pars <- c(0.3, 0.1, 0.1, 0.15)
-#' simulated_data = mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
-#' graphics::plot(simulated_data$tes)
+#' simulated_data = mbd_sim(
+#'  pars = test_pars,
+#'  n_0 = 2,
+#'  age = 10,
+#'  cond = 1
+#' )
+#' graphics::plot(simulated_data$reconstructed_tree)
 #' # @Giappo: does not work
 #' # mbd_ml(
-#' #   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
+#' #   brts = simulated_data$brts,
+#' #   initparsopt = 0.11 , idparsopt = 4,
 #' #   idparsfix = c(1, 2, 3),
 #' #   parsfix = test_pars[idparsfix],
-#' #   missnumspec = 0, cond = 1, soc = 2
+#' #   missnumspec = 0, cond = 1, n_0 = 2
 #' # )
 #' @seealso use \link{pmb_ml} to perform a maximum likelihood estimation
 #'   for a Pure Multiple Birth model.
@@ -59,11 +65,11 @@ mbd_ml <- function(
   parsfix,
   missnumspec = 0,
   cond = 1,
-  soc = 2,
+  n_0 = 2,
   tips_interval = c(0, Inf),
   res = 10 * (1 + length(brts) + missnumspec),
   tol = c(1E-3, 1E-4, 1E-6),
-  maxiter = 1000 * round((1.25)^length(idparsopt)),
+  maxiter = 1000 * round((1.25) ^ length(idparsopt)),
   changeloglikifnoconv = FALSE,
   optimmethod = "simplex",
   methode = "expo",
@@ -144,7 +150,7 @@ mbd_ml <- function(
     trparsopt = trparsopt, trparsfix = trparsfix,
     idparsopt = idparsopt, idparsfix = idparsfix,
     brts = brts, missnumspec = missnumspec,
-    cond = cond, soc = soc, tips_interval = tips_interval,
+    cond = cond, n_0 = n_0, tips_interval = tips_interval,
     methode = methode,
     minimum_multiple_births = minimum_multiple_births,
     pars_transform = pars_transform,
@@ -175,7 +181,7 @@ mbd_ml <- function(
     trparsopt = trparsopt, trparsfix = trparsfix,
     idparsopt = idparsopt, idparsfix = idparsfix,
     brts = brts, missnumspec = missnumspec, cond = cond,
-    soc = soc, tips_interval = tips_interval, methode = methode,
+    n_0 = n_0, tips_interval = tips_interval, methode = methode,
     minimum_multiple_births = minimum_multiple_births,
     pars_transform = pars_transform, print_errors = print_errors,
     ...
@@ -229,9 +235,3 @@ mbd_ml <- function(
 
   invisible(out2)
 }
-
-# mbd_ml_cluster----------------
-# Moved to razzo
-
-# pmb_ML_cluster----------------
-# Moved to razzo

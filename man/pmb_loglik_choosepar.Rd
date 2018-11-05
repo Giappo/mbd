@@ -8,7 +8,7 @@ This function is built to work inside mbd_minusLL_vs_single_parameter
 or any optimizer like optim or simplex}
 \usage{
 pmb_loglik_choosepar(trparsopt, trparsfix = 0, idparsopt = c(1, 3, 4),
-  idparsfix = (1:4)[-idparsopt], brts, soc = 2, pars_transform = 0)
+  idparsfix = (1:4)[-idparsopt], brts, n_0 = 2, pars_transform = 0)
 }
 \arguments{
 \item{trparsopt}{something}
@@ -26,10 +26,9 @@ The ids are defined as follows:
 
 \item{idparsfix}{something}
 
-\item{brts}{A set of branching times of a phylogeny}
+\item{brts}{A set of branching times of a phylogeny.}
 
-\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
-use '2' for crown.}
+\item{n_0}{the number of lineages at time equals zero.}
 
 \item{pars_transform}{something}
 }

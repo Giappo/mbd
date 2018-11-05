@@ -6,7 +6,7 @@
   under a multiple birth-death diversification model}
 \usage{
 mbd_ml(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
-  parsfix, missnumspec = 0, cond = 1, soc = 2, tips_interval = c(0,
+  parsfix, missnumspec = 0, cond = 1, n_0 = 2, tips_interval = c(0,
   Inf), res = 10 * (1 + length(brts) + missnumspec), tol = c(0.001,
   1e-04, 1e-06), maxiter = 1000 * round((1.25)^length(idparsopt)),
   changeloglikifnoconv = FALSE, optimmethod = "simplex",
@@ -14,7 +14,7 @@ mbd_ml(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
   print_errors = 0, verbose = TRUE, ...)
 }
 \arguments{
-\item{brts}{A set of branching times of a phylogeny}
+\item{brts}{A set of branching times of a phylogeny.}
 
 \item{initparsopt}{The initial values of the parameters
 that must be optimized}
@@ -34,13 +34,12 @@ The default is to fix all parameters not specified in idparsopt.}
 \item{parsfix}{The values of the parameters that should not be optimized.}
 
 \item{missnumspec}{The number of species that are in the clade,
-but missing in the phylogeny_}
+but missing in the phylogeny.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{soc}{Sets whether stem or crown age should be used. Use '1' for stem,
-use '2' for crown.}
+\item{n_0}{the number of lineages at time equals zero.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
@@ -103,14 +102,20 @@ mbd_ml computes the maximum likelihood estimates of
 \examples{
 set.seed(10)
 test_pars <- c(0.3, 0.1, 0.1, 0.15)
-simulated_data = mbd_sim(pars = test_pars, soc = 2, age = 10, cond = 1)
-graphics::plot(simulated_data$tes)
+simulated_data = mbd_sim(
+ pars = test_pars,
+ n_0 = 2,
+ age = 10,
+ cond = 1
+)
+graphics::plot(simulated_data$reconstructed_tree)
 # @Giappo: does not work
 # mbd_ml(
-#   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
+#   brts = simulated_data$brts,
+#   initparsopt = 0.11 , idparsopt = 4,
 #   idparsfix = c(1, 2, 3),
 #   parsfix = test_pars[idparsfix],
-#   missnumspec = 0, cond = 1, soc = 2
+#   missnumspec = 0, cond = 1, n_0 = 2
 # )
 }
 \seealso{
