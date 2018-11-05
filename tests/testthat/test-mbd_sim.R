@@ -42,16 +42,16 @@ test_that("abuse", {
   expect_error(
     mbd_sim(
       pars = c(1.0, 1.0, 1.0, 1.0),
-      soc = "nonsense"
+      n_0 = "nonsense"
     ),
-    "'soc' must be numeric"
+    "'n_0' must be numeric"
   )
   expect_error(
     mbd_sim(
       pars = c(1.0, 1.0, 1.0, 1.0),
-      soc = 42
+      n_0 = 42
     ),
-    "'soc' must be '1' or '2'"
+    "'n_0' must be '1' of '2'"
   )
 })
 

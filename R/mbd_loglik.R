@@ -114,14 +114,6 @@ mbd_loglik <- function(
       # as bugs from the integration process
       q_t[t, ] <- mbd:::negatives_correction(q_t[t, ], pars) # nolint internal function
     }
-    if (any(is.nan(q_t[t, ]))) {
-      nan_values <- 1
-      break
-    }
-    if (any(q_t[t, ] < 0)) {
-      negative_values <- 1
-      break
-    }
 
     # Applying C operator
     # (this is a trick to avoid precision issues)
@@ -145,17 +137,6 @@ mbd_loglik <- function(
     if (methode != "sexpm") {
       q_t[t, ] <- mbd:::negatives_correction(q_t[t, ], pars) # nolint internal function
     }
-    if (any(is.nan(q_t[t, ]))) {
-      if (Sys.info()[["sysname"]] == "Windows") {
-        print(pars); print(q_t[t, ])
-      }
-      nan_values <- 1
-      break
-    }
-    if (any(q_t[t, ] < 0)) {
-      negative_values <- 1
-      break
-    }
 
     # Applying D operator
     # (this works exactly like C)
@@ -165,14 +146,14 @@ mbd_loglik <- function(
     t <- t + 1
   }
 
-  #Selecting the state I am interested in
+  # Selecting the state I am interested in
   vm <- 1 / choose((k + missnumspec), k)
   likelihood  <- vm * q_t[t, (missnumspec + 1)]
 
-  #Removing C and D effects from the LL
+  # Removing C and D effects from the LL
   loglik <- log(likelihood) - sum(log(C)) - sum(log(D))
 
-  #Various checks
+  # Various checks
   loglik <- as.numeric(loglik)
   if (is.nan(loglik) | is.na(loglik)) {
     loglik <- -Inf
