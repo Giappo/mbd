@@ -5,22 +5,49 @@
 #'   three kind of events: sympatric speciation, multiple allopatric
 #'   speciations and extinction.
 #' @inheritParams default_params_doc
+#' @param pars vector of parameters:
+#' \itemize{
+#'   \item pars[1] is lambda, the sympatric speciation rate;
+#'   \item pars[2] is mu, the extinction rate;
+#'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+#'   \item pars[4] is q, the single-lineage speciation probability_
+#' }
+#' @return The function returns a
+#'   list of L table, branching times and number of extinct species:
+#' \itemize{
+#'   \item brts are the branching times
+#'   \item tes is a tree-object corresponding to the
+#'     reconstructed phylogenetic tree
+#'   \item tas is a tree-object corresponding to the full phylogenetic tree
+#'   \item extinct_species is the number of species
+#'     gone extinct before the present time
+#'   \item L is a matrix of all species where the columns are:
+#'   \itemize{
+#'      \item first is the time at which a species is born;
+#'      \item second is the label of the parent of the species;
+#'        positive and negative values only indicate
+#'        whether the species belongs to the left or right crown lineage;
+#'      \item third is the label of the daughter species itself;
+#'        positive and negative values only indicate
+#'        whether the species belongs to the left or right crown lineage;
+#'      \item fourth is the time of extinction of the species.
+#'        If this is equal to -1, then the species is still extant.
+#'   }
+#' }
+#'
 #' @examples
 #' out <- mbd_sim(
-#'   pars = c(0.6, 0.1, 0.4, 0.1),
-#'   n_0 = 2,
-#'   age = 10,
-#'   cond = 1,
+#'   pars = c(0.6, 0.1, 0.4, 0.1), soc = 2, age = 10, cond = 1,
 #'   tips_interval = c(0, Inf)
 #' )
-#' graphics::plot(out$full_tree)
-#' graphics::plot(out$reconstructed_tree)
-#' out$l_matrix
+#' graphics::plot(out$tas)
+#' graphics::plot(out$tes)
+#' out$L
 #'
 #' @export
 mbd_sim <- function(
   pars,
-  n_0 = 2,
+  soc = 2,
   age = 10,
   cond = 1,
   tips_interval = c(0, Inf),
@@ -53,17 +80,11 @@ mbd_sim <- function(
   if (any(tips_interval < 0)) {
     stop("'tips_interval' must contain two positive values")
   }
-  if (!is.numeric(soc)) {
-    stop("'soc' must be numeric")
-  }
-  if (is.numeric(soc) != 1 && soc != 2) {
-    stop("'soc' must be '1' of '2'")
-  }
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
   q <- pars[4]
-  init_n_lineages <- n_0
+  init_n_lineages <- soc
   tips <- -1; crown_species_dead <- cond; multiple_births_check <- 0;
   keep_the_sim <- 0
   while (keep_the_sim == 0 | multiple_births_check == 0) {
@@ -122,6 +143,7 @@ mbd_sim <- function(
       }
     }
     l_matrix <- l_matrix[(1:total_count), ]
+    extinct_species <- sum(l_matrix[, 4] != -1)
     #tips check
     tips <- length(l_matrix[, 4][l_matrix[, 4] == -1])
     #survival of crown check
@@ -145,28 +167,29 @@ mbd_sim <- function(
     #should i consider the full tree or the reconstructed one???
     multiple_births_check <- multiple_births_rec_tree >= minimum_multiple_births
 
-    #should i keep this simulation?
+     #should i keep this simulation?
     keep_the_sim <- (!crown_species_dead) &
       (tips >= tips_interval[1] &
-         tips <= tips_interval[2]
-      )
+      tips <= tips_interval[2]
+    )
   }
   time_points <- unlist(
     unname(sort(DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE))
   )
-
+  
   colnames(l_matrix) <- c("birth_time",
                           "parent",
                           "id",
                           "death_time")
-
-  brts <- sort(abs(as.numeric(time_points)), decreasing = TRUE)
-  reconstructed_tree <- DDD::L2phylo(unname(l_matrix), dropextinct = TRUE)
-  full_tree <- DDD::L2phylo(l_matrix, dropextinct = FALSE)
+  
+  brts <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
+  tes <- DDD::L2phylo(l_matrix, dropextinct = TRUE)
+  tas <- DDD::L2phylo(l_matrix, dropextinct = FALSE)
   list(
     brts = brts,
-    reconstructed_tree = reconstructed_tree,
-    full_tree = full_tree,
+    tes = tes,
+    tas = tas,
+    extinct_species = extinct_species,
     l_matrix = l_matrix,
     minimum_multiple_births = multi_births_full_tree
   )

@@ -2,14 +2,15 @@
 #' documentation.
 #' @param a_abstol something
 #' @param a_reltol something
-#' @param abstol something
+#' @param abstol absolute error tolerance for
+#' the numerical integration using deSolve.
 #' @param account_name something
 #' @param after something
 #' @param age The age of the tree.
 #' @param alpha something
 #' @param alpha0 something
-#' @param b something
-#' @param brts A set of branching times of a phylogeny
+#' @param b the number of simultaneous births on a given branching time.
+#' @param brts A set of branching times of a phylogeny.
 #' @param changeloglikifnoconv something
 #' @param checked_functions something
 #' @param colormap something
@@ -26,18 +27,19 @@
 #'     \item pars[4] is q, the single-lineage speciation probability_
 #'   }
 #' @param initparsopt something
-#' @param input_trees_path Path to \code{.trees} file
+#' @param input_trees_path Path to \code{.trees} file.
 #' @param input_xml something
 #' @param interval_max something
 #' @param interval_min something
 #' @param iterations something
-#' @param k something
-#' @param lambda the sympatric speciation rate
+#' @param k the number of visible species in the phylogeny at a given time.
+#' @param lambda the sympatric speciation rate.
 #' @param logs something
 #' @param lx It is the number of ODEs considered for the computation.
 #' @param lx0 something
 #' @param matrix something
-#' @param matrix_builder something
+#' @param matrix_builder function used to build the transition matrix.
+#' Default option is \code{hyper_a_hanno}
 #' @param max_iter Sets the maximum number of iterations in the optimization
 #' @param max_k something
 #' @param max_number_of_species something
@@ -54,38 +56,34 @@
 #'   }
 #' @param minimum_multiple_births something
 #' @param missnumspec The number of species that are in the clade,
-#'   but missing in the phylogeny_
-#' @param mu the extinction rate
+#'   but missing in the phylogeny.
+#' @param mu the extinction rate.
 #' @param mutation_rate something
-#' @param n_species number of species
-#' @param init_n_lineages the number of lineages at time equals zero
+#' @param n_0 the number of lineages at time equals zero.
+#' @param n_species number of species.
+#' @param init_n_lineages the number of lineages at time equals zero.
 #' @param n_steps something
 #' @param n_subs something
-#' @param nu the multiple allopatric speciation trigger rate
+#' @param nu the multiple allopatric speciation trigger rate.
 #' @param optimmethod something
 #' @param pars vector of parameters:
-#' \itemize{
-#'   \item pars[1] is the multiple speciation trigger rate;
-#'   \item pars[2] is the extinction rate;
-#'   \item pars[3] is the single-lineage speciation probability_
-#' }
-#' or
 #' \itemize{
 #'   \item pars[1] is lambda, the sympatric speciation rate;
 #'   \item pars[2] is mu, the extinction rate;
 #'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-#'   \item pars[4] is q, the single-lineage speciation probability_
+#'   \item pars[4] is q, the single-lineage speciation probability;
 #' }
 #' @param pars_transform something
 #' @param parsfix The values of the parameters that should not be optimized.
 #' @param precision something
 #' @param printit something
 #' @param print_errors something
-#' @param q_matrix a matrix of something
-#' @param q the single-lineage speciation probability at a triggered event
+#' @param q_vector the q vector from "Etienne et al. 2012 - Proc. R. Soc. B".
+#' @param q the single-lineage speciation probability at a triggered event.
 #' @param quantiles_choice something
 #' @param recursive something
-#' @param reltol something
+#' @param reltol relative error tolerance for
+#' the numerical integration using deSolve.
 #' @param res something
 #' @param results something
 #' @param s something
@@ -99,7 +97,7 @@
 #'   \item id == 4 corresponds to q (single-lineage speciation probability)
 #' }
 #' @param sim_phylo something
-#' @param soc Sets whether stem or crown age should be used. Use '1' for stem,
+#' @param n_0 Sets whether stem or crown age should be used. Use '1' for stem,
 #'   use '2' for crown.
 #' @param subsamp something
 #' @param t something
@@ -184,7 +182,7 @@ default_params_doc <- function(
   precision,
   print_errors,
   printit,
-  q_matrix,
+  q_vector,
   q,
   quantiles_choice,
   recursive,
@@ -196,7 +194,7 @@ default_params_doc <- function(
   sequence_length,
   sim_pars,
   sim_phylo,
-  soc,
+  n_0,
   subsamp,
   t,
   t1,
