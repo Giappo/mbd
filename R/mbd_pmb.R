@@ -7,35 +7,25 @@
 pmb_loglik <- function(
   pars,
   brts,
-  soc = 2
+  N0 = 2
 ) {
-  init_n_lineages <- soc
+  
+  init_n_lineages <- N0
   lambda <- pars[1]
-  mu <- pars[2]
-  nu <- pars[3]
-  q <- pars[4]
-  if (any(is.nan(pars))) {
-    stop("'pars' cannot contain NaNs")
-  }
-  if (any(is.infinite(pars))) {
-    stop("'pars' cannot contain Infs")
-  }
-  if (lambda < 0.0) {
-    stop("'lambda' must be positive")
-  }
-  if (mu != 0.0) {
-    stop("'mu' must be zero")
-  }
-  if (nu < 0.0) {
-    stop("'nu' must be positive")
-  }
-  if (q < 0.0) {
-    stop("'q' must be positive")
-  }
-  if (q > 1.0) {
-    stop("'q' must be less or equal to one")
-  }
-  data <- brts2time_intervals_and_births(brts)  # nolint internal function
+  mu     <- pars[2]
+  nu     <- pars[3]
+  q      <- pars[4]
+  
+  if (mu != 0) stop("this function works only for mu = 0!")
+  
+  if (are_these_parameters_wrong(
+    brts = brts,
+    pars = pars,
+    safety_threshold = 0,
+    N0 = N0
+  )) {return(-Inf)}
+  
+  data <- mbd:::brts2time_intervals_and_births(brts)  # nolint internal function
   time_intervals <- data$time_intervals
   births <- data$births
   k <- init_n_lineages + cumsum(c(0, births))

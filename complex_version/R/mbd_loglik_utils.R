@@ -1,13 +1,11 @@
 #' @title are_these_parameters_wrong
 #' @description check parameters consistency
 #' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
 #' @export
 are_these_parameters_wrong <- function(
-  brts,
-  pars,
-  safety_threshold,
-  N0
+ pars,
+ safety_threshold,
+ N0
 )
 {
   lambda <- pars[1]
@@ -26,14 +24,14 @@ are_these_parameters_wrong <- function(
   }
   
   out <- (any(is.infinite(pars))) ||
-    (lambda < 0.0) ||
-    (mu < 0.0) ||
-    (nu < 0.0) ||
-    (q < 0.0) ||
-    (q > 1.0) ||
-    (q < 0 + safety_threshold) ||
-    (q > 1.0 - safety_threshold)
-  
+  (lambda < 0.0) ||
+  (mu < 0.0) ||
+  (nu < 0.0) ||
+  (q < 0.0) ||
+  (q > 1.0) ||
+  (q < 0 + safety_threshold) ||
+  (q > 1.0 - safety_threshold)
+    
 }
 
 #' Function to build a matrix, used in creating the A and B operators.
@@ -85,16 +83,15 @@ hyper_a_hanno <- function(
   matrix_a[1:n_species, 1:n_species]
 }
 
-#' @title A matrix
-#' @description Creates the A matrix, used for likelihood integration between branching times.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-#' @author Giovanni Laudanno
 #' @export
 create_a <- function(
   pars,
   k,
-  lx,
+  max_number_of_species,
   matrix_builder = mbd:::hyper_a_hanno
 ) 
 {
@@ -103,52 +100,46 @@ create_a <- function(
   nu     <- pars[3]
   q      <- pars[4]
   
-  testit::assert(lx < 2 ^ 31)
-  nvec <- 0:lx
+  testit::assert(max_number_of_species < 2 ^ 31)
+  nvec <- 0:max_number_of_species
   
   m <- nu * matrix_builder(
-    n_species = lx, 
+    n_species = max_number_of_species, 
     k = k, 
     q = q
   )
   diag(m)  <- (-nu) * (1 - (1 - q) ^ (k + nvec)) - (lambda + mu) * (k + nvec)
-  m[row(m) == col(m) - 1] <- mu * nvec[2:(lx + 1)]
+  m[row(m) == col(m) - 1] <- mu * nvec[2:(max_number_of_species + 1)]
   m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] +
-    lambda * (nvec[1:(lx)] + 2 * k)
+                             lambda * (nvec[1:(max_number_of_species)] + 2 * k)
   m[length(nvec), length(nvec)] = (-mu) * (k + nvec[length(nvec)]) +
-    (-nu) * (1 - (1 - q) ^ (k + nvec[length(nvec)]))
+                                  (-nu) * (1 - (1 - q) ^ (k + nvec[length(nvec)]))
   
   m
 }
 
-#' @title B matrix
-#' @description Creates the B matrix, used to modify the likelihood on branching times.
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-#' @author Giovanni Laudanno
 #' @export
 create_b <- function(
   pars,
   k,
   b,
-  lx,
+  max_number_of_species,
   matrix_builder = mbd:::hyper_a_hanno
 ) 
 {
-  
-  if (b > k) {
-    stop("you can't have more births than species present in the phylogeny") # nolint
-  }
-  
   lambda <- pars[1]
   mu     <- pars[2]
   nu     <- pars[3]
   q      <- pars[4]
   
   k2 <- k - b
-  m <- matrix_builder(n_species = lx, k = k2, q = q)
+  m <- matrix_builder(n_species = max_number_of_species, k = k2, q = q)
   
-  lambda * k * diag(lx + 1) *
+  lambda * k * diag(max_number_of_species + 1) *
     (b == 1) + nu * choose(k, b) * (q^b) * m
 }
 
@@ -165,31 +156,29 @@ create_b <- function(
 #'
 #' A(t_i - t_{i-1}) = exp(M(t_k - t_{k-1})
 #' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
 #' @noRd
 a_operator <- function(
   q_vector,
   transition_matrix,
   time_interval,
   precision = 50L,
-  abstol = 1e-16,
-  reltol = 1e-10,
+  a_abstol = 1e-16,
+  a_reltol = 1e-10,
   methode = "expo"
-) 
-{
+) {
   precision_limit <- 2000
   precision_step1 <- 40
   precision_step2 <- 50
   max_repetitions <- 10
   result <- rep(-1, length(q_vector))
   bad_result <- 0
-  
+
   testit::assert(methode != "sexpm")
   if (methode == "expo") {
     result_nan <- result_negative <- 1
     repetition <- 1
     while ((result_nan == 1 | result_negative == 1) &
-           repetition < max_repetitions
+      repetition < max_repetitions
     ) {
       result <- try(
         expoRkit::expv(
@@ -200,7 +189,7 @@ a_operator <- function(
         ),
         silent = TRUE
       )
-      
+
       result_nan <- (any(!is.numeric(result)) || any(is.nan(result)))
       if (result_nan) {
         precision <- precision - precision_step1
@@ -216,12 +205,12 @@ a_operator <- function(
       repetition <- repetition + 1
     }
   }
-  
+
   bad_result <- (any(!is.numeric(result)) || any(is.nan(result)))
   if (!bad_result) {
     bad_result <- (any(result < 0))
   }
-  
+
   if (methode == "lsoda" | bad_result) {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
@@ -230,31 +219,30 @@ a_operator <- function(
       times = times,
       func = mbd_loglik_rhs,
       parms = ode_matrix,
-      atol = abstol,
-      rtol = reltol)[2, -1],
+      atol = a_abstol,
+      rtol = a_reltol)[2, -1],
       timeout = 1001
     )
   }
-  
+
   result
 }
 
-#' @title Builds the right hand side of the ODE set for multiple birth model
-#' @description Builds the right hand side of the ODE set for multiple birth model
+#' @title Internal mbd function
+#' @description Internal mbd function.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
-#' @author Giovanni Laudanno
 #' @export
 mbd_loglik_rhs <- function(
   t,
   x,
-  params
+  pars
 ) 
 {
-  
+  #builds right hand side of the ODE set for multiple birth model
   with(as.list(x), {
     starting_vector <- x
-    transition_matrix <- params
+    transition_matrix <- pars
     dx <- rep(0, length(starting_vector))
     dx <- drop(transition_matrix %*% starting_vector)
     out <- (dx)
@@ -267,16 +255,105 @@ mbd_loglik_rhs <- function(
 #' @description Test if the given branching times can actually be generated by a MBD process. In any moment you CANNOT have more births than number of species.
 #' @inheritParams default_params_doc
 #' @return TRUE or FALSE.
-#' @author Giovanni Laudanno
 #' @export
-check_brts_consistency <- function(
-  brts, 
-  N0
-) 
-{
-  births <- mbd:::brts2time_intervals_and_births(brts)$births
+check_brts_consistency <- function(brts, N0) {
+  births <- brts2time_intervals_and_births(brts)$births
   kvec <- N0 + cumsum(c(0, births)); kvec
   all(births <= kvec[-length(kvec)])  
+}
+
+#' @title Internal mbd function
+#' @description Internal mbd function.
+#' @inheritParams default_params_doc
+#' @details This is not to be called by the user.
+#' @export
+alpha_analysis <- function(
+  brts,
+  pars,
+  tips_interval,
+  cond,
+  soc,
+  alpha0,
+  max_k,
+  methode = "expo",
+  abstol,
+  reltol,
+  minimum_multiple_births
+) {
+  delta_alpha <- 1
+  count <- 0
+  same_result_count <- 0
+  pc_notanumber <- 1
+  alpha <- alpha0
+  while (pc_notanumber) {
+    pc_1 <- mbd_calc_alpha_cond_prob(
+      brts = brts,
+      pars = pars,
+      tips_interval = tips_interval,
+      cond = cond,
+      soc = soc,
+      alpha = alpha,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol,
+      minimum_multiple_births = minimum_multiple_births
+    )$pc
+    pc_notanumber <- is.nan(pc_1)
+    alpha <- alpha - pc_notanumber
+  }
+  while (delta_alpha != 0 && count < 100 && same_result_count < 5) {
+    pc_2 <- mbd_calc_alpha_cond_prob(
+      brts = brts,
+      pars = pars,
+      tips_interval = tips_interval,
+      cond = cond,
+      soc = soc,
+      alpha = alpha + delta_alpha,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol,
+      minimum_multiple_births = minimum_multiple_births
+    )$pc
+    if (is.nan(pc_2)) {
+      delta_alpha <- delta_alpha - 1
+    } else if (pc_2 < pc_1) {
+      delta_alpha <- delta_alpha + 1
+      same_result_count <- same_result_count + 1
+    } else {
+      same_result_count <- 0
+      delta_pc <- abs(pc_2 - pc_1) / pc_1;
+      delta_alpha <- floor(10 * delta_pc)
+      alpha <- alpha + delta_alpha
+      pc_1 <- pc_2
+    }
+    
+    count <- count + 1
+  }
+  if (max_k * alpha >= 2000) {
+    #check to see whether alpha is too big to be handled without memory issues
+    alpha <- floor(1500 / max_k)
+    pc_1 <- mbd_calc_alpha_cond_prob(
+      brts = brts,
+      pars = pars,
+      tips_interval = tips_interval,
+      cond = cond,
+      soc = soc,
+      alpha = alpha,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol,
+      minimum_multiple_births = minimum_multiple_births
+    )$pc
+  }
+  pc <- pc_1
+  if (count >= 100) {
+    alpha <- 10
+  }
+  if (pc <= 0 | pc == Inf | pc == -Inf) {
+    pc <- 1
+    print("there's a problem with pc")
+  }
+  return(list(pc = pc, alpha = alpha))
 }
 
 #' Converts branching times to "time intervals between branching times"
@@ -285,8 +362,7 @@ check_brts_consistency <- function(
 #' @noRd
 brts2time_intervals_and_births <- function(
   brts
-) 
-{
+) {
   time_points <- -unlist(unname(sort(abs(brts), decreasing = TRUE)))
   branching_times <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   births <- c(0, unname(table(branching_times))[-1])
@@ -297,37 +373,4 @@ brts2time_intervals_and_births <- function(
   )
   births <- births[-1]
   list(time_intervals = time_intervals, births = births)
-}
-
-#' Checks for NA, NaN or negative components in a vector (usually used for Qt)
-#' @inheritParams default_params_doc
-#' @param v a vector
-#' @param display_output If TRUE it prints the flags
-#' @noRd
-negatives_correction <- function(
-  v,
-  pars,
-  display_output = 0
-)
-{
-  problems <- 0
-  if (any(is.na(v))) {
-    problems <- 1
-    na_components <- which(is.na(v) & !is.nan(v))
-    nan_components <- which(is.nan(v))
-    if (display_output == 1) {
-      cat("There are non-numeric components for par values:", pars, "\n")
-      if (length(na_components) > 0) {
-        cat("NA component are:", na_components)
-      }
-      if (length(nan_components) > 0) {
-        cat("NaN component are:", nan_components)
-      }
-    }
-  }
-
-  if (any(v < 0) && problems == 0) {
-    v[v < 0 & (abs(v) / abs(max(v))) < 1e-10] <- 0
-  }
-  v
 }
