@@ -37,12 +37,15 @@ mbd_sim produces simulated trees allowing for
 }
 \examples{
 out <- mbd_sim(
-  pars = c(0.6, 0.1, 0.4, 0.1), n_0 = 2, age = 10, cond = 1,
+  pars = c(0.6, 0.1, 0.4, 0.1),
+  n_0 = 2,
+  age = 10,
+  cond = 1,
   tips_interval = c(0, Inf)
 )
-graphics::plot(out$tas)
-graphics::plot(out$tes)
-out$L
+graphics::plot(out$full_tree)
+graphics::plot(out$reconstructed_tree)
+out$l_matrix
 
 }
 \author{
