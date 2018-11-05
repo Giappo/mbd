@@ -4,8 +4,8 @@
 \alias{mbd_loglik}
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
-mbd_loglik(pars, brts, N0 = 2, cond = 1, lx = 1 + 2 * (length(brts) +
-  length(missnumspec)), tips_interval = c(0, Inf), missnumspec = 0,
+mbd_loglik(pars, brts, n_0 = 2, cond = 1, lx = 1 + 2 * (length(brts)
+  + length(missnumspec)), tips_interval = c(0, Inf), missnumspec = 0,
   safety_threshold = 0.001, methode = "expo", abstol = 1e-16,
   reltol = 1e-10)
 }
@@ -20,7 +20,7 @@ mbd_loglik(pars, brts, N0 = 2, cond = 1, lx = 1 + 2 * (length(brts) +
 
 \item{brts}{A set of branching times of a phylogeny.}
 
-\item{N0}{the number of lineages at time equals zero.}
+\item{n_0}{the number of lineages at time equals zero.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}

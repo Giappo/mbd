@@ -5,19 +5,19 @@ test_that("conditioned likelihood is lesser than unconditioned likelihood", {
 
   pars <- c(0.2, 0.15, 2.0, 0.1)
   brts <- c(5, 4, 3, 3, 1)
-  N0   <- 2
+  n_0   <- 2
   
   testthat::expect_lt(
     mbd::mbd_loglik(
       pars = pars,
       brts = brts,
-      N0  = N0, 
+      n_0  = n_0, 
       cond = 0 
     ),
     mbd::mbd_loglik(
       pars = pars,
       brts = brts,
-      N0  = N0, 
+      n_0  = n_0, 
       cond = 1 
     )
   )
@@ -28,16 +28,16 @@ test_that("right conditioning", {
   
   pars <- c(0.2, 0.15, 0, 0.1)
   brts <- c(5, 4, 1)
-  N0  <- 2
+  n_0  <- 2
   cond <- 1
   
-  pars2 <- c(0, cond, 0, 0, N0)
+  pars2 <- c(0, cond, 0, 0, n_0)
   testthat::expect_true(
     abs(
       mbd::mbd_loglik(
         pars = pars,
         brts = brts,
-        N0 = N0, # Crown age
+        n_0 = n_0, # Crown age
         cond = cond,
         lx = 300
       ) -
@@ -50,13 +50,13 @@ test_that("right conditioning", {
     ) <= 1e-5
   )
   
-  pars2 <- c(0, cond, 0, 0, N0)
+  pars2 <- c(0, cond, 0, 0, n_0)
   testthat::expect_true(
     abs(
       mbd::mbd_loglik(
         pars = pars,
         brts = brts,
-        N0 = N0, # Crown age
+        n_0 = n_0, # Crown age
         cond = cond,
         lx = 300
       ) -
@@ -77,7 +77,7 @@ test_that("abuse", {
     mbd::mbd_loglik(
       pars = c(0.1), # Too few
       brts = c(1, 2, 3),
-      N0 = 2, # Crown age
+      n_0 = 2, # Crown age
       cond = 1  # Non-extinction
     ),
     "'pars' must have a length of four"
@@ -87,7 +87,7 @@ test_that("abuse", {
     mbd::mbd_loglik(
       pars = c(NaN, 0.15, 2.0, 0.1),
       brts = c(1, 2, 3),
-      N0 = 2, # Crown age
+      n_0 = 2, # Crown age
       cond = 1  # Non-extinction
     ),
     "'pars' cannot contain NaNs"
@@ -96,7 +96,7 @@ test_that("abuse", {
     mbd::mbd_loglik(
       pars = c(Inf, 0.15, 2.0, 0.1),
       brts = c(1, 2, 3),
-      N0 = 2, 
+      n_0 = 2, 
       cond = 1  
     ),
     -Inf
@@ -105,7 +105,7 @@ test_that("abuse", {
     mbd::mbd_loglik(
       pars = c(-12.34, 0.15, 2.0, 0.1),
       brts = c(1, 2, 3),
-      N0 = 2,
+      n_0 = 2,
       cond = 1
     ),
     -Inf
@@ -114,7 +114,7 @@ test_that("abuse", {
     mbd::mbd_loglik(
       pars = c(0.2, -12.34, 2.0, 0.1),
       brts = c(1, 2, 3),
-      N0 = 2,
+      n_0 = 2,
       cond = 1
     ),
     -Inf
@@ -123,7 +123,7 @@ test_that("abuse", {
     mbd::mbd_loglik(
       pars = c(0.2, 0.15, -12.34, 0.1),
       brts = c(1, 2, 3),
-      N0 = 2,
+      n_0 = 2,
       cond = 1
     ),
     -Inf
@@ -132,7 +132,7 @@ test_that("abuse", {
     mbd::mbd_loglik(
       pars = c(0.2, 0.15, 2.0, -12.34),
       brts = c(1, 2, 3),
-      N0 = 2, 
+      n_0 = 2, 
       cond = 1
     ),
     -Inf
@@ -141,7 +141,7 @@ test_that("abuse", {
     mbd::mbd_loglik(
       pars = c(0.2, 0.15, 2.0, 12.34),
       brts = c(1, 2, 3),
-      N0 = 2, # Crown age
+      n_0 = 2, # Crown age
       cond = 1  # Non-extinction
     ),
     -Inf

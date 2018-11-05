@@ -7,10 +7,10 @@
 pmb_loglik <- function(
   pars,
   brts,
-  N0 = 2
+  n_0 = 2
 ) {
   
-  init_n_lineages <- N0
+  init_n_lineages <- n_0
   lambda <- pars[1]
   mu     <- pars[2]
   nu     <- pars[3]
@@ -22,7 +22,7 @@ pmb_loglik <- function(
     brts = brts,
     pars = pars,
     safety_threshold = 0,
-    N0 = N0
+    n_0 = n_0
   )) {return(-Inf)}
   
   data <- mbd:::brts2time_intervals_and_births(brts)  # nolint internal function

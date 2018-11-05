@@ -7,7 +7,7 @@
 #' @inheritParams default_params_doc
 #' @examples
 #' out <- mbd_sim(
-#'   pars = c(0.6, 0.1, 0.4, 0.1), N0 = 2, age = 10, cond = 1,
+#'   pars = c(0.6, 0.1, 0.4, 0.1), n_0 = 2, age = 10, cond = 1,
 #'   tips_interval = c(0, Inf)
 #' )
 #' graphics::plot(out$tas)
@@ -17,7 +17,7 @@
 #' @export
 mbd_sim <- function(
   pars,
-  N0 = 2,
+  n_0 = 2,
   age = 10,
   cond = 1,
   tips_interval = c(0, Inf),
@@ -55,7 +55,7 @@ mbd_sim <- function(
   mu <- pars[2]
   nu <- pars[3]
   q <- pars[4]
-  init_n_lineages <- N0
+  init_n_lineages <- n_0
   tips <- -1; crown_species_dead <- cond; multiple_births_check <- 0;
   keep_the_sim <- 0
   while (keep_the_sim == 0 | multiple_births_check == 0) {

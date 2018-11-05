@@ -4,7 +4,7 @@
 \alias{pmb_loglik}
 \title{Calculate the log-likelihood for a Pure Multiple Birth model}
 \usage{
-pmb_loglik(pars, brts, N0 = 2)
+pmb_loglik(pars, brts, n_0 = 2)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -17,7 +17,7 @@ pmb_loglik(pars, brts, N0 = 2)
 
 \item{brts}{A set of branching times of a phylogeny.}
 
-\item{N0}{the number of lineages at time equals zero.}
+\item{n_0}{the number of lineages at time equals zero.}
 }
 \description{
 Calculate the log-likelihood for a Pure Multiple Birth model

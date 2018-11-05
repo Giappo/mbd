@@ -46,7 +46,7 @@ test_that("abuse", {
 test_that("mbd_sim", {
   
   pars <- c(0.2, 0.15, 2, 0.1) 
-  N0 <- 2 
+  n_0 <- 2 
   age <- 5
   cond <- 0 
   
@@ -55,7 +55,7 @@ test_that("mbd_sim", {
     set.seed(s)
     out <- mbd_sim(
       pars = pars,
-      N0 = N0,
+      n_0 = n_0,
       age = age,
       cond = cond
     )
@@ -99,7 +99,7 @@ test_that("mbd_sim", {
     set.seed(s)
     out <- mbd_sim(
       pars = pars,
-      N0 = N0,
+      n_0 = n_0,
       age = age,
       cond = cond
     )

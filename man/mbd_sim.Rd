@@ -5,7 +5,7 @@
 \title{Creates simulated trees under the multiple birth death process,
   including both sympatric and allopatric speciation}
 \usage{
-mbd_sim(pars, N0 = 2, age = 10, cond = 1, tips_interval = c(0,
+mbd_sim(pars, n_0 = 2, age = 10, cond = 1, tips_interval = c(0,
   Inf), minimum_multiple_births = 0)
 }
 \arguments{
@@ -17,7 +17,7 @@ mbd_sim(pars, N0 = 2, age = 10, cond = 1, tips_interval = c(0,
   \item pars[4] is q, the single-lineage speciation probability;
 }}
 
-\item{N0}{the number of lineages at time equals zero.}
+\item{n_0}{the number of lineages at time equals zero.}
 
 \item{age}{The age of the tree.}
 
@@ -37,7 +37,7 @@ mbd_sim produces simulated trees allowing for
 }
 \examples{
 out <- mbd_sim(
-  pars = c(0.6, 0.1, 0.4, 0.1), N0 = 2, age = 10, cond = 1,
+  pars = c(0.6, 0.1, 0.4, 0.1), n_0 = 2, age = 10, cond = 1,
   tips_interval = c(0, Inf)
 )
 graphics::plot(out$tas)

@@ -4,7 +4,7 @@
 \alias{are_these_parameters_wrong}
 \title{are_these_parameters_wrong}
 \usage{
-are_these_parameters_wrong(brts, pars, safety_threshold, N0)
+are_these_parameters_wrong(brts, pars, safety_threshold, n_0)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
@@ -17,7 +17,7 @@ are_these_parameters_wrong(brts, pars, safety_threshold, N0)
   \item pars[4] is q, the single-lineage speciation probability;
 }}
 
-\item{N0}{the number of lineages at time equals zero.}
+\item{n_0}{the number of lineages at time equals zero.}
 }
 \description{
 check parameters consistency

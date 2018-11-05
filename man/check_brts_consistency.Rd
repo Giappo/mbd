@@ -4,12 +4,12 @@
 \alias{check_brts_consistency}
 \title{Test consistency of branching times}
 \usage{
-check_brts_consistency(brts, N0)
+check_brts_consistency(brts, n_0)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
 
-\item{N0}{the number of lineages at time equals zero.}
+\item{n_0}{the number of lineages at time equals zero.}
 }
 \value{
 TRUE or FALSE.

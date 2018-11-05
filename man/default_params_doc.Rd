@@ -226,7 +226,7 @@ do with a standard usage of mbd_sim.}
 
 \item{z_name}{something}
 
-\item{N0}{the number of lineages at time equals zero.}
+\item{n_0}{the number of lineages at time equals zero.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

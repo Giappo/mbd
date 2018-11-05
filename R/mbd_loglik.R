@@ -18,7 +18,7 @@
 mbd_loglik <- function(
   pars,
   brts,
-  N0 = 2,
+  n_0 = 2,
   cond = 1,
   lx = 1 + 2 * (length(brts) + length(missnumspec)),
   tips_interval = c(0, Inf),
@@ -42,7 +42,7 @@ mbd_loglik <- function(
     brts = brts,
     pars = pars,
     safety_threshold = safety_threshold,
-    N0 = N0
+    n_0 = n_0
   )) {return(-Inf)}
   
   # Use Pure Multiple Birth when there is no extinction
@@ -50,14 +50,14 @@ mbd_loglik <- function(
       all(tips_interval == c(0, Inf)) &&
       missnumspec == 0
   ) {
-    return(mbd::pmb_loglik(pars = pars, brts = brts, N0 = N0))
+    return(mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0))
   }
   # Use Multiple Birth Death model
   #ADJUSTING DATA
   data <- mbd:::brts2time_intervals_and_births(brts) # nolint internal function
   time_intervals <- c(0, data$time_intervals)
   births <- c(0, data$births)
-  init_n_lineages <- N0 #number of starting species
+  init_n_lineages <- n_0 #number of starting species
   k_interval <- init_n_lineages + cumsum(births)
   
   pc <- 1
@@ -65,7 +65,7 @@ mbd_loglik <- function(
     pc <- mbd:::calculate_conditional_probability(
       brts = brts,
       pars = pars,
-      N0 = N0,
+      n_0 = n_0,
       lx = lx,
       tips_interval = tips_interval,
       methode = methode,
@@ -96,6 +96,7 @@ mbd_loglik <- function(
   
   #EVOLVING THE INITIAL STATE TO THE LAST BRANCHING POINT
   while (t <= length(time_intervals)) {
+    
     #Applying A operator
     matrix_a <- create_a(
       pars = pars,

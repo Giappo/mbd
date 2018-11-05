@@ -8,7 +8,7 @@ calculate_conditional_probability <- function(
   brts,
   pars,
   lx = 1000,
-  N0 = 2,
+  n_0 = 2,
   tips_interval = c(0, Inf),
   methode = "expo",
   abstol = 1e-16,
@@ -20,12 +20,12 @@ calculate_conditional_probability <- function(
   
   m <- 0:lx; length(m)
   one_over_cm <- (3 * (m + 1)) / (m + 3); length(one_over_cm)
-  one_over_qm_binom <- 1 / choose((m + N0), N0)
+  one_over_qm_binom <- 1 / choose((m + n_0), n_0)
   q_i <- c(1, rep(0, lx)); length(q_i)
   
   matrix_a <- create_a(
     pars = pars, 
-    k = N0,
+    k = n_0,
     lx = lx
   )
   
@@ -40,8 +40,8 @@ calculate_conditional_probability <- function(
   )
   
   total_product <- a2_v1 * one_over_cm * one_over_qm_binom
-  missingspecies_min <- max((tips_interval[1] - N0), 0)
-  missingspecies_max <- min((tips_interval[2] - N0), lx)
+  missingspecies_min <- max((tips_interval[1] - n_0), 0)
+  missingspecies_max <- min((tips_interval[2] - n_0), lx)
   # +1 is because of the zero-th component
   tips_components <- 1 + c(missingspecies_min, missingspecies_max)
   sum(total_product[tips_components[1]:tips_components[2]])
