@@ -23,8 +23,8 @@ mbd_loglik <- function(
   lx = 1 + 2 * (length(brts) + length(missnumspec)),
   tips_interval = c(0, Inf),
   missnumspec = 0,
-  safety_threshold = 1e-3,
   methode = "expo",
+  safety_threshold = 1e-3,
   abstol = 1e-16,
   reltol = 1e-10
 ) {
@@ -37,28 +37,26 @@ mbd_loglik <- function(
     pars = pars,
     safety_threshold = safety_threshold,
     n_0 = n_0
-  )) {
+  )
+  ) {
     return(-Inf)
   }
 
   # Use Pure Multiple Birth when there is no extinction
-  if (pars[2] == 0 &&
-      all(tips_interval == c(0, Inf)) &&
-      missnumspec == 0
-  ) {
+  if (pars[2] == 0 && all(tips_interval == c(0, Inf)) && missnumspec == 0) {
     return(mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0))
   }
 
   # Adjusting data
-  data <- mbd:::brts2time_intervals_and_births(brts) # nolint internal function
+  data <- brts2time_intervals_and_births(brts)  # nolint internal function
   time_intervals <- c(0, data$time_intervals)
   births <- c(0, data$births)
-  init_n_lineages <- n_0 #number of starting species
+  init_n_lineages <- n_0  #number of starting species
 
   # Calculate conditional probability
   pc <- 1
   if (cond == 1) {
-    pc <- mbd:::calculate_conditional_prob(
+    pc <- calculate_conditional_prob(
       brts = brts,
       pars = pars,
       n_0 = n_0,
@@ -70,8 +68,7 @@ mbd_loglik <- function(
     )
   }
   if (is.nan(log(pc))) {
-    # Whatever happens in the future, if pc is NaN,
-    # the result will be NaN
+    # Whatever happens in the future, if pc is NaN, the result will be NaN
     return(NaN)
   }
 
@@ -84,8 +81,8 @@ mbd_loglik <- function(
   dimnames(q_t)[[2]] <- paste0("Q", 0:lx)
   # init_n_lineages is the number of species at t = 1
   k <- init_n_lineages
-  # t is starting from 2 so everything is ok with birth[t] and
-  # time_intervals[t] vectors
+  # t is starting from 2 so everything is ok with birth[t] and time_intervals[t]
+  # vectors
   t <- 2
   D <- C <- rep(1, (length(time_intervals)))
 
@@ -93,14 +90,10 @@ mbd_loglik <- function(
   while (t <= length(time_intervals)) {
 
     # Creating A matrix
-    matrix_a <- create_a(
-      pars = pars,
-      k = k,
-      lx = lx
-    )
+    matrix_a <- create_a(pars = pars, k = k, lx = lx)
 
     # Applying A operator
-    q_t[t, ] <- mbd:::a_operator(
+    q_t[t, ] <- a_operator(
       q_vector = q_t[(t - 1), ],
       transition_matrix = matrix_a,
       time_interval = time_intervals[t],
@@ -110,14 +103,14 @@ mbd_loglik <- function(
       reltol = reltol
     )
     if (methode != "sexpm") {
-      # it removes some small negative values that can occur
-      # as bugs from the integration process
-      q_t[t, ] <- mbd:::negatives_correction(q_t[t, ], pars) # nolint internal function
+      # it removes some small negative values that can occur as bugs from the
+      # integration process
+      q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     }
 
-    # Applying C operator
-    # (this is a trick to avoid precision issues)
-    C[t] <- 1 / (sum(q_t[t, ])); q_t[t, ] <- q_t[t, ] * C[t]
+    # Applying C operator (this is a trick to avoid precision issues)
+    C[t] <- 1 / (sum(q_t[t, ]))
+    q_t[t, ] <- q_t[t, ] * C[t]
 
     # Loop has to end after integrating to t_p
     if (!(t < length(time_intervals))) {
@@ -135,12 +128,12 @@ mbd_loglik <- function(
     # Applying B operator
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
     if (methode != "sexpm") {
-      q_t[t, ] <- mbd:::negatives_correction(q_t[t, ], pars) # nolint internal function
+      q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     }
 
-    # Applying D operator
-    # (this works exactly like C)
-    D[t] <- 1 / (sum(q_t[t, ])); q_t[t, ] <- q_t[t, ] * D[t]
+    # Applying D operator (this works exactly like C)
+    D[t] <- 1 / (sum(q_t[t, ]))
+    q_t[t, ] <- q_t[t, ] * D[t]
     # Updating running parameters
     k <- k + births[t]
     t <- t + 1
@@ -148,7 +141,7 @@ mbd_loglik <- function(
 
   # Selecting the state I am interested in
   vm <- 1 / choose((k + missnumspec), k)
-  likelihood  <- vm * q_t[t, (missnumspec + 1)]
+  likelihood <- vm * q_t[t, (missnumspec + 1)]
 
   # Removing C and D effects from the LL
   loglik <- log(likelihood) - sum(log(C)) - sum(log(D))
@@ -158,7 +151,7 @@ mbd_loglik <- function(
   if (is.nan(loglik) | is.na(loglik)) {
     loglik <- -Inf
   } else {
-    #conditioned likelihood
+    # conditioned likelihood
     loglik <- loglik - log(pc) * (cond == 1)
   }
   loglik

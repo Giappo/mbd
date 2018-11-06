@@ -34,7 +34,7 @@ The ids are defined as follows:
 
 \item{changeloglikifnoconv}{something}
 
-\item{optimmethod}{something}
+\item{optimmethod}{optimization routine: choose between subplex and simplex}
 
 \item{pars_transform}{something}
 

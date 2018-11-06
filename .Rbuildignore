@@ -4,6 +4,7 @@
 ^pics$
 ^scripts$
 ^cluster_scripts$
+^complex_version$
 ^errors$
 ^libs$
 ^account_name$

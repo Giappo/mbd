@@ -5,64 +5,36 @@
 \title{Maximization of the loglikelihood
   under a multiple birth-death diversification model}
 \usage{
-mbd_ml(brts, initparsopt, idparsopt, idparsfix = (1:4)[-idparsopt],
-  parsfix, missnumspec = 0, cond = 1, n_0 = 2, tips_interval = c(0,
-  Inf), res = 10 * (1 + length(brts) + missnumspec), tol = c(0.001,
-  1e-04, 1e-06), maxiter = 1000 * round((1.25)^length(idparsopt)),
-  changeloglikifnoconv = FALSE, optimmethod = "simplex",
-  methode = "expo", minimum_multiple_births = 0, pars_transform = 1,
-  print_errors = 0, verbose = TRUE, ...)
+mbd_ml(start_pars = c(0.3, 0.15, 2, 0.1), true_pars,
+  optim_ids = c(TRUE, TRUE, TRUE, TRUE), brts, n_0 = 2, cond = 1,
+  tips_interval = c(0, Inf), missnumspec = 0, lx = 1 + 2 *
+  (length(brts) + length(missnumspec)), optimmethod = "simplex",
+  methode = "expo", verbose = TRUE)
 }
 \arguments{
+\item{start_pars}{starting parameter values for the ml process}
+
+\item{true_pars}{true parameter values when running the ml process}
+
+\item{optim_ids}{ids of the parameters you want to optimize}
+
 \item{brts}{A set of branching times of a phylogeny.}
 
-\item{initparsopt}{The initial values of the parameters
-that must be optimized}
-
-\item{idparsopt}{The ids of the parameters that must be optimized.
-The ids are defined as follows:
-\itemize{
-  \item pars[1] is lambda, the sympatric speciation rate;
-  \item pars[2] is mu, the extinction rate;
-  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-  \item pars[4] is q, the single-lineage speciation probability_
-}}
-
-\item{idparsfix}{The ids of the parameters that should not be optimized.
-The default is to fix all parameters not specified in idparsopt.}
-
-\item{parsfix}{The values of the parameters that should not be optimized.}
-
-\item{missnumspec}{The number of species that are in the clade,
-but missing in the phylogeny.}
+\item{n_0}{the number of lineages at time equals zero.}
 
 \item{cond}{Set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
-
-\item{n_0}{the number of lineages at time equals zero.}
 
 \item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
-\item{res}{Sets the maximum number of species for which a probability
-must be computed, must be larger than 1 + length(brts).}
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny.}
 
-\item{tol}{Sets the tolerances in the optimization. Consists of:
-\itemize{
-\item reltolx = relative tolerance of parameter values in optimization
-\item reltolf = relative tolerance of function value in optimization
-\item abstolx = absolute tolerance of parameter values in optimization
-}}
+\item{lx}{It is the number of ODEs considered for the computation.}
 
-\item{maxiter}{something}
-
-\item{changeloglikifnoconv}{If TRUE,
-the loglik will be set to -Inf if ML does not converge.}
-
-\item{optimmethod}{Method used in optimization of the likelihood.
-Current default is 'simplex'.
-Alternative is 'subplex' (default of previous versions).}
+\item{optimmethod}{optimization routine: choose between subplex and simplex}
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
@@ -71,15 +43,7 @@ Alternative is 'subplex' (default of previous versions).}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
-\item{minimum_multiple_births}{something}
-
-\item{pars_transform}{something}
-
-\item{print_errors}{something}
-
-\item{verbose}{something}
-
-\item{...}{Something}
+\item{verbose}{choose if you want to print the output or not}
 }
 \value{
 The output is a dataframe containing
@@ -102,17 +66,10 @@ mbd_ml computes the maximum likelihood estimates of
 \examples{
 set.seed(10)
 test_pars <- c(0.3, 0.1, 0.1, 0.15)
-simulated_data = mbd_sim(
- pars = test_pars,
- n_0 = 2,
- age = 10,
- cond = 1
-)
+simulated_data <- mbd_sim(pars = test_pars, n_0 = 2, age = 10, cond = 1)
 graphics::plot(simulated_data$reconstructed_tree)
-# @Giappo: does not work
 # mbd_ml(
-#   brts = simulated_data$brts,
-#   initparsopt = 0.11 , idparsopt = 4,
+#   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
 #   idparsfix = c(1, 2, 3),
 #   parsfix = test_pars[idparsfix],
 #   missnumspec = 0, cond = 1, n_0 = 2

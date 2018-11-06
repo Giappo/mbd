@@ -61,10 +61,11 @@ test_that("mbd_sim", {
   pars <- c(0.2, 0.15, 2, 0.1)
   n_0 <- 2
   age <- 5
+  max_sims <- 15 + (ribir:::is_on_travis() * 10)
 
   # test with cond == 0
   cond <- 0
-  for (s in 1:20) {
+  for (s in 1:max_sims) {
     set.seed(s)
     out <- mbd_sim(
       pars = pars,
@@ -106,7 +107,7 @@ test_that("mbd_sim", {
 
   # test with cond == 1
   cond <- 1
-  for (s in 21:40) {
+  for (s in (max_sims + 1):(2 * max_sims)) {
     set.seed(s)
     out <- mbd_sim(
       pars = pars,
