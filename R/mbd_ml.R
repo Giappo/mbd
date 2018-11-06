@@ -17,16 +17,33 @@
 #'   missing species, as explained in the supplementary
 #'   material to Etienne et al. 2012.
 #' @examples
-#' set.seed(10)
-#' test_pars <- c(0.3, 0.1, 0.1, 0.15)
-#' simulated_data <- mbd_sim(pars = test_pars, n_0 = 2, age = 10, cond = 1)
+#' set.seed(2)
+#' lambda <- 0.2 # sympatric speciation rate
+#' mu <- 0.15 # extinction rate;
+#' nu <- 2.0 # multiple allopatric speciation trigger rate
+#' q <- 0.1 # single-lineage speciation probability
+#' sim_pars <- c(lambda, mu, nu, q)
+#' crown_age <- 1
+#' cond <- 1
+#' n_0 <- 2
+#' sim <- mbd_sim(
+#'  pars = sim_pars, 
+#'  n_0 = n_0, # Use a crown age 
+#'  age = crown_age,
+#'  cond = cond # Condition on non-extinction
+#' )
+#' start_pars <- c(0.2, 0.15, 1, 0.15)
+#' optim_ids <- c(FALSE, FALSE, FALSE, TRUE)
 #' graphics::plot(simulated_data$reconstructed_tree)
-#' # mbd_ml(
-#' #   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
-#' #   idparsfix = c(1, 2, 3),
-#' #   parsfix = test_pars[idparsfix],
-#' #   missnumspec = 0, cond = 1, n_0 = 2
-#' # )
+#' out <- mbd::mbd_ml(
+#'   start_pars = start_pars,
+#'   true_pars = sim_pars,
+#'   optim_ids = optim_ids,
+#'   brts = out$brts,
+#'   cond = cond,
+#'   n_0 = n_0,
+#'   verbose = TRUE
+#' )
 #' @seealso use \link{pmb_ml} to perform a maximum likelihood estimation
 #'   for a Pure Multiple Birth model.
 #' @export
