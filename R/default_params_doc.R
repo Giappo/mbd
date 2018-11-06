@@ -65,7 +65,8 @@
 #' @param n_steps something
 #' @param n_subs something
 #' @param nu the multiple allopatric speciation trigger rate.
-#' @param optimmethod something
+#' @param optimmethod optimization routine: choose between subplex and simplex
+#' @param params transition matrix for the rhs of the ode system.
 #' @param pars vector of parameters:
 #' \itemize{
 #'   \item pars[1] is lambda, the sympatric speciation rate;
@@ -78,7 +79,8 @@
 #' @param precision something
 #' @param printit something
 #' @param print_errors something
-#' @param q_vector the q vector from "Etienne et al. 2012 - Proc. R. Soc. B".
+#' @param q_vector the \code{Q} vector from
+#' 'Etienne et al. 2012 - Proc. R. Soc. B'.
 #' @param q the single-lineage speciation probability at a triggered event.
 #' @param quantiles_choice something
 #' @param recursive something
@@ -87,6 +89,8 @@
 #' @param res something
 #' @param results something
 #' @param s something
+#' @param safety_threshold adds a threshold for the evaluation of q. This is due
+#' because you never want \code{q} to actually be equal to zero or one.
 #' @param sample_interval something
 #' @param sequence_length something
 #' @param sim_pars vector of parameters:
@@ -111,7 +115,7 @@
 #' @param trparsfix something
 #' @param trparsopt something
 #' @param values something
-#' @param verbose something
+#' @param verbose choose if you want to print the output or not
 #' @param x something
 #' @param x_name something
 #' @param x_splits something
@@ -120,6 +124,9 @@
 #' @param y_splits something
 #' @param z something
 #' @param z_name something
+#' @param start_pars starting parameter values for the ml process
+#' @param true_pars true parameter values when running the ml process
+#' @param optim_ids ids of the parameters you want to optimize
 #' @author Documentation by Giovanni Laudanno,
 #'   use of this function by Richel J.C. Bilderbeek
 #' @note This is an internal function, so it should be marked with
@@ -175,6 +182,7 @@ default_params_doc <- function(
   n_subs,
   nu,
   optimmethod,
+  params,
   pars,
   pars_transform,
   parsfix,
@@ -189,6 +197,7 @@ default_params_doc <- function(
   res,
   results,
   s,
+  safety_threshold,
   sample_interval,
   sequence_length,
   sim_pars,
@@ -213,7 +222,10 @@ default_params_doc <- function(
   y_name,
   y_splits,
   z,
-  z_name
+  z_name,
+  start_pars,
+  true_pars,
+  optim_ids
 ) {
   # Nothing
 }

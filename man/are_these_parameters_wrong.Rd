@@ -17,6 +17,9 @@ are_these_parameters_wrong(brts, pars, safety_threshold, n_0)
   \item pars[4] is q, the single-lineage speciation probability;
 }}
 
+\item{safety_threshold}{adds a threshold for the evaluation of q. This is due
+because you never want \code{q} to actually be equal to zero or one.}
+
 \item{n_0}{the number of lineages at time equals zero.}
 }
 \description{

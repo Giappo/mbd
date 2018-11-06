@@ -27,7 +27,7 @@ pmb_loglik <- function(
     return(-Inf)
   }
 
-  data <- mbd:::brts2time_intervals_and_births(brts)  # nolint internal function
+  data <- brts2time_intervals_and_births(brts)  # nolint internal function
   time_intervals <- data$time_intervals
   births <- data$births
   k <- init_n_lineages + cumsum(c(0, births))

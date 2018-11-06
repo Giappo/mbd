@@ -12,12 +12,14 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
   max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
   methode, minimum_multiple_births, missnumspec, mu, mutation_rate, n_0,
-  n_species, init_n_lineages, n_steps, n_subs, nu, optimmethod, pars,
-  pars_transform, parsfix, precision, print_errors, printit, q_vector, q,
-  quantiles_choice, recursive, reltol, res, results, s, sample_interval,
-  sequence_length, sim_pars, sim_phylo, subsamp, t, t1, t2, tips_interval,
-  time_interval, tol, tr, transition_matrix, trparsfix, trparsopt, values,
-  verbose, x, x_name, x_splits, y, y_name, y_splits, z, z_name)
+  n_species, init_n_lineages, n_steps, n_subs, nu, optimmethod, params,
+  pars, pars_transform, parsfix, precision, print_errors, printit,
+  q_vector, q, quantiles_choice, recursive, reltol, res, results, s,
+  safety_threshold, sample_interval, sequence_length, sim_pars, sim_phylo,
+  subsamp, t, t1, t2, tips_interval, time_interval, tol, tr,
+  transition_matrix, trparsfix, trparsopt, values, verbose, x, x_name,
+  x_splits, y, y_name, y_splits, z, z_name, start_pars, true_pars,
+  optim_ids)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -132,7 +134,9 @@ but missing in the phylogeny.}
 
 \item{nu}{the multiple allopatric speciation trigger rate.}
 
-\item{optimmethod}{something}
+\item{optimmethod}{optimization routine: choose between subplex and simplex}
+
+\item{params}{transition matrix for the rhs of the ode system.}
 
 \item{pars}{vector of parameters:
 \itemize{
@@ -152,7 +156,8 @@ but missing in the phylogeny.}
 
 \item{printit}{something}
 
-\item{q_vector}{the q vector from "Etienne et al. 2012 - Proc. R. Soc. B".}
+\item{q_vector}{the \code{Q} vector from
+'Etienne et al. 2012 - Proc. R. Soc. B'.}
 
 \item{q}{the single-lineage speciation probability at a triggered event.}
 
@@ -168,6 +173,9 @@ the numerical integration using deSolve.}
 \item{results}{something}
 
 \item{s}{something}
+
+\item{safety_threshold}{adds a threshold for the evaluation of q. This is due
+because you never want \code{q} to actually be equal to zero or one.}
 
 \item{sample_interval}{something}
 
@@ -209,7 +217,7 @@ do with a standard usage of mbd_sim.}
 
 \item{values}{something}
 
-\item{verbose}{something}
+\item{verbose}{choose if you want to print the output or not}
 
 \item{x}{something}
 
@@ -226,6 +234,12 @@ do with a standard usage of mbd_sim.}
 \item{z}{something}
 
 \item{z_name}{something}
+
+\item{start_pars}{starting parameter values for the ml process}
+
+\item{true_pars}{true parameter values when running the ml process}
+
+\item{optim_ids}{ids of the parameters you want to optimize}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'
