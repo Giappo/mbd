@@ -9,7 +9,7 @@ mbd_ml(start_pars = c(0.3, 0.15, 2, 0.1), true_pars,
   optim_ids = c(TRUE, TRUE, TRUE, TRUE), brts, n_0 = 2, cond = 1,
   tips_interval = c(0, Inf), missnumspec = 0, lx = 1 + 2 *
   (length(brts) + length(missnumspec)), optimmethod = "simplex",
-  methode = "expo", verbose = TRUE, ...)
+  methode = "expo", verbose = TRUE)
 }
 \arguments{
 \item{start_pars}{starting parameter values for the ml process}
@@ -34,7 +34,7 @@ but missing in the phylogeny.}
 
 \item{lx}{It is the number of ODEs considered for the computation.}
 
-\item{optimmethod}{something}
+\item{optimmethod}{optimization routine: choose between subplex and simplex}
 
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
@@ -43,7 +43,7 @@ but missing in the phylogeny.}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
-\item{verbose}{something}
+\item{verbose}{choose if you want to print the output or not}
 }
 \value{
 The output is a dataframe containing
@@ -66,7 +66,7 @@ mbd_ml computes the maximum likelihood estimates of
 \examples{
 set.seed(10)
 test_pars <- c(0.3, 0.1, 0.1, 0.15)
-simulated_data = mbd_sim(pars = test_pars, n_0 = 2, age = 10, cond = 1)
+simulated_data <- mbd_sim(pars = test_pars, n_0 = 2, age = 10, cond = 1)
 graphics::plot(simulated_data$reconstructed_tree)
 # mbd_ml(
 #   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,

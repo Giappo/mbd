@@ -1,5 +1,5 @@
-context("package Style")
+context("package style")
 
-test_that("package Style", {
-  lintr:::expect_lint_free()
+test_that("package style", {
+  lintr::expect_lint_free()
 })

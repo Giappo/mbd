@@ -134,7 +134,7 @@ but missing in the phylogeny.}
 
 \item{nu}{the multiple allopatric speciation trigger rate.}
 
-\item{optimmethod}{something}
+\item{optimmethod}{optimization routine: choose between subplex and simplex}
 
 \item{params}{transition matrix for the rhs of the ode system.}
 
@@ -217,7 +217,7 @@ do with a standard usage of mbd_sim.}
 
 \item{values}{something}
 
-\item{verbose}{something}
+\item{verbose}{choose if you want to print the output or not}
 
 \item{x}{something}
 

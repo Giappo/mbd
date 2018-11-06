@@ -12,7 +12,9 @@ Imports:
   deSolve,
   expoRkit,
   R.utils, 
-  testit
+  testit,
+  rappdirs,
+  ribir
 Suggests: 
   knitr, 
   rmarkdown, 
