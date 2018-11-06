@@ -14,19 +14,18 @@ calculate_conditional_prob <- function(
   abstol = 1e-16,
   reltol = 1e-10
 ) {
-  total_time <- max(abs(brts));
-  m <- 0:lx; length(m)
-  one_over_cm <- (3 * (m + 1)) / (m + 3); length(one_over_cm)
+  total_time <- max(abs(brts))
+  m <- 0:lx
+  length(m)
+  one_over_cm <- (3 * (m + 1)) / (m + 3)
+  length(one_over_cm)
   one_over_qm_binom <- 1 / choose((m + n_0), n_0)
-  q_i <- c(1, rep(0, lx)); length(q_i)
+  q_i <- c(1, rep(0, lx))
+  length(q_i)
   # creating a_matrix
-  matrix_a <- create_a(
-    pars = pars,
-    k = n_0,
-    lx = lx
-  )
+  matrix_a <- create_a(pars = pars, k = n_0, lx = lx)
   # integrating the starting q_vector to t_p
-  a2_v1 <- mbd:::a_operator(
+  a2_v1 <- a_operator(
     q_vector = q_i,
     transition_matrix = matrix_a,
     time_interval = total_time,
@@ -35,6 +34,7 @@ calculate_conditional_prob <- function(
     abstol = abstol,
     reltol = reltol
   )
+
   total_product <- a2_v1 * one_over_cm * one_over_qm_binom
   missingspecies_min <- max((tips_interval[1] - n_0), 0)
   missingspecies_max <- min((tips_interval[2] - n_0), lx)

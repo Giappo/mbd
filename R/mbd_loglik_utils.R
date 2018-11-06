@@ -9,10 +9,11 @@ are_these_parameters_wrong <- function(
   safety_threshold,
   n_0
 ) {
+
   lambda <- pars[1]
-  mu     <- pars[2]
-  nu     <- pars[3]
-  q      <- pars[4]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4]
 
   # checks
   if (length(pars) != 4) {
@@ -26,13 +27,13 @@ are_these_parameters_wrong <- function(
   }
 
   out <- (any(is.infinite(pars))) ||
-    (lambda < 0.0) ||
-    (mu < 0.0) ||
-    (nu < 0.0) ||
-    (q < 0.0) ||
-    (q > 1.0) ||
+    (lambda < 0) ||
+    (mu < 0) ||
+    (nu < 0) ||
+    (q < 0) ||
+    (q > 1) ||
     (q < 0 + safety_threshold) ||
-    (q > 1.0 - safety_threshold)
+    (q > 1 - safety_threshold)
 
 }
 
@@ -60,32 +61,25 @@ hyper_a_hanno <- function(
   q
 ) {
   if (n_species > 46340) {
-    stop(
-      "'n_species' must be below 46340. ",
-      "Cannot allocate matrix with 2^31 elements"
-    )
+    stop("'n_species' must be below 46340. ",
+         "Cannot allocate matrix with 2^31 elements")
   }
   # HG function: fast O(N), updated after Moulis meeting
   j <- 0:k
   a_1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
   n_species <- n_species + 1
-  matrix_a <- diag(
-    a_1[1],
-    nrow = n_species + 2,
-    ncol = n_species + 2
-  )
+  matrix_a <- diag(a_1[1], nrow = n_species + 2, ncol = n_species + 2)
   matrix_a[1:(k + 1), 1] <- a_1
   for (dst in 2:n_species) {
     src <- dst - 1
     s <- src:min(n_species, 2 * src + k - 1)
     matrix_a[s + 2, dst] <- matrix_a[s, src] + matrix_a[s + 1, src]
     m <- s - 1
-    n <- src - 1;
-    matrix_a[s, src] <- matrix_a[s, src] *
-      q ^ (m - n) * (1 - q) ^ (2 * n - m)
+    n <- src - 1
+    matrix_a[s, src] <- matrix_a[s, src] * q ^ (m - n) * (1 - q) ^ (2 * n - m)
   }
   matrix_a[n_species, n_species] <- matrix_a[n_species, n_species] *
-    (1 - q) ^ (n_species - 1);
+    (1 - q) ^ (n_species - 1)
   matrix_a[1:n_species, 1:n_species]
 }
 
@@ -96,26 +90,17 @@ hyper_a_hanno <- function(
 #' @details This is not to be called by the user.
 #' @author Giovanni Laudanno
 #' @export
-create_a <- function(
-  pars,
-  k,
-  lx,
-  matrix_builder = mbd:::hyper_a_hanno
-) {
+create_a <- function(pars, k, lx, matrix_builder = hyper_a_hanno) {
   lambda <- pars[1]
-  mu     <- pars[2]
-  nu     <- pars[3]
-  q      <- pars[4]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4]
 
-  testit::assert(lx < 2 ^ 31)
+  testit::assert(lx < 2^31)
   nvec <- 0:lx
 
-  m <- nu * matrix_builder(
-    n_species = lx,
-    k = k,
-    q = q
-  )
-  diag(m)  <- (-nu) * (1 - (1 - q) ^ (k + nvec)) - (lambda + mu) * (k + nvec)
+  m <- nu * matrix_builder(n_species = lx, k = k, q = q)
+  diag(m) <- (-nu) * (1 - (1 - q) ^ (k + nvec)) - (lambda + mu) * (k + nvec)
   m[row(m) == col(m) - 1] <- mu * nvec[2:(lx + 1)]
   m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] +
     lambda * (nvec[1:(lx)] + 2 * k)
@@ -132,26 +117,19 @@ create_a <- function(
 #' @details This is not to be called by the user.
 #' @author Giovanni Laudanno
 #' @export
-create_b <- function(
-  pars,
-  k,
-  b,
-  lx,
-  matrix_builder = mbd:::hyper_a_hanno
-) {
+create_b <- function(pars, k, b, lx, matrix_builder = hyper_a_hanno) {
   if (b > k) {
-    stop("you can't have more births than species present in the phylogeny") # nolint
+    stop("you can't have more births than species present in the phylogeny")  # nolint
   }
 
   lambda <- pars[1]
-  nu     <- pars[3]
-  q      <- pars[4]
+  nu <- pars[3]
+  q <- pars[4]
 
   k2 <- k - b
   m <- matrix_builder(n_species = lx, k = k2, q = q)
 
-  lambda * k * diag(lx + 1) *
-    (b == 1) + nu * choose(k, b) * (q^b) * m
+  lambda * k * diag(lx + 1) * (b == 1) + nu * choose(k, b) * (q^b) * m
 }
 
 #' The A operator is given by the integration of a set of differential equations
@@ -190,16 +168,12 @@ a_operator <- function(
     result_nan <- result_negative <- 1
     repetition <- 1
     while ((result_nan == 1 | result_negative == 1) &
-           repetition < max_repetitions
-    ) {
-      result <- try(
-        expoRkit::expv(
-          v = q_vector,
-          x = transition_matrix,
-          t = time_interval,
-          m = precision
-        ),
-        silent = TRUE
+           repetition < max_repetitions) {
+      result <- try(expoRkit::expv(v = q_vector,
+                                   x = transition_matrix,
+                                   t = time_interval,
+                                   m = precision),
+                    silent = TRUE
       )
 
       result_nan <- (any(!is.numeric(result)) || any(is.nan(result)))
@@ -226,13 +200,15 @@ a_operator <- function(
   if (methode == "lsoda" | bad_result) {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
-    R.utils::withTimeout(result <- deSolve::ode(
-      y = q_vector,
-      times = times,
-      func = mbd_loglik_rhs,
-      parms = ode_matrix,
-      atol = abstol,
-      rtol = reltol)[2, -1],
+    R.utils::withTimeout(
+      result <- deSolve::ode(
+        y = q_vector,
+        times = times,
+        func = mbd_loglik_rhs,
+        parms = ode_matrix,
+        atol = abstol,
+        rtol = reltol
+      )[2, -1],
       timeout = 1001
     )
   }
@@ -247,11 +223,7 @@ a_operator <- function(
 #' @details This is not to be called by the user.
 #' @author Giovanni Laudanno
 #' @export
-mbd_loglik_rhs <- function(
-  t,
-  x,
-  params
-) {
+mbd_loglik_rhs <- function(t, x, params) {
   with(as.list(x), {
     starting_vector <- x
     transition_matrix <- params
@@ -271,30 +243,24 @@ mbd_loglik_rhs <- function(
 #' @return TRUE or FALSE.
 #' @author Giovanni Laudanno
 #' @export
-check_brts_consistency <- function(
-  brts,
-  n_0
-) {
-  births <- mbd:::brts2time_intervals_and_births(brts)$births
-  kvec <- n_0 + cumsum(c(0, births)); kvec
+check_brts_consistency <- function(brts, n_0) {
+  births <- brts2time_intervals_and_births(brts)$births
+  kvec <- n_0 + cumsum(c(0, births))
+  kvec
   all(births <= kvec[-length(kvec)])
 }
 
-#' Converts branching times to "time intervals between branching times"
-#'   and "birth at nodes" vectors
+#' Converts branching times to 'time intervals between branching times'
+#'   and 'birth at nodes' vectors
 #' @inheritParams default_params_doc
 #' @noRd
-brts2time_intervals_and_births <- function(
-  brts
-) {
+brts2time_intervals_and_births <- function(brts) {
   time_points <- -unlist(unname(sort(abs(brts), decreasing = TRUE)))
   branching_times <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
   births <- c(0, unname(table(branching_times))[-1])
   unique_branching_times <- as.numeric(names(table(branching_times)))
-  time_intervals <- c(
-    diff(unique_branching_times),
-    abs(utils::tail(unique_branching_times, 1))
-  )
+  time_intervals <- c(diff(unique_branching_times),
+                      abs(utils::tail(unique_branching_times, 1)))
   births <- births[-1]
   list(time_intervals = time_intervals, births = births)
 }
@@ -304,11 +270,7 @@ brts2time_intervals_and_births <- function(
 #' @param v a vector
 #' @param display_output If TRUE it prints the flags
 #' @noRd
-negatives_correction <- function(
-  v,
-  pars,
-  display_output = 0
-) {
+negatives_correction <- function(v, pars, display_output = 0) {
   problems <- 0
   if (any(is.na(v))) {
     problems <- 1

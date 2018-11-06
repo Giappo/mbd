@@ -6,7 +6,7 @@
 \usage{
 mbd_loglik(pars, brts, n_0 = 2, cond = 1, lx = 1 + 2 * (length(brts)
   + length(missnumspec)), tips_interval = c(0, Inf), missnumspec = 0,
-  safety_threshold = 0.001, methode = "expo", abstol = 1e-16,
+  methode = "expo", safety_threshold = 0.001, abstol = 1e-16,
   reltol = 1e-10)
 }
 \arguments{
@@ -34,14 +34,14 @@ do with a standard usage of mbd_sim.}
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny.}
 
-\item{safety_threshold}{It determines the precision on the parameters.}
-
 \item{methode}{Specifies how the integration must be performed:
 \itemize{
   \item \code{sexpm}: use \code{sexpm}
   \item \code{expo}: use \code{expoRkit}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
+
+\item{safety_threshold}{It determines the precision on the parameters.}
 
 \item{abstol}{absolute error tolerance for
 the numerical integration using deSolve.}

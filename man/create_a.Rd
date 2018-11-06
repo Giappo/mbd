@@ -4,7 +4,7 @@
 \alias{create_a}
 \title{A matrix}
 \usage{
-create_a(pars, k, lx, matrix_builder = mbd:::hyper_a_hanno)
+create_a(pars, k, lx, matrix_builder = hyper_a_hanno)
 }
 \arguments{
 \item{pars}{vector of parameters:

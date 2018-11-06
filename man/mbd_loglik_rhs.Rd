@@ -10,6 +10,8 @@ mbd_loglik_rhs(t, x, params)
 \item{t}{something}
 
 \item{x}{something}
+
+\item{params}{transition matrix for the rhs of the ode system.}
 }
 \description{
 Builds the right hand side of the ODE set
