@@ -16,7 +16,7 @@ mbd_transform_back <- function(pars_transformed) {
 
 #' @title Transformed loglik function to plug into the mle routine
 #' @description This function provides a likelihood for a subset of parameters.
-#' This is built to work inside mbd_ml
+#' This is built to work inside mbd_ml.
 #' @inheritParams default_params_doc
 #' @details This is not to be called by the user.
 #' @export
