@@ -13,8 +13,7 @@ Imports:
   expoRkit,
   R.utils, 
   testit,
-  rappdirs,
-  ribir
+  rappdirs
 Suggests: 
   knitr, 
   rmarkdown, 
