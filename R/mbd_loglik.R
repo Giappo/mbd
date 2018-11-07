@@ -48,10 +48,10 @@ mbd_loglik <- function(
   }
 
   # Adjusting data
-  data <- brts2time_intervals_and_births(brts)  # nolint internal function
-  time_intervals <- c(0, data$time_intervals)
-  births <- c(0, data$births)
-  init_n_lineages <- n_0  #number of starting species
+  data <- brts2time_intervals_and_births(brts) # nolint internal function
+  time_intervals <- data$time_intervals
+  births <- data$births
+  init_n_lineages <- n_0 #number of starting species
 
   # Calculate conditional probability
   pc <- 1
@@ -134,6 +134,7 @@ mbd_loglik <- function(
     # Applying D operator (this works exactly like C)
     D[t] <- 1 / (sum(q_t[t, ]))
     q_t[t, ] <- q_t[t, ] * D[t]
+
     # Updating running parameters
     k <- k + births[t]
     t <- t + 1
