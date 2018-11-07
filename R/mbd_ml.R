@@ -103,8 +103,8 @@ mbd_ml <- function(
     utils::flush.console()
   }
 
-  trparsopt <- mbd_transform_forward(initparsopt)
-  trparsfix <- mbd_transform_forward(parsfix)
+  trparsopt <- mbd_transform_forward(initparsopt) # nolint internal function
+  trparsfix <- mbd_transform_forward(parsfix) # nolint internal function
 
   initloglik <- mbd_loglik_choosepar(
     trparsopt = trparsopt,
@@ -167,7 +167,7 @@ mbd_ml <- function(
     out2 <- fail_out
     return(invisible(out2))
   }
-  ml_pars <- mbd_transform_back(out$par)
+  ml_pars <- mbd_transform_back(out$par) # nolint internal function
   ml_pars1 <- rep(0, n_pars); names(ml_pars1) <- namepars
   ml_pars1[idparsopt] <- ml_pars
   if (length(idparsfix) != 0) {
