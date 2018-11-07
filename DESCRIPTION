@@ -16,6 +16,7 @@ Imports:
   rappdirs
 Suggests: 
   knitr, 
+  ribir,
   rmarkdown, 
   testthat
 Description: 
