@@ -6,7 +6,7 @@
 #' the numerical integration using deSolve.
 #' @param account_name something
 #' @param after something
-#' @param age The age of the tree.
+#' @param age the age of the tree.
 #' @param alpha something
 #' @param alpha0 something
 #' @param b the number of simultaneous births on a given branching time.
@@ -14,11 +14,11 @@
 #' @param changeloglikifnoconv something
 #' @param checked_functions something
 #' @param colormap something
-#' @param cond Set 1 if you want to condition on stem or crown age
+#' @param cond set 1 if you want to condition on stem or crown age
 #'   and non-extinction of the phylogeny_ Set 0 otherwise.
 #' @param function_name something
 #' @param idparsfix something
-#' @param idparsopt The ids of the parameters that must be optimized.
+#' @param idparsopt the ids of the parameters that must be optimized.
 #'   The ids are defined as follows:
 #'   \itemize{
 #'     \item pars[1] is lambda, the sympatric speciation rate;
@@ -35,7 +35,7 @@
 #' @param k the number of visible species in the phylogeny at a given time.
 #' @param lambda the sympatric speciation rate.
 #' @param logs something
-#' @param lx It is the number of ODEs considered for the computation.
+#' @param lx it is the number of ODEs considered for the computation.
 #' @param lx0 something
 #' @param matrix something
 #' @param matrix_builder function used to build the transition matrix.
@@ -48,13 +48,14 @@
 #' @param maxiter something
 #' @param mbd_lambda something
 #' @param methode
-#'   Specifies how the integration must be performed:
+#'   specifies how the integration must be performed:
 #'   \itemize{
 #'     \item \code{sexpm}: use \code{sexpm}
 #'     \item \code{expo}: use \code{expoRkit}
 #'     \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 #'   }
-#' @param minimum_multiple_births something
+#' @param minimum_multiple_births minimum amount of multiple births
+#' that have to be present in the simulated phylogeny.
 #' @param missnumspec The number of species that are in the clade,
 #'   but missing in the phylogeny.
 #' @param mu the extinction rate.
@@ -75,7 +76,7 @@
 #'   \item pars[4] is q, the single-lineage speciation probability;
 #' }
 #' @param pars_transform something
-#' @param parsfix The values of the parameters that should not be optimized.
+#' @param parsfix the values of the parameters that should not be optimized.
 #' @param precision something
 #' @param printit something
 #' @param print_errors something
@@ -106,7 +107,7 @@
 #' @param t1 something
 #' @param t2 something
 #' @param time_interval something
-#' @param tips_interval Sets tips boundaries constrain on simulated dataset.
+#' @param tips_interval sets tips boundaries constrain on simulated dataset.
 #'   You can also define the tips_interval as you can usually
 #'   do with a standard usage of mbd_sim.
 #' @param tol something
@@ -124,9 +125,9 @@
 #' @param y_splits something
 #' @param z something
 #' @param z_name something
-#' @param start_pars starting parameter values for the ml process
-#' @param true_pars true parameter values when running the ml process
-#' @param optim_ids ids of the parameters you want to optimize
+#' @param start_pars starting parameter values for the ml process.
+#' @param true_pars true parameter values when running the ml process.
+#' @param optim_ids ids of the parameters you want to optimize.
 #' @author Documentation by Giovanni Laudanno,
 #'   use of this function by Richel J.C. Bilderbeek
 #' @note This is an internal function, so it should be marked with
