@@ -301,6 +301,7 @@ get_mbd_param_names <- function() {
 }
 
 #' Count the number of multiple speciation events
+#' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
 mbd_count_n_spec_events <- function(brts) {

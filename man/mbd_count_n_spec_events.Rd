@@ -6,6 +6,9 @@
 \usage{
 mbd_count_n_spec_events(brts)
 }
+\arguments{
+\item{brts}{A set of branching times of a phylogeny.}
+}
 \description{
 Count the number of multiple speciation events
 }

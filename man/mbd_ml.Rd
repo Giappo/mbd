@@ -81,12 +81,12 @@ sim <- mbd_sim(
 )
 start_pars <- c(0.2, 0.15, 1, 0.15)
 optim_ids <- c(FALSE, FALSE, FALSE, TRUE)
-graphics::plot(simulated_data$reconstructed_tree)
+graphics::plot(sim$reconstructed_tree)
 out <- mbd::mbd_ml(
   start_pars = start_pars,
   true_pars = sim_pars,
   optim_ids = optim_ids,
-  brts = out$brts,
+  brts = sim$brts,
   cond = cond,
   n_0 = n_0,
   verbose = TRUE
