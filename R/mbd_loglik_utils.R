@@ -299,3 +299,11 @@ negatives_correction <- function(v, pars, display_output = 0) {
 get_mbd_param_names <- function() {
   c("lambda", "mu", "nu", "q")
 }
+
+#' Count the number of multiple speciation events
+#' @author Giovanni Laudanno
+#' @export
+mbd_count_n_spec_events <- function(brts) {
+  births <- mbd:::brts2time_intervals_and_births(brts)$births
+  sum(births > 1)
+}
