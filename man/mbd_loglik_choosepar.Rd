@@ -50,7 +50,7 @@ but missing in the phylogeny.}
 }
 \description{
 This function provides a likelihood for a subset of parameters.
-This is built to work inside mbd_ml
+This is built to work inside mbd_ml.
 }
 \details{
 This is not to be called by the user.

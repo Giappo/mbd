@@ -90,7 +90,7 @@ mbd_loglik <- function(
   while (t <= length(time_intervals)) {
 
     # Creating A matrix
-    matrix_a <- create_a(pars = pars, k = k, lx = lx)
+    matrix_a <- create_a(pars = pars, k = k, lx = lx) # nolint internal function
 
     # Applying A operator
     q_t[t, ] <- a_operator(
