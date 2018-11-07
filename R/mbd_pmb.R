@@ -27,13 +27,14 @@ pmb_loglik <- function(
     return(-Inf)
   }
 
-  data <- brts2time_intervals_and_births(brts)  # nolint internal function
-  time_intervals <- data$time_intervals
-  births <- data$births
+  data <- mbd:::brts2time_intervals_and_births(brts)  # nolint internal function
+  time_intervals <- data$time_intervals[-1]
+  births <- data$births[-which(data$births == 0)]
   k <- init_n_lineages + cumsum(c(0, births))
-  a_term <- rep(1, length(time_intervals))     #branches
-  b_term <- rep(1, length(time_intervals) - 1) #nodes
-  #calculating branches contribution
+  a_term <- rep(1, length(time_intervals)) # branches
+  b_term <- rep(1, length(time_intervals) - 1) # nodes
+
+  # calculating branches contribution
   i <- 0:1e6
   for (t in 1:length(time_intervals)) {
     #(nu *(t_k-t_k-1))^i * exp(-nu * (t_k - t_k - 1)) / k!

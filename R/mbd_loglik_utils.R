@@ -255,17 +255,41 @@ check_brts_consistency <- function(brts, n_0) {
 #' @inheritParams default_params_doc
 #' @noRd
 brts2time_intervals_and_births <- function(brts) {
-  time_points <- -unlist(unname(sort(abs(brts), decreasing = TRUE)))
-  branching_times <- -sort(abs(as.numeric(time_points)), decreasing = TRUE)
-  births <- c(0, unname(table(branching_times))[-1])
-  unique_branching_times <- as.numeric(names(table(branching_times)))
-  time_intervals <- c(diff(unique_branching_times),
-                      abs(utils::tail(unique_branching_times, 1)))
-  births <- births[-1]
-  list(time_intervals = time_intervals, births = births)
+
+  branching_times <- unlist(unname(sort(abs(brts), decreasing = TRUE)))
+  unique_branching_times <- unique(branching_times)
+  time_intervals <- c(0, -diff(c(unique_branching_times, 0)))
+  multiple_births_coords <- duplicated(branching_times)
+  multiple_branching_times <- unique(branching_times[multiple_births_coords])
+  births <- c(
+    0,
+    rev(c(
+      unname(table(branching_times))
+    ))[-1],
+    0
+  )
+
+  testit::assert(length(births) == length(time_intervals))
+  testit::assert(
+    rev(cumsum(rev(time_intervals)))[-1] == unique_branching_times
+  )
+  testit::assert(
+    all(unique_branching_times[births > 1] == multiple_branching_times)
+  )
+  testit::assert(all(multiple_branching_times %in% branching_times))
+  for (i in seq_along(multiple_branching_times)) {
+    testit::assert(
+      sum(multiple_branching_times[i] == branching_times) > 1
+    )
+  }
+
+  list(
+    time_intervals = time_intervals,
+    births = births
+  )
 }
 
-#' Checks for NA, NaN or negative components in a vector (usually used for Qt)
+#' Checks for NA, NaN or negative components in a vector (usually used for q_t)
 #' @inheritParams default_params_doc
 #' @param v a vector
 #' @param display_output If TRUE it prints the flags
