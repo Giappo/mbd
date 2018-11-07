@@ -27,8 +27,8 @@
 #' cond <- 1
 #' n_0 <- 2
 #' sim <- mbd_sim(
-#'  pars = sim_pars, 
-#'  n_0 = n_0, # Use a crown age 
+#'  pars = sim_pars,
+#'  n_0 = n_0, # Use a crown age
 #'  age = crown_age,
 #'  cond = cond # Condition on non-extinction
 #' )
