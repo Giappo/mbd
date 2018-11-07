@@ -244,6 +244,7 @@ mbd_ml_cluster <- function(s, initparsopt = c(0.6, 0.1, 1.3, 0.16)){
   simpath  <- getwd()
   datapath <- paste0(simpath, "/data")
   load(file = paste0(datapath, "/general_settings"))
+  sim_data <- NULL; rm(sim_data) # nolint, fixes warning: no visible binding for global variable
   load(file = paste0(datapath, "/sim_data"))
 
   if (!file.exists(paste0(simpath, "/errors"))) {
