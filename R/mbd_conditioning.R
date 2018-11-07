@@ -23,7 +23,7 @@ calculate_conditional_prob <- function(
   q_i <- c(1, rep(0, lx))
   length(q_i)
   # creating a_matrix
-  matrix_a <- create_a(pars = pars, k = n_0, lx = lx)
+  matrix_a <- create_a(pars = pars, k = n_0, lx = lx) # nolint internal function
   # integrating the starting q_vector to t_p
   a2_v1 <- a_operator(
     q_vector = q_i,

@@ -120,8 +120,8 @@ mbd_ml <- function(
     utils::flush.console()
   }
 
-  trparsopt <- mbd_transform_forward(initparsopt)
-  trparsfix <- mbd_transform_forward(parsfix)
+  trparsopt <- mbd_transform_forward(initparsopt) # nolint internal function
+  trparsfix <- mbd_transform_forward(parsfix) # nolint internal function
 
   initloglik <- mbd_loglik_choosepar(
     trparsopt = trparsopt,
@@ -184,7 +184,7 @@ mbd_ml <- function(
     out2 <- fail_out
     return(invisible(out2))
   }
-  ml_pars <- mbd_transform_back(out$par)
+  ml_pars <- mbd_transform_back(out$par) # nolint internal function
   ml_pars1 <- rep(0, n_pars); names(ml_pars1) <- namepars
   ml_pars1[idparsopt] <- ml_pars
   if (length(idparsfix) != 0) {
@@ -261,6 +261,7 @@ mbd_ml_cluster <- function(s, initparsopt = c(0.6, 0.1, 1.3, 0.16)){
   simpath  <- getwd()
   datapath <- paste0(simpath, "/data")
   load(file = paste0(datapath, "/general_settings"))
+  sim_data <- NULL; rm(sim_data) # nolint, fixes warning: no visible binding for global variable
   load(file = paste0(datapath, "/sim_data"))
 
   if (!file.exists(paste0(simpath, "/errors"))) {

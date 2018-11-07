@@ -244,7 +244,7 @@ mbd_loglik_rhs <- function(t, x, params) {
 #' @author Giovanni Laudanno
 #' @export
 check_brts_consistency <- function(brts, n_0) {
-  births <- brts2time_intervals_and_births(brts)$births
+  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
   kvec <- n_0 + cumsum(c(0, births))
   kvec
   all(births <= kvec[-length(kvec)])
