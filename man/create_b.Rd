@@ -19,7 +19,7 @@ create_b(pars, k, b, lx, matrix_builder = hyper_a_hanno)
 
 \item{b}{the number of simultaneous births on a given branching time.}
 
-\item{lx}{It is the number of ODEs considered for the computation.}
+\item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{matrix_builder}{function used to build the transition matrix.
 Default option is \code{hyper_a_hanno}}

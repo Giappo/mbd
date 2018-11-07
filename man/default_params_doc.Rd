@@ -33,7 +33,7 @@ the numerical integration using deSolve.}
 
 \item{after}{something}
 
-\item{age}{The age of the tree.}
+\item{age}{the age of the tree.}
 
 \item{alpha}{something}
 
@@ -49,14 +49,14 @@ the numerical integration using deSolve.}
 
 \item{colormap}{something}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age
+\item{cond}{set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{function_name}{something}
 
 \item{idparsfix}{something}
 
-\item{idparsopt}{The ids of the parameters that must be optimized.
+\item{idparsopt}{the ids of the parameters that must be optimized.
 The ids are defined as follows:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
@@ -83,7 +83,7 @@ The ids are defined as follows:
 
 \item{logs}{something}
 
-\item{lx}{It is the number of ODEs considered for the computation.}
+\item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{lx0}{something}
 
@@ -106,14 +106,15 @@ Default option is \code{hyper_a_hanno}}
 
 \item{mbd_lambda}{something}
 
-\item{methode}{Specifies how the integration must be performed:
+\item{methode}{specifies how the integration must be performed:
 \itemize{
   \item \code{sexpm}: use \code{sexpm}
   \item \code{expo}: use \code{expoRkit}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
-\item{minimum_multiple_births}{something}
+\item{minimum_multiple_births}{minimum amount of multiple births
+that have to be present in the simulated phylogeny.}
 
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny.}
@@ -148,7 +149,7 @@ but missing in the phylogeny.}
 
 \item{pars_transform}{something}
 
-\item{parsfix}{The values of the parameters that should not be optimized.}
+\item{parsfix}{the values of the parameters that should not be optimized.}
 
 \item{precision}{something}
 
@@ -199,7 +200,7 @@ because you never want \code{q} to actually be equal to zero or one.}
 
 \item{t2}{something}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+\item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
@@ -235,11 +236,11 @@ do with a standard usage of mbd_sim.}
 
 \item{z_name}{something}
 
-\item{start_pars}{starting parameter values for the ml process}
+\item{start_pars}{starting parameter values for the ml process.}
 
-\item{true_pars}{true parameter values when running the ml process}
+\item{true_pars}{true parameter values when running the ml process.}
 
-\item{optim_ids}{ids of the parameters you want to optimize}
+\item{optim_ids}{ids of the parameters you want to optimize.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

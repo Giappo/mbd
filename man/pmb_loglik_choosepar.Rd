@@ -15,7 +15,7 @@ pmb_loglik_choosepar(trparsopt, trparsfix = 0, idparsopt = c(1, 3, 4),
 
 \item{trparsfix}{something}
 
-\item{idparsopt}{The ids of the parameters that must be optimized.
+\item{idparsopt}{the ids of the parameters that must be optimized.
 The ids are defined as follows:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;

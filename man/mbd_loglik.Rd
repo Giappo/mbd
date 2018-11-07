@@ -22,19 +22,19 @@ mbd_loglik(pars, brts, n_0 = 2, cond = 1, lx = 1 + 2 * (length(brts)
 
 \item{n_0}{the number of lineages at time equals zero.}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age
+\item{cond}{set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{lx}{It is the number of ODEs considered for the computation.}
+\item{lx}{it is the number of ODEs considered for the computation.}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+\item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny.}
 
-\item{methode}{Specifies how the integration must be performed:
+\item{methode}{specifies how the integration must be performed:
 \itemize{
   \item \code{sexpm}: use \code{sexpm}
   \item \code{expo}: use \code{expoRkit}

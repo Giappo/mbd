@@ -19,16 +19,17 @@ mbd_sim(pars, n_0 = 2, age = 10, cond = 1, tips_interval = c(0,
 
 \item{n_0}{the number of lineages at time equals zero.}
 
-\item{age}{The age of the tree.}
+\item{age}{the age of the tree.}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age
+\item{cond}{set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+\item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
-\item{minimum_multiple_births}{something}
+\item{minimum_multiple_births}{minimum amount of multiple births
+that have to be present in the simulated phylogeny.}
 }
 \description{
 mbd_sim produces simulated trees allowing for

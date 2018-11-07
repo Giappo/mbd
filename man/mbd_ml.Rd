@@ -12,31 +12,31 @@ mbd_ml(start_pars = c(0.3, 0.15, 2, 0.1), true_pars,
   methode = "expo", verbose = TRUE)
 }
 \arguments{
-\item{start_pars}{starting parameter values for the ml process}
+\item{start_pars}{starting parameter values for the ml process.}
 
-\item{true_pars}{true parameter values when running the ml process}
+\item{true_pars}{true parameter values when running the ml process.}
 
-\item{optim_ids}{ids of the parameters you want to optimize}
+\item{optim_ids}{ids of the parameters you want to optimize.}
 
 \item{brts}{A set of branching times of a phylogeny.}
 
 \item{n_0}{the number of lineages at time equals zero.}
 
-\item{cond}{Set 1 if you want to condition on stem or crown age
+\item{cond}{set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{tips_interval}{Sets tips boundaries constrain on simulated dataset.
+\item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny.}
 
-\item{lx}{It is the number of ODEs considered for the computation.}
+\item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{optimmethod}{optimization routine: choose between subplex and simplex}
 
-\item{methode}{Specifies how the integration must be performed:
+\item{methode}{specifies how the integration must be performed:
 \itemize{
   \item \code{sexpm}: use \code{sexpm}
   \item \code{expo}: use \code{expoRkit}
@@ -64,16 +64,33 @@ mbd_ml computes the maximum likelihood estimates of
   and extinction.
 }
 \examples{
-set.seed(10)
-test_pars <- c(0.3, 0.1, 0.1, 0.15)
-simulated_data <- mbd_sim(pars = test_pars, n_0 = 2, age = 10, cond = 1)
+set.seed(2)
+lambda <- 0.2 # sympatric speciation rate
+mu <- 0.15 # extinction rate;
+nu <- 2.0 # multiple allopatric speciation trigger rate
+q <- 0.1 # single-lineage speciation probability
+sim_pars <- c(lambda, mu, nu, q)
+crown_age <- 1
+cond <- 1
+n_0 <- 2
+sim <- mbd_sim(
+ pars = sim_pars,
+ n_0 = n_0, # Use a crown age
+ age = crown_age,
+ cond = cond # Condition on non-extinction
+)
+start_pars <- c(0.2, 0.15, 1, 0.15)
+optim_ids <- c(FALSE, FALSE, FALSE, TRUE)
 graphics::plot(simulated_data$reconstructed_tree)
-# mbd_ml(
-#   brts = simulated_data$brts, initparsopt = 0.11 , idparsopt = 4,
-#   idparsfix = c(1, 2, 3),
-#   parsfix = test_pars[idparsfix],
-#   missnumspec = 0, cond = 1, n_0 = 2
-# )
+out <- mbd::mbd_ml(
+  start_pars = start_pars,
+  true_pars = sim_pars,
+  optim_ids = optim_ids,
+  brts = out$brts,
+  cond = cond,
+  n_0 = n_0,
+  verbose = TRUE
+)
 }
 \seealso{
 use \link{pmb_ml} to perform a maximum likelihood estimation
