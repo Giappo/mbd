@@ -2,7 +2,7 @@
 title: "Using mbd"
 author: "Giovanni Laudanno and Richel J.C. Bilderbeek"
 date: "`r Sys.Date()`"
-output: rmarkdown::pdf_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{"Using mbd"}
   %\VignetteEngine{knitr::rmarkdown}

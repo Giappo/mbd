@@ -46,7 +46,7 @@ mbd_loglik_choosepar <- function(
     if (min(trpars1[1:n_pars]) < 0) {
         loglik <- -Inf
     } else {
-        pars1 <- mbd_transform_back(trpars1)
+        pars1 <- mbd_transform_back(trpars1) # nolint internal function
         loglik <- mbd_loglik(
           pars = pars1,
           brts = brts,

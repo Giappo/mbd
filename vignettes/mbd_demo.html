@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Giovanni Laudanno and Richel J.C. Bilderbeek" />
+
+<meta name="date" content="2018-11-07" />
+
+<title>Using mbd</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Using mbd</h1>
+<h4 class="author"><em>Giovanni Laudanno and Richel J.C. Bilderbeek</em></h4>
+<h4 class="date"><em>2018-11-07</em></h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>1. Introduction</h2>
+<p><code>mbd</code> is a package to support multiple birth model. This model accounts for a diversification process in which multiple birth (at different nodes) are allowed to occur at the same time.</p>
+<p>The basic framework is described in Etienne et al. 2012<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. The main purpose of the package is to provide a tool to estimate, given a phylogenetic tree, the likelihood for a set of four parameters: <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\nu\)</span> and <span class="math inline">\(q\)</span>. Here:</p>
+<ul>
+<li><p><span class="math inline">\(\lambda\)</span> is the sympatric speciation rate;</p></li>
+<li><p><span class="math inline">\(\mu\)</span> is the extinction rate;</p></li>
+<li><p><span class="math inline">\(\nu\)</span> is the multiple allopatric speciation trigger rate;</p></li>
+<li><p><span class="math inline">\(q\)</span> is the single-lineage speciation probability.</p></li>
+</ul>
+<p>Those parameters may be inferred through a maximum likelihood approach using the function <code>mbd_ml</code>.</p>
+</div>
+<div id="setup" class="section level2">
+<h2>2. Setup</h2>
+<p>We will need to load the package:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mbd)</code></pre></div>
+<p>Also, we will set the random number generator seed to a value, so that this vignette always produces the same results:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2</span>)</code></pre></div>
+</div>
+<div id="simulating-an-mbd-tree" class="section level2">
+<h2>3. Simulating an MBD tree</h2>
+<p>First we set the parameters of the MBD speciation model:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lambda &lt;-<span class="st"> </span><span class="fl">0.2</span> <span class="co"># sympatric speciation rate</span>
+mu &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># extinction rate;</span>
+nu &lt;-<span class="st"> </span><span class="fl">2.0</span> <span class="co"># multiple allopatric speciation trigger rate</span>
+q &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># single-lineage speciation probability</span></code></pre></div>
+<p>Then we set some basic parameters to create a simulated tree:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crown_age &lt;-<span class="st"> </span><span class="dv">1</span>
+sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu, q)
+sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
+  <span class="dt">pars =</span> sim_pars, 
+  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Use a crown age </span>
+  <span class="dt">age =</span> crown_age,
+  <span class="dt">cond =</span> <span class="dv">1</span> <span class="co"># Condition on non-extinction</span>
+)</code></pre></div>
+<p>These are additional auxilary parameters such as <code>n_0</code> (equal to 1 if we want a stem, or 2 if we want a crown), <code>cond</code> (let us condition the tree on the survival of crown species) and <code>crown_age</code> (being the total age of the tree).</p>
+</div>
+<div id="showing-the-results" class="section level2">
+<h2>4. Showing the results</h2>
+<p>The <code>sim</code> list contain different objects. You can visualize the full tree and keep track of species that die before present time (missing species):</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>full_tree)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>If you want you can also show the reconstructed tree, obtained cutting the kinks from the previous tree:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>reconstructed_tree)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>The dataframe containing all the information related to this tree is labeled as L (or L-table). You can access it by typing:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>l_matrix))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">birth_time</th>
+<th align="right">parent</th>
+<th align="right">id</th>
+<th align="right">death_time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">-1</td>
+<td align="right">0.0531426</td>
+</tr>
+<tr class="even">
+<td align="right">1.0000000</td>
+<td align="right">-1</td>
+<td align="right">2</td>
+<td align="right">-1.0000000</td>
+</tr>
+<tr class="odd">
+<td align="right">0.4742348</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">-1.0000000</td>
+</tr>
+<tr class="even">
+<td align="right">0.4396944</td>
+<td align="right">-1</td>
+<td align="right">-4</td>
+<td align="right">-1.0000000</td>
+</tr>
+</tbody>
+</table>
+<p>In this table:</p>
+<ul>
+<li><p>the first column are the times at which species are born;</p></li>
+<li><p>the second contains labels of the species’ parents; positive and negative values only indicate whether the species belongs to the left or right crown lineage;</p></li>
+<li><p>the third contains the labels of the daughter species themselves; positive and negative values only indicate whether the species belongs to the left or right crown lineage;</p></li>
+<li><p>the fourth contains the extinction times of the species. If this is equal to -1, then the species is still extant.</p></li>
+</ul>
+<p>To recover the vector of branching times use:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>brts))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td align="right">0.4742348</td>
+</tr>
+</tbody>
+</table>
+<p>In this vector values repeated more than once indicate that a multiple birth process has taken place.</p>
+</div>
+<div id="likelihood-estimation" class="section level2">
+<h2>5. Likelihood estimation</h2>
+<p>To estimate the likelihood of a phylogeny, one needs</p>
+<ul>
+<li>parameter estimates</li>
+<li>the branching times (topology is irrelevant)</li>
+</ul>
+<p>In this case, we will use</p>
+<ul>
+<li>the parameter estimates that we used to generate the tree</li>
+<li>the branching times of the tree we generated</li>
+</ul>
+<p>The function <code>mbd_loglik</code> shows the likelihood of the parameters having generated the branching times:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mbd<span class="op">::</span><span class="kw">mbd_loglik</span>(
+  <span class="dt">pars =</span> <span class="kw">c</span>(lambda, mu, nu, q), 
+  <span class="dt">brts =</span> sim<span class="op">$</span>brts, 
+  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Crown age </span>
+  <span class="dt">cond =</span> <span class="dv">1</span>  <span class="co"># Non-extinction </span>
+)</code></pre></div>
+<pre><code>## [1] -1.237561</code></pre>
+</div>
+<div id="maximum-likelihood-estimation" class="section level2">
+<h2>6. Maximum likelihood estimation</h2>
+<p>You can also ask for an optimization of the likelihood function using the function mbd_ml either considering a variation of all the parameters (<span class="math inline">\(\lambda, \mu, \nu, q\)</span>) or any their subset of your choice.</p>
+<p>Because this is a heavy calculation, we will use a simpler tree:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">phylogeny &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">read.tree</span>(<span class="dt">text =</span> <span class="st">&quot;((A:1, B:1):2, C:3);&quot;</span>)  
+ape<span class="op">::</span><span class="kw">plot.phylo</span>(phylogeny)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brts &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">branching.times</span>(phylogeny)</code></pre></div>
+<p>If you want for example to maximize the likelihood only for the parameter <span class="math inline">\(q\)</span>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brts &lt;-<span class="st"> </span>sim<span class="op">$</span>brts
+start_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="dv">1</span>, <span class="fl">0.15</span>)
+optim_ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)
+n_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">2</span>
+cond &lt;-<span class="st"> </span><span class="dv">1</span>
+out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">mbd_ml</span>(
+  <span class="dt">start_pars =</span> start_pars,
+  <span class="dt">true_pars =</span> sim_pars,
+  <span class="dt">optim_ids =</span> optim_ids,
+  <span class="dt">brts =</span> brts,
+  <span class="dt">cond =</span> cond,
+  <span class="dt">n_0 =</span> n_<span class="dv">0</span>,
+  <span class="dt">verbose =</span> <span class="ot">TRUE</span>
+)</code></pre></div>
+<pre><code>## You are optimizing q 
+## You are fixing lambda mu nu 
+## Optimizing the likelihood - this may take a while. 
+## The loglikelihood for the initial parameter values is -1.24789 
+## 1 0.15 -1.24788982671216 initial 
+## 2 0.135287846481876 -1.24103363564973 expand 
+## 3 0.106964656964657 -1.23648686307913 expand 
+## 4 0.106964656964657 -1.23648686307913 contract inside 
+## 5 0.113912133891213 -1.23636226608897 contract inside 
+## 6 0.110427528675704 -1.23631219027019 contract inside 
+## 7 0.112167101827676 -1.23630954234395 contract inside 
+## 8 0.111296634489955 -1.2363038943574 contract inside 
+## 9 0.111296634489955 -1.2363038943574 contract inside 
+## 10 0.111296634489955 -1.2363038943574 contract inside 
+## 11 0.111405368383288 -1.23630383988072 contract inside 
+## 12 0.111405368383288 -1.23630383988072 contract inside 
+## 13 0.111378182915195 -1.23630383308519 contract inside 
+## 14 0.111378182915195 -1.23630383308519 contract inside 
+## 15 0.111378182915195 -1.23630383308519 contract inside 
+## 16 0.111378182915195 -1.23630383308519 contract inside 
+## 17 0.111378182915195 -1.23630383308519 contract inside 
+## 18 0.111378182915195 -1.23630383308519 contract inside 
+## Optimization has terminated successfully. 
+## 
+##  Maximum likelihood parameter estimates: lambda: 0.2 mu: 0.15 nu: 2 q: 0.111 
+##  Maximum loglikelihood: -1.236304</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(out)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">lambda</th>
+<th align="right">mu</th>
+<th align="right">nu</th>
+<th align="right">q</th>
+<th align="right">loglik</th>
+<th align="right">df</th>
+<th align="right">conv</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.2</td>
+<td align="right">0.15</td>
+<td align="right">2</td>
+<td align="right">0.1113782</td>
+<td align="right">-1.236304</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Etienne, R.S., Haegeman, B., Stadler, T., Aze, T., Pearson, P.N., Purvis, A., Phillimore, A.B.: Diversity-dependence brings molecular phylogenies closer to agreement with the fossil record. Proceedings of the Royal Society of London B: Biological Sciences 279(1732), 1300–1309 (2012)<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
