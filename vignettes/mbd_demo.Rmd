@@ -41,6 +41,7 @@ Those parameters may be inferred through a maximum likelihood approach using the
 We will need to load the package:
 
 ```{r}
+# devtools::install_github("Giappo/mbd", quiet = TRUE)
 library(mbd)
 ```
 

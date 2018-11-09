@@ -11,6 +11,7 @@
 #' @param alpha0 something
 #' @param b the number of simultaneous births on a given branching time.
 #' @param brts A set of branching times of a phylogeny.
+#' @param brts_precision set the level of approximation on the branching times.
 #' @param changeloglikifnoconv something
 #' @param checked_functions something
 #' @param colormap something
@@ -144,6 +145,7 @@ default_params_doc <- function(
   alpha0,
   b,
   brts,
+  brts_precision,
   changeloglikifnoconv,
   checked_functions,
   colormap,

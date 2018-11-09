@@ -61,7 +61,7 @@ test_that("mbd_sim", {
   pars <- c(0.2, 0.15, 2, 0.1)
   n_0 <- 2
   age <- 5
-  max_sims <- 15 + (ribir:::is_on_travis() * 10)
+  max_sims <- 15 + (ribir:::is_on_travis() * 35)
 
   # test with cond == 0
   cond <- 0

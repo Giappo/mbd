@@ -6,7 +6,7 @@
   including both sympatric and allopatric speciation}
 \usage{
 mbd_sim(pars, n_0 = 2, age = 10, cond = 1, tips_interval = c(0,
-  Inf), minimum_multiple_births = 0)
+  Inf), minimum_multiple_births = 0, brts_precision = 8)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -30,6 +30,8 @@ do with a standard usage of mbd_sim.}
 
 \item{minimum_multiple_births}{minimum amount of multiple births
 that have to be present in the simulated phylogeny.}
+
+\item{brts_precision}{set the level of approximation on the branching times.}
 }
 \description{
 mbd_sim produces simulated trees allowing for

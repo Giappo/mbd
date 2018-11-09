@@ -24,7 +24,8 @@ mbd_sim <- function(
   age = 10,
   cond = 1,
   tips_interval = c(0, Inf),
-  minimum_multiple_births = 0
+  minimum_multiple_births = 0,
+  brts_precision = 8
 ) {
   if (length(pars) != 4) {
     stop("'pars' must have four parameters")
@@ -126,6 +127,8 @@ mbd_sim <- function(
       }
     }
     l_matrix <- l_matrix[(1:total_count), ]
+    l_matrix[, 1] <- DDD::roundn(l_matrix[, 1], digits = brts_precision)
+
     # tips check
     tips <- length(l_matrix[, 4][l_matrix[, 4] == -1])
     # survival of crown check
@@ -156,6 +159,7 @@ mbd_sim <- function(
   colnames(l_matrix) <- c("birth_time", "parent", "id", "death_time")
 
   brts <- sort(abs(as.numeric(time_points)), decreasing = TRUE)
+  brts <- DDD::roundn(brts, digits = brts_precision)
   reconstructed_tree <- DDD::L2phylo(unname(l_matrix), dropextinct = TRUE)
   full_tree <- DDD::L2phylo(l_matrix, dropextinct = FALSE)
   list(
