@@ -254,8 +254,9 @@ check_brts_consistency <- function(brts, n_0) {
 #'   and 'birth at nodes' vectors
 #' @inheritParams default_params_doc
 #' @noRd
-brts2time_intervals_and_births <- function(brts) {
+brts2time_intervals_and_births <- function(brts, brts_precision) {
 
+  brts <- DDD::roundn(brts, digits = brts_precision)
   branching_times <- unlist(unname(sort(abs(brts), decreasing = TRUE)))
   unique_branching_times <- unique(branching_times)
   time_intervals <- c(0, -diff(c(unique_branching_times, 0)))
