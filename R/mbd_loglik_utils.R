@@ -254,7 +254,7 @@ check_brts_consistency <- function(brts, n_0) {
 #'   and 'birth at nodes' vectors
 #' @inheritParams default_params_doc
 #' @noRd
-brts2time_intervals_and_births <- function(brts, brts_precision) {
+brts2time_intervals_and_births <- function(brts, brts_precision = 8) {
 
   brts <- DDD::roundn(brts, digits = brts_precision)
   branching_times <- unlist(unname(sort(abs(brts), decreasing = TRUE)))
@@ -272,7 +272,15 @@ brts2time_intervals_and_births <- function(brts, brts_precision) {
 
   testit::assert(length(births) == length(time_intervals))
   testit::assert(
-    rev(cumsum(rev(time_intervals)))[-1] == unique_branching_times
+    all.equal(
+      rev(cumsum(rev(time_intervals)))[-1], unique_branching_times
+    )
+  )
+  testit::assert(
+    all(time_intervals[-1] > .Machine$double.neg.eps)
+  )
+  testit::assert(
+    all(time_intervals[-1] > 10 ^ (-brts_precision))
   )
   testit::assert(
     all(unique_branching_times[births > 1] == multiple_branching_times)

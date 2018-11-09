@@ -7,7 +7,7 @@ Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
 Depends: 
   R (>= 3.2.0)
 Imports: 
-  ape, 
+  ape,
   DDD,
   deSolve,
   expoRkit,
@@ -26,5 +26,5 @@ License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: no
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr

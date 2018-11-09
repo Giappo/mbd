@@ -128,7 +128,7 @@ mbd_sim <- function(
     }
     l_matrix <- l_matrix[(1:total_count), ]
     l_matrix[, 1] <- DDD::roundn(l_matrix[, 1], digits = brts_precision)
-    l_matrix[, 4] <- DDD::roundn(l_matrix[, 4], digits = brts_precision)
+
     # tips check
     tips <- length(l_matrix[, 4][l_matrix[, 4] == -1])
     # survival of crown check
