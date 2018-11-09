@@ -25,7 +25,7 @@ test_that("advanced check", {
   n_0 <- 2
   age <- 10
   cond <- 1
-  max_sims <- 5
+  max_sims <- 5 + (ribir::is_on_travis() * 15)
 
   for (s in 1:max_sims) {
     set.seed(s)

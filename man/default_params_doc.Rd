@@ -6,19 +6,19 @@
 documentation.}
 \usage{
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
-  alpha, alpha0, b, brts, changeloglikifnoconv, checked_functions,
-  colormap, cond, function_name, idparsfix, idparsopt, initparsopt,
-  input_trees_path, input_xml, interval_max, interval_min, iterations, k,
-  lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
-  max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
-  methode, minimum_multiple_births, missnumspec, mu, mutation_rate, n_0,
-  n_species, init_n_lineages, n_steps, n_subs, nu, optimmethod, params,
-  pars, pars_transform, parsfix, precision, print_errors, printit,
-  q_vector, q, quantiles_choice, recursive, reltol, res, results, s,
-  safety_threshold, sample_interval, sequence_length, sim_pars, sim_phylo,
-  subsamp, t, t1, t2, tips_interval, time_interval, tol, tr,
-  transition_matrix, trparsfix, trparsopt, values, verbose, x, x_name,
-  x_splits, y, y_name, y_splits, z, z_name, start_pars, true_pars,
+  alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
+  checked_functions, colormap, cond, function_name, idparsfix, idparsopt,
+  initparsopt, input_trees_path, input_xml, interval_max, interval_min,
+  iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
+  max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
+  mbd_lambda, methode, minimum_multiple_births, missnumspec, mu,
+  mutation_rate, n_0, n_species, init_n_lineages, n_steps, n_subs, nu,
+  optimmethod, params, pars, pars_transform, parsfix, precision,
+  print_errors, printit, q_vector, q, quantiles_choice, recursive, reltol,
+  res, results, s, safety_threshold, sample_interval, sequence_length,
+  sim_pars, sim_phylo, subsamp, t, t1, t2, tips_interval, time_interval,
+  tol, tr, transition_matrix, trparsfix, trparsopt, values, verbose, x,
+  x_name, x_splits, y, y_name, y_splits, z, z_name, start_pars, true_pars,
   optim_ids)
 }
 \arguments{
@@ -42,6 +42,8 @@ the numerical integration using deSolve.}
 \item{b}{the number of simultaneous births on a given branching time.}
 
 \item{brts}{A set of branching times of a phylogeny.}
+
+\item{brts_precision}{set the level of approximation on the branching times.}
 
 \item{changeloglikifnoconv}{something}
 
