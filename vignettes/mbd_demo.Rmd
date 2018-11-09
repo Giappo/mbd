@@ -66,16 +66,14 @@ q <- 0.1 # single-lineage speciation probability
 Then we set some basic parameters to create a simulated tree:
 
 ```{r}
-if (1 == 2) {
-  crown_age <- 1
-  sim_pars <- c(lambda, mu, nu, q)
-  sim <- mbd_sim(
-    pars = sim_pars, 
-    n_0 = 2, # Use a crown age 
-    age = crown_age,
-    cond = 1 # Condition on non-extinction
-  )
-}
+crown_age <- 1
+sim_pars <- c(lambda, mu, nu, q)
+sim <- mbd_sim(
+  pars = sim_pars, 
+  n_0 = 2, # Use a crown age 
+  age = crown_age,
+  cond = 1 # Condition on non-extinction
+)
 ```
 
 These are additional auxilary parameters
@@ -90,27 +88,21 @@ You can visualize the full tree and keep track of species that die
 before present time (missing species):
 
 ```{r, fig.show='hold', fig.width=7, fig.height=7}
-if (1 == 2) {
-  graphics::plot(sim$full_tree)
-}
+graphics::plot(sim$full_tree)
 ```
 
 If you want you can also show the reconstructed tree,
 obtained cutting the kinks from the previous tree:
 
 ```{r, fig.show='hold', fig.width=7, fig.height=7}
-if (1 == 2) {
-  graphics::plot(sim$reconstructed_tree)
-}
+graphics::plot(sim$reconstructed_tree)
 ```
 
 The dataframe containing all the information related to this tree
 is labeled as L (or L-table). You can access it by typing:
 
 ```{r}
-if (1 == 2) {
-  knitr::kable(head(sim$l_matrix))
-}
+knitr::kable(head(sim$l_matrix))
 ```
 
 In this table:
@@ -126,9 +118,7 @@ In this table:
 To recover the vector of branching times use:
 
 ```{r}
-if (1 == 2) {
-  knitr::kable(head(sim$brts))
-}
+knitr::kable(head(sim$brts))
 ```
 
 In this vector values repeated more than once indicate
@@ -150,14 +140,12 @@ The function `mbd_loglik` shows the likelihood of the parameters having
 generated the branching times:
 
 ```{r}
-if (1 == 2) {
-  mbd::mbd_loglik(
-    pars = c(lambda, mu, nu, q), 
-    brts = sim$brts, 
-    n_0 = 2, # Crown age 
-    cond = 1  # Non-extinction 
-  )
-}
+mbd::mbd_loglik(
+  pars = c(lambda, mu, nu, q), 
+  brts = sim$brts, 
+  n_0 = 2, # Crown age 
+  cond = 1  # Non-extinction 
+)
 ```
 
 ## 6. Maximum likelihood estimation
@@ -177,21 +165,19 @@ brts <- ape::branching.times(phylogeny)
 If you want for example to maximize the likelihood only for the parameter $q$:
 
 ```{r}
-if (1 == 2) {
-  brts <- sim$brts
-  start_pars <- c(0.2, 0.15, 1, 0.15)
-  optim_ids <- c(FALSE, FALSE, FALSE, TRUE)
-  n_0 <- 2
-  cond <- 1
-  out <- mbd::mbd_ml(
-    start_pars = start_pars,
-    true_pars = sim_pars,
-    optim_ids = optim_ids,
-    brts = brts,
-    cond = cond,
-    n_0 = n_0,
-    verbose = TRUE
-  )
-  knitr::kable(out)
-}
+brts <- sim$brts
+start_pars <- c(0.2, 0.15, 1, 0.15)
+optim_ids <- c(FALSE, FALSE, FALSE, TRUE)
+n_0 <- 2
+cond <- 1
+out <- mbd::mbd_ml(
+  start_pars = start_pars,
+  true_pars = sim_pars,
+  optim_ids = optim_ids,
+  brts = brts,
+  cond = cond,
+  n_0 = n_0,
+  verbose = TRUE
+)
+knitr::kable(out)
 ```

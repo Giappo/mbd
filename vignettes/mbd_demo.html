@@ -104,32 +104,62 @@ mu &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co">#
 nu &lt;-<span class="st"> </span><span class="fl">2.0</span> <span class="co"># multiple allopatric speciation trigger rate</span>
 q &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># single-lineage speciation probability</span></code></pre></div>
 <p>Then we set some basic parameters to create a simulated tree:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) {
-  crown_age &lt;-<span class="st"> </span><span class="dv">1</span>
-  sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu, q)
-  sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
-    <span class="dt">pars =</span> sim_pars, 
-    <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Use a crown age </span>
-    <span class="dt">age =</span> crown_age,
-    <span class="dt">cond =</span> <span class="dv">1</span> <span class="co"># Condition on non-extinction</span>
-  )
-}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crown_age &lt;-<span class="st"> </span><span class="dv">1</span>
+sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu, q)
+sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
+  <span class="dt">pars =</span> sim_pars, 
+  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Use a crown age </span>
+  <span class="dt">age =</span> crown_age,
+  <span class="dt">cond =</span> <span class="dv">1</span> <span class="co"># Condition on non-extinction</span>
+)</code></pre></div>
 <p>These are additional auxilary parameters such as <code>n_0</code> (equal to 1 if we want a stem, or 2 if we want a crown), <code>cond</code> (let us condition the tree on the survival of crown species) and <code>crown_age</code> (being the total age of the tree).</p>
 </div>
 <div id="showing-the-results" class="section level2">
 <h2>4. Showing the results</h2>
 <p>The <code>sim</code> list contain different objects. You can visualize the full tree and keep track of species that die before present time (missing species):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) {
-  graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>full_tree)
-}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>full_tree)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>If you want you can also show the reconstructed tree, obtained cutting the kinks from the previous tree:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) {
-  graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>reconstructed_tree)
-}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>reconstructed_tree)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>The dataframe containing all the information related to this tree is labeled as L (or L-table). You can access it by typing:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) {
-  knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>l_matrix))
-}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>l_matrix))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">birth_time</th>
+<th align="right">parent</th>
+<th align="right">id</th>
+<th align="right">death_time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.0000000</td>
+<td align="right">0</td>
+<td align="right">-1</td>
+<td align="right">0.0531426</td>
+</tr>
+<tr class="even">
+<td align="right">1.0000000</td>
+<td align="right">-1</td>
+<td align="right">2</td>
+<td align="right">-1.0000000</td>
+</tr>
+<tr class="odd">
+<td align="right">0.4742348</td>
+<td align="right">2</td>
+<td align="right">3</td>
+<td align="right">-1.0000000</td>
+</tr>
+<tr class="even">
+<td align="right">0.4396944</td>
+<td align="right">-1</td>
+<td align="right">-4</td>
+<td align="right">-1.0000000</td>
+</tr>
+</tbody>
+</table>
 <p>In this table:</p>
 <ul>
 <li><p>the first column are the times at which species are born;</p></li>
@@ -138,9 +168,22 @@ q &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># s
 <li><p>the fourth contains the extinction times of the species. If this is equal to -1, then the species is still extant.</p></li>
 </ul>
 <p>To recover the vector of branching times use:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) {
-  knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>brts))
-}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>brts))</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">x</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1.0000000</td>
+</tr>
+<tr class="even">
+<td align="right">0.4742348</td>
+</tr>
+</tbody>
+</table>
 <p>In this vector values repeated more than once indicate that a multiple birth process has taken place.</p>
 </div>
 <div id="likelihood-estimation" class="section level2">
@@ -156,14 +199,13 @@ q &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># s
 <li>the branching times of the tree we generated</li>
 </ul>
 <p>The function <code>mbd_loglik</code> shows the likelihood of the parameters having generated the branching times:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) {
-  mbd<span class="op">::</span><span class="kw">mbd_loglik</span>(
-    <span class="dt">pars =</span> <span class="kw">c</span>(lambda, mu, nu, q), 
-    <span class="dt">brts =</span> sim<span class="op">$</span>brts, 
-    <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Crown age </span>
-    <span class="dt">cond =</span> <span class="dv">1</span>  <span class="co"># Non-extinction </span>
-  )
-}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mbd<span class="op">::</span><span class="kw">mbd_loglik</span>(
+  <span class="dt">pars =</span> <span class="kw">c</span>(lambda, mu, nu, q), 
+  <span class="dt">brts =</span> sim<span class="op">$</span>brts, 
+  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Crown age </span>
+  <span class="dt">cond =</span> <span class="dv">1</span>  <span class="co"># Non-extinction </span>
+)</code></pre></div>
+<pre><code>## [1] -1.237561</code></pre>
 </div>
 <div id="maximum-likelihood-estimation" class="section level2">
 <h2>6. Maximum likelihood estimation</h2>
@@ -174,23 +216,71 @@ ape<span class="op">::</span><span class="kw">plot.phylo</span>(phylogeny)</code
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAQlBMVEUAAAAAADoAAGYAOpAAZmYAZrY6AAA6kNtmAABmtv+QOgCQ27aQ2/+2ZgC2///bkDrb////tmb/25D//7b//9v////tkscoAAAACXBIWXMAAA7DAAAOwwHHb6hkAAADoUlEQVR4nO3d0VLbVhRAUactDqF1KQb+/1cLRnnqNHssIcm5WfshvJBzzRpbygw59uFVP+yw9wO49QBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaBofKDT4XD47e/Zf310oPPx7u3P05e/5g4YHOj5/uv7l5eHu7kTBgc6/f7P5evj7BfZKkCHW+n5/tvin+UzQDYZOqen+dee7w0OtOD2NQUoGhxoeoktuBaNDTTd5V8fp5vZjMYGen06vAudbu1f0rcD9PYcervbf10wYHSgxQGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQNDjQy8NlLWrBf5QeHOhjF+F8nL82NjjQ0+Gd5uVh/lNocKDHy7rP952WOQ0O9LGz+ists1y3szpdo+cvQ/2EQFd99/l4eW39Us+gq7572jhcsvw8NtC0Lg/o/5reV2DJbu/QQNPtfboSbXDgrkNnjD4fP25mS95+YWigmz0Q0B5DVx+94YGA9hi6+ugNDwS0x9DVR294IKA9hq4+esMDAe0xdPXRGx4IaI+hq4/e8EBAewxdffSGBwLaY+jqozc8ENAeQ1cfveGBn/h+vv9pjcf7w59l6wMXBigCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEXXP97zcdHH1I0PdPpj0QcdDg/09OXPBQuZ4wO9PNwt+JDVGQfu3bW/ZXxfqTvd3Erm7XR59sz/FNrX4YEuO5mLPm11bKCPy8+SN14YHOhxuhbd2sbhrfR8f7l/LbqNDQ30GQGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFP0LBoxnoJbq110AAAAASUVORK5CYII=" /><!-- --></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brts &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">branching.times</span>(phylogeny)</code></pre></div>
 <p>If you want for example to maximize the likelihood only for the parameter <span class="math inline">\(q\)</span>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (<span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="dv">2</span>) {
-  brts &lt;-<span class="st"> </span>sim<span class="op">$</span>brts
-  start_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="dv">1</span>, <span class="fl">0.15</span>)
-  optim_ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)
-  n_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">2</span>
-  cond &lt;-<span class="st"> </span><span class="dv">1</span>
-  out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">mbd_ml</span>(
-    <span class="dt">start_pars =</span> start_pars,
-    <span class="dt">true_pars =</span> sim_pars,
-    <span class="dt">optim_ids =</span> optim_ids,
-    <span class="dt">brts =</span> brts,
-    <span class="dt">cond =</span> cond,
-    <span class="dt">n_0 =</span> n_<span class="dv">0</span>,
-    <span class="dt">verbose =</span> <span class="ot">TRUE</span>
-  )
-  knitr<span class="op">::</span><span class="kw">kable</span>(out)
-}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brts &lt;-<span class="st"> </span>sim<span class="op">$</span>brts
+start_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="dv">1</span>, <span class="fl">0.15</span>)
+optim_ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)
+n_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">2</span>
+cond &lt;-<span class="st"> </span><span class="dv">1</span>
+out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">mbd_ml</span>(
+  <span class="dt">start_pars =</span> start_pars,
+  <span class="dt">true_pars =</span> sim_pars,
+  <span class="dt">optim_ids =</span> optim_ids,
+  <span class="dt">brts =</span> brts,
+  <span class="dt">cond =</span> cond,
+  <span class="dt">n_0 =</span> n_<span class="dv">0</span>,
+  <span class="dt">verbose =</span> <span class="ot">TRUE</span>
+)</code></pre></div>
+<pre><code>## You are optimizing q 
+## You are fixing lambda mu nu 
+## Optimizing the likelihood - this may take a while. 
+## The loglikelihood for the initial parameter values is -1.24789 
+## 1 0.15 -1.24788982669092 initial 
+## 2 0.135287846481876 -1.24103363562896 expand 
+## 3 0.106964656964657 -1.23648686305939 expand 
+## 4 0.106964656964657 -1.23648686305939 contract inside 
+## 5 0.113912133891213 -1.23636226606896 contract inside 
+## 6 0.110427528675704 -1.2363121902503 contract inside 
+## 7 0.112167101827676 -1.23630954232399 contract inside 
+## 8 0.111296634489956 -1.23630389433748 contract inside 
+## 9 0.111296634489956 -1.23630389433748 contract inside 
+## 10 0.111296634489956 -1.23630389433748 contract inside 
+## 11 0.111405368383288 -1.2363038398608 contract inside 
+## 12 0.111405368383288 -1.2363038398608 contract inside 
+## 13 0.111378182915196 -1.23630383306527 contract inside 
+## 14 0.111378182915196 -1.23630383306527 contract inside 
+## 15 0.111378182915196 -1.23630383306527 contract inside 
+## 16 0.111378182915196 -1.23630383306527 contract inside 
+## 17 0.111378182915196 -1.23630383306527 contract inside 
+## 18 0.111378182915196 -1.23630383306527 contract inside 
+## Optimization has terminated successfully. 
+## 
+##  Maximum likelihood parameter estimates: lambda: 0.2 mu: 0.15 nu: 2 q: 0.111 
+##  Maximum loglikelihood: -1.236304</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(out)</code></pre></div>
+<table>
+<thead>
+<tr class="header">
+<th align="right">lambda</th>
+<th align="right">mu</th>
+<th align="right">nu</th>
+<th align="right">q</th>
+<th align="right">loglik</th>
+<th align="right">df</th>
+<th align="right">conv</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">0.2</td>
+<td align="right">0.15</td>
+<td align="right">2</td>
+<td align="right">0.1113782</td>
+<td align="right">-1.236304</td>
+<td align="right">1</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="footnotes">
 <hr />
