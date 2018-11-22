@@ -7,4 +7,4 @@ Branch|[![Travis CI logo](pics/TravisCI.png)](https://travis-ci.org)|[![Codecov 
 `giovanni`|[![Build Status](https://travis-ci.org/Giappo/mbd.svg?branch=giovanni)](https://travis-ci.org/Giappo/mbd) | [![codecov.io](https://codecov.io/github/Giappo/mbd/coverage.svg?branch=giovanni)](https://codecov.io/github/Giappo/mbd?branch=giovanni)
 `richel`|[![Build Status](https://travis-ci.org/Giappo/mbd.svg?branch=richel)](https://travis-ci.org/Giappo/mbd) | [![codecov.io](https://codecov.io/github/Giappo/mbd/coverage.svg?branch=richel)](https://codecov.io/github/Giappo/mbd?branch=richel)
 
-Multiple Birth Model.
+Macro Evolutionary Likelihood models: Multiple Birth Model.
