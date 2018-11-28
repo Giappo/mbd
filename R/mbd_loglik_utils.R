@@ -338,6 +338,6 @@ get_mbd_param_names <- function() {
 #' @author Giovanni Laudanno
 #' @export
 mbd_count_n_spec_events <- function(brts) {
-  births <- mbd:::brts2time_intervals_and_births(brts)$births
+  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
   sum(births > 1)
 }

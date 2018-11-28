@@ -3,7 +3,7 @@ context("brts2time_intervals_and_births")
 test_that("basic use", {
 
   brts <- c(10, 9, 8, 7, 7, 6, 6, 6, 5, 5, 5, 5)
-  out <- mbd:::brts2time_intervals_and_births(brts)
+  out <- brts2time_intervals_and_births(brts) # nolint internal function
   time_intervals <- out$time_intervals
   births <- out$births
 
@@ -35,7 +35,7 @@ test_that("advanced check", {
       age = age,
       cond = cond
     )$brts
-    out <- mbd:::brts2time_intervals_and_births(brts)
+    out <- brts2time_intervals_and_births(brts) # nolint internal function
     time_intervals <- out$time_intervals
     births <- out$births
 
