@@ -7,8 +7,9 @@ is_on_ci <- function() {
 }
 
 test_that("use", {
-  seed_interval <- 1:(1 + 9 * is_on_ci())
+  seed_interval <- 8:(8 + 9 * is_on_ci())
   for (seed in seed_interval) {
+    # seed = 8 is critical
     sim_pars <- c(0.2, 0.15, 1.2, 0.1)
     cond <- 1
     test <- mbd_main(
@@ -70,9 +71,9 @@ test_that("use", {
 
     # test file saving
     if (.Platform$OS.type == "windows") {
-      sim_path  <- system.file("extdata", package = mbd_pkg_name())
+      sim_path <- system.file("extdata", package = mbd_pkg_name())
     } else {
-      sim_path  <- getwd()
+      sim_path <- getwd()
     }
     # check data_path folder existence
     data_path <- file.path(sim_path, "data")

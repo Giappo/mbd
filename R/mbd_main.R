@@ -13,7 +13,7 @@ mbd_main <- function(
   tips_interval = c(0, Inf),
   start_pars = c(0.3, 0.1, 1, 0.1),
   loglik_function = mbd_loglik,
-  verbose = TRUE
+  verbose = FALSE
 ) {
   # set up
   pkg_name <- mbd_pkg_name()
@@ -55,21 +55,14 @@ mbd_main <- function(
     ncol = length(start_pars) + 3 + 2
   ))
 
-  if (verbose == FALSE) {
-    if (rappdirs::app_dir()$os != "win") {
-      sink(file.path(rappdirs::user_cache_dir(), "ddd"))
-    } else {
-      sink(rappdirs::user_cache_dir())
-    }
-  }
   mle <- mbd_ml(
-    true_pars = sim_pars,
     brts = sim$brts,
-    tips_interval = tips_interval
+    n_0 = n_0,
+    cond = cond,
+    tips_interval = tips_interval,
+    verbose = verbose
   )
-  if (verbose == FALSE) {
-    sink()
-  }
+
   results <- data.frame(
     mle,
     tips = tips,
@@ -97,11 +90,18 @@ mbd_main <- function(
     colnames(results),
     "model"
   )
+  rownames(out) <- NULL
   out <- data.frame(out)
 
   # save data
   if (.Platform$OS.type == "windows") {
-    sim_path  <- system.file("extdata", package = pkg_name)
+    if (!("extdata" %in% list.files(system.file(package = pkg_name)))) {
+      dir.create(file.path(
+        system.file(package = pkg_name),
+        "extdata"
+      ))
+    }
+    sim_path <- system.file("extdata", package = pkg_name)
     if (!file.exists(sim_path)) {
       dir.create(sim_path, showWarnings = FALSE)
     }

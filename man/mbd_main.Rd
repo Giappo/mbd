@@ -6,7 +6,7 @@
 \usage{
 mbd_main(seed, sim_pars, cond = 1, n_0 = 2, age = 10,
   tips_interval = c(0, Inf), start_pars = c(0.3, 0.1, 1, 0.1),
-  loglik_function = mbd_loglik, verbose = TRUE)
+  loglik_function = mbd_loglik, verbose = FALSE)
 }
 \arguments{
 \item{seed}{the seed}

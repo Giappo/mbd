@@ -12,7 +12,7 @@
 
 <meta name="author" content="Giovanni Laudanno and Richel J.C. Bilderbeek" />
 
-<meta name="date" content="2018-11-09" />
+<meta name="date" content="2018-11-29" />
 
 <title>Using mbd</title>
 
@@ -55,8 +55,6 @@ code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
 code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
 code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-
-
 </style>
 
 
@@ -72,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Using mbd</h1>
 <h4 class="author"><em>Giovanni Laudanno and Richel J.C. Bilderbeek</em></h4>
-<h4 class="date"><em>2018-11-09</em></h4>
+<h4 class="date"><em>2018-11-29</em></h4>
 
 
 
@@ -218,48 +216,21 @@ ape<span class="op">::</span><span class="kw">plot.phylo</span>(phylogeny)</code
 <p>If you want for example to maximize the likelihood only for the parameter <span class="math inline">\(q\)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brts &lt;-<span class="st"> </span>sim<span class="op">$</span>brts
 start_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="dv">1</span>, <span class="fl">0.15</span>)
-optim_ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)
 n_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">2</span>
 cond &lt;-<span class="st"> </span><span class="dv">1</span>
 out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">mbd_ml</span>(
   <span class="dt">start_pars =</span> start_pars,
-  <span class="dt">true_pars =</span> sim_pars,
-  <span class="dt">optim_ids =</span> optim_ids,
   <span class="dt">brts =</span> brts,
   <span class="dt">cond =</span> cond,
   <span class="dt">n_0 =</span> n_<span class="dv">0</span>,
   <span class="dt">verbose =</span> <span class="ot">TRUE</span>
 )</code></pre></div>
-<pre><code>## You are optimizing q 
-## You are fixing lambda mu nu 
-## Optimizing the likelihood - this may take a while. 
-## The loglikelihood for the initial parameter values is -1.24789 
-## 1 0.15 -1.24788982669092 initial 
-## 2 0.135287846481876 -1.24103363562896 expand 
-## 3 0.106964656964657 -1.23648686305939 expand 
-## 4 0.106964656964657 -1.23648686305939 contract inside 
-## 5 0.113912133891213 -1.23636226606896 contract inside 
-## 6 0.110427528675704 -1.2363121902503 contract inside 
-## 7 0.112167101827676 -1.23630954232399 contract inside 
-## 8 0.111296634489956 -1.23630389433748 contract inside 
-## 9 0.111296634489956 -1.23630389433748 contract inside 
-## 10 0.111296634489956 -1.23630389433748 contract inside 
-## 11 0.111405368383288 -1.2363038398608 contract inside 
-## 12 0.111405368383288 -1.2363038398608 contract inside 
-## 13 0.111378182915196 -1.23630383306527 contract inside 
-## 14 0.111378182915196 -1.23630383306527 contract inside 
-## 15 0.111378182915196 -1.23630383306527 contract inside 
-## 16 0.111378182915196 -1.23630383306527 contract inside 
-## 17 0.111378182915196 -1.23630383306527 contract inside 
-## 18 0.111378182915196 -1.23630383306527 contract inside 
-## Optimization has terminated successfully. 
-## 
-##  Maximum likelihood parameter estimates: lambda: 0.2 mu: 0.15 nu: 2 q: 0.111 
-##  Maximum loglikelihood: -1.236304</code></pre>
+<pre><code>## The loglikelihood for the initial parameter values is -1.26530246144336</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(out)</code></pre></div>
 <table>
 <thead>
 <tr class="header">
+<th></th>
 <th align="right">lambda</th>
 <th align="right">mu</th>
 <th align="right">nu</th>
@@ -271,12 +242,13 @@ out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">0.2</td>
-<td align="right">0.15</td>
-<td align="right">2</td>
-<td align="right">0.1113782</td>
-<td align="right">-1.236304</td>
-<td align="right">1</td>
+<td>results</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">406.9415</td>
+<td align="right">0.001</td>
+<td align="right">1.212088</td>
+<td align="right">4</td>
 <td align="right">0</td>
 </tr>
 </tbody>

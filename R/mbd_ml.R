@@ -48,173 +48,103 @@
 #'   for a Pure Multiple Birth model.
 #' @export
 mbd_ml <- function(
-  start_pars = c(0.3, 0.15, 2, 0.10),
-  true_pars,
-  optim_ids = c(TRUE, TRUE, TRUE, TRUE),
+  loglik_function = mbd_loglik,
   brts,
+  start_pars = c(0.5, 0.3, 0.5, 0.3),
   n_0 = 2,
   cond = 1,
   tips_interval = c(0, Inf),
-  missnumspec = 0,
-  lx = 1 + 2 * (length(brts) + length(missnumspec)),
-  optimmethod = "simplex",
-  methode = "expo",
-  verbose = TRUE
+  safety_threshold = 1e-3,
+  verbose = TRUE,
+  optim_ids = c(TRUE, TRUE, TRUE, TRUE),
+  true_pars = start_pars
 ) {
-  namepars <- mbd::get_mbd_param_names()
-  n_pars <- length(namepars)
-  idparsopt <- (1:n_pars)[optim_ids]
-  idparsfix <- (1:n_pars)[!optim_ids]
-  parsfix <- true_pars[idparsfix]
-  initparsopt <- start_pars[idparsopt]
+  if (any(start_pars < 0)) {
+    stop("you cannot start from negative parameters")
+  }
+  if (any(start_pars * optim_ids != true_pars * optim_ids)) {
+    stop("for fixed parameters start from the true values")
+  }
+  if (true_pars[3] == 0 | true_pars[4] == 0) {
+    safety_threshold <- 0
+  }
+  failpars <- rep(-1, length(start_pars))
+  par_names <- mbd::get_mbd_param_names()
+  out_names <- c(par_names, "loglik", "df", "conv")
+  failout  <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
+  colnames(failout) <- out_names
 
-  # res <- 10 * (1 + length(brts) + missnumspec) nolint
-  tol <- c(1E-3, 1E-4, 1E-6)
-  maxiter <- 1000 * round((1.25)^length(idparsopt))
-  optimpars  <- c(tol, maxiter)
-  changeloglikifnoconv <- FALSE
+  optim_fun <- function(tr_optim_pars) {
+    pars2 <- rep(0, length(start_pars))
+    optim_pars <- pars_transform_back(tr_optim_pars)
+    pars2[optim_ids] <- optim_pars
+    pars2[!optim_ids] <- true_pars[!optim_ids]
 
-  if (!is.numeric(brts)) {
-    stop("'brts' must be numeric")
-  }
-  if (length(initparsopt) != length(idparsopt)) {
-    stop("lengths of 'idparsopt' and'initparsopt' must match")
-  }
-  if (length(parsfix) != length(idparsfix)) {
-    stop("lengths of 'idparsfix' and'parsfix' must match")
-  }
-  if (!all(sort(c(idparsopt, idparsfix)) == 1:n_pars)) {
-    stop(
-      "IDs 1 to 4 must be present exactly once ",
-      "in either 'idparsfix' or 'idparsopt'"
+    out <- -loglik_function(
+      pars = pars2,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      safety_threshold = safety_threshold
     )
-  }
-  if (length(idparsfix) == 0) {
-    idparsfix <- NULL
-  }
-  if (missing(parsfix) && (length(idparsfix) == 0)) {
-    parsfix <- idparsfix <- NULL
-  }
-
-  options(warn = -1)
-  fail_pars <- rep(-1, n_pars)
-  names(fail_pars) <- namepars
-  fail_out <- data.frame(t(fail_pars), loglik = -1, df = -1, conv = -1)
-
-  if (length(namepars[idparsopt]) == 0) {
-    optstr <- "nothing"
-  } else {
-    optstr <- namepars[idparsopt]
-  }
-  if (verbose == TRUE) {
-    cat("You are optimizing", optstr, "\n")
-  }
-  if (length(namepars[idparsfix]) == 0) {
-    fixstr <- "nothing"
-  } else {
-    fixstr <- namepars[idparsfix]
-  }
-  if (verbose == TRUE) {
-    cat("You are fixing", fixstr, "\n")
-    cat("Optimizing the likelihood - this may take a while.", "\n")
-    utils::flush.console()
-  }
-
-  trparsopt <- mbd_transform_forward(initparsopt) # nolint internal function
-  trparsfix <- mbd_transform_forward(parsfix) # nolint internal function
-
-  initloglik <- mbd_loglik_choosepar(
-    trparsopt = trparsopt,
-    trparsfix = trparsfix,
-    idparsopt = idparsopt,
-    idparsfix = idparsfix,
-    brts = brts,
-    n_0 = n_0,
-    cond = cond,
-    tips_interval = tips_interval,
-    missnumspec = missnumspec,
-    lx = lx,
-    methode = methode
-  )
-  if (verbose == TRUE) {
-    cat(
-      "The loglikelihood for the initial parameter values is",
-      initloglik, "\n"
-    )
-    utils::flush.console()
-  }
-  if (initloglik == -Inf) {
-    warning(
-      "The initial parameter values have a likelihood that is equal to 0",
-      "or below machine precision. Try again with different initial values."
-    )
-    out2 <- fail_out
-    return(invisible(out2))
-  }
-  if (verbose != TRUE) {
-    if (rappdirs::app_dir()$os != "win") {
-      sink("/dev/null")
-    } else {
-      sink(rappdirs::user_cache_dir())
+    if (verbose == TRUE) {
+      print_this <- c(pars2, out)
+      cat(print_this, "\n")
     }
+    out
   }
-  out <- DDD::optimizer(
-    optimmethod = optimmethod,
-    optimpars = optimpars,
-    fun = mbd_loglik_choosepar,
-    trparsopt = trparsopt,
-    trparsfix = trparsfix,
-    idparsopt = idparsopt,
-    idparsfix = idparsfix,
-    brts = brts,
-    n_0 = n_0,
-    cond = cond,
-    tips_interval = tips_interval,
-    missnumspec = missnumspec,
-    lx = lx,
-    methode = methode
-  )
-  if (verbose != TRUE) {
-    sink() # Give back the output
-  }
-  if (out$conv != 0) {
-    warning("Optimization has not converged. ",
-      "Try again with different initial values."
-    )
-    out2 <- fail_out
-    return(invisible(out2))
-  }
-  ml_pars <- mbd_transform_back(out$par) # nolint internal function
-  ml_pars1 <- rep(0, n_pars); names(ml_pars1) <- namepars
-  ml_pars1[idparsopt] <- ml_pars
-  if (length(idparsfix) != 0) {
-    ml_pars1[idparsfix] <- parsfix
-  }
-  max_lik <- as.numeric(unlist(out$fvalues))
-  out2 <- data.frame(
-    t(ml_pars1),
-    loglik = max_lik,
-    df = length(initparsopt),
-    conv = unlist(out$conv)
-  )
 
-  tobeprint <- "Maximum likelihood parameter estimates:"
-  for (ii in 1:n_pars) {
-    tobeprint <- paste(
-      tobeprint,
-      paste0(names(ml_pars1[ii]), ":"),
-      signif(ml_pars1[ii], digits = 3)
+  # initial likelihood
+  tr_start_pars <- rep(0, length(start_pars))
+  tr_start_pars <- pars_transform_forward(start_pars[optim_ids])
+  initloglik <- optim_fun(tr_start_pars)
+  cat2(
+    message = paste0("The loglikelihood for the initial parameter values is ", initloglik, "\n"), # nolint
+    verbose = verbose
+  )
+  utils::flush.console()
+  if (initloglik == -Inf) {
+    cat(
+      message = "The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n" # nolint
     )
-  }
-  if (verbose == TRUE) {
-    s1 <- sprintf(tobeprint)
-  }
-  if (out2$conv != 0 & changeloglikifnoconv == TRUE) {
-    out2$loglik <- -Inf
-  }
-  if (verbose == TRUE) {
-    s2 <- sprintf("Maximum loglikelihood: %f", max_lik)
-    cat("\n", s1, "\n", s2, "\n\n")
+    out2 <- failout
+  } else {
+    out <- subplex::subplex(
+      par = tr_start_pars,
+      fn = function(x) optim_fun(x)
+    )
+    if (out$conv > 0) {
+      cat2(
+        "Optimization has not converged. Try again with different initial values.\n", # nolint
+        verbose = verbose
+      )
+      out2 <- data.frame(
+        t(failpars),
+        loglik = -1,
+        df = -1,
+        conv = unlist(out$conv)
+      )
+      names(out2) <- out_names
+    } else {
+      outpars <- rep(0, length(start_pars))
+      outpars[optim_ids] <- pars_transform_back(
+        as.numeric(unlist(out$par))
+      )
+      outpars[!optim_ids] <- true_pars[!optim_ids]
+      names(outpars) <- par_names
+
+      out2 <- data.frame(
+        row.names = "results",
+        lambda = outpars[1],
+        mu = outpars[2],
+        nu = outpars[3],
+        q = outpars[4],
+        loglik = out$value,
+        df = sum(optim_ids),
+        conv = unlist(out$conv)
+      )
+      names(out2) <- out_names
+    }
   }
 
   invisible(out2)
