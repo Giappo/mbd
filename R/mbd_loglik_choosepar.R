@@ -1,18 +1,4 @@
-mbd_transform_forward <- function(pars) {
-    pars <- as.numeric(unlist(pars))
-    pars_transformed <- pars / (1 + pars)
-    pars_transformed[which(pars == Inf)] <- 1
-    pars_transformed
-}
 
-mbd_transform_back <- function(pars_transformed) {
-    if (!all(pars_transformed <= 1)) {
-        stop("inputs greater than 1 make no sense")
-    }
-    pars_transformed <- as.numeric(unlist(pars_transformed))
-    pars <- pars_transformed / (1 - pars_transformed)
-    pars
-}
 
 #' @title Transformed loglik function to plug into the mle routine
 #' @description This function provides a likelihood for a subset of parameters.
@@ -46,7 +32,7 @@ mbd_loglik_choosepar <- function(
     if (min(trpars1[1:n_pars]) < 0) {
         loglik <- -Inf
     } else {
-        pars1 <- mbd_transform_back(trpars1) # nolint internal function
+        pars1 <- pars_transform_back(trpars1) # nolint internal function
         loglik <- mbd_loglik(
           pars = pars1,
           brts = brts,

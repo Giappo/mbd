@@ -22,7 +22,7 @@ test_that("is silent", {
     testthat::expect_true(TRUE)
   } else {
     testthat::expect_silent(
-      mbd:::hyper_a_hanno(n_species = 10000, k = 2, q = 0.1)
+      hyper_a_hanno(n_species = 10000, k = 2, q = 0.1) # nolint internal function
     )
     gc()
   }
@@ -35,7 +35,7 @@ test_that("abuse", {
     testthat::expect_true(TRUE)
   } else {
     testthat::expect_error(
-      mbd:::hyper_a_hanno(n_species = 100000, k = 2, q = 0.1),
+      hyper_a_hanno(n_species = 100000, k = 2, q = 0.1), # nolint internal function
       "'n_species' must be below 46340"
     )
     gc()

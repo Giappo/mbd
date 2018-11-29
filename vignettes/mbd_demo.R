@@ -49,13 +49,10 @@ brts <- ape::branching.times(phylogeny)
 ## ------------------------------------------------------------------------
 brts <- sim$brts
 start_pars <- c(0.2, 0.15, 1, 0.15)
-optim_ids <- c(FALSE, FALSE, FALSE, TRUE)
 n_0 <- 2
 cond <- 1
 out <- mbd::mbd_ml(
   start_pars = start_pars,
-  true_pars = sim_pars,
-  optim_ids = optim_ids,
   brts = brts,
   cond = cond,
   n_0 = n_0,

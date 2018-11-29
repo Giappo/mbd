@@ -5,20 +5,17 @@
 \title{Maximization of the loglikelihood
   under a multiple birth-death diversification model}
 \usage{
-mbd_ml(start_pars = c(0.3, 0.15, 2, 0.1), true_pars,
-  optim_ids = c(TRUE, TRUE, TRUE, TRUE), brts, n_0 = 2, cond = 1,
-  tips_interval = c(0, Inf), missnumspec = 0, lx = 1 + 2 *
-  (length(brts) + length(missnumspec)), optimmethod = "simplex",
-  methode = "expo", verbose = TRUE)
+mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
+  0.5, 0.3), n_0 = 2, cond = 1, tips_interval = c(0, Inf),
+  safety_threshold = 0.001, verbose = TRUE, optim_ids = rep(TRUE,
+  length(start_pars)), true_pars = start_pars)
 }
 \arguments{
-\item{start_pars}{starting parameter values for the ml process.}
-
-\item{true_pars}{true parameter values when running the ml process.}
-
-\item{optim_ids}{ids of the parameters you want to optimize.}
+\item{loglik_function}{the loglik function}
 
 \item{brts}{A set of branching times of a phylogeny.}
+
+\item{start_pars}{starting parameter values for the ml process.}
 
 \item{n_0}{the number of lineages at time equals zero.}
 
@@ -29,21 +26,14 @@ and non-extinction of the phylogeny_ Set 0 otherwise.}
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
-\item{missnumspec}{The number of species that are in the clade,
-but missing in the phylogeny.}
-
-\item{lx}{it is the number of ODEs considered for the computation.}
-
-\item{optimmethod}{optimization routine: choose between subplex and simplex}
-
-\item{methode}{specifies how the integration must be performed:
-\itemize{
-  \item \code{sexpm}: use \code{sexpm}
-  \item \code{expo}: use \code{expoRkit}
-  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
-}}
+\item{safety_threshold}{adds a threshold for the evaluation of q. This is due
+because you never want \code{q} to actually be equal to zero or one.}
 
 \item{verbose}{choose if you want to print the output or not}
+
+\item{optim_ids}{ids of the parameters you want to optimize.}
+
+\item{true_pars}{true parameter values when running the ml process.}
 }
 \value{
 The output is a dataframe containing
@@ -79,17 +69,16 @@ sim <- mbd_sim(
  age = crown_age,
  cond = cond # Condition on non-extinction
 )
-start_pars <- c(0.2, 0.15, 1, 0.15)
+start_pars <- c(0.2, 0.15, 2, 0.15)
 optim_ids <- c(FALSE, FALSE, FALSE, TRUE)
 graphics::plot(sim$reconstructed_tree)
 out <- mbd::mbd_ml(
   start_pars = start_pars,
-  true_pars = sim_pars,
   optim_ids = optim_ids,
   brts = sim$brts,
   cond = cond,
   n_0 = n_0,
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \seealso{

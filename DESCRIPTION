@@ -11,9 +11,10 @@ Imports:
   DDD,
   deSolve,
   expoRkit,
-  R.utils, 
-  testit,
-  rappdirs
+  rappdirs,
+  R.utils,
+  subplex,
+  testit
 Suggests: 
   knitr,
   lintr,

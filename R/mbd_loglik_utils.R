@@ -2,6 +2,7 @@
 #' @description check parameters consistency
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
+#' @return the answer to the question: are these parameters wrong?
 #' @export
 are_these_parameters_wrong <- function(
   brts,
@@ -34,7 +35,7 @@ are_these_parameters_wrong <- function(
     (q > 1) ||
     (q < 0 + safety_threshold) ||
     (q > 1 - safety_threshold)
-
+  out
 }
 
 #' Function to build a matrix, used in creating the A and B operators.
@@ -338,6 +339,6 @@ get_mbd_param_names <- function() {
 #' @author Giovanni Laudanno
 #' @export
 mbd_count_n_spec_events <- function(brts) {
-  births <- mbd:::brts2time_intervals_and_births(brts)$births
+  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
   sum(births > 1)
 }

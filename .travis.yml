@@ -20,15 +20,19 @@ before_script:
   - if [ -f ".lintr" ]; then echo "Do use Hadley Wickham's style guide"; exit 1; fi
   # proselint
   - sudo pip install proselint
+  
+script:
+  - travis_wait 50 R CMD build .
+  - travis_wait 50 R CMD check mbd*tar.gz
 
 after_success:
   - Rscript -e 'lintr::lint_package()'
-  - Rscript -e 'covr::codecov()'
-  - Rscript -e 'goodpractice::gp()'
+  - travis_wait 50 Rscript -e 'covr::codecov()'
+  - travis_wait 50 Rscript -e 'goodpractice::gp()'
   - proselint *.md | egrep -v "typography\.symbols\.curly_quotes"
 
 after_failure:
   - Rscript -e 'lintr::lint_package()'
-  - Rscript -e 'covr::codecov()'
-  - Rscript -e 'goodpractice::gp()'
+  - travis_wait 50 Rscript -e 'covr::codecov()'
+  - travis_wait 50 Rscript -e 'goodpractice::gp()'
   - proselint *.md | egrep -v "typography\.symbols\.curly_quotes"

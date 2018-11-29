@@ -9,17 +9,17 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
   checked_functions, colormap, cond, function_name, idparsfix, idparsopt,
   initparsopt, input_trees_path, input_xml, interval_max, interval_min,
-  iterations, k, lambda, logs, lx, lx0, matrix, matrix_builder, max_iter,
-  max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
-  mbd_lambda, methode, minimum_multiple_births, missnumspec, mu,
-  mutation_rate, n_0, n_species, init_n_lineages, n_steps, n_subs, nu,
-  optimmethod, params, pars, pars_transform, parsfix, precision,
-  print_errors, printit, q_vector, q, quantiles_choice, recursive, reltol,
-  res, results, s, safety_threshold, sample_interval, sequence_length,
-  sim_pars, sim_phylo, subsamp, t, t1, t2, tips_interval, time_interval,
-  tol, tr, transition_matrix, trparsfix, trparsopt, values, verbose, x,
-  x_name, x_splits, y, y_name, y_splits, z, z_name, start_pars, true_pars,
-  optim_ids)
+  iterations, k, lambda, loglik_function, logs, lx, lx0, matrix,
+  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
+  max_sims, maxiter, mbd_lambda, message, methode, minimum_multiple_births,
+  missnumspec, mu, mutation_rate, n_0, n_species, init_n_lineages, n_steps,
+  n_subs, nu, optimmethod, params, pars, pars_transform, pars_transformed,
+  parsfix, precision, print_errors, printit, q_vector, q, quantiles_choice,
+  recursive, reltol, res, results, s, seed, safety_threshold,
+  sample_interval, sequence_length, sim_pars, sim_phylo, subsamp, t, t1,
+  t2, tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
+  trparsopt, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
+  z_name, start_pars, true_pars, optim_ids)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -83,6 +83,8 @@ The ids are defined as follows:
 
 \item{lambda}{the sympatric speciation rate.}
 
+\item{loglik_function}{the loglik function}
+
 \item{logs}{something}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
@@ -107,6 +109,8 @@ Default option is \code{hyper_a_hanno}}
 \item{maxiter}{something}
 
 \item{mbd_lambda}{something}
+
+\item{message}{a message}
 
 \item{methode}{specifies how the integration must be performed:
 \itemize{
@@ -151,6 +155,9 @@ but missing in the phylogeny.}
 
 \item{pars_transform}{something}
 
+\item{pars_transformed}{parameters of the likelihood functions, transformed
+according to y = x / (1 + x)}
+
 \item{parsfix}{the values of the parameters that should not be optimized.}
 
 \item{precision}{something}
@@ -175,7 +182,9 @@ the numerical integration using deSolve.}
 
 \item{results}{something}
 
-\item{s}{something}
+\item{s}{the seed}
+
+\item{seed}{the seed}
 
 \item{safety_threshold}{adds a threshold for the evaluation of q. This is due
 because you never want \code{q} to actually be equal to zero or one.}

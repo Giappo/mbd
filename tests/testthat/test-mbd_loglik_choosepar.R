@@ -34,7 +34,7 @@ test_that("mbd_loglik_choosepar yields the same result as mbd_loglik", {
   n_0 <- 2
   cond <- 1
 
-  trpars <- mbd_transform_forward(pars)
+  trpars <- pars_transform_forward(pars)
   idparsopt <- 2
   idparsfix <- (1:4)[-idparsopt]
   trparsopt <- trpars[idparsopt]
