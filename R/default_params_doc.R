@@ -49,6 +49,7 @@
 #' @param max_sims something
 #' @param maxiter something
 #' @param mbd_lambda something
+#' @param message a message
 #' @param methode
 #'   specifies how the integration must be performed:
 #'   \itemize{
@@ -78,6 +79,8 @@
 #'   \item pars[4] is q, the single-lineage speciation probability;
 #' }
 #' @param pars_transform something
+#' @param pars_transformed parameters of the likelihood functions, transformed
+#' according to y = x / (1 + x)
 #' @param parsfix the values of the parameters that should not be optimized.
 #' @param precision something
 #' @param printit something
@@ -176,6 +179,7 @@ default_params_doc <- function(
   max_sims,
   maxiter,
   mbd_lambda,
+  message,
   methode,
   minimum_multiple_births,
   missnumspec,
@@ -191,6 +195,7 @@ default_params_doc <- function(
   params,
   pars,
   pars_transform,
+  pars_transformed,
   parsfix,
   precision,
   print_errors,

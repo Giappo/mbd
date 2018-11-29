@@ -7,8 +7,8 @@
 \usage{
 mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
   0.5, 0.3), n_0 = 2, cond = 1, tips_interval = c(0, Inf),
-  safety_threshold = 0.001, verbose = TRUE, optim_ids = c(TRUE, TRUE,
-  TRUE, TRUE), true_pars = start_pars)
+  safety_threshold = 0.001, verbose = TRUE, optim_ids = rep(TRUE,
+  length(start_pars)), true_pars = start_pars)
 }
 \arguments{
 \item{loglik_function}{the loglik function}
@@ -69,17 +69,16 @@ sim <- mbd_sim(
  age = crown_age,
  cond = cond # Condition on non-extinction
 )
-start_pars <- c(0.2, 0.15, 1, 0.15)
+start_pars <- c(0.2, 0.15, 2, 0.15)
 optim_ids <- c(FALSE, FALSE, FALSE, TRUE)
 graphics::plot(sim$reconstructed_tree)
 out <- mbd::mbd_ml(
   start_pars = start_pars,
-  true_pars = sim_pars,
   optim_ids = optim_ids,
   brts = sim$brts,
   cond = cond,
   n_0 = n_0,
-  verbose = TRUE
+  verbose = FALSE
 )
 }
 \seealso{

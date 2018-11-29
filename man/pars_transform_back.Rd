@@ -6,6 +6,10 @@
 \usage{
 pars_transform_back(pars_transformed)
 }
+\arguments{
+\item{pars_transformed}{parameters of the likelihood functions, transformed
+according to y = x / (1 + x)}
+}
 \value{
 the original parameters
 }

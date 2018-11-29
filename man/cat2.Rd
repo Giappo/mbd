@@ -7,6 +7,8 @@
 cat2(message, verbose)
 }
 \arguments{
+\item{message}{a message}
+
 \item{verbose}{choose if you want to print the output or not}
 }
 \value{

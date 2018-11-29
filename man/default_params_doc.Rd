@@ -11,10 +11,10 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   initparsopt, input_trees_path, input_xml, interval_max, interval_min,
   iterations, k, lambda, loglik_function, logs, lx, lx0, matrix,
   matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
-  max_sims, maxiter, mbd_lambda, methode, minimum_multiple_births,
+  max_sims, maxiter, mbd_lambda, message, methode, minimum_multiple_births,
   missnumspec, mu, mutation_rate, n_0, n_species, init_n_lineages, n_steps,
-  n_subs, nu, optimmethod, params, pars, pars_transform, parsfix,
-  precision, print_errors, printit, q_vector, q, quantiles_choice,
+  n_subs, nu, optimmethod, params, pars, pars_transform, pars_transformed,
+  parsfix, precision, print_errors, printit, q_vector, q, quantiles_choice,
   recursive, reltol, res, results, s, seed, safety_threshold,
   sample_interval, sequence_length, sim_pars, sim_phylo, subsamp, t, t1,
   t2, tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
@@ -110,6 +110,8 @@ Default option is \code{hyper_a_hanno}}
 
 \item{mbd_lambda}{something}
 
+\item{message}{a message}
+
 \item{methode}{specifies how the integration must be performed:
 \itemize{
   \item \code{sexpm}: use \code{sexpm}
@@ -152,6 +154,9 @@ but missing in the phylogeny.}
 }}
 
 \item{pars_transform}{something}
+
+\item{pars_transformed}{parameters of the likelihood functions, transformed
+according to y = x / (1 + x)}
 
 \item{parsfix}{the values of the parameters that should not be optimized.}
 

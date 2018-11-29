@@ -33,6 +33,6 @@ after_success:
 
 after_failure:
   - Rscript -e 'lintr::lint_package()'
-  - Rscript -e 'covr::codecov()'
-  - Rscript -e 'goodpractice::gp()'
+  - travis_wait 50 Rscript -e 'covr::codecov()'
+  - travis_wait 50 Rscript -e 'goodpractice::gp()'
   - proselint *.md | egrep -v "typography\.symbols\.curly_quotes"

@@ -19,6 +19,7 @@ test_that("use", {
   }
   testthat::expect_true(test$q <= 1)
   testthat::expect_true(is.numeric(test$loglik) == TRUE)
+  testthat::expect_true(test$loglik <= 0)
   testthat::expect_true(test$df == length(start_pars))
   testthat::expect_true(test$conv == 0)
 })
