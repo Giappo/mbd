@@ -143,7 +143,7 @@ mbd_ml <- function(
   )
   outpars[!optim_ids] <- true_pars[!optim_ids]
   names(outpars) <- par_names
-  
+
   out2 <- data.frame(
     row.names = "results",
     lambda = outpars[1],
