@@ -38,7 +38,7 @@ but missing in the phylogeny.}
 \itemize{
   \item \code{sexpm}: use \code{sexpm}
   \item \code{expo}: use \code{expoRkit}
-  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
 }}
 
 \item{safety_threshold}{It determines the precision on the parameters.}

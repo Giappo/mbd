@@ -116,7 +116,7 @@ Default option is \code{hyper_a_hanno}}
 \itemize{
   \item \code{sexpm}: use \code{sexpm}
   \item \code{expo}: use \code{expoRkit}
-  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
 }}
 
 \item{minimum_multiple_births}{minimum amount of multiple births

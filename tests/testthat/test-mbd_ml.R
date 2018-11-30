@@ -83,3 +83,33 @@ test_that("mbd_ml can be silent", {
     )
   )
 })
+
+test_that("abuse", {
+  brts <- c(10, 9, 7, 6, 5)
+  start_pars <- c(0.2, 0.15, 1, 0.1)
+  n_0 <- 2
+  cond <- 1
+
+  testthat::expect_error(
+    mbd::mbd_ml(
+      start_pars = c(0.2, 0.15, -1, 0.1),
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      verbose = FALSE
+    ),
+    "you cannot start from negative parameters"
+  )
+
+  testthat::expect_error(
+    mbd::mbd_ml(
+      start_pars = start_pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      verbose = FALSE,
+      true_pars = c(start_pars[1:3], 0.2)
+    ),
+    "for fixed parameters start from the true values"
+  )
+})
