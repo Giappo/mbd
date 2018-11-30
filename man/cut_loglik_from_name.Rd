@@ -7,7 +7,7 @@
 cut_loglik_from_name(function_name)
 }
 \arguments{
-\item{function_name}{something}
+\item{function_name}{function name}
 }
 \value{
 clean name

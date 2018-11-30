@@ -6,6 +6,9 @@
 \usage{
 get_function_names(models)
 }
+\arguments{
+\item{models}{the models you want to use to define the likelihood}
+}
 \value{
 function names
 }

@@ -32,6 +32,8 @@ do with a standard usage of mbd_sim.}
 
 \item{start_pars}{starting parameter values for the ml process.}
 
+\item{models}{the models you want to use to define the likelihood}
+
 \item{verbose}{choose if you want to print the output or not}
 }
 \description{

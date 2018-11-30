@@ -7,6 +7,8 @@
 get_model_names(function_names, verbose = FALSE)
 }
 \arguments{
+\item{function_names}{function names}
+
 \item{verbose}{choose if you want to print the output or not}
 }
 \value{

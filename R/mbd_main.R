@@ -16,6 +16,8 @@ mbd_main <- function(
   verbose = FALSE
 ) {
   # set up
+  n_0s <- n_0
+  
   pkg_name <- get_pkg_name() # nolint internal function
   function_names <- get_function_names( # nolint internal function
     models = models
@@ -34,14 +36,22 @@ mbd_main <- function(
     tips_interval = tips_interval,
     cond = cond
   )
-  tips <- (n_0 - 1) + length(sim$brts)
+  brts <- sim$brts
+  if (!is.list(brts)) {
+    tips <- (n_0s[1] - 1) + length(brts)
+  } else {
+    tips <- rep(NA, length(brts))
+    for (i in seq_along(brts)) {
+      tips[i] <- n_0s[i] - 1 + length(brts[[i]])
+    }
+  }
 
   # maximum likelihood
   results <- data.frame(matrix(
     NA,
     nrow = length(models),
-    # ncol must be length pars + (loglik, df, conv) + (tips, seed)
-    ncol = length(start_pars) + 3 + 2
+    # ncol must be length pars + (loglik, df, conv, seed) + length(tips)
+    ncol = length(start_pars) + 4 + length(tips)
   ))
   for (m in seq_along(models)) {
     if (verbose == FALSE) {
@@ -61,17 +71,16 @@ mbd_main <- function(
     if (verbose == FALSE) {
       sink()
     }
+    dim(tips) <- c(1, length(tips))
     results[m, ] <- data.frame(
-      mle,
-      tips = tips,
-      seed = seed
+      cbind(mle, tips, seed)
     )
   }
 
   # format output
   colnames(results) <- c(
     colnames(mle),
-    "tips",
+    paste0("tips_", 1:length(tips)),
     "seed"
   )
   out <- cbind(
