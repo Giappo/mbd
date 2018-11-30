@@ -22,6 +22,9 @@ because you never want \code{q} to actually be equal to zero or one.}
 
 \item{n_0}{the number of lineages at time equals zero.}
 }
+\value{
+the answer to the question: are these parameters wrong?
+}
 \description{
 check parameters consistency
 }

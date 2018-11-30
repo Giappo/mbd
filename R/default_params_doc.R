@@ -35,6 +35,7 @@
 #' @param iterations something
 #' @param k the number of visible species in the phylogeny at a given time.
 #' @param lambda the sympatric speciation rate.
+#' @param loglik_function the loglik function
 #' @param logs something
 #' @param lx it is the number of ODEs considered for the computation.
 #' @param lx0 something
@@ -48,6 +49,7 @@
 #' @param max_sims something
 #' @param maxiter something
 #' @param mbd_lambda something
+#' @param message a message
 #' @param methode
 #'   specifies how the integration must be performed:
 #'   \itemize{
@@ -77,6 +79,8 @@
 #'   \item pars[4] is q, the single-lineage speciation probability;
 #' }
 #' @param pars_transform something
+#' @param pars_transformed parameters of the likelihood functions, transformed
+#' according to y = x / (1 + x)
 #' @param parsfix the values of the parameters that should not be optimized.
 #' @param precision something
 #' @param printit something
@@ -90,10 +94,11 @@
 #' the numerical integration using deSolve.
 #' @param res something
 #' @param results something
-#' @param s something
+#' @param s the seed
 #' @param safety_threshold adds a threshold for the evaluation of q. This is due
 #' because you never want \code{q} to actually be equal to zero or one.
 #' @param sample_interval something
+#' @param seed the seed
 #' @param sequence_length something
 #' @param sim_pars vector of parameters:
 #' \itemize{
@@ -161,6 +166,7 @@ default_params_doc <- function(
   iterations,
   k,
   lambda,
+  loglik_function,
   logs,
   lx,
   lx0,
@@ -173,6 +179,7 @@ default_params_doc <- function(
   max_sims,
   maxiter,
   mbd_lambda,
+  message,
   methode,
   minimum_multiple_births,
   missnumspec,
@@ -188,6 +195,7 @@ default_params_doc <- function(
   params,
   pars,
   pars_transform,
+  pars_transformed,
   parsfix,
   precision,
   print_errors,
@@ -200,6 +208,7 @@ default_params_doc <- function(
   res,
   results,
   s,
+  seed,
   safety_threshold,
   sample_interval,
   sequence_length,

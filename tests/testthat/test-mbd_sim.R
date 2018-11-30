@@ -1,5 +1,11 @@
 context("mbd_sim")
 
+is_on_ci <- function() {
+  is_it_on_appveyor <- Sys.getenv("APPVEYOR") != ""
+  is_it_on_travis <- Sys.getenv("TRAVIS") != ""
+  is_it_on_appveyor || is_it_on_travis # nolint internal function
+}
+
 # abuse ----
 test_that("abuse", {
   expect_error(
@@ -61,7 +67,7 @@ test_that("mbd_sim", {
   pars <- c(0.2, 0.15, 2, 0.1)
   n_0 <- 2
   age <- 5
-  max_sims <- 15 + (ribir:::is_on_travis() * 35)
+  max_sims <- 15 + (is_on_ci() * 35)
 
   # test with cond == 0
   cond <- 0
