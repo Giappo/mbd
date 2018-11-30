@@ -81,10 +81,6 @@ out <- mbd::mbd_ml(
   verbose = FALSE
 )
 }
-\seealso{
-use \link{pmb_ml} to perform a maximum likelihood estimation
-  for a Pure Multiple Birth model.
-}
 \author{
 Giovanni Laudanno
 }
