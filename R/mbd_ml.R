@@ -43,8 +43,6 @@
 #'   n_0 = n_0,
 #'   verbose = FALSE
 #' )
-#' @seealso use \link{pmb_ml} to perform a maximum likelihood estimation
-#'   for a Pure Multiple Birth model.
 #' @export
 mbd_ml <- function(
   loglik_function = mbd_loglik,
