@@ -33,7 +33,7 @@ mbd_main <- function(
   }
   fun_name <- toString(fun_list[which_function])
   if (verbose == TRUE) {
-   cat("You are using the function:", fun_name)
+    cat("You are using the function:", fun_name)
   }
 
   # simulate

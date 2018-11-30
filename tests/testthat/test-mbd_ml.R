@@ -112,4 +112,17 @@ test_that("abuse", {
     ),
     "for fixed parameters start from the true values"
   )
+
+  testthat::expect_known_output(
+    suppressWarnings(
+      mbd::mbd_ml(
+        start_pars = c(60, 50, 10, 0.5),
+        brts = brts,
+        cond = cond,
+        n_0 = n_0,
+        verbose = FALSE
+      )
+    ),
+    "The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values." # nolint
+  )
 })
