@@ -15,9 +15,10 @@ mbd_main <- function(
   models = mbd_loglik,
   verbose = FALSE
 ) {
-  # set up
+  # specific set up
   n_0s <- n_0
-  
+
+  # generic set up
   pkg_name <- get_pkg_name() # nolint internal function
   function_names <- get_function_names( # nolint internal function
     models = models
