@@ -12,29 +12,18 @@ mbd_main <- function(
   age = 10,
   tips_interval = c(0, Inf),
   start_pars = c(0.3, 0.1, 1, 0.1),
-  loglik_function = mbd_loglik,
+  models = mbd_loglik,
   verbose = FALSE
 ) {
   # set up
-  pkg_name <- mbd_pkg_name()
-  fun_list <- ls(paste0("package:", pkg_name))
-  fun <- eval(loglik_function)
-  if (is.character(loglik_function)) {
-    which_function <- which(fun_list == loglik_function)
-  } else {
-    for (i in seq_along(fun_list)) {
-      if (all.equal(get(fun_list[i]), fun) == TRUE) {
-        which_function <- i
-      }
-    }
-  }
-  if (is.null(which_function)) {
-    stop("This is not a likelihood function provided by mbd!")
-  }
-  fun_name <- toString(fun_list[which_function])
-  if (verbose == TRUE) {
-    cat("You are using the function:", fun_name)
-  }
+  pkg_name <- get_pkg_name() # nolint internal function
+  function_names <- get_function_names( # nolint internal function
+    models = models
+  )
+  model_names <- get_model_names( # nolint internal function
+    function_names = function_names,
+    verbose = verbose
+  )
 
   # simulate
   set.seed(seed)
@@ -50,24 +39,34 @@ mbd_main <- function(
   # maximum likelihood
   results <- data.frame(matrix(
     NA,
-    nrow = 1,
+    nrow = length(models),
     # ncol must be length pars + (loglik, df, conv) + (tips, seed)
     ncol = length(start_pars) + 3 + 2
   ))
-
-  mle <- mbd_ml(
-    brts = sim$brts,
-    n_0 = n_0,
-    cond = cond,
-    tips_interval = tips_interval,
-    verbose = verbose
-  )
-
-  results <- data.frame(
-    mle,
-    tips = tips,
-    seed = seed
-  )
+  for (m in seq_along(models)) {
+    if (verbose == FALSE) {
+      if (rappdirs::app_dir()$os != "win") {
+        sink(file.path(rappdirs::user_cache_dir(), "ddd"))
+      } else {
+        sink(rappdirs::user_cache_dir())
+      }
+    }
+    mle <- mbd_ml(
+      brts = sim$brts,
+      n_0 = n_0,
+      cond = cond,
+      tips_interval = tips_interval,
+      verbose = verbose
+    )
+    if (verbose == FALSE) {
+      sink()
+    }
+    results[m, ] <- data.frame(
+      mle,
+      tips = tips,
+      seed = seed
+    )
+  }
 
   # format output
   colnames(results) <- c(
@@ -78,12 +77,12 @@ mbd_main <- function(
   out <- cbind(
     matrix(
       sim_pars,
-      nrow = 1,
+      nrow = length(models),
       ncol = length(start_pars),
       byrow = TRUE
     ),
     results,
-    model = fun_name
+    model = model_names
   )
   colnames(out) <- c(
     paste0("sim_", colnames(mle[1:length(start_pars)])),

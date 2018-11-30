@@ -54,7 +54,7 @@ The function returns the natural logarithm
   of the likelihood for the process.
 }
 \description{
-mbd_loglik_basic provides the likelihood for a process
+mbd_loglik provides the likelihood for a process
   in which multiple births (from different parents) at the same time
   are possible, along with usual sympatric speciation and extinction events.
 }

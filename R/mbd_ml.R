@@ -57,7 +57,7 @@ mbd_ml <- function(
   true_pars = start_pars
 ) {
   # setup and checks
-  par_names <- mbd::get_mbd_param_names()
+  par_names <- get_param_names() # nolint internal function
   testit::assert(length(optim_ids) == length(start_pars))
   testit::assert(length(true_pars) == length(start_pars))
   if (any(start_pars < 0)) {

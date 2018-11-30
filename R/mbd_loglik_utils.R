@@ -330,13 +330,6 @@ negatives_correction <- function(v, pars, display_output = 0) {
   v
 }
 
-#' Get the names of the parameters used in the MBD model
-#' @author Richel J.C. Bilderbeek
-#' @export
-get_mbd_param_names <- function() {
-  c("lambda", "mu", "nu", "q")
-}
-
 #' Count the number of multiple speciation events
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno

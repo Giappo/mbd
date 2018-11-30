@@ -20,7 +20,7 @@ test_that("use", {
       age = 10,
       tips_interval = c(0, Inf),
       start_pars = c(0.3, 0.1, 1, 0.1),
-      loglik_function = mbd_loglik,
+      models = mbd_loglik,
       verbose = FALSE
     )
     testthat::expect_true(
@@ -71,7 +71,7 @@ test_that("use", {
 
     # test file saving
     if (.Platform$OS.type == "windows") {
-      sim_path <- system.file("extdata", package = mbd_pkg_name())
+      sim_path <- system.file("extdata", package = get_pkg_name())
     } else {
       sim_path <- getwd()
     }
@@ -83,7 +83,7 @@ test_that("use", {
     # check data file existence
     data_file_name <- file.path(
       data_path,
-      paste0(mbd_pkg_name(), "_sim_", seed, ".RData")
+      paste0(get_pkg_name(), "_sim_", seed, ".RData")
     )
     testthat::expect_true(
       file.exists(data_file_name)
@@ -91,7 +91,7 @@ test_that("use", {
     # check results file existence
     results_file_name <- file.path(
       sim_path,
-      paste0(mbd_pkg_name(), "_mle_", seed, ".txt")
+      paste0(get_pkg_name(), "_mle_", seed, ".txt")
     )
     testthat::expect_true(
       file.exists(results_file_name)

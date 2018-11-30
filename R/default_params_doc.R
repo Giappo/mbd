@@ -70,6 +70,7 @@
 #' @param n_subs something
 #' @param nu the multiple allopatric speciation trigger rate.
 #' @param optimmethod optimization routine: choose between subplex and simplex
+#' @param optim_ids ids of the parameters you want to optimize.
 #' @param params transition matrix for the rhs of the ode system.
 #' @param pars vector of parameters:
 #' \itemize{
@@ -121,6 +122,7 @@
 #' @param transition_matrix something
 #' @param trparsfix something
 #' @param trparsopt something
+#' @param true_pars true parameter values when running the ml process.
 #' @param values something
 #' @param verbose choose if you want to print the output or not
 #' @param x something
@@ -132,8 +134,6 @@
 #' @param z something
 #' @param z_name something
 #' @param start_pars starting parameter values for the ml process.
-#' @param true_pars true parameter values when running the ml process.
-#' @param optim_ids ids of the parameters you want to optimize.
 #' @author Documentation by Giovanni Laudanno,
 #'   use of this function by Richel J.C. Bilderbeek
 #' @note This is an internal function, so it should be marked with

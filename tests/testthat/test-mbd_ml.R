@@ -14,7 +14,7 @@ test_that("use", {
     verbose = FALSE
   )
 
-  for (var_name in get_mbd_param_names()) {
+  for (var_name in get_param_names()) { # nolint internal function
     testthat::expect_true(test[var_name] >= 0)
   }
   testthat::expect_true(test$q <= 1)
