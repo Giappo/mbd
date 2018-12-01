@@ -170,13 +170,15 @@ a_operator <- function(
     repetition <- 1
     while ((result_nan == 1 | result_negative == 1) &
            repetition < max_repetitions) {
-      result <- try(expoRkit::expv(v = q_vector,
-                                   x = transition_matrix,
-                                   t = time_interval,
-                                   m = precision),
-                    silent = TRUE
+      result <- try(
+        expoRkit::expv(
+          v = q_vector,
+          x = transition_matrix,
+          t = time_interval,
+          m = precision
+        ),
+        silent = TRUE
       )
-
       result_nan <- (any(!is.numeric(result)) || any(is.nan(result)))
       if (result_nan) {
         precision <- precision - precision_step1
@@ -198,7 +200,7 @@ a_operator <- function(
     bad_result <- (any(result < 0))
   }
 
-  if (methode == "lsoda" | bad_result) {
+  if (methode == "lsodes" | bad_result) {
     times <- c(0, time_interval)
     ode_matrix <- transition_matrix
     R.utils::withTimeout(
@@ -208,7 +210,8 @@ a_operator <- function(
         func = mbd_loglik_rhs,
         parms = ode_matrix,
         atol = abstol,
-        rtol = reltol
+        rtol = reltol,
+        method = "lsodes"
       )[2, -1],
       timeout = 1001
     )
@@ -325,13 +328,6 @@ negatives_correction <- function(v, pars, display_output = 0) {
     v[v < 0 & (abs(v) / abs(max(v))) < 1e-10] <- 0
   }
   v
-}
-
-#' Get the names of the parameters used in the MBD model
-#' @author Richel J.C. Bilderbeek
-#' @export
-get_mbd_param_names <- function() {
-  c("lambda", "mu", "nu", "q")
 }
 
 #' Count the number of multiple speciation events

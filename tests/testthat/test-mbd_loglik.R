@@ -19,8 +19,8 @@ test_that("silent if verbose is FALSE", {
   )
 })
 
-# likelihoods using expo and lsoda are identical ----
-test_that("likelihoods using expo and lsoda are identical", {
+# likelihoods using expo and lsodes are identical ----
+test_that("likelihoods using expo and lsodes are identical", {
 
   pars <- c(0.23, 0.12, 0.5, 0.24)
   brts <- c(1, 2, 2)
@@ -29,10 +29,10 @@ test_that("likelihoods using expo and lsoda are identical", {
   loglik_expo  <- mbd::mbd_loglik(
     pars = pars, brts = brts, n_0 = n_0, cond = cond, methode = "expo"
   )
-  loglik_lsoda <- mbd::mbd_loglik(
-    pars = pars, brts = brts, n_0 = n_0, cond = cond, methode = "lsoda"
+  loglik_lsodes <- mbd::mbd_loglik(
+    pars = pars, brts = brts, n_0 = n_0, cond = cond, methode = "lsodes"
   )
-  testthat::expect_equal(loglik_expo, loglik_lsoda)
+  testthat::expect_equal(loglik_expo, loglik_lsodes)
 })
 
 # nu is zero ----
