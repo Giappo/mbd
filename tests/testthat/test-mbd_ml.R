@@ -14,7 +14,7 @@ test_that("use", {
     verbose = FALSE
   )
 
-  for (var_name in get_mbd_param_names()) {
+  for (var_name in get_param_names()) { # nolint internal function
     testthat::expect_true(test[var_name] >= 0)
   }
   testthat::expect_true(test$q <= 1)
@@ -81,5 +81,48 @@ test_that("mbd_ml can be silent", {
       n_0 = n_0,
       verbose = FALSE
     )
+  )
+})
+
+test_that("abuse", {
+  brts <- c(10, 9, 7, 6, 5)
+  start_pars <- c(0.2, 0.15, 1, 0.1)
+  n_0 <- 2
+  cond <- 1
+
+  testthat::expect_error(
+    mbd::mbd_ml(
+      start_pars = c(0.2, 0.15, -1, 0.1),
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      verbose = FALSE
+    ),
+    "you cannot start from negative parameters"
+  )
+
+  testthat::expect_error(
+    mbd::mbd_ml(
+      start_pars = start_pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      verbose = FALSE,
+      true_pars = c(start_pars[1:3], 0.2)
+    ),
+    "for fixed parameters start from the true values"
+  )
+
+  testthat::expect_known_output(
+    suppressWarnings(
+      mbd::mbd_ml(
+        start_pars = c(60, 50, 10, 0.5),
+        brts = brts,
+        cond = cond,
+        n_0 = n_0,
+        verbose = FALSE
+      )
+    ),
+    "The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values." # nolint
   )
 })

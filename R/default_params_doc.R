@@ -17,7 +17,9 @@
 #' @param colormap something
 #' @param cond set 1 if you want to condition on stem or crown age
 #'   and non-extinction of the phylogeny_ Set 0 otherwise.
-#' @param function_name something
+#' @param function_name function name
+#' @param function_names function names
+#' @param functions_names function names
 #' @param idparsfix something
 #' @param idparsopt the ids of the parameters that must be optimized.
 #'   The ids are defined as follows:
@@ -55,12 +57,13 @@
 #'   \itemize{
 #'     \item \code{sexpm}: use \code{sexpm}
 #'     \item \code{expo}: use \code{expoRkit}
-#'     \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+#'     \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
 #'   }
 #' @param minimum_multiple_births minimum amount of multiple births
 #' that have to be present in the simulated phylogeny.
 #' @param missnumspec The number of species that are in the clade,
 #'   but missing in the phylogeny.
+#' @param models the models you want to use to define the likelihood
 #' @param mu the extinction rate.
 #' @param mutation_rate something
 #' @param n_0 the number of lineages at time equals zero.
@@ -70,6 +73,7 @@
 #' @param n_subs something
 #' @param nu the multiple allopatric speciation trigger rate.
 #' @param optimmethod optimization routine: choose between subplex and simplex
+#' @param optim_ids ids of the parameters you want to optimize.
 #' @param params transition matrix for the rhs of the ode system.
 #' @param pars vector of parameters:
 #' \itemize{
@@ -121,6 +125,7 @@
 #' @param transition_matrix something
 #' @param trparsfix something
 #' @param trparsopt something
+#' @param true_pars true parameter values when running the ml process.
 #' @param values something
 #' @param verbose choose if you want to print the output or not
 #' @param x something
@@ -132,8 +137,6 @@
 #' @param z something
 #' @param z_name something
 #' @param start_pars starting parameter values for the ml process.
-#' @param true_pars true parameter values when running the ml process.
-#' @param optim_ids ids of the parameters you want to optimize.
 #' @author Documentation by Giovanni Laudanno,
 #'   use of this function by Richel J.C. Bilderbeek
 #' @note This is an internal function, so it should be marked with
@@ -156,6 +159,8 @@ default_params_doc <- function(
   colormap,
   cond,
   function_name,
+  function_names,
+  functions_names,
   idparsfix,
   idparsopt,
   initparsopt,
@@ -183,6 +188,7 @@ default_params_doc <- function(
   methode,
   minimum_multiple_births,
   missnumspec,
+  models,
   mu,
   mutation_rate,
   n_0,
@@ -192,6 +198,7 @@ default_params_doc <- function(
   n_subs,
   nu,
   optimmethod,
+  optim_ids,
   params,
   pars,
   pars_transform,
@@ -214,6 +221,7 @@ default_params_doc <- function(
   sequence_length,
   sim_pars,
   sim_phylo,
+  start_pars,
   subsamp,
   t,
   t1,
@@ -225,6 +233,7 @@ default_params_doc <- function(
   transition_matrix,
   trparsfix,
   trparsopt,
+  true_pars,
   values,
   verbose,
   x,
@@ -234,10 +243,7 @@ default_params_doc <- function(
   y_name,
   y_splits,
   z,
-  z_name,
-  start_pars,
-  true_pars,
-  optim_ids
+  z_name
 ) {
   # Nothing
 }

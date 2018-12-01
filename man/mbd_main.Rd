@@ -6,7 +6,7 @@
 \usage{
 mbd_main(seed, sim_pars, cond = 1, n_0 = 2, age = 10,
   tips_interval = c(0, Inf), start_pars = c(0.3, 0.1, 1, 0.1),
-  loglik_function = mbd_loglik, verbose = FALSE)
+  models = mbd_loglik, verbose = FALSE)
 }
 \arguments{
 \item{seed}{the seed}
@@ -32,7 +32,7 @@ do with a standard usage of mbd_sim.}
 
 \item{start_pars}{starting parameter values for the ml process.}
 
-\item{loglik_function}{the loglik function}
+\item{models}{the models you want to use to define the likelihood}
 
 \item{verbose}{choose if you want to print the output or not}
 }

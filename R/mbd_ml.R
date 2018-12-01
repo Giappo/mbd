@@ -57,7 +57,7 @@ mbd_ml <- function(
   true_pars = start_pars
 ) {
   # setup and checks
-  par_names <- mbd::get_mbd_param_names()
+  par_names <- get_param_names() # nolint internal function
   testit::assert(length(optim_ids) == length(start_pars))
   testit::assert(length(true_pars) == length(start_pars))
   if (any(start_pars < 0)) {
@@ -89,7 +89,12 @@ mbd_ml <- function(
       safety_threshold = safety_threshold
     )
     if (verbose == TRUE) {
-      print_this <- c(pars2, out)
+      printed_values <- paste0(
+        c(par_names, "loglik"),
+        " = ",
+        signif(c(pars2, -out), digits = 5)
+      )
+      print_this <- paste(printed_values, sep = ",")
       cat(print_this, "\n")
     }
     out
@@ -98,11 +103,13 @@ mbd_ml <- function(
   # initial likelihood
   tr_start_pars <- rep(0, length(start_pars))
   tr_start_pars <- pars_transform_forward(start_pars[optim_ids])
+  if (rappdirs::app_dir()$os != "win") {
+    sink("/dev/null")
+  } else {
+    sink(rappdirs::user_cache_dir())
+  }
   initloglik <- -optim_fun(tr_start_pars)
-  cat2(
-    message = paste0("The loglikelihood for the initial parameter values is ", initloglik, "\n"), # nolint
-    verbose = verbose
-  )
+  sink()
   utils::flush.console()
   if (initloglik == -Inf) {
     cat(
@@ -143,16 +150,15 @@ mbd_ml <- function(
   names(outpars) <- par_names
 
   out2 <- data.frame(
-    row.names = "results",
-    lambda = outpars[1],
-    mu = outpars[2],
-    nu = outpars[3],
-    q = outpars[4],
-    loglik = -out$value,
-    df = sum(optim_ids),
-    conv = unlist(out$conv)
+    row.names = NULL,
+    outpars[1],
+    outpars[2],
+    outpars[3],
+    outpars[4],
+    -out$value,
+    sum(optim_ids),
+    unlist(out$conv)
   )
   names(out2) <- out_names
-
-  invisible(out2)
+  return(out2)
 }

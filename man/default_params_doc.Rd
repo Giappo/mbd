@@ -7,19 +7,20 @@ documentation.}
 \usage{
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
-  checked_functions, colormap, cond, function_name, idparsfix, idparsopt,
-  initparsopt, input_trees_path, input_xml, interval_max, interval_min,
-  iterations, k, lambda, loglik_function, logs, lx, lx0, matrix,
-  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
-  max_sims, maxiter, mbd_lambda, message, methode, minimum_multiple_births,
-  missnumspec, mu, mutation_rate, n_0, n_species, init_n_lineages, n_steps,
-  n_subs, nu, optimmethod, params, pars, pars_transform, pars_transformed,
+  checked_functions, colormap, cond, function_name, function_names,
+  functions_names, idparsfix, idparsopt, initparsopt, input_trees_path,
+  input_xml, interval_max, interval_min, iterations, k, lambda,
+  loglik_function, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
+  max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
+  message, methode, minimum_multiple_births, missnumspec, models, mu,
+  mutation_rate, n_0, n_species, init_n_lineages, n_steps, n_subs, nu,
+  optimmethod, optim_ids, params, pars, pars_transform, pars_transformed,
   parsfix, precision, print_errors, printit, q_vector, q, quantiles_choice,
   recursive, reltol, res, results, s, seed, safety_threshold,
-  sample_interval, sequence_length, sim_pars, sim_phylo, subsamp, t, t1,
-  t2, tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
-  trparsopt, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
-  z_name, start_pars, true_pars, optim_ids)
+  sample_interval, sequence_length, sim_pars, sim_phylo, start_pars,
+  subsamp, t, t1, t2, tips_interval, time_interval, tol, tr,
+  transition_matrix, trparsfix, trparsopt, true_pars, values, verbose, x,
+  x_name, x_splits, y, y_name, y_splits, z, z_name)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -54,7 +55,11 @@ the numerical integration using deSolve.}
 \item{cond}{set 1 if you want to condition on stem or crown age
 and non-extinction of the phylogeny_ Set 0 otherwise.}
 
-\item{function_name}{something}
+\item{function_name}{function name}
+
+\item{function_names}{function names}
+
+\item{functions_names}{function names}
 
 \item{idparsfix}{something}
 
@@ -116,7 +121,7 @@ Default option is \code{hyper_a_hanno}}
 \itemize{
   \item \code{sexpm}: use \code{sexpm}
   \item \code{expo}: use \code{expoRkit}
-  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
 }}
 
 \item{minimum_multiple_births}{minimum amount of multiple births
@@ -124,6 +129,8 @@ that have to be present in the simulated phylogeny.}
 
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny.}
+
+\item{models}{the models you want to use to define the likelihood}
 
 \item{mu}{the extinction rate.}
 
@@ -142,6 +149,8 @@ but missing in the phylogeny.}
 \item{nu}{the multiple allopatric speciation trigger rate.}
 
 \item{optimmethod}{optimization routine: choose between subplex and simplex}
+
+\item{optim_ids}{ids of the parameters you want to optimize.}
 
 \item{params}{transition matrix for the rhs of the ode system.}
 
@@ -203,6 +212,8 @@ because you never want \code{q} to actually be equal to zero or one.}
 
 \item{sim_phylo}{something}
 
+\item{start_pars}{starting parameter values for the ml process.}
+
 \item{subsamp}{something}
 
 \item{t}{something}
@@ -227,6 +238,8 @@ do with a standard usage of mbd_sim.}
 
 \item{trparsopt}{something}
 
+\item{true_pars}{true parameter values when running the ml process.}
+
 \item{values}{something}
 
 \item{verbose}{choose if you want to print the output or not}
@@ -246,12 +259,6 @@ do with a standard usage of mbd_sim.}
 \item{z}{something}
 
 \item{z_name}{something}
-
-\item{start_pars}{starting parameter values for the ml process.}
-
-\item{true_pars}{true parameter values when running the ml process.}
-
-\item{optim_ids}{ids of the parameters you want to optimize.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'
