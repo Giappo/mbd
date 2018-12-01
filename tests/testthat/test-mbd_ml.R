@@ -84,6 +84,30 @@ test_that("mbd_ml can be silent", {
   )
 })
 
+test_that("mbd_ml can produce output", {
+  set.seed(10)
+  brts <- c(10, 9, 7, 6, 5, 3)
+  optim_ids <- c(FALSE, TRUE, FALSE, FALSE)
+  n_0 <- 2
+  cond <- 1
+  output <- capture.output(
+    mbd::mbd_ml(
+      start_pars = c(0.2, 0.15, 1, 0.1),
+      optim_ids = optim_ids,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      verbose = TRUE
+    )
+  )
+  testthat::expect_true(
+    length(output) > 0
+  )
+  testthat::expect_false(
+    is.null(output)
+  )
+})
+
 test_that("abuse", {
   brts <- c(10, 9, 7, 6, 5)
   start_pars <- c(0.2, 0.15, 1, 0.1)
