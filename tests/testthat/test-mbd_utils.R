@@ -70,3 +70,12 @@ test_that("get_function_names & get_model_names", {
     error_message
   )
 })
+
+test_that("cat2", {
+  testthat::expect_output(
+    cat2(
+      message = "test",
+      verbose = TRUE
+    )
+  )
+})
