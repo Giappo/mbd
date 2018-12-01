@@ -61,7 +61,7 @@ mbd_ml <- function(
   testit::assert(length(optim_ids) == length(start_pars))
   testit::assert(length(true_pars) == length(start_pars))
   if (any(start_pars < 0)) {
-    stop("you cannot start from negative parameters")
+    stop("You cannot start from negative parameters.")
   }
   if (any(start_pars * optim_ids != true_pars * optim_ids)) {
     stop("for fixed parameters start from the true values")
@@ -77,7 +77,7 @@ mbd_ml <- function(
   # define function to optimize
   optim_fun <- function(tr_optim_pars) {
     pars2 <- rep(0, length(start_pars))
-    optim_pars <- pars_transform_back(tr_optim_pars)
+    optim_pars <- pars_transform_back(tr_optim_pars) # nolint internal function
     pars2[optim_ids] <- optim_pars
     pars2[!optim_ids] <- true_pars[!optim_ids]
 
@@ -102,7 +102,7 @@ mbd_ml <- function(
 
   # initial likelihood
   tr_start_pars <- rep(0, length(start_pars))
-  tr_start_pars <- pars_transform_forward(start_pars[optim_ids])
+  tr_start_pars <- pars_transform_forward(start_pars[optim_ids]) # nolint internal function
   if (rappdirs::app_dir()$os != "win") {
     sink("/dev/null")
   } else {

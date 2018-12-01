@@ -53,7 +53,7 @@ test_that("get_function_names & get_model_names", {
   )
   testthat::expect_error(
     get_function_names(
-      models = "grepl"
+      models = grepl
     ),
     error_message
   )
@@ -68,5 +68,14 @@ test_that("get_function_names & get_model_names", {
       function_names = "nonsense"
     ),
     error_message
+  )
+})
+
+test_that("cat2", {
+  testthat::expect_output(
+    cat2(
+      message = "test",
+      verbose = TRUE
+    )
   )
 })

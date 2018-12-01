@@ -155,6 +155,7 @@ get_function_names <- function(
       }
       which_function <- find_function
     } else {
+      which_function <- 0
       for (i in seq_along(fun_list)) {
         if (all.equal(get(fun_list[i]), fun) == TRUE) {
           which_function <- i
