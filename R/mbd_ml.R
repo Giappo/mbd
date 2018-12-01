@@ -61,7 +61,7 @@ mbd_ml <- function(
   testit::assert(length(optim_ids) == length(start_pars))
   testit::assert(length(true_pars) == length(start_pars))
   if (any(start_pars < 0)) {
-    stop("you cannot start from negative parameters")
+    stop("You cannot start from negative parameters.")
   }
   if (any(start_pars * optim_ids != true_pars * optim_ids)) {
     stop("for fixed parameters start from the true values")
