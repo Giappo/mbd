@@ -122,7 +122,7 @@ test_that("abuse", {
       n_0 = n_0,
       verbose = FALSE
     ),
-    "you cannot start from negative parameters"
+    "You cannot start from negative parameters."
   )
 
   testthat::expect_error(
