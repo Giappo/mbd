@@ -53,7 +53,7 @@ test_that("get_function_names & get_model_names", {
   )
   testthat::expect_error(
     get_function_names(
-      models = "grepl"
+      models = grepl
     ),
     error_message
   )
