@@ -38,6 +38,7 @@ mbd_main <- function(
     cond = cond
   )
   brts <- sim$brts
+  print_info(brts = brts, n_0s = n_0s, cond = cond, verbose = verbose) # nolint internal function
   if (!is.list(brts)) {
     tips <- (n_0s[1] - 1) + length(brts)
   } else {
@@ -136,6 +137,6 @@ mbd_main <- function(
     x = out,
     file = results_file_name
   )
-
+  print_info(brts = brts, n_0s = n_0s, cond = cond, verbose = verbose) # nolint internal function
   out
 }

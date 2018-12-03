@@ -16,7 +16,7 @@
 #' @param checked_functions something
 #' @param colormap something
 #' @param cond set 1 if you want to condition on stem or crown age
-#'   and non-extinction of the phylogeny_ Set 0 otherwise.
+#'   and non-extinction of the phylogeny. Set 0 otherwise.
 #' @param function_name function name
 #' @param function_names function names
 #' @param functions_names function names
@@ -67,6 +67,7 @@
 #' @param mu the extinction rate.
 #' @param mutation_rate something
 #' @param n_0 the number of lineages at time equals zero.
+#' @param n_0s starting number of lineages for all the clades
 #' @param n_species number of species.
 #' @param init_n_lineages the number of lineages at time equals zero.
 #' @param n_steps something
@@ -192,6 +193,7 @@ default_params_doc <- function(
   mu,
   mutation_rate,
   n_0,
+  n_0s,
   n_species,
   init_n_lineages,
   n_steps,

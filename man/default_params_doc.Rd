@@ -13,12 +13,12 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   loglik_function, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
   max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
   message, methode, minimum_multiple_births, missnumspec, models, mu,
-  mutation_rate, n_0, n_species, init_n_lineages, n_steps, n_subs, nu,
-  optimmethod, optim_ids, params, pars, pars_transform, pars_transformed,
-  parsfix, precision, print_errors, printit, q_vector, q, quantiles_choice,
-  recursive, reltol, res, results, s, seed, safety_threshold,
-  sample_interval, sequence_length, sim_pars, sim_phylo, start_pars,
-  subsamp, t, t1, t2, tips_interval, time_interval, tol, tr,
+  mutation_rate, n_0, n_0s, n_species, init_n_lineages, n_steps, n_subs,
+  nu, optimmethod, optim_ids, params, pars, pars_transform,
+  pars_transformed, parsfix, precision, print_errors, printit, q_vector, q,
+  quantiles_choice, recursive, reltol, res, results, s, seed,
+  safety_threshold, sample_interval, sequence_length, sim_pars, sim_phylo,
+  start_pars, subsamp, t, t1, t2, tips_interval, time_interval, tol, tr,
   transition_matrix, trparsfix, trparsopt, true_pars, values, verbose, x,
   x_name, x_splits, y, y_name, y_splits, z, z_name)
 }
@@ -53,7 +53,7 @@ the numerical integration using deSolve.}
 \item{colormap}{something}
 
 \item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
+and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{function_name}{function name}
 
@@ -137,6 +137,8 @@ but missing in the phylogeny.}
 \item{mutation_rate}{something}
 
 \item{n_0}{the number of lineages at time equals zero.}
+
+\item{n_0s}{starting number of lineages for all the clades}
 
 \item{n_species}{number of species.}
 

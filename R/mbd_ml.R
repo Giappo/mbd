@@ -103,13 +103,7 @@ mbd_ml <- function(
   # initial likelihood
   tr_start_pars <- rep(0, length(start_pars))
   tr_start_pars <- pars_transform_forward(start_pars[optim_ids]) # nolint internal function
-  if (rappdirs::app_dir()$os != "win") {
-    sink("/dev/null")
-  } else {
-    sink(rappdirs::user_cache_dir())
-  }
   initloglik <- -optim_fun(tr_start_pars)
-  sink()
   utils::flush.console()
   if (initloglik == -Inf) {
     cat(
