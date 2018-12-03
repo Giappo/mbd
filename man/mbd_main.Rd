@@ -20,7 +20,7 @@ mbd_main(seed, sim_pars, cond = 1, n_0 = 2, age = 10,
 }}
 
 \item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
+and non-extinction of the phylogeny. Set 0 otherwise.}
 
 \item{n_0}{the number of lineages at time equals zero.}
 
