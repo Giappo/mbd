@@ -40,19 +40,14 @@ test_that("compare results from bd and mbd in case of nu = q = 0", {
     verbose = FALSE
   )
 
-  if (rappdirs::app_dir()$os != "win") {
-    sink("/dev/null")
-  } else {
-    sink(rappdirs::user_cache_dir())
-  }
-  bd_out <- DDD::bd_ML(
+  x <- capture.output(bd_out <- DDD::bd_ML(
     brts = brts,
     idparsopt = 1:2,
     initparsopt = start_pars[1:2],
     soc = n_0,
     cond = cond
-  )
-  sink()
+  ))
+  rm(x)
 
   testthat::expect_true(
     abs(
@@ -125,13 +120,13 @@ test_that("abuse", {
     "You cannot start from negative parameters!"
   )
   testthat::expect_output(
-    mbd::mbd_ml(
+    suppressWarnings(mbd::mbd_ml(
       start_pars = c(60, 50, 10, 0.5),
       brts = brts,
       cond = cond,
       n_0 = n_0,
       verbose = FALSE
-    ),
+    )),
     "The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values." # nolint
   )
   testthat::expect_error(
