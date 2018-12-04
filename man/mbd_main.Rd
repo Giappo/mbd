@@ -4,13 +4,12 @@
 \alias{mbd_main}
 \title{Run the full mbd routine}
 \usage{
-mbd_main(seed, sim_pars, cond = 1, n_0 = 2, age = 10,
-  tips_interval = c(0, Inf), start_pars = c(0.3, 0.1, 1, 0.1),
-  models = mbd_loglik, verbose = FALSE)
+mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
+  tips_interval = c(0, Inf), seed, start_pars = c(0.3, 0.1, 1, 0.1),
+  optim_ids = rep(TRUE, length(start_pars)), models = mbd_loglik,
+  project_folder = NULL, verbose = FALSE)
 }
 \arguments{
-\item{seed}{the seed}
-
 \item{sim_pars}{vector of parameters:
 \itemize{
   \item id == 1 corresponds to lambda (speciation rate)
@@ -20,7 +19,7 @@ mbd_main(seed, sim_pars, cond = 1, n_0 = 2, age = 10,
 }}
 
 \item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny. Set 0 otherwise.}
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{n_0}{the number of lineages at time equals zero.}
 
@@ -30,9 +29,15 @@ and non-extinction of the phylogeny. Set 0 otherwise.}
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
 
+\item{seed}{the seed}
+
 \item{start_pars}{starting parameter values for the ml process.}
 
+\item{optim_ids}{ids of the parameters you want to optimize.}
+
 \item{models}{the models you want to use to define the likelihood}
+
+\item{project_folder}{the folder when you want to save data and results}
 
 \item{verbose}{choose if you want to print the output or not}
 }
