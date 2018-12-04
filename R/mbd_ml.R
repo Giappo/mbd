@@ -57,17 +57,15 @@ mbd_ml <- function(
   true_pars = start_pars
 ) {
   # setup and checks
+  if (true_pars[3] == 0 | true_pars[4] == 0) {
+    safety_threshold <- 0
+  }
   par_names <- get_param_names() # nolint internal function
   testit::assert(length(optim_ids) == length(start_pars))
   testit::assert(length(true_pars) == length(start_pars))
+  start_pars[!optim_ids] <- true_pars[!optim_ids]
   if (any(start_pars < 0)) {
-    stop("you cannot start from negative parameters")
-  }
-  if (any(start_pars * optim_ids != true_pars * optim_ids)) {
-    stop("for fixed parameters start from the true values")
-  }
-  if (true_pars[3] == 0 | true_pars[4] == 0) {
-    safety_threshold <- 0
+    stop("You cannot start from negative parameters!")
   }
   out_names <- c(par_names, "loglik", "df", "conv")
   failpars <- rep(-1, length(start_pars))
@@ -103,13 +101,7 @@ mbd_ml <- function(
   # initial likelihood
   tr_start_pars <- rep(0, length(start_pars))
   tr_start_pars <- pars_transform_forward(start_pars[optim_ids]) # nolint internal function
-  if (rappdirs::app_dir()$os != "win") {
-    sink("/dev/null")
-  } else {
-    sink(rappdirs::user_cache_dir())
-  }
   initloglik <- -optim_fun(tr_start_pars)
-  sink()
   utils::flush.console()
   if (initloglik == -Inf) {
     cat(
@@ -143,7 +135,7 @@ mbd_ml <- function(
 
   # return mle results
   outpars <- rep(0, length(start_pars))
-  outpars[optim_ids] <- pars_transform_back(
+  outpars[optim_ids] <- pars_transform_back( # nolint internal function
     as.numeric(unlist(out$par))
   )
   outpars[!optim_ids] <- true_pars[!optim_ids]

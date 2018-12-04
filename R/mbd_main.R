@@ -5,21 +5,23 @@
 #' @details mle inference
 #' @export
 mbd_main <- function(
-  seed,
   sim_pars,
   cond = 1,
   n_0 = 2,
   age = 10,
   tips_interval = c(0, Inf),
+  seed,
   start_pars = c(0.3, 0.1, 1, 0.1),
+  optim_ids = rep(TRUE, length(start_pars)),
   models = mbd_loglik,
+  project_folder = NULL,
   verbose = FALSE
 ) {
   # specific set up
   n_0s <- n_0
+  t_0s <- age
 
   # generic set up
-  pkg_name <- get_pkg_name() # nolint internal function
   function_names <- get_function_names( # nolint internal function
     models = models
   )
@@ -34,10 +36,11 @@ mbd_main <- function(
     pars = sim_pars,
     n_0 = n_0,
     age = age,
-    tips_interval = tips_interval,
-    cond = cond
+    cond = cond,
+    tips_interval = tips_interval
   )
   brts <- sim$brts
+  print_info(brts = brts, n_0 = n_0, cond = cond, verbose = verbose) # nolint internal function
   if (!is.list(brts)) {
     tips <- (n_0s[1] - 1) + length(brts)
   } else {
@@ -48,12 +51,6 @@ mbd_main <- function(
   }
 
   # maximum likelihood
-  results <- data.frame(matrix(
-    NA,
-    nrow = length(models),
-    # ncol must be length pars + (loglik, df, conv, seed) + length(tips)
-    ncol = length(start_pars) + 4 + length(tips)
-  ))
   for (m in seq_along(models)) {
     if (verbose == FALSE) {
       if (rappdirs::app_dir()$os != "win") {
@@ -72,70 +69,76 @@ mbd_main <- function(
     if (verbose == FALSE) {
       sink()
     }
-    dim(tips) <- c(1, length(tips))
-    results[m, ] <- data.frame(
-      cbind(mle, tips, seed)
-    )
   }
 
-  # format output
-  colnames(results) <- c(
-    colnames(mle),
-    paste0("tips_", 1:length(tips)),
-    "seed"
-  )
-  out <- cbind(
+  # format results
+  results <- cbind(
     matrix(
       sim_pars,
       nrow = length(models),
       ncol = length(start_pars),
       byrow = TRUE
     ),
-    results,
+    mle,
+    seed,
+    cond,
+    n_0,
+    matrix(
+      t_0s,
+      nrow = length(models),
+      ncol = length(t_0s),
+      byrow = TRUE
+    ),
+    matrix(
+      tips,
+      nrow = length(models),
+      ncol = length(tips),
+      byrow = TRUE
+    ),
+    matrix(
+      optim_ids,
+      nrow = length(models),
+      ncol = length(optim_ids),
+      byrow = TRUE
+    ),
     model = model_names
   )
-  colnames(out) <- c(
+  if (length(t_0s) > 1) {
+    t_0s_label <- paste0("t_0_", 1:length(t_0s))
+  } else {
+    t_0s_label <- "t_0"
+  }
+  if (length(tips) > 1) {
+    tips_label <- paste0("tips_", 1:length(tips))
+  } else {
+    tips_label <- "tips"
+  }
+  colnames(results) <- c(
     paste0("sim_", colnames(mle[1:length(start_pars)])),
-    colnames(results),
+    colnames(mle),
+    "seed",
+    "cond",
+    "n_0",
+    t_0s_label,
+    tips_label,
+    paste0("optim_", colnames(mle[1:length(start_pars)])),
     "model"
   )
-  rownames(out) <- NULL
-  out <- data.frame(out)
+  rownames(results) <- NULL
+  results <- data.frame(results)
 
   # save data
-  if (.Platform$OS.type == "windows") {
-    if (!("extdata" %in% list.files(system.file(package = pkg_name)))) {
-      dir.create(file.path(
-        system.file(package = pkg_name),
-        "extdata"
-      ))
-    }
-    sim_path <- system.file("extdata", package = pkg_name)
-    if (!file.exists(sim_path)) {
-      dir.create(sim_path, showWarnings = FALSE)
-    }
-  } else {
-    sim_path  <- getwd()
-  }
-  data_path <- file.path(sim_path, "data")
-  data_file_name <- file.path(
-    data_path,
-    paste0(pkg_name, "_sim_", seed, ".RData")
+  main_save_files( # nolint internal function
+    project_folder = project_folder,
+    sim_pars = sim_pars,
+    optim_ids = optim_ids,
+    cond = cond,
+    n_0 = n_0,
+    t_0s = t_0s,
+    seed = seed,
+    sim = sim,
+    results = results
   )
-  if (!file.exists(data_file_name)) {
-    if (!file.exists(data_path)) {
-      dir.create(data_path, showWarnings = FALSE)
-    }
-  }
-  save(sim, file = data_file_name)
-  results_file_name <- file.path(
-    sim_path,
-    paste0(pkg_name, "_mle_", seed, ".txt")
-  )
-  utils::write.csv(
-    x = out,
-    file = results_file_name
-  )
-
-  out
+  print_info(brts = brts, n_0 = n_0, cond = cond, verbose = verbose) # nolint internal function
+  results
 }
