@@ -82,12 +82,12 @@ test_that("cat2", {
 
 test_that("print_info", {
   brts <- c(3, 2, 1)
-  n_0s <- 2
+  n_0 <- 2
   cond <- 1
   testthat::expect_output(
     print_info(
       brts = brts,
-      n_0s = n_0s,
+      n_0 = n_0,
       cond = cond,
       verbose = TRUE
     )
@@ -98,7 +98,7 @@ test_that("print_info", {
   testthat::expect_output(
     print_info(
       brts = brts,
-      n_0s = n_0s,
+      n_0 = n_0,
       cond = cond,
       verbose = TRUE
     )
@@ -106,7 +106,7 @@ test_that("print_info", {
   testthat::expect_silent(
     print_info(
       brts = brts,
-      n_0s = n_0s,
+      n_0 = n_0,
       cond = cond,
       verbose = FALSE
     )

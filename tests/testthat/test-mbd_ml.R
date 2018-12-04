@@ -117,32 +117,27 @@ test_that("abuse", {
       n_0 = n_0,
       verbose = FALSE
     ),
-    "You cannot start from negative parameters."
+    "You cannot start from negative parameters!"
   )
-
-  testthat::expect_error(
-    mbd::mbd_ml(
-      start_pars = start_pars,
-      brts = brts,
-      cond = cond,
-      n_0 = n_0,
-      verbose = FALSE,
-      true_pars = c(start_pars[1:3], 0.2)
-    ),
-    "for fixed parameters start from the true values"
-  )
-
-  output <- capture.output(suppressWarnings(
-    mbd::mbd_ml(
+  testthat::expect_output(
+    suppressWarnings(mbd::mbd_ml(
       start_pars = c(60, 50, 10, 0.5),
       brts = brts,
       cond = cond,
       n_0 = n_0,
       verbose = FALSE
-    )
-  ))
-  testthat::expect_equal(
-    output,
+    )),
     "The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values." # nolint
+  )
+  testthat::expect_error(
+    test <- mbd_ml(
+      loglik_function = mbd_loglik,
+      brts = brts,
+      start_pars = c(-1, 0.1, 2, 0.1),
+      cond = cond,
+      n_0 = 2,
+      verbose = FALSE
+    ),
+    "You cannot start from negative parameters!"
   )
 })
