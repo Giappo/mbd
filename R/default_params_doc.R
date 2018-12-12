@@ -16,7 +16,8 @@
 #' @param checked_functions something
 #' @param colormap something
 #' @param cond set 1 if you want to condition on stem or crown age
-#'   and non-extinction of the phylogeny. Set 0 otherwise.
+#'   and non-extinction of the phylogeny_ Set 0 otherwise.
+#' @param data_folder The data folder insider the project folder.
 #' @param function_name function name
 #' @param function_names function names
 #' @param functions_names function names
@@ -90,6 +91,7 @@
 #' @param precision something
 #' @param printit something
 #' @param print_errors something
+#' @param project_folder the folder when you want to save data and results
 #' @param q_vector the \code{Q} vector from
 #' 'Etienne et al. 2012 - Proc. R. Soc. B'.
 #' @param q the single-lineage speciation probability at a triggered event.
@@ -98,13 +100,15 @@
 #' @param reltol relative error tolerance for
 #' the numerical integration using deSolve.
 #' @param res something
-#' @param results something
+#' @param results mle results
+#' @param results_folder The results folder insider the project folder.
 #' @param s the seed
 #' @param safety_threshold adds a threshold for the evaluation of q. This is due
 #' because you never want \code{q} to actually be equal to zero or one.
 #' @param sample_interval something
 #' @param seed the seed
 #' @param sequence_length something
+#' @param sim the results of a sim run
 #' @param sim_pars vector of parameters:
 #' \itemize{
 #'   \item id == 1 corresponds to lambda (speciation rate)
@@ -117,6 +121,8 @@
 #' @param t something
 #' @param t1 something
 #' @param t2 something
+#' @param t_0 starting time
+#' @param t_0s starting time for each clade
 #' @param time_interval something
 #' @param tips_interval sets tips boundaries constrain on simulated dataset.
 #'   You can also define the tips_interval as you can usually
@@ -159,6 +165,7 @@ default_params_doc <- function(
   checked_functions,
   colormap,
   cond,
+  data_folder,
   function_name,
   function_names,
   functions_names,
@@ -209,6 +216,7 @@ default_params_doc <- function(
   precision,
   print_errors,
   printit,
+  project_folder,
   q_vector,
   q,
   quantiles_choice,
@@ -216,11 +224,13 @@ default_params_doc <- function(
   reltol,
   res,
   results,
+  results_folder,
   s,
   seed,
   safety_threshold,
   sample_interval,
   sequence_length,
+  sim,
   sim_pars,
   sim_phylo,
   start_pars,
@@ -228,6 +238,8 @@ default_params_doc <- function(
   t,
   t1,
   t2,
+  t_0,
+  t_0s,
   tips_interval,
   time_interval,
   tol,

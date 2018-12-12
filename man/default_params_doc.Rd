@@ -7,18 +7,19 @@ documentation.}
 \usage{
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
-  checked_functions, colormap, cond, function_name, function_names,
-  functions_names, idparsfix, idparsopt, initparsopt, input_trees_path,
-  input_xml, interval_max, interval_min, iterations, k, lambda,
-  loglik_function, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
-  max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
-  message, methode, minimum_multiple_births, missnumspec, models, mu,
-  mutation_rate, n_0, n_0s, n_species, init_n_lineages, n_steps, n_subs,
-  nu, optimmethod, optim_ids, params, pars, pars_transform,
-  pars_transformed, parsfix, precision, print_errors, printit, q_vector, q,
-  quantiles_choice, recursive, reltol, res, results, s, seed,
-  safety_threshold, sample_interval, sequence_length, sim_pars, sim_phylo,
-  start_pars, subsamp, t, t1, t2, tips_interval, time_interval, tol, tr,
+  checked_functions, colormap, cond, data_folder, function_name,
+  function_names, functions_names, idparsfix, idparsopt, initparsopt,
+  input_trees_path, input_xml, interval_max, interval_min, iterations, k,
+  lambda, loglik_function, logs, lx, lx0, matrix, matrix_builder, max_iter,
+  max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
+  mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
+  models, mu, mutation_rate, n_0, n_0s, n_species, init_n_lineages,
+  n_steps, n_subs, nu, optimmethod, optim_ids, params, pars,
+  pars_transform, pars_transformed, parsfix, precision, print_errors,
+  printit, project_folder, q_vector, q, quantiles_choice, recursive,
+  reltol, res, results, results_folder, s, seed, safety_threshold,
+  sample_interval, sequence_length, sim, sim_pars, sim_phylo, start_pars,
+  subsamp, t, t1, t2, t_0, t_0s, tips_interval, time_interval, tol, tr,
   transition_matrix, trparsfix, trparsopt, true_pars, values, verbose, x,
   x_name, x_splits, y, y_name, y_splits, z, z_name)
 }
@@ -53,7 +54,9 @@ the numerical integration using deSolve.}
 \item{colormap}{something}
 
 \item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny. Set 0 otherwise.}
+and non-extinction of the phylogeny_ Set 0 otherwise.}
+
+\item{data_folder}{The data folder insider the project folder.}
 
 \item{function_name}{function name}
 
@@ -177,6 +180,8 @@ according to y = x / (1 + x)}
 
 \item{printit}{something}
 
+\item{project_folder}{the folder when you want to save data and results}
+
 \item{q_vector}{the \code{Q} vector from
 'Etienne et al. 2012 - Proc. R. Soc. B'.}
 
@@ -191,7 +196,9 @@ the numerical integration using deSolve.}
 
 \item{res}{something}
 
-\item{results}{something}
+\item{results}{mle results}
+
+\item{results_folder}{The results folder insider the project folder.}
 
 \item{s}{the seed}
 
@@ -203,6 +210,8 @@ because you never want \code{q} to actually be equal to zero or one.}
 \item{sample_interval}{something}
 
 \item{sequence_length}{something}
+
+\item{sim}{the results of a sim run}
 
 \item{sim_pars}{vector of parameters:
 \itemize{
@@ -223,6 +232,10 @@ because you never want \code{q} to actually be equal to zero or one.}
 \item{t1}{something}
 
 \item{t2}{something}
+
+\item{t_0}{starting time}
+
+\item{t_0s}{starting time for each clade}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually

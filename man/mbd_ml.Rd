@@ -20,7 +20,7 @@ mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
 \item{n_0}{the number of lineages at time equals zero.}
 
 \item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny. Set 0 otherwise.}
+and non-extinction of the phylogeny_ Set 0 otherwise.}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
