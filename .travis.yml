@@ -10,7 +10,6 @@ r_github_packages:
   - jimhester/covr
   - jimhester/lintr
   - MangoTheCat/goodpractice
-  - richelbilderbeek/pirouette
   - ropensci/spelling
 
 before_install:
