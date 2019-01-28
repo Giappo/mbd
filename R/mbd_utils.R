@@ -243,7 +243,7 @@ read_results <- function(project_folder = NULL) {
   print("Saved results are:")
   print(files_results)
   x <- readline("Which one do you want to read?")
-  result <- read.csv(
+  result <- utils::read.csv(
     file.path(
       dir_results,
       files_results[as.numeric(x)]

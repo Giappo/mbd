@@ -56,13 +56,18 @@ mbd_sim <- function(
   if (n_0 != 1 && n_0 != 2) {
     stop("'n_0' must be '1' of '2'")
   }
-  if (seed %% 1 == 0) {
-    set.seed(seed)
-  } else {
-    if (!is.na(seed)) {
+  if (!is.na(seed)) {
+    if (!is.numeric(seed)) {
       stop("seed must be integer or NA")
+    } else {
+      if (seed %% 1 == 0) {
+        set.seed(seed)
+      } else {
+        stop("seed must be integer or NA")
+      }
     }
   }
+  
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
