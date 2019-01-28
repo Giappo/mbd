@@ -5,9 +5,10 @@
 \title{Run the full mbd routine}
 \usage{
 mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
-  tips_interval = c(0, Inf), seed, start_pars = c(0.3, 0.1, 1, 0.1),
-  optim_ids = rep(TRUE, length(start_pars)), models = mbd_loglik,
-  project_folder = NULL, verbose = FALSE)
+  tips_interval = c(0, Inf), seed, start_pars = c(0.3, 0.1, 1.5, 0.15),
+  optim_ids = rep(TRUE, length(start_pars)),
+  loglik_functions = mbd_loglik, project_folder = NULL,
+  verbose = FALSE, safety_threshold = 1e-04)
 }
 \arguments{
 \item{sim_pars}{vector of parameters:
@@ -18,8 +19,14 @@ mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
   \item id == 4 corresponds to q (single-lineage speciation probability)
 }}
 
-\item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
+\item{cond}{sets the conditioning
+\itemize{
+ \item cond = 0: no conditioning;
+ \item cond = 1: conditioning on stem or crown age
+  and non-extinction of the phylogeny;
+ \item cond = 2: like cond = 1 but forces at least one visible multiple
+ event in the phylogeny
+}}
 
 \item{n_0}{the number of lineages at time equals zero.}
 
@@ -35,11 +42,14 @@ do with a standard usage of mbd_sim.}
 
 \item{optim_ids}{ids of the parameters you want to optimize.}
 
-\item{models}{the models you want to use to define the likelihood}
+\item{loglik_functions}{the loglik_functions you want to use}
 
 \item{project_folder}{the folder when you want to save data and results}
 
 \item{verbose}{choose if you want to print the output or not}
+
+\item{safety_threshold}{adds a threshold for the evaluation of q. This is due
+because you never want \code{q} to actually be equal to zero or one.}
 }
 \description{
 Simulate an mbd process and infer parameters maximizing the

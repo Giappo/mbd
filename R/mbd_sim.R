@@ -23,8 +23,8 @@ mbd_sim <- function(
   n_0 = 2,
   age = 10,
   cond = 1,
+  seed = NA,
   tips_interval = c(0, Inf),
-  minimum_multiple_births = 0,
   brts_precision = 8
 ) {
   if (length(pars) != 4) {
@@ -56,6 +56,13 @@ mbd_sim <- function(
   if (n_0 != 1 && n_0 != 2) {
     stop("'n_0' must be '1' of '2'")
   }
+  if (seed %% 1 == 0) {
+    set.seed(seed)
+  } else {
+    if (!is.na(seed)) {
+      stop("seed must be integer or NA")
+    }
+  }
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
@@ -63,9 +70,8 @@ mbd_sim <- function(
   init_n_lineages <- n_0
   tips <- -1
   crown_species_dead <- cond
-  multiple_births_check <- 0
   keep_the_sim <- 0
-  while (keep_the_sim == 0 | multiple_births_check == 0) {
+  while (keep_the_sim == 0) {
     total_count <- init_n_lineages
     pool <- 1:init_n_lineages
     while (total_count == init_n_lineages |
@@ -131,26 +137,37 @@ mbd_sim <- function(
 
     # tips check
     tips <- length(l_matrix[, 4][l_matrix[, 4] == -1])
+
     # survival of crown check
     alive <- l_matrix[l_matrix[, 4] == -1, ]
     alive <- matrix(alive, ncol = 4)
-    # if cond == 0 they'll always look like they're alive, because I don't care
-    crown_species_dead <- (length(unique(sign(alive[, 3]))) != 2) * cond
+    crown_species_dead <- (length(unique(sign(alive[, 3]))) != 2) * (cond > 0)
+
     # multiple births check
     births_rec_tree <- unlist(unname(sort(
       DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE
     )))
-    births_full_tree <- unlist(unname(sort(
-      DDD::L2brts(l_matrix, dropextinct = FALSE), decreasing = TRUE
-    )))
-    multiple_births_rec_tree <- sum(duplicated(births_rec_tree))
-    multi_births_full_tree <- sum(duplicated(births_full_tree))
-    # should i consider the full tree or the reconstructed one???
-    multiple_births_check <- multiple_births_rec_tree >= minimum_multiple_births
+    births_rec_tree <- DDD::roundn(births_rec_tree, digits = brts_precision)
+    multiple_births_rec_tree <- length(
+      which(
+        births_rec_tree %in% births_rec_tree[duplicated(births_rec_tree)]
+      )
+    )
 
     # should i keep this simulation?
-    keep_the_sim <- (!crown_species_dead) &
-                    (tips >= tips_interval[1] & tips <= tips_interval[2])
+    keep_the_sim <- (cond == 0) *
+      1 +
+      (cond == 1) *
+      (
+        (!crown_species_dead) &
+          (tips >= tips_interval[1] & tips <= tips_interval[2])
+      ) +
+      (cond == 2) *
+      (
+        (!crown_species_dead) &
+          (tips >= tips_interval[1] & tips <= tips_interval[2]) &
+          multiple_births_rec_tree >= 2
+      )
   }
   time_points <- unlist(unname(sort(
     DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE
@@ -162,11 +179,11 @@ mbd_sim <- function(
   brts <- DDD::roundn(brts, digits = brts_precision)
   reconstructed_tree <- DDD::L2phylo(unname(l_matrix), dropextinct = TRUE)
   full_tree <- DDD::L2phylo(l_matrix, dropextinct = FALSE)
+
   list(
     brts = brts,
     reconstructed_tree = reconstructed_tree,
     full_tree = full_tree,
-    l_matrix = l_matrix,
-    minimum_multiple_births = multi_births_full_tree
+    l_matrix = l_matrix
   )
 }

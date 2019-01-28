@@ -1,3 +1,72 @@
+#' #' @export
+#' myTryCatch <- function(expr) {
+#'   warn <- err <- NULL
+#'   value <- withCallingHandlers(
+#'     tryCatch(expr, error = function(e) {
+#'       err <<- e
+#'       NULL
+#'     }), warning = function(w) {
+#'       warn <<- w
+#'       invokeRestart("muffleWarning")
+#'     })
+#'   list(
+#'     value = value,
+#'     warning = warn,
+#'     error = err
+#'   )
+#' }
+#' 
+#' #' The A operator is given by the integration of a set of differential equations
+#' #' between two consecutive nodes. So, defined the set in the time interval
+#' #' [t_{i-1}, t_i], where k species are present in the phylogeny, as:
+#' #'
+#' #' d
+#' #' --Q^k_m(t) = SUM_n(M^k_m,n * Q^k_n(t)
+#' #' dt
+#' #'
+#' #' where m, n, label the amount of unseen species in the phylogeny,
+#' #' A is thus defined as:
+#' #'
+#' #' A(t_i - t_{i-1}) = exp(M(t_k - t_{k-1})
+#' #' @inheritParams default_params_doc
+#' #' @author Giovanni Laudanno
+#' #' @noRd
+#' a_operator <- function(
+#'   q_vector,
+#'   transition_matrix,
+#'   time_interval,
+#'   precision = 50L,
+#'   abstol = 1e-16,
+#'   reltol = 1e-10,
+#'   methode = "lsodes"
+#' ) {
+#'   out <- list(
+#'     value = NULL,
+#'     warning = 1,
+#'     error = 1
+#'   )
+#'   while (!is.null(out$warning) || !is.null(out$error)) {
+#'     times <- c(0, time_interval)
+#'     ode_matrix <- transition_matrix
+#'     R.utils::withTimeout(
+#'       out <- myTryCatch(deSolve::ode(
+#'         y = q_vector,
+#'         times = times,
+#'         func = mbd_loglik_rhs,
+#'         parms = ode_matrix,
+#'         atol = abstol,
+#'         rtol = reltol,
+#'         method = methode
+#'       )[2, -1]),
+#'       timeout = 1001
+#'     )
+#'   }
+#'   out$warning
+#'   out$error
+#'   result <- out$value
+#'   result
+#' }
+
 #' @title are_these_parameters_wrong
 #' @description check parameters consistency
 #' @inheritParams default_params_doc
@@ -67,7 +136,7 @@ hyper_a_hanno <- function(
   }
   # HG function: fast O(N), updated after Moulis meeting
   j <- 0:k
-  a_1 <- (1 - q) ^ (k) * choose(k, j) * (2)^j
+  a_1 <- (1 - q) ^ (k) * choose(k, j) * (2) ^ j
   n_species <- n_species + 1
   matrix_a <- diag(a_1[1], nrow = n_species + 2, ncol = n_species + 2)
   matrix_a[1:(k + 1), 1] <- a_1
@@ -84,7 +153,7 @@ hyper_a_hanno <- function(
   matrix_a[1:n_species, 1:n_species]
 }
 
-#' @title A matrix
+#' @title The A matrix
 #' @description Creates the A matrix,
 #' used for likelihood integration between branching times.
 #' @inheritParams default_params_doc
@@ -97,7 +166,7 @@ create_a <- function(pars, k, lx, matrix_builder = hyper_a_hanno) {
   nu <- pars[3]
   q <- pars[4]
 
-  testit::assert(lx < 2^31)
+  testit::assert(lx < 2 ^ 31)
   nvec <- 0:lx
 
   m <- nu * matrix_builder(n_species = lx, k = k, q = q)
@@ -105,8 +174,7 @@ create_a <- function(pars, k, lx, matrix_builder = hyper_a_hanno) {
   m[row(m) == col(m) - 1] <- mu * nvec[2:(lx + 1)]
   m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] +
     lambda * (nvec[1:(lx)] + 2 * k)
-  m[length(nvec), length(nvec)] <- (-mu) * (k + nvec[length(nvec)]) +
-    (-nu) * (1 - (1 - q) ^ (k + nvec[length(nvec)]))
+  m[length(nvec), length(nvec)] <- (-mu) * (k + nvec[length(nvec)])
 
   m
 }
@@ -130,7 +198,7 @@ create_b <- function(pars, k, b, lx, matrix_builder = hyper_a_hanno) {
   k2 <- k - b
   m <- matrix_builder(n_species = lx, k = k2, q = q)
 
-  lambda * k * diag(lx + 1) * (b == 1) + nu * choose(k, b) * (q^b) * m
+  lambda * k * diag(lx + 1) * (b == 1) + nu * choose(k, b) * (q ^ b) * m
 }
 
 #' The A operator is given by the integration of a set of differential equations
@@ -168,8 +236,10 @@ a_operator <- function(
   if (methode == "expo") {
     result_nan <- result_negative <- 1
     repetition <- 1
-    while ((result_nan == 1 | result_negative == 1) &
-           repetition < max_repetitions) {
+    while (
+      (result_nan == 1 | result_negative == 1) &
+      repetition < max_repetitions
+    ) {
       result <- try(
         expoRkit::expv(
           v = q_vector,
@@ -281,7 +351,7 @@ brts2time_intervals_and_births <- function(brts, brts_precision = 8) {
     )
   )
   testit::assert(
-    all(time_intervals[-1] > .Machine$double.neg.eps)
+    all(time_intervals[-1] > .Machine$double.neg.eps) # nolint
   )
   testit::assert(
     all(time_intervals[-1] > 10 ^ (-brts_precision))

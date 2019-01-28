@@ -4,10 +4,10 @@
 \alias{get_function_names}
 \title{Get function names}
 \usage{
-get_function_names(models)
+get_function_names(loglik_functions)
 }
 \arguments{
-\item{models}{the models you want to use to define the likelihood}
+\item{loglik_functions}{the loglik_functions you want to use}
 }
 \value{
 function names
