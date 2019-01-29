@@ -105,10 +105,39 @@ main_save_files <- function(
     t_0s = t_0s,
     seed = seed
   )
-  utils::write.csv(
-    x = results,
-    file = results_file_name
-  )
+  if (file.exists(results_file_name)) {
+    previous_results <- utils::read.csv(
+      file = results_file_name,
+      header = TRUE
+    )[, -1]
+    all_results <- rbind(
+      previous_results,
+      results
+    )
+    all_results <- all_results[order(all_results[, ncol(all_results)]), ]
+    all_results <- all_results[!duplicated(all_results), ]
+    file.remove(results_file_name)
+    utils::write.csv(
+      x = all_results,
+      file = results_file_name
+    )
+    res2 <- utils::read.csv(
+      file = results_file_name,
+      header = TRUE
+    )[, -1]
+    res2 <- res2[order(res2[, ncol(res2)]), ]
+    res2 <- res2[!duplicated(res2), ]
+    file.remove(results_file_name)
+    utils::write.csv(
+      x = res2,
+      file = results_file_name
+    )
+  } else {
+    utils::write.csv(
+      x = results,
+      file = results_file_name
+    )
+  }
 }
 
 #' @title Create results file name

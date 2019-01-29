@@ -15,8 +15,14 @@
 #' @param changeloglikifnoconv something
 #' @param checked_functions something
 #' @param colormap something
-#' @param cond set 1 if you want to condition on stem or crown age
-#'   and non-extinction of the phylogeny_ Set 0 otherwise.
+#' @param cond sets the conditioning
+#' \itemize{
+#'  \item cond = 0: no conditioning;
+#'  \item cond = 1: conditioning on stem or crown age
+#'   and non-extinction of the phylogeny;
+#'  \item cond = 2: like cond = 1 but forces at least one visible multiple
+#'  event in the phylogeny
+#' }
 #' @param data_folder The data folder insider the project folder.
 #' @param function_name function name
 #' @param function_names function names
@@ -39,6 +45,7 @@
 #' @param k the number of visible species in the phylogeny at a given time.
 #' @param lambda the sympatric speciation rate.
 #' @param loglik_function the loglik function
+#' @param loglik_functions the loglik_functions you want to use
 #' @param logs something
 #' @param lx it is the number of ODEs considered for the computation.
 #' @param lx0 something
@@ -180,6 +187,7 @@ default_params_doc <- function(
   k,
   lambda,
   loglik_function,
+  loglik_functions,
   logs,
   lx,
   lx0,

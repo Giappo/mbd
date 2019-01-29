@@ -8,7 +8,8 @@
 mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
   0.5, 0.3), n_0 = 2, cond = 1, tips_interval = c(0, Inf),
   safety_threshold = 0.001, verbose = TRUE, optim_ids = rep(TRUE,
-  length(start_pars)), true_pars = start_pars)
+  length(start_pars)), true_pars = start_pars, lx = 1 + 2 *
+  (length(brts)))
 }
 \arguments{
 \item{loglik_function}{the loglik function}
@@ -19,8 +20,14 @@ mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
 
 \item{n_0}{the number of lineages at time equals zero.}
 
-\item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
+\item{cond}{sets the conditioning
+\itemize{
+ \item cond = 0: no conditioning;
+ \item cond = 1: conditioning on stem or crown age
+  and non-extinction of the phylogeny;
+ \item cond = 2: like cond = 1 but forces at least one visible multiple
+ event in the phylogeny
+}}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
@@ -34,6 +41,8 @@ because you never want \code{q} to actually be equal to zero or one.}
 \item{optim_ids}{ids of the parameters you want to optimize.}
 
 \item{true_pars}{true parameter values when running the ml process.}
+
+\item{lx}{it is the number of ODEs considered for the computation.}
 }
 \value{
 The output is a dataframe containing

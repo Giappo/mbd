@@ -11,13 +11,13 @@ test_that("get_function_names & get_model_names", {
   testthat::expect_true(
     all(
       get_function_names(
-        models = mbd_logliks_function()
+        loglik_functions = mbd_logliks_function()
       ) == c("mbd_loglik", "pmb_loglik")
     )
   )
   testthat::expect_true(
     get_function_names(
-      models = mbd_loglik
+      loglik_functions = mbd_loglik
     ) == "mbd_loglik"
   )
   testthat::expect_silent(
@@ -41,25 +41,25 @@ test_that("get_function_names & get_model_names", {
   )
   testthat::expect_error(
     get_function_names(
-      models = "nonsense"
+      loglik_functions = "nonsense"
     ),
     error_message
   )
   testthat::expect_error(
     get_function_names(
-      models = c("nonsense1", "nonsense2")
+      loglik_functions = c("nonsense1", "nonsense2")
     ),
     error_message
   )
   testthat::expect_error(
     get_function_names(
-      models = grepl
+      loglik_functions = grepl
     ),
     error_message
   )
   testthat::expect_error(
     get_function_names(
-      models = c(exp, grepl)
+      loglik_functions = c(exp, grepl)
     ),
     error_message
   )

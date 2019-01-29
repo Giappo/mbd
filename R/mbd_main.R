@@ -11,19 +11,26 @@ mbd_main <- function(
   age = 10,
   tips_interval = c(0, Inf),
   seed,
-  start_pars = c(0.3, 0.1, 1, 0.1),
+  start_pars = c(0.3, 0.1, 1.5, 0.15),
   optim_ids = rep(TRUE, length(start_pars)),
-  models = mbd_loglik,
+  loglik_functions = mbd_loglik,
   project_folder = NULL,
-  verbose = FALSE
+  verbose = FALSE,
+  safety_threshold = 1e-4
 ) {
+  # check formats
+  sim_pars <- as.numeric(sim_pars)
+  start_pars <- as.numeric(start_pars)
+  cond <- as.numeric(cond)
+  seed <- as.numeric(seed)
+
   # specific set up
   n_0s <- n_0
   t_0s <- age
 
   # generic set up
   function_names <- get_function_names( # nolint internal function
-    models = models
+    loglik_functions = loglik_functions
   )
   model_names <- get_model_names( # nolint internal function
     function_names = function_names,
@@ -31,13 +38,13 @@ mbd_main <- function(
   )
 
   # simulate
-  set.seed(seed)
-  sim <- mbd_sim(
+  sim <- mbd::mbd_sim(
     pars = sim_pars,
     n_0 = n_0,
     age = age,
     cond = cond,
-    tips_interval = tips_interval
+    tips_interval = tips_interval,
+    seed = seed
   )
   brts <- sim$brts
   print_info(brts = brts, n_0 = n_0, cond = cond, verbose = verbose) # nolint internal function
@@ -51,7 +58,13 @@ mbd_main <- function(
   }
 
   # maximum likelihood
-  for (m in seq_along(models)) {
+  mle <- data.frame(matrix(
+    NA,
+    nrow = length(loglik_functions),
+    # ncol must be length pars + (loglik, df, conv)
+    ncol = length(start_pars) + 3
+  ))
+  for (m in seq_along(loglik_functions)) {
     if (verbose == FALSE) {
       if (rappdirs::app_dir()$os != "win") {
         sink(file.path(rappdirs::user_cache_dir(), "ddd"))
@@ -59,13 +72,21 @@ mbd_main <- function(
         sink(rappdirs::user_cache_dir())
       }
     }
-    mle <- mbd_ml(
+    mle_out <- mbd_ml(
+      loglik_function = get(function_names[m]),
       brts = sim$brts,
-      n_0 = n_0,
       cond = cond,
+      n_0 = n_0,
       tips_interval = tips_interval,
-      verbose = verbose
+      start_pars = start_pars,
+      optim_ids = optim_ids,
+      true_pars = sim_pars,
+      verbose = verbose,
+      lx = 1 + 3 * (length(brts)),
+      safety_threshold = safety_threshold
     )
+    mle[m, ] <- mle_out
+    colnames(mle) <- names(mle_out)
     if (verbose == FALSE) {
       sink()
     }
@@ -75,7 +96,7 @@ mbd_main <- function(
   results <- cbind(
     matrix(
       sim_pars,
-      nrow = length(models),
+      nrow = length(loglik_functions),
       ncol = length(start_pars),
       byrow = TRUE
     ),
@@ -85,19 +106,19 @@ mbd_main <- function(
     n_0,
     matrix(
       t_0s,
-      nrow = length(models),
+      nrow = length(loglik_functions),
       ncol = length(t_0s),
       byrow = TRUE
     ),
     matrix(
       tips,
-      nrow = length(models),
+      nrow = length(loglik_functions),
       ncol = length(tips),
       byrow = TRUE
     ),
     matrix(
       optim_ids,
-      nrow = length(models),
+      nrow = length(loglik_functions),
       ncol = length(optim_ids),
       byrow = TRUE
     ),

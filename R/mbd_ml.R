@@ -54,7 +54,8 @@ mbd_ml <- function(
   safety_threshold = 1e-3,
   verbose = TRUE,
   optim_ids = rep(TRUE, length(start_pars)),
-  true_pars = start_pars
+  true_pars = start_pars,
+  lx = 1 + 2 * (length(brts))
 ) {
   # setup and checks
   if (true_pars[3] == 0 | true_pars[4] == 0) {
@@ -84,7 +85,8 @@ mbd_ml <- function(
       brts = brts,
       cond = cond,
       n_0 = n_0,
-      safety_threshold = safety_threshold
+      safety_threshold = safety_threshold,
+      lx = lx
     )
     if (verbose == TRUE) {
       printed_values <- paste0(

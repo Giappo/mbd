@@ -36,6 +36,17 @@ get_pkg_name <- function() {
   pkg_name
 }
 
+#' @title Conditionings
+#' @author Giovanni Laudanno
+#' @description Gives the conditionings accepted by mbd
+#' @inheritParams default_params_doc
+#' @return the conditionings
+#' @export
+mbd_conds <- function() {
+  conds <- c(0, 1, 2)
+  conds
+}
+
 #---- general functions
 #' @title cat2
 #' @author Giovanni Laudanno
@@ -111,7 +122,7 @@ cut_loglik_from_name <- function(
 #' @return function names
 #' @export
 get_function_names <- function(
-  models
+  loglik_functions
 ) {
   pkg_name <- get_pkg_name() # nolint internal function
   fun_list <- ls(paste0("package:", pkg_name))
@@ -121,13 +132,14 @@ get_function_names <- function(
     "!"
   )
 
-  if (is.vector(models)) {
-    function_names <- model_names <- which_function <- rep(NA, length(models))
-    for (m in seq_along(models)) {
-      fun <- eval(models[m])[[1]]
-      if (is.character(models[m])) {
+  if (is.vector(loglik_functions)) {
+    function_names <- rep(NA, length(loglik_functions))
+    model_names <- which_function <- function_names
+    for (m in seq_along(loglik_functions)) {
+      fun <- eval(loglik_functions[m])[[1]]
+      if (is.character(loglik_functions[m])) {
         if (length(
-          (find_function <- which(fun_list == models[m]))
+          (find_function <- which(fun_list == loglik_functions[m]))
         ) == 0) {
           stop(error_message)
         }
@@ -146,10 +158,10 @@ get_function_names <- function(
       model_names[m] <- cut_loglik_from_name(function_names[m]) # nolint internal function
     }
   } else {
-    fun <- eval(models)
-    if (is.character(models)) {
+    fun <- eval(loglik_functions)
+    if (is.character(loglik_functions)) {
       if (length(
-        (find_function <- which(fun_list == models))
+        (find_function <- which(fun_list == loglik_functions))
       ) == 0) {
         stop(error_message)
       }
@@ -200,4 +212,53 @@ get_model_names <- function(
     cat("You are using the functions:", model_names)
   }
   model_names
+}
+
+#' @title Read saved results
+#' @author Giovanni Laudanno
+#' @description Read saved results
+#' @inheritParams default_params_doc
+#' @return results
+#' @export
+read_results <- function(project_folder = NULL) {
+  if (is.null(project_folder)) {
+    if (.Platform$OS.type == "windows") {
+      project_folder <- system.file("extdata", package = get_pkg_name())
+    }
+  }
+  if (!dir.exists(project_folder)) {
+    stop("This directory does not exist")
+  }
+  if (length(list.files(project_folder)) == 0) {
+    stop(paste0(project_folder, " is empty."))
+  }
+  dir_results <- file.path(project_folder, "results")
+  dir_data <- file.path(project_folder, "data")
+
+  files_results <- list.files(dir_results)
+  if (length(files_results) == 0) {
+    stop(paste0(dir_results, " is empty."))
+  }
+  files_data <- list.files(dir_data)
+  print("Saved results are:")
+  print(files_results)
+  x <- readline("Which one do you want to read?")
+  result <- utils::read.csv(
+    file.path(
+      dir_results,
+      files_results[as.numeric(x)]
+    )
+  )
+  data <- get(load(
+    file.path(
+      dir_data,
+      files_data[as.numeric(x)]
+    )
+  ))
+  return(
+    list(
+      data = data,
+      result = result
+    )
+  )
 }
