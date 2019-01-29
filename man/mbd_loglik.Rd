@@ -6,7 +6,7 @@
 \usage{
 mbd_loglik(pars, brts, n_0 = 2, cond = 1, lx = 1 + 2 * (length(brts)
   + length(missnumspec)), tips_interval = c(0, Inf), missnumspec = 0,
-  methode = "expo", safety_threshold = 0.001, abstol = 1e-16,
+  methode = "lsodes", safety_threshold = 0.001, abstol = 1e-16,
   reltol = 1e-10)
 }
 \arguments{
@@ -22,8 +22,14 @@ mbd_loglik(pars, brts, n_0 = 2, cond = 1, lx = 1 + 2 * (length(brts)
 
 \item{n_0}{the number of lineages at time equals zero.}
 
-\item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
+\item{cond}{sets the conditioning
+\itemize{
+ \item cond = 0: no conditioning;
+ \item cond = 1: conditioning on stem or crown age
+  and non-extinction of the phylogeny;
+ \item cond = 2: like cond = 1 but forces at least one visible multiple
+ event in the phylogeny
+}}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
 

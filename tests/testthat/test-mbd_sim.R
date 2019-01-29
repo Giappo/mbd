@@ -71,13 +71,13 @@ test_that("mbd_sim", {
 
   # test with cond == 0
   cond <- 0
-  for (s in 1:max_sims) {
-    set.seed(s)
+  for (seed in 1:max_sims) {
     out <- mbd_sim(
       pars = pars,
       n_0 = n_0,
       age = age,
-      cond = cond
+      cond = cond,
+      seed = seed
     )
     expect_true(
       is.numeric(out$brts) && all(out$brts >= 0) &&
@@ -113,13 +113,13 @@ test_that("mbd_sim", {
 
   # test with cond == 1
   cond <- 1
-  for (s in (max_sims + 1):(2 * max_sims)) {
-    set.seed(s)
+  for (seed in (max_sims + 1):(2 * max_sims)) {
     out <- mbd_sim(
       pars = pars,
       n_0 = n_0,
       age = age,
-      cond = cond
+      cond = cond,
+      seed = seed
     )
     expect_true(
       is.numeric(out$brts) && all(out$brts >= 0) &&

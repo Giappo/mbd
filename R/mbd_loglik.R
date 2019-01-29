@@ -23,7 +23,7 @@ mbd_loglik <- function(
   lx = 1 + 2 * (length(brts) + length(missnumspec)),
   tips_interval = c(0, Inf),
   missnumspec = 0,
-  methode = "expo",
+  methode = "lsodes",
   safety_threshold = 1e-3,
   abstol = 1e-16,
   reltol = 1e-10
@@ -42,9 +42,24 @@ mbd_loglik <- function(
     return(-Inf)
   }
 
+  # Calculate conditional probability
+  pc <- calculate_conditional_prob(
+    brts = brts,
+    pars = pars,
+    cond = cond,
+    n_0 = n_0,
+    lx = lx + 100,
+    tips_interval = tips_interval,
+    methode = methode,
+    abstol = abstol,
+    reltol = reltol
+  )
+
   # Use Pure Multiple Birth when there is no extinction
   if (pars[2] == 0 && all(tips_interval == c(0, Inf)) && missnumspec == 0) {
-    return(mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0))
+    return(
+      mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0) - log(pc)
+    )
   }
 
   # Adjusting data
@@ -52,25 +67,6 @@ mbd_loglik <- function(
   time_intervals <- data$time_intervals
   births <- data$births
   init_n_lineages <- n_0 #number of starting species
-
-  # Calculate conditional probability
-  pc <- 1
-  if (cond == 1) {
-    pc <- calculate_conditional_prob(
-      brts = brts,
-      pars = pars,
-      n_0 = n_0,
-      lx = lx,
-      tips_interval = tips_interval,
-      methode = methode,
-      abstol = abstol,
-      reltol = reltol
-    )
-  }
-  if (is.nan(log(pc))) {
-    # Whatever happens in the future, if pc is NaN, the result will be NaN
-    return(NaN)
-  }
 
   # LIKELIHOOD INTEGRATION
 
@@ -141,7 +137,7 @@ mbd_loglik <- function(
   }
 
   # Selecting the state I am interested in
-  vm <- 1 / choose((k + missnumspec), k)
+  vm <- 1 / choose(k + missnumspec, k)
   likelihood <- vm * q_t[t, (missnumspec + 1)]
 
   # Removing C and D effects from the LL
@@ -153,7 +149,7 @@ mbd_loglik <- function(
     loglik <- -Inf
   } else {
     # conditioned likelihood
-    loglik <- loglik - log(pc) * (cond == 1)
+    loglik <- loglik - log(pc) * (cond > 0)
   }
   loglik
 }

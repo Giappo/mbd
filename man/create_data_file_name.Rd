@@ -20,8 +20,14 @@ create_data_file_name(data_folder, sim_pars, optim_ids, cond, n_0, t_0s,
 
 \item{optim_ids}{ids of the parameters you want to optimize.}
 
-\item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
+\item{cond}{sets the conditioning
+\itemize{
+ \item cond = 0: no conditioning;
+ \item cond = 1: conditioning on stem or crown age
+  and non-extinction of the phylogeny;
+ \item cond = 2: like cond = 1 but forces at least one visible multiple
+ event in the phylogeny
+}}
 
 \item{n_0}{the number of lineages at time equals zero.}
 

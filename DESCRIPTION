@@ -18,7 +18,6 @@ Imports:
 Suggests: 
   knitr,
   lintr,
-  ribir,
   rmarkdown, 
   testthat
 Description: 

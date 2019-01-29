@@ -10,12 +10,12 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   checked_functions, colormap, cond, data_folder, function_name,
   function_names, functions_names, idparsfix, idparsopt, initparsopt,
   input_trees_path, input_xml, interval_max, interval_min, iterations, k,
-  lambda, loglik_function, logs, lx, lx0, matrix, matrix_builder, max_iter,
-  max_k, max_number_of_species, max_repetitions, max_sims, maxiter,
-  mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
-  models, mu, mutation_rate, n_0, n_0s, n_species, init_n_lineages,
-  n_steps, n_subs, nu, optimmethod, optim_ids, params, pars,
-  pars_transform, pars_transformed, parsfix, precision, print_errors,
+  lambda, loglik_function, loglik_functions, logs, lx, lx0, matrix,
+  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
+  max_sims, maxiter, mbd_lambda, message, methode, minimum_multiple_births,
+  missnumspec, models, mu, mutation_rate, n_0, n_0s, n_species,
+  init_n_lineages, n_steps, n_subs, nu, optimmethod, optim_ids, params,
+  pars, pars_transform, pars_transformed, parsfix, precision, print_errors,
   printit, project_folder, q_vector, q, quantiles_choice, recursive,
   reltol, res, results, results_folder, s, seed, safety_threshold,
   sample_interval, sequence_length, sim, sim_pars, sim_phylo, start_pars,
@@ -53,8 +53,14 @@ the numerical integration using deSolve.}
 
 \item{colormap}{something}
 
-\item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
+\item{cond}{sets the conditioning
+\itemize{
+ \item cond = 0: no conditioning;
+ \item cond = 1: conditioning on stem or crown age
+  and non-extinction of the phylogeny;
+ \item cond = 2: like cond = 1 but forces at least one visible multiple
+ event in the phylogeny
+}}
 
 \item{data_folder}{The data folder insider the project folder.}
 
@@ -92,6 +98,8 @@ The ids are defined as follows:
 \item{lambda}{the sympatric speciation rate.}
 
 \item{loglik_function}{the loglik function}
+
+\item{loglik_functions}{the loglik_functions you want to use}
 
 \item{logs}{something}
 

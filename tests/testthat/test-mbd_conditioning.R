@@ -78,7 +78,7 @@ test_that("abuse", {
       pars = c(0.1), # Too few
       brts = c(1, 2, 3),
       n_0 = 2, # Crown age
-      cond = 1  # Non-extinction
+      cond = 1  # Non extinction of the phylogeny
     ),
     "'pars' must have a length of four"
   )
@@ -88,7 +88,7 @@ test_that("abuse", {
       pars = c(NaN, 0.15, 2.0, 0.1),
       brts = c(1, 2, 3),
       n_0 = 2, # Crown age
-      cond = 1  # Non-extinction
+      cond = 1  # Non extinction of the phylogeny
     ),
     "'pars' cannot contain NaNs"
   )
@@ -142,7 +142,7 @@ test_that("abuse", {
       pars = c(0.2, 0.15, 2.0, 12.34),
       brts = c(1, 2, 3),
       n_0 = 2, # Crown age
-      cond = 1  # Non-extinction
+      cond = 1  # Non extinction of the phylogeny
     ),
     -Inf
   )
