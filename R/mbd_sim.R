@@ -58,12 +58,12 @@ mbd_sim <- function(
   }
   if (!is.na(seed)) {
     if (!is.numeric(seed)) {
-      stop("seed must be integer or NA")
+      stop("'seed' must be integer or NA")
     } else {
       if (seed %% 1 == 0) {
         set.seed(seed)
       } else {
-        stop("seed must be integer or NA")
+        stop("'seed' must be integer or NA")
       }
     }
   }
