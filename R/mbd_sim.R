@@ -67,7 +67,6 @@ mbd_sim <- function(
       }
     }
   }
-  
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
