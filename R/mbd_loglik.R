@@ -151,8 +151,6 @@ mbd_loglik <- function(
     # conditioned likelihood
     loglik <- loglik - log(pc) * (cond > 0)
   }
-  if (!is.numeric(loglik)) {
-    print("belli cazzi") # TODO remove it
-  }
+
   loglik
 }

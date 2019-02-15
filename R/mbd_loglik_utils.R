@@ -81,7 +81,7 @@ a_operator <- function(
   if (!is.null(out$warning) || !is.null(out$error)) {
     result <- rep(NA, length(q_vector))
   } else {
-    result <- out$value  
+    result <- out$value
   }
   rm(x)
   result
