@@ -6,9 +6,9 @@
   under a multiple birth-death diversification model}
 \usage{
 mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
-  0.5, 0.3), n_0 = 2, cond = 1, tips_interval = c(0, Inf),
-  safety_threshold = 0.001, verbose = TRUE, optim_ids = rep(TRUE,
-  length(start_pars)), true_pars = start_pars, lx = 1 + 2 *
+  0.5, 0.3), n_0 = 2, cond = 1, optim_ids = rep(TRUE,
+  length(start_pars)), true_pars = start_pars, tips_interval = c(0,
+  Inf), safety_threshold = 0.001, verbose = TRUE, lx = 1 + 2 *
   (length(brts)))
 }
 \arguments{
@@ -29,6 +29,10 @@ mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
  event in the phylogeny
 }}
 
+\item{optim_ids}{ids of the parameters you want to optimize.}
+
+\item{true_pars}{true parameter values when running the ml process.}
+
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 You can also define the tips_interval as you can usually
 do with a standard usage of mbd_sim.}
@@ -37,10 +41,6 @@ do with a standard usage of mbd_sim.}
 because you never want \code{q} to actually be equal to zero or one.}
 
 \item{verbose}{choose if you want to print the output or not}
-
-\item{optim_ids}{ids of the parameters you want to optimize.}
-
-\item{true_pars}{true parameter values when running the ml process.}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
 }

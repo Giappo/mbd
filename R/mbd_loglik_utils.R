@@ -1,71 +1,91 @@
-#' #' @export
-#' myTryCatch <- function(expr) {
-#'   warn <- err <- NULL
-#'   value <- withCallingHandlers(
-#'     tryCatch(expr, error = function(e) {
-#'       err <<- e
-#'       NULL
-#'     }), warning = function(w) {
-#'       warn <<- w
-#'       invokeRestart("muffleWarning")
-#'     })
-#'   list(
-#'     value = value,
-#'     warning = warn,
-#'     error = err
-#'   )
-#' }
-#' 
-#' #' The A operator is given by the integration of a set of differential equations
-#' #' between two consecutive nodes. So, defined the set in the time interval
-#' #' [t_{i-1}, t_i], where k species are present in the phylogeny, as:
-#' #'
-#' #' d
-#' #' --Q^k_m(t) = SUM_n(M^k_m,n * Q^k_n(t)
-#' #' dt
-#' #'
-#' #' where m, n, label the amount of unseen species in the phylogeny,
-#' #' A is thus defined as:
-#' #'
-#' #' A(t_i - t_{i-1}) = exp(M(t_k - t_{k-1})
-#' #' @inheritParams default_params_doc
-#' #' @author Giovanni Laudanno
-#' #' @noRd
-#' a_operator <- function(
-#'   q_vector,
-#'   transition_matrix,
-#'   time_interval,
-#'   precision = 50L,
-#'   abstol = 1e-16,
-#'   reltol = 1e-10,
-#'   methode = "lsodes"
-#' ) {
-#'   out <- list(
-#'     value = NULL,
-#'     warning = 1,
-#'     error = 1
-#'   )
-#'   while (!is.null(out$warning) || !is.null(out$error)) {
-#'     times <- c(0, time_interval)
-#'     ode_matrix <- transition_matrix
-#'     R.utils::withTimeout(
-#'       out <- myTryCatch(deSolve::ode(
-#'         y = q_vector,
-#'         times = times,
-#'         func = mbd_loglik_rhs,
-#'         parms = ode_matrix,
-#'         atol = abstol,
-#'         rtol = reltol,
-#'         method = methode
-#'       )[2, -1]),
-#'       timeout = 1001
-#'     )
-#'   }
-#'   out$warning
-#'   out$error
-#'   result <- out$value
-#'   result
-#' }
+#' @noRd
+myTryCatch <- function(expr) {
+  warn <- err <- NULL
+  value <- withCallingHandlers(
+    tryCatch(
+      expr, error = function(e) {
+      err <<- e
+      NULL
+    }
+    ), warning = function(w) {
+      warn <<- w
+      invokeRestart("muffleWarning")
+    })
+  list(
+    value = value,
+    warning = warn,
+    error = err
+  )
+}
+
+#' The A operator is given by the integration of a set of differential equations
+#' between two consecutive nodes. So, defined the set in the time interval
+#' [t_{i-1}, t_i], where k species are present in the phylogeny, as:
+#'
+#' d
+#' --Q^k_m(t) = SUM_n(M^k_m,n * Q^k_n(t)
+#' dt
+#'
+#' where m, n, label the amount of unseen species in the phylogeny,
+#' A is thus defined as:
+#'
+#' A(t_i - t_{i-1}) = exp(M(t_k - t_{k-1})
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @noRd
+a_operator <- function(
+  q_vector,
+  transition_matrix,
+  time_interval,
+  precision = 50L,
+  abstol = 1e-16,
+  reltol = 1e-12,
+  methode = "lsodes"
+) {
+  times <- c(0, time_interval)
+  ode_matrix <- transition_matrix
+  out <- list(
+    value = NULL,
+    warning = 1,
+    error = 1
+  )
+  methodes <- c("lsodes", "ode45", "lsoda")
+  other_methodes <- methodes[!methodes == methode]
+  methodes <- c(methode, other_methodes)
+  for (methode in methodes) {
+    rtol <- reltol
+    while (
+      (!is.null(out$warning) || !is.null(out$error)) && rtol >= 1e-14
+    ) {
+      x <- utils::capture.output(R.utils::withTimeout(
+        out <- myTryCatch(deSolve::ode( # nolint internal function
+          y = q_vector,
+          times = times,
+          func = mbd_loglik_rhs,
+          parms = ode_matrix,
+          atol = abstol,
+          rtol = rtol,
+          method = methode
+        )[2, -1]),
+        timeout = 1001
+      ))
+      rtol <- rtol * 1e-1
+    }
+    if (is.null(out$warning) && is.null(out$error)) {
+      break
+    } else {
+      out$value <- rep(NA, length(q_vector))
+    }
+  }
+  
+  if (!is.null(out$warning) || !is.null(out$error)) {
+    result <- rep(NA, length(q_vector))
+  } else {
+    result <- out$value  
+  }
+  rm(x)
+  result
+}
 
 #' @title are_these_parameters_wrong
 #' @description check parameters consistency
@@ -201,94 +221,7 @@ create_b <- function(pars, k, b, lx, matrix_builder = hyper_a_hanno) {
   lambda * k * diag(lx + 1) * (b == 1) + nu * choose(k, b) * (q ^ b) * m
 }
 
-#' The A operator is given by the integration of a set of differential equations
-#' between two consecutive nodes. So, defined the set in the time interval
-#' [t_{i-1}, t_i], where k species are present in the phylogeny, as:
-#'
-#' d
-#' --Q^k_m(t) = SUM_n(M^k_m,n * Q^k_n(t)
-#' dt
-#'
-#' where m, n, label the amount of unseen species in the phylogeny,
-#' A is thus defined as:
-#'
-#' A(t_i - t_{i-1}) = exp(M(t_k - t_{k-1})
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @noRd
-a_operator <- function(
-  q_vector,
-  transition_matrix,
-  time_interval,
-  precision = 50L,
-  abstol = 1e-16,
-  reltol = 1e-10,
-  methode = "expo"
-) {
-  precision_limit <- 2000
-  precision_step1 <- 40
-  precision_step2 <- 50
-  max_repetitions <- 10
-  result <- rep(-1, length(q_vector))
-  bad_result <- 0
 
-  testit::assert(methode != "sexpm")
-  if (methode == "expo") {
-    result_nan <- result_negative <- 1
-    repetition <- 1
-    while (
-      (result_nan == 1 | result_negative == 1) &
-      repetition < max_repetitions
-    ) {
-      result <- try(
-        expoRkit::expv(
-          v = q_vector,
-          x = transition_matrix,
-          t = time_interval,
-          m = precision
-        ),
-        silent = TRUE
-      )
-      result_nan <- (any(!is.numeric(result)) || any(is.nan(result)))
-      if (result_nan) {
-        precision <- precision - precision_step1
-      } else {
-        result_negative <- (any(result < 0))
-        if (result_negative) {
-          precision <- precision + precision_step2
-          if (precision > precision_limit) {
-            break
-          }
-        }
-      }
-      repetition <- repetition + 1
-    }
-  }
-
-  bad_result <- (any(!is.numeric(result)) || any(is.nan(result)))
-  if (!bad_result) {
-    bad_result <- (any(result < 0))
-  }
-
-  if (methode == "lsodes" | bad_result) {
-    times <- c(0, time_interval)
-    ode_matrix <- transition_matrix
-    R.utils::withTimeout(
-      result <- deSolve::ode(
-        y = q_vector,
-        times = times,
-        func = mbd_loglik_rhs,
-        parms = ode_matrix,
-        atol = abstol,
-        rtol = reltol,
-        method = "lsodes"
-      )[2, -1],
-      timeout = 1001
-    )
-  }
-
-  result
-}
 
 #' @title Builds the right hand side of the ODE set for multiple birth model
 #' @description Builds the right hand side of the ODE set
