@@ -20,9 +20,9 @@ mbd_loglik <- function(
   brts,
   n_0 = 2,
   cond = 1,
+  missnumspec = 0,
   lx = 1 + 2 * (length(brts) + length(missnumspec)),
   tips_interval = c(0, Inf),
-  missnumspec = 0,
   methode = "lsodes",
   safety_threshold = 1e-3,
   abstol = 1e-16,
@@ -151,5 +151,6 @@ mbd_loglik <- function(
     # conditioned likelihood
     loglik <- loglik - log(pc) * (cond > 0)
   }
+
   loglik
 }

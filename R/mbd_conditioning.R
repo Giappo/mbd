@@ -106,5 +106,6 @@ calculate_conditional_prob <- function(
     pc2 <- pc1 - sum(total_product_2[tips_components[1]:tips_components[2]])
   }
 
-  pc1 * (cond == 1) + pc2 * (cond == 2)
+  pc <- pc0 * (cond == 0) + pc1 * (cond == 1) + pc2 * (cond == 2)
+  pc
 }

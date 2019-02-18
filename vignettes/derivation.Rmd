@@ -1,6 +1,6 @@
 ---
 title: "mbd derivation"
-author: "Richel J.C. Bilderbeek"
+author: "Giovanni Laudanno and Richel J.C. Bilderbeek"
 header-includes:
    - \usepackage{bbm}
 date: "`r Sys.Date()`"

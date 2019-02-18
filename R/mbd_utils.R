@@ -10,7 +10,7 @@ get_param_names <- function() {
 #' @author Giovanni Laudanno
 #' @description Get all the loglik functions in mbd package
 #' @inheritParams default_params_doc
-#' @return loglik functions 
+#' @return loglik functions
 #' @export
 mbd_logliks_function <- function() {
   fun_list <- ls(paste0("package:", get_pkg_name())) # nolint internal function

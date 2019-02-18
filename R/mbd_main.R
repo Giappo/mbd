@@ -82,7 +82,7 @@ mbd_main <- function(
       optim_ids = optim_ids,
       true_pars = sim_pars,
       verbose = verbose,
-      lx = 1 + 3 * (length(brts)),
+      lx = min(1 + 3 * (length(brts)), 1200),
       safety_threshold = safety_threshold
     )
     mle[m, ] <- mle_out

@@ -8,9 +8,11 @@ is_on_ci <- function() {
 
 test_that("use", {
 
-  skip("numerical problems!")
+  if (!is_on_ci()) {
+    skip("This is long")
+  }
 
-  seed_interval <- 8:(8 + 3 * is_on_ci())
+  seed_interval <- 8:10
   for (seed in seed_interval) {
     # seed = 8 is critical
     sim_pars <- c(0.2, 0.15, 1.2, 0.1)

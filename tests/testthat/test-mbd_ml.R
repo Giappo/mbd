@@ -8,7 +8,9 @@ is_on_ci <- function() {
 
 test_that("use", {
 
-  skip("numerical issues")
+  if (!is_on_ci()) {
+    skip("This is long")
+  }
 
   brts <- c(10, 9, 7, 6, 5)
   start_pars <- c(0.2, 0.15, 1, 0.1)
