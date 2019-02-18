@@ -50,11 +50,11 @@ mbd_ml <- function(
   start_pars = c(0.5, 0.3, 0.5, 0.3),
   n_0 = 2,
   cond = 1,
+  optim_ids = rep(TRUE, length(start_pars)),
+  true_pars = start_pars,
   tips_interval = c(0, Inf),
   safety_threshold = 1e-3,
   verbose = TRUE,
-  optim_ids = rep(TRUE, length(start_pars)),
-  true_pars = start_pars,
   lx = 1 + 2 * (length(brts))
 ) {
   # setup and checks
