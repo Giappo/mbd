@@ -1,5 +1,5 @@
 #' @noRd
-myTryCatch <- function(expr) {
+my_try_catch <- function(expr) {
   warn <- err <- NULL
   value <- withCallingHandlers(
     tryCatch(
@@ -58,7 +58,7 @@ a_operator <- function(
       (!is.null(out$warning) || !is.null(out$error)) && rtol >= 1e-14
     ) {
       x <- utils::capture.output(R.utils::withTimeout(
-        out <- myTryCatch(deSolve::ode( # nolint internal function
+        out <- my_try_catch(deSolve::ode( # nolint internal function
           y = q_vector,
           times = times,
           func = mbd_loglik_rhs,
@@ -77,7 +77,7 @@ a_operator <- function(
       out$value <- rep(NA, length(q_vector))
     }
   }
-  
+
   if (!is.null(out$warning) || !is.null(out$error)) {
     result <- rep(NA, length(q_vector))
   } else {
@@ -220,8 +220,6 @@ create_b <- function(pars, k, b, lx, matrix_builder = hyper_a_hanno) {
 
   lambda * k * diag(lx + 1) * (b == 1) + nu * choose(k, b) * (q ^ b) * m
 }
-
-
 
 #' @title Builds the right hand side of the ODE set for multiple birth model
 #' @description Builds the right hand side of the ODE set
