@@ -28,16 +28,16 @@ test_that("calc_diff_percentile", {
 test_that("mbd_tips_to_pars_single", {
 
   if (!is_on_ci()) {
-    skip("This must be performed only on ci") 
+    skip("This must be performed only on ci")
   }
 
   tips <- 60
   age <- 7
-  optim_ids <- c(FALSE,FALSE,TRUE,TRUE)
+  optim_ids <- c(FALSE, FALSE, TRUE, TRUE)
   out <- mbd_tips_to_pars_single(
     tips = tips,
     age = age,
-    start_pars = c(0.2,0.15,1,0.15),
+    start_pars = c(0.2, 0.15, 1, 0.15),
     optim_ids = optim_ids,
     verbose = FALSE
   )
@@ -53,17 +53,17 @@ test_that("mbd_tips_to_pars_single", {
 test_that("mbd_tips_to_pars", {
 
   if (!is_on_ci()) {
-    skip("This must be performed only on ci") 
+    skip("This must be performed only on ci")
   }
 
   tips <- 60
   age <- 7
-  optim_ids <- c(FALSE,FALSE,TRUE,TRUE)
+  optim_ids <- c(FALSE, FALSE, TRUE, TRUE)
   chain_length <- 2
   out <- mbd_tips_to_pars(
     tips = tips,
     age = age,
-    start_pars = c(0.2,0.15,1,0.15),
+    start_pars = c(0.2, 0.15, 1, 0.15),
     optim_ids = optim_ids,
     chain_length = chain_length,
     verbose = FALSE
@@ -87,7 +87,7 @@ test_that("mbd_tips_to_pars", {
 test_that("find_nu_q_relation", {
 
   if (!is_on_ci()) {
-    skip("This must be performed only on ci") 
+    skip("This must be performed only on ci")
   }
 
   tips <- 60
@@ -102,5 +102,3 @@ test_that("find_nu_q_relation", {
   testthat::expect_true(is.numeric(out))
   testthat::expect_true(out > 0)
 })
-
-

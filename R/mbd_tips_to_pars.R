@@ -34,7 +34,6 @@ calc_diff_percentile <- function(
     reltol = reltol
   )
   distribution <- distribution / sum(distribution)
-  # plot(distribution)
   cumulative <- cumsum(distribution)
   n_additional <- tips - n_0
   cum_prob_tips <- cumulative[n_additional + 1] # +1 is for the 0-th component
@@ -62,7 +61,7 @@ mbd_tips_to_pars_single <- function(
   age = 10,
   n_0 = 2,
   optim_ids = c(FALSE, FALSE, TRUE, TRUE),
-  methode = "ode45", #methode <- "lsodes"
+  methode = "ode45",
   verbose = TRUE
 ) {
 
@@ -71,7 +70,7 @@ mbd_tips_to_pars_single <- function(
     optim_pars <- pars_transform_back(tr_optim_pars) # nolint internal function
     pars2[optim_ids] <- optim_pars
     pars2[!optim_ids] <- start_pars[!optim_ids]
-    
+
     if (
       are_these_parameters_wrong(
         brts = age,
@@ -80,7 +79,7 @@ mbd_tips_to_pars_single <- function(
         n_0 = n_0
         )
       ) {
-      return(100) 
+      return(100)
     }
     optim_out <- calc_diff_percentile(
       pars = pars2,
@@ -98,7 +97,7 @@ mbd_tips_to_pars_single <- function(
     }
     optim_out
   }
-  
+
   tr_start_pars <- rep(0, length(start_pars))
   tr_start_pars <- pars_transform_forward(start_pars[optim_ids]) # nolint internal function
   out <- subplex::subplex(
@@ -132,7 +131,7 @@ mbd_tips_to_pars <- function(
   start_pars = c(0.2, 0.15, 1.5, 0.15),
   optim_ids = c(FALSE, FALSE, TRUE, TRUE),
   chain_length = 10^sum(optim_ids),
-  methode = "ode45", #methode <- "lsodes"
+  methode = "ode45",
   verbose = TRUE
 ) {
   results <- vector("list", chain_length)
@@ -189,7 +188,11 @@ find_nu_q_relation <- function(
   # select the one that makes the relation more consistent across the whole
   # nu-q list.
   var_y <- rep(NA, max_l <- 100)
-  ys <- seq(from = (min_y <- 1.6), to = (max_y <- 2.6), by = (max_y - min_y) / (max_l - 1))
+  ys <- seq(
+    from = (min_y <- 1.6),
+    to = (max_y <- 2.6),
+    by = (max_y - min_y) / (max_l - 1)
+  )
   for (i in 1:max_l) {
     x <- unlist(lapply(nu_q_list, FUN = function(x) x[1] * x[2]^ys[i]))
     var_y[i] <- stats::var(x)
@@ -197,12 +200,3 @@ find_nu_q_relation <- function(
   best_y <- ys[which(var_y == min(var_y))]
   best_y
 }
-
-# # test functions
-# if (1 == 2) {
-#   out1 <- mbd_tips_to_pars_single(tips = 200, age = 10, start_pars = c(0.2,0.15,1,0.15), optim_ids = c(FALSE,FALSE,TRUE,TRUE))
-#   out2 <- mbd_tips_to_pars_single(tips = 200, age = 10, start_pars = c(0.2,0.15,2,0.10), optim_ids = c(FALSE,FALSE,TRUE,TRUE))
-#   profvis::profvis(out <- mbd_tips_to_pars_single(tips = 100, age = 10, start_pars = c(0.2,0.15,1,0.15), optim_ids = c(FALSE,FALSE,TRUE,TRUE),verbose = FALSE, transformation = TRUE)); out
-#   out3 <- mbd_tips_to_pars(tips = 60, age = 9, start_pars = c(0.2,0.15,1,0.15), optim_ids = c(FALSE,FALSE,TRUE,TRUE), chain_length = 3)
-#   out4 <- find_nu_q_relation(); out4
-# }
