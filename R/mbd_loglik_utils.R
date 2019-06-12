@@ -87,6 +87,35 @@ a_operator <- function(
   result
 }
 
+#' @noRd
+a_operator2 <- function(
+  q_vector,
+  transition_matrix,
+  time_interval,
+  precision = 50L,
+  abstol = 1e-16,
+  reltol = 1e-12,
+  methode = "lsodes"
+) {
+  times <- c(0, time_interval)
+  ode_matrix <- transition_matrix
+  out <- list(
+    value = NULL,
+    warning = 1,
+    error = 1
+  )
+  out <- deSolve::ode( # nolint internal function
+    y = q_vector,
+    times = times,
+    func = mbd_loglik_rhs,
+    parms = ode_matrix,
+    atol = abstol,
+    rtol = reltol,
+    method = methode
+  )[2, -1]
+  out
+}
+
 #' @title are_these_parameters_wrong
 #' @description check parameters consistency
 #' @inheritParams default_params_doc
