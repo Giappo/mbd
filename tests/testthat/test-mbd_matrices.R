@@ -13,7 +13,7 @@ test_that("a_matrix", {
     lx = lx
   )
   m2 <- matrix(
-    DDD::dd_loglik_M_aux(
+    DDD:::dd_loglik_M_aux(
       pars = c(lambda, mu, Inf),
       lx = lx + 1,
       k = 0,
@@ -37,7 +37,7 @@ test_that("a_matrix", {
     lx = lx
   )
   m2 <- matrix(
-    DDD::dd_loglik_M_aux(
+    DDD:::dd_loglik_M_aux(
       pars = c(lambda, mu, Inf),
       lx = lx + 1,
       k = 0,
