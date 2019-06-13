@@ -24,7 +24,7 @@ calc_diff_percentile <- function(
 ) {
   q_i <- c(1, rep(0, lx))
   matrix_a <- create_a(pars = pars, k = n_0, lx = lx) # nolint internal function
-  distribution <- a_operator( # integrating the starting q_vector to t_p
+  distribution <- a_operator(# integrating the starting q_vector to t_p
     q_vector = q_i,
     transition_matrix = matrix_a,
     time_interval = age,
