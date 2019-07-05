@@ -262,3 +262,20 @@ read_results <- function(project_folder = NULL) {
     )
   )
 }
+
+#' @title Logliks for the experiment
+#' @author Giovanni Laudanno
+#' @description Get the loglik functions to use for the experiment
+#' @inheritParams default_params_doc
+#' @return loglik functions to use for the experiment
+#' @export
+mbd_logliks_experiment <- function() {
+  fun_list <- ls(paste0("package:", get_pkg_name())) # nolint internal function
+  mbd_funs <- fun_list[sapply(
+    fun_list, function(x)
+      any(grepl("mbd_loglik", x)) &
+      !any(grepl("loglik_", x)) &
+      !any(grepl("logliks", x))
+  )]
+  mbd_funs
+}
