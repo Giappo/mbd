@@ -66,24 +66,23 @@ mbd_loglik <- function(
   data <- brts2time_intervals_and_births(brts) # nolint internal function
   time_intervals <- data$time_intervals
   births <- data$births
-  init_n_lineages <- n_0 #number of starting species
+  lt <- length(time_intervals)
+  testit::assert(n_0 - 1 + length(brts) == n_0 + sum(births)) #every tip is born
 
   # LIKELIHOOD INTEGRATION
 
   # setting initial conditions (there's always a +1 because of Q0)
   q_i <- c(1, rep(0, lx))
-  q_t <- matrix(0, ncol = (lx + 1), nrow = length(time_intervals))
+  q_t <- matrix(0, ncol = (lx + 1), nrow = lt)
   q_t[1, ] <- q_i
   dimnames(q_t)[[2]] <- paste0("Q", 0:lx)
-  # init_n_lineages is the number of species at t = 1
-  k <- init_n_lineages
-  # t is starting from 2 so everything is ok with birth[t] and time_intervals[t]
-  # vectors
+  k <- n_0 # n_0 is the number of species at t = 1
+  # t is starting from 2 so all is ok with births[t] and time_intervals[t]
   t <- 2
-  D <- C <- rep(1, (length(time_intervals)))
+  D <- C <- rep(1, lt)
 
   # evolving the initial state to the present
-  while (t <= length(time_intervals)) {
+  while (t <= lt) {
 
     # Creating A matrix
     matrix_a <- create_a(pars = pars, k = k, lx = lx) # nolint internal function
@@ -109,7 +108,7 @@ mbd_loglik <- function(
     q_t[t, ] <- q_t[t, ] * C[t]
 
     # Loop has to end after integrating to t_p
-    if (!(t < length(time_intervals))) {
+    if (!(t < lt)) {
       break
     }
 
@@ -135,6 +134,8 @@ mbd_loglik <- function(
     k <- k + births[t]
     t <- t + 1
   }
+  testit::assert(k == n_0 + sum(births)) # k is the number of tips
+  testit::assert(t == lt) # t refers to the last time interval
 
   # Selecting the state I am interested in
   vm <- 1 / choose(k + missnumspec, k)

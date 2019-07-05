@@ -75,6 +75,7 @@ calculate_conditional_prob <- function(
     abstol = abstol,
     reltol = reltol
   )
+  names(a2_v1) <- paste0("Q", 0:lx)
 
   total_product <- a2_v1 * one_over_cm * one_over_qm_binom
   missingspecies_min <- max(tips_interval[1] - n_0, 0)
@@ -107,5 +108,8 @@ calculate_conditional_prob <- function(
   }
 
   pc <- pc0 * (cond == 0) + pc1 * (cond == 1) + pc2 * (cond == 2)
+  if (pc == 0) {
+    print("pippo baudo è capellone") 
+  }
   pc
 }
