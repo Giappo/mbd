@@ -23,7 +23,7 @@ test_that("silent if verbose is FALSE", {
 test_that("likelihoods using expo and lsodes are identical", {
 
   pars <- c(0.23, 0.12, 0.5, 0.24)
-  brts <- c(1, 2, 2)
+  brts <- c(3, 2, 1)
   n_0  <- 2
   cond <- 1
   loglik_expo  <- mbd::mbd_loglik(
@@ -40,7 +40,7 @@ test_that("nu is zero", {
 
   # pars[3] is nu
   pars <- c(0.2, 0.1, 0, 0.1)
-  brts <- c(1, 2, 3)
+  brts <- c(3, 2, 1)
   n_0  <- 2
   cond <- 0
 
@@ -66,7 +66,7 @@ test_that("q is zero", {
 
   # pars[4] is q
   pars <- c(0.2, 0.1, 2.0, 0)
-  brts <- c(1, 2, 3)
+  brts <- c(3, 2, 1)
   n_0  <- 2
   cond <- 0
 
