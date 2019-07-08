@@ -18,7 +18,7 @@
 mbd_loglik <- function(
   pars,
   brts,
-  n_0 = 2,
+  n_0 = 2, # starting number of species
   cond = 1,
   missnumspec = 0,
   lx = 1 + 2 * (length(brts) + length(missnumspec)),
