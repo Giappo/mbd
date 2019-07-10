@@ -51,7 +51,11 @@ mbd_loglik <- function(
   )
 
   # Use Pure Multiple Birth when there is no extinction
-  if (pars[2] == 0 && all(tips_interval == c(0, Inf)) && missnumspec == 0) {
+  if (
+    pars[2] == 0 &&
+    all(tips_interval == c(n_0 * (cond > 0), Inf))
+    && missnumspec == 0
+  ) {
     return(
       mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0) - log(pc)
     )
