@@ -35,7 +35,7 @@ check_pars <- function(
   }
 
   # checks
-  if (length(pars) != length(mbd:::get_param_names())) {
+  if (length(pars) != length(get_param_names())) {
     stop("'pars' must have a length of four.")
   }
   if (any(is.nan(pars))) {

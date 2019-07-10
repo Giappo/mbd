@@ -47,8 +47,7 @@ out <- mbd_sim(
   pars = c(0.6, 0.1, 0.4, 0.1),
   n_0 = 2,
   age = 10,
-  cond = 1,
-  tips_interval = c(0, Inf)
+  cond = 1
 )
 graphics::plot(out$full_tree)
 graphics::plot(out$reconstructed_tree)

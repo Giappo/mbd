@@ -97,7 +97,7 @@ test_that("abuse", {
       brts = c(1, 2, 3),
       n_0 = 2
     ),
-    "this function works only for mu = 0!"
+    "This function works only for mu = 0!"
   )
   testthat::expect_equal(
     mbd::pmb_loglik(

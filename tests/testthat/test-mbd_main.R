@@ -28,7 +28,6 @@ test_that("use", {
       cond = cond,
       n_0 = n_0,
       age = age,
-      tips_interval = c(0, Inf),
       start_pars = c(0.3, 0.1, 1, 0.1),
       loglik_functions = loglik_functions,
       optim_ids = optim_ids,

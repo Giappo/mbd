@@ -22,7 +22,7 @@ pmb_loglik <- function(
   nu     <- pars[3]
   q      <- pars[4]
 
-  if (mu != 0) stop("this function works only for mu = 0!")
+  if (mu != 0) stop("This function works only for mu = 0!")
 
   data <- brts2time_intervals_and_births(brts) # nolint internal function
   time_intervals <- data$time_intervals[-1]
