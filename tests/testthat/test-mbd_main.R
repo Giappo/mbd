@@ -171,6 +171,8 @@ test_that("use", {
       utils::read.csv(results_file_name)[, -1],
       test
     )
+    file.remove(results_file_name)
+    testthat::expect_true(!file.exists(results_file_name))
   }
 })
 
