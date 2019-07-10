@@ -112,3 +112,17 @@ test_that("print_info", {
     )
   )
 })
+
+test_that("mbd_logliks_experiment", {
+  loglik_func <- get(
+    mbd_logliks_experiment()
+  )
+  testthat::expect_true(
+    is.numeric(
+      loglik_func(
+        pars = c(0.2, 0.1, 2, 0.1),
+        brts = c(10, 8, 6, 6)
+      )
+    )
+  )
+})

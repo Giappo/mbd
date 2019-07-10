@@ -5,8 +5,8 @@
 \title{Run the full mbd routine}
 \usage{
 mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
-  tips_interval = c(0, Inf), seed, start_pars = c(0.3, 0.1, 1.5, 0.15),
-  optim_ids = rep(TRUE, length(start_pars)),
+  tips_interval = c(n_0 * (cond > 0), Inf), seed, start_pars = c(0.3,
+  0.1, 1.5, 0.15), optim_ids = rep(TRUE, length(start_pars)),
   loglik_functions = mbd_loglik, project_folder = NULL,
   verbose = FALSE, safety_threshold = 1e-04)
 }
@@ -33,8 +33,7 @@ mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
 \item{age}{the age of the tree.}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually
-do with a standard usage of mbd_sim.}
+It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
 \item{seed}{the seed}
 

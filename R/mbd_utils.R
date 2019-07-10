@@ -43,8 +43,37 @@ get_pkg_name <- function() {
 #' @return the conditionings
 #' @export
 mbd_conds <- function() {
-  conds <- c(0, 1, 2)
+  conds <- c(0, 1)
   conds
+}
+
+#' @title Integration methodes
+#' @author Giovanni Laudanno
+#' @description Gives the integration methodes (methods for odes)
+#'  accepted by mbd
+#' @inheritParams default_params_doc
+#' @return the integration methodes
+#' @export
+mbd_methodes <- function() {
+  methodes <- c("lsodes", "ode45", "lsoda")
+  methodes
+}
+
+#' @title Logliks for the experiment
+#' @author Giovanni Laudanno
+#' @description Get the loglik functions to use for the experiment
+#' @inheritParams default_params_doc
+#' @return loglik functions to use for the experiment
+#' @export
+mbd_logliks_experiment <- function() {
+  fun_list <- ls(paste0("package:", get_pkg_name())) # nolint internal function
+  mbd_funs <- fun_list[sapply(
+    fun_list, function(x)
+      any(grepl("mbd_loglik", x)) &
+      !any(grepl("loglik_", x)) &
+      !any(grepl("logliks", x))
+  )]
+  mbd_funs
 }
 
 #---- general functions
@@ -261,21 +290,4 @@ read_results <- function(project_folder = NULL) {
       result = result
     )
   )
-}
-
-#' @title Logliks for the experiment
-#' @author Giovanni Laudanno
-#' @description Get the loglik functions to use for the experiment
-#' @inheritParams default_params_doc
-#' @return loglik functions to use for the experiment
-#' @export
-mbd_logliks_experiment <- function() {
-  fun_list <- ls(paste0("package:", get_pkg_name())) # nolint internal function
-  mbd_funs <- fun_list[sapply(
-    fun_list, function(x)
-      any(grepl("mbd_loglik", x)) &
-      !any(grepl("loglik_", x)) &
-      !any(grepl("logliks", x))
-  )]
-  mbd_funs
 }

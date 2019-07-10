@@ -10,4 +10,3 @@ a <- mbd:::a_operator(
   transition_matrix = c(1),
   time_interval = 0.1
 )
-

@@ -34,8 +34,7 @@ mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
 \item{true_pars}{true parameter values when running the ml process.}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually
-do with a standard usage of mbd_sim.}
+It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
 \item{safety_threshold}{adds a threshold for the evaluation of q. This is due
 because you never want \code{q} to actually be equal to zero or one.}

@@ -38,7 +38,7 @@ test_that("use", {
 test_that("compare results from bd and mbd in case of nu = q = 0", {
 
   if (!is_on_ci()) {
-    skip("test performed on ci")
+    skip("To be performed on ci.")
   }
 
   brts <- c(10, 9, 7, 6, 5, 4, 3, 2, 1)
@@ -80,7 +80,7 @@ test_that("compare results from bd and mbd in case of nu = q = 0", {
 test_that("mbd_ml can be silent", {
 
   if (!is_on_ci()) {
-    skip("test performed on ci")
+    skip("To be performed on ci.")
   }
 
   brts <- c(10, 9, 7, 6, 5, 3)
@@ -102,7 +102,7 @@ test_that("mbd_ml can be silent", {
 test_that("mbd_ml can produce output", {
 
   if (!is_on_ci()) {
-    skip("test performed on ci")
+    skip("To be performed on ci.")
   }
 
   brts <- c(10, 9, 7, 6, 5, 3)
