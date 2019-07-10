@@ -6,7 +6,7 @@
   including both sympatric and allopatric speciation}
 \usage{
 mbd_sim(pars, n_0 = 2, age = 10, cond = 1, seed = NA,
-  tips_interval = c(0, Inf), brts_precision = 8)
+  tips_interval = c(n_0 * (cond > 0), Inf), brts_precision = 8)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -33,8 +33,7 @@ mbd_sim(pars, n_0 = 2, age = 10, cond = 1, seed = NA,
 \item{seed}{the seed}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually
-do with a standard usage of mbd_sim.}
+It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
 \item{brts_precision}{set the level of approximation on the branching times.}
 }

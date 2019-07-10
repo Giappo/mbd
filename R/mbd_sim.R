@@ -24,48 +24,15 @@ mbd_sim <- function(
   age = 10,
   cond = 1,
   seed = NA,
-  tips_interval = c(0, Inf),
+  tips_interval = c(n_0 * (cond > 0), Inf),
   brts_precision = 8
 ) {
-  if (length(pars) != 4) {
-    stop("'pars' must have four parameters")
-  }
-  if (pars[1] < 0) {
-    stop("The sympatric speciation rate 'pars[1]' must be positive")
-  }
-  if (pars[2] < 0) {
-    stop("The extinction rate 'pars[2]' must be positive")
-  }
-  if (pars[3] < 0) {
-    stop("The multiple allopatric speciation trigger rate ",
-         "'pars[3]' must be positive")
-  }
-  if (pars[4] < 0) {
-    stop("The single-lineage speciation probability 'pars[4]' must be positive")
-  }
-  if (tips_interval[2] < tips_interval[1]) {
-    stop("'tips_interval' must contain two values, ",
-         "of which the second is larger")
-  }
-  if (any(tips_interval < 0)) {
-    stop("'tips_interval' must contain two positive values")
-  }
-  if (!is.numeric(n_0)) {
-    stop("'n_0' must be numeric")
-  }
-  if (n_0 != 1 && n_0 != 2) {
-    stop("'n_0' must be '1' of '2'")
-  }
-  if (!is.na(seed)) {
-    if (!is.numeric(seed)) {
-      stop("'seed' must be integer or NA")
-    } else {
-      if (seed %% 1 == 0) {
-        set.seed(seed)
-      } else {
-        stop("'seed' must be integer or NA")
-      }
-    }
+  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
+  check_seed(seed = seed)
+  if (
+    check_pars(pars = pars) == "wrong"
+  ) {
+    stop("These parameters are wrong. Please check.")
   }
   lambda <- pars[1]
   mu <- pars[2]
@@ -78,8 +45,10 @@ mbd_sim <- function(
   while (keep_the_sim == 0) {
     total_count <- init_n_lineages
     pool <- 1:init_n_lineages
-    while (total_count == init_n_lineages |
-           length(pool) < init_n_lineages) {
+    while (
+      total_count == init_n_lineages |
+      length(pool) < init_n_lineages
+    ) {
       total_count <- init_n_lineages
       n_species <- init_n_lineages
       pool <- c(-1, 2)

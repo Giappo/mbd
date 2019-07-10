@@ -33,8 +33,7 @@ mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
 \item{age}{the age of the tree.}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually
-do with a standard usage of mbd_sim.}
+It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
 \item{seed}{the seed}
 

@@ -9,8 +9,14 @@ pmb_loglik <- function(
   brts,
   n_0 = 2
 ) {
+# BASIC SETTINGS AND CHECKS
+  check_brts(brts = brts, n_0 = n_0)
+  if (
+    check_pars(pars = pars) == "wrong"
+  ) {
+    return(-Inf)
+  }
 
-  init_n_lineages <- n_0
   lambda <- pars[1]
   mu     <- pars[2]
   nu     <- pars[3]
@@ -18,19 +24,10 @@ pmb_loglik <- function(
 
   if (mu != 0) stop("this function works only for mu = 0!")
 
-  if (are_these_parameters_wrong(
-    brts = brts,
-    pars = pars,
-    safety_threshold = 0,
-    n_0 = n_0
-  )) {
-    return(-Inf)
-  }
-
   data <- brts2time_intervals_and_births(brts) # nolint internal function
   time_intervals <- data$time_intervals[-1]
   births <- data$births[-which(data$births == 0)]
-  k <- init_n_lineages + cumsum(c(0, births))
+  k <- n_0 + cumsum(c(0, births))
   a_term <- rep(1, length(time_intervals)) # branches
   b_term <- rep(1, length(time_intervals) - 1) # nodes
 
