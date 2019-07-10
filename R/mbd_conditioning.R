@@ -43,18 +43,16 @@ calculate_conditional_prob <- function(
   cond,
   lx = 1000,
   n_0 = 2,
-  tips_interval = c(0, Inf),
+  tips_interval = c(n_0 * (cond > 0), Inf),
   methode = "lsodes",
   abstol = 1e-16,
   reltol = 1e-10
 ) {
-  if (!(cond %in% mbd_conds())) {
-    stop("This conditioning is not implemented.")
+  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
+  if (cond == 0) {
+    return(1)
   }
   pc0 <- pc1 <- pc2 <- 1
-  if (cond == 0) {
-    return(pc0)
-  }
   total_time <- max(abs(brts))
   m <- 0:lx
   one_over_cm <- (3 * (m + 1)) / (m + 3)

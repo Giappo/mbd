@@ -18,26 +18,21 @@
 mbd_loglik <- function(
   pars,
   brts,
-  n_0 = 2, # starting number of species
+  n_0 = 2,
   cond = 1,
   missnumspec = 0,
   lx = 1 + 2 * (length(brts) + length(missnumspec)),
-  tips_interval = c(0, Inf),
+  tips_interval = c(n_0 * (cond > 0), Inf),
   methode = "lsodes",
   safety_threshold = 1e-3,
   abstol = 1e-16,
   reltol = 1e-10
 ) {
   # BASIC SETTINGS AND CHECKS
-  if (cond == 0) {
-    tips_interval <- c(0, Inf)
-  }
-  if (are_these_parameters_wrong(
-    brts = brts,
-    pars = pars,
-    safety_threshold = safety_threshold,
-    n_0 = n_0
-  )
+  check_brts(brts = brts, n_0 = n_0)
+  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
+  if (
+    check_pars(pars = pars, safety_threshold = safety_threshold) == "wrong"
   ) {
     return(-Inf)
   }
@@ -56,7 +51,11 @@ mbd_loglik <- function(
   )
 
   # Use Pure Multiple Birth when there is no extinction
-  if (pars[2] == 0 && all(tips_interval == c(0, Inf)) && missnumspec == 0) {
+  if (
+    pars[2] == 0 &&
+    all(tips_interval == c(n_0 * (cond > 0), Inf))
+    && missnumspec == 0
+  ) {
     return(
       mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0) - log(pc)
     )
@@ -85,7 +84,11 @@ mbd_loglik <- function(
   while (t <= lt) {
 
     # Creating A matrix
-    matrix_a <- create_a(pars = pars, k = k, lx = lx) # nolint internal function
+    matrix_a <- create_a(
+      pars = pars,
+      lx = lx,
+      k = k
+    )
 
     # Applying A operator
     q_t[t, ] <- a_operator(
@@ -114,10 +117,10 @@ mbd_loglik <- function(
 
     # Creating B matrix
     matrix_b <- create_b(
-      pars,
+      pars = pars,
+      lx = lx,
       k = k,
-      b = births[t],
-      lx = lx
+      b = births[t]
     )
 
     # Applying B operator

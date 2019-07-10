@@ -5,9 +5,9 @@
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
 mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0, lx = 1 +
-  2 * (length(brts) + length(missnumspec)), tips_interval = c(0, Inf),
-  methode = "lsodes", safety_threshold = 0.001, abstol = 1e-16,
-  reltol = 1e-10)
+  2 * (length(brts) + length(missnumspec)), tips_interval = c(n_0 * (cond
+  > 0), Inf), methode = "lsodes", safety_threshold = 0.001,
+  abstol = 1e-16, reltol = 1e-10)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -37,8 +37,7 @@ but missing in the phylogeny.}
 \item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually
-do with a standard usage of mbd_sim.}
+It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
 \item{methode}{specifies how the integration must be performed:
 \itemize{

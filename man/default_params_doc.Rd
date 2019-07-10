@@ -246,8 +246,7 @@ because you never want \code{q} to actually be equal to zero or one.}
 \item{t_0s}{starting time for each clade}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually
-do with a standard usage of mbd_sim.}
+It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
 \item{time_interval}{something}
 

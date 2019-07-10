@@ -9,7 +9,7 @@ mbd_main <- function(
   cond = 1,
   n_0 = 2,
   age = 10,
-  tips_interval = c(0, Inf),
+  tips_interval = c(n_0 * (cond > 0), Inf),
   seed,
   start_pars = c(0.3, 0.1, 1.5, 0.15),
   optim_ids = rep(TRUE, length(start_pars)),
