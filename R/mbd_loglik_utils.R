@@ -333,8 +333,9 @@ mbd_count_n_spec_events <- function(brts) {
 }
 
 #' @author Giovanni Laudanno
-#' @title 
-#' @description 
+#' @title The q-vector
+#' @description Yields all the values of the q-vector obtained from a likelihood
+#'  computation.
 #' @inheritParams default_params_doc
 #' @param pars vector of parameters:
 #' \itemize{
