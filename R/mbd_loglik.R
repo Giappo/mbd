@@ -49,6 +49,7 @@ mbd_loglik <- function(
     abstol = abstol,
     reltol = reltol
   )
+  testit::assert(pc >= 0 && pc <= 1)
 
   # Use Pure Multiple Birth when there is no extinction
   if (
@@ -70,7 +71,7 @@ mbd_loglik <- function(
 
   # LIKELIHOOD INTEGRATION
 
-  # setting initial conditions (there's always a +1 because of Q0)
+  # Setting initial conditions (there's always a +1 because of Q0)
   q_i <- c(1, rep(0, lx))
   q_t <- matrix(0, ncol = (lx + 1), nrow = lt)
   q_t[1, ] <- q_i
@@ -80,7 +81,7 @@ mbd_loglik <- function(
   t <- 2
   D <- C <- rep(1, lt)
 
-  # evolving the initial state to the present
+  # Evolving the initial state to the present
   while (t <= lt) {
 
     # Creating A matrix
@@ -137,6 +138,7 @@ mbd_loglik <- function(
     k <- k + births[t]
     t <- t + 1
   }
+  testit::assert(all(q_t >= 0)) # q_t has been correctly integrated
   testit::assert(k == n_0 + sum(births)) # k is the number of tips
   testit::assert(t == lt) # t refers to the last time interval
 
@@ -145,6 +147,8 @@ mbd_loglik <- function(
   likelihood <- vm * q_t[t, (missnumspec + 1)]
 
   # Removing C and D effects from the LL
+  testit::assert(all(C >= 0))
+  testit::assert(all(D >= 0))
   loglik <- log(likelihood) - sum(log(C)) - sum(log(D))
 
   # Various checks
