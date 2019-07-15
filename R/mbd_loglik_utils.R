@@ -331,3 +331,150 @@ mbd_count_n_spec_events <- function(brts) {
   births <- brts2time_intervals_and_births(brts)$births # nolint internal function
   sum(births > 1)
 }
+
+#' @author Giovanni Laudanno
+#' @title 
+#' @description 
+#' @inheritParams default_params_doc
+#' @param pars vector of parameters:
+#' \itemize{
+#'   \item pars[1] is lambda, the sympatric speciation rate;
+#'   \item pars[2] is mu, the extinction rate;
+#'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+#'   \item pars[4] is q, the single-lineage speciation probability;
+#' }
+#' @param safety_threshold It determines the precision on the parameters.
+#' @param correct_negatives Do you want to use the negative correction? See
+#'  \link{negatives_correction}.
+#' @return The q-vector in time
+#' @noRd
+mbd_calculate_q_vector <- function(
+  pars,
+  brts,
+  n_0 = 2,
+  cond = 1,
+  missnumspec = 0,
+  lx = 1 + 2 * (length(brts) + length(missnumspec)),
+  tips_interval = c(n_0 * (cond > 0), Inf),
+  methode = "lsodes",
+  safety_threshold = 1e-3,
+  abstol = 1e-16,
+  reltol = 1e-10,
+  correct_negatives = FALSE
+) {
+  # BASIC SETTINGS AND CHECKS
+  check_brts(brts = brts, n_0 = n_0)
+  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
+  if (
+    check_pars(pars = pars, safety_threshold = safety_threshold) == "wrong"
+  ) {
+    return(-Inf)
+  }
+
+  # Calculate conditional probability
+  pc <- calculate_conditional_prob(
+    brts = brts,
+    pars = pars,
+    cond = cond,
+    n_0 = n_0,
+    lx = lx + 100,
+    tips_interval = tips_interval,
+    methode = methode,
+    abstol = abstol,
+    reltol = reltol
+  )
+
+  # Use Pure Multiple Birth when there is no extinction
+  if (
+    pars[2] == 0 &&
+    all(tips_interval == c(n_0 * (cond > 0), Inf))
+    && missnumspec == 0
+  ) {
+    return(
+      mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0) - log(pc)
+    )
+  }
+
+  # Adjusting data
+  data <- brts2time_intervals_and_births(brts) # nolint internal function
+  time_intervals <- data$time_intervals
+  births <- data$births
+  lt <- length(time_intervals)
+  testit::assert(n_0 - 1 + length(brts) == n_0 + sum(births)) #every tip is born
+
+  # LIKELIHOOD INTEGRATION
+
+  # Setting initial conditions (there's always a +1 because of Q0)
+  q_i <- c(1, rep(0, lx))
+  q_t <- matrix(0, ncol = (lx + 1), nrow = lt)
+  q_t[1, ] <- q_i
+  dimnames(q_t)[[2]] <- paste0("Q", 0:lx)
+  k <- n_0 # n_0 is the number of species at t = 1
+  # t is starting from 2 so all is ok with births[t] and time_intervals[t]
+  t <- 2
+  D <- C <- rep(1, lt)
+
+  # Evolving the initial state to the present
+  while (t <= lt) {
+
+    # Creating A matrix
+    matrix_a <- create_a(
+      pars = pars,
+      lx = lx,
+      k = k
+    )
+
+    # Applying A operator
+    q_t[t, ] <- a_operator(
+      q_vector = q_t[(t - 1), ],
+      transition_matrix = matrix_a,
+      time_interval = time_intervals[t],
+      precision = 50L,
+      methode = methode,
+      abstol = abstol,
+      reltol = reltol
+    )
+    if (correct_negatives == TRUE) {
+      if (methode != "sexpm") {
+        # it removes some small negative values that can occur as bugs from the
+        # integration process
+        q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
+      }
+    }
+
+    # Applying C operator (this is a trick to avoid precision issues)
+    C[t] <- 1 / (sum(q_t[t, ]))
+    q_t[t, ] <- q_t[t, ] * C[t]
+
+    # Loop has to end after integrating to t_p
+    if (!(t < lt)) {
+      break
+    }
+
+    # Creating B matrix
+    matrix_b <- create_b(
+      pars = pars,
+      lx = lx,
+      k = k,
+      b = births[t]
+    )
+
+    # Applying B operator
+    q_t[t, ] <- (matrix_b %*% q_t[t, ])
+    if (correct_negatives == TRUE) {
+      if (methode != "sexpm") {
+        q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
+      }
+    }
+
+    # Applying D operator (this works exactly like C)
+    D[t] <- 1 / (sum(q_t[t, ]))
+    q_t[t, ] <- q_t[t, ] * D[t]
+
+    # Updating running parameters
+    k <- k + births[t]
+    t <- t + 1
+  }
+
+  q_t
+}
