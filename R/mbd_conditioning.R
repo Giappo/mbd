@@ -106,8 +106,5 @@ calculate_conditional_prob <- function(
   }
 
   pc <- pc0 * (cond == 0) + pc1 * (cond == 1) + pc2 * (cond == 2)
-  if (pc == 0) {
-    print("Conditional probability equals zero!")
-  }
   pc
 }
