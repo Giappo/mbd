@@ -45,7 +45,6 @@ mbd_loglik <- function(
     abstol = abstol,
     reltol = reltol
   )
-  testit::assert(pc >= 0 && pc <= 1)
 
   # Use Pure Multiple Birth when there is no extinction
   if (

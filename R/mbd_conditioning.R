@@ -106,5 +106,10 @@ calculate_conditional_prob <- function(
   }
 
   pc <- pc0 * (cond == 0) + pc1 * (cond == 1) + pc2 * (cond == 2)
+  # small numerical errors can occur for short trees
+  if (pc > 1 && pc < 1.01) {
+    pc <- 1
+  }
+  testit::assert(pc >= 0 && pc <= 1)
   pc
 }
