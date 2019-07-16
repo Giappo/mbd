@@ -8,7 +8,7 @@
 mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
   0.5, 0.3), n_0 = 2, cond = 1, optim_ids = rep(TRUE,
   length(start_pars)), true_pars = start_pars, tips_interval = c(0,
-  Inf), safety_threshold = 0.001, verbose = TRUE, lx = 1 + 2 *
+  Inf), q_threshold = 0.001, verbose = TRUE, lx = 1 + 2 *
   (length(brts)))
 }
 \arguments{
@@ -36,7 +36,7 @@ mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
-\item{safety_threshold}{adds a threshold for the evaluation of q. This is due
+\item{q_threshold}{adds a threshold for the evaluation of q. This is due
 because you never want \code{q} to actually be equal to zero or one.}
 
 \item{verbose}{choose if you want to print the output or not}

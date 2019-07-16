@@ -24,38 +24,52 @@ check_n_0 <- function(
 #' @noRd
 check_pars <- function(
   pars,
-  safety_threshold
+  safety_checks = TRUE,
+  lambda_limit = 10,
+  mu_limit = 10,
+  nu_limit = Inf,
+  q_threshold = 1e-3
 ) {
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
   q <- pars[4]
-  if (missing(safety_threshold)) {
-    safety_threshold <- 0
+  if (missing(q_threshold)) {
+    q_threshold <- 0
   }
 
-  # checks
+  # standard checks
   if (length(pars) != length(get_param_names())) {
     stop("'pars' must have a length of four.")
   }
   if (any(is.nan(pars))) {
     stop("'pars' cannot contain NaNs")
   }
-
-  check <- (any(is.infinite(pars))) ||
+  is_it_wrong <-
+    (any(is.infinite(pars))) ||
     (lambda < 0) ||
     (mu < 0) ||
     (nu < 0) ||
     (q < 0) ||
-    (q > 1) ||
-    (q < 0 + safety_threshold) ||
-    (q > 1 - safety_threshold)
-  if (check == TRUE) {
-    out <- "wrong"
-  } else {
-    out <- "right"
+    (q > 1)
+  if (is_it_wrong == TRUE) {
+    return("wrong")
   }
-  out
+
+  # safety checks
+  if (safety_checks == TRUE) {
+    is_it_wrong <-
+      (lambda > lambda_limit) ||
+      (mu > mu_limit) ||
+      (nu > nu_limit) ||
+      (q < 0 + q_threshold) ||
+      (q > 1 - q_threshold)
+  }
+  if (is_it_wrong == TRUE) {
+    return("wrong")
+  } else {
+    return("right")
+  }
 }
 
 #' @title Check 'brts'

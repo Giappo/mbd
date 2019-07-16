@@ -44,6 +44,7 @@
 #' @param iterations something
 #' @param k the number of visible species in the phylogeny at a given time.
 #' @param lambda the sympatric speciation rate.
+#' @param lambda_limit Upper limit to lambda estimations.
 #' @param loglik_function the loglik function
 #' @param loglik_functions the loglik_functions you want to use
 #' @param logs something
@@ -73,6 +74,7 @@
 #'   but missing in the phylogeny.
 #' @param models the models you want to use to define the likelihood
 #' @param mu the extinction rate.
+#' @param mu_limit Upper limit to mu estimations.
 #' @param mutation_rate something
 #' @param n_0 the number of lineages at time equals zero.
 #' @param n_0s starting number of lineages for all the clades
@@ -81,6 +83,7 @@
 #' @param n_steps something
 #' @param n_subs something
 #' @param nu the multiple allopatric speciation trigger rate.
+#' @param nu_limit Upper limit to nu estimations.
 #' @param optimmethod optimization routine: choose between subplex and simplex
 #' @param optim_ids ids of the parameters you want to optimize.
 #' @param params transition matrix for the rhs of the ode system.
@@ -110,7 +113,7 @@
 #' @param results mle results
 #' @param results_folder The results folder insider the project folder.
 #' @param s the seed
-#' @param safety_threshold adds a threshold for the evaluation of q. This is due
+#' @param q_threshold adds a threshold for the evaluation of q. This is due
 #' because you never want \code{q} to actually be equal to zero or one.
 #' @param sample_interval something
 #' @param seed the seed
@@ -185,6 +188,7 @@ default_params_doc <- function(
   iterations,
   k,
   lambda,
+  lambda_limit,
   loglik_function,
   loglik_functions,
   logs,
@@ -205,6 +209,7 @@ default_params_doc <- function(
   missnumspec,
   models,
   mu,
+  mu_limit,
   mutation_rate,
   n_0,
   n_0s,
@@ -213,6 +218,7 @@ default_params_doc <- function(
   n_steps,
   n_subs,
   nu,
+  nu_limit,
   optimmethod,
   optim_ids,
   params,
@@ -234,7 +240,7 @@ default_params_doc <- function(
   results_folder,
   s,
   seed,
-  safety_threshold,
+  q_threshold,
   sample_interval,
   sequence_length,
   sim,

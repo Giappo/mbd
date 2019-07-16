@@ -10,18 +10,19 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   checked_functions, colormap, cond, data_folder, function_name,
   function_names, functions_names, idparsfix, idparsopt, initparsopt,
   input_trees_path, input_xml, interval_max, interval_min, iterations, k,
-  lambda, loglik_function, loglik_functions, logs, lx, lx0, matrix,
-  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
-  max_sims, maxiter, mbd_lambda, message, methode, minimum_multiple_births,
-  missnumspec, models, mu, mutation_rate, n_0, n_0s, n_species,
-  init_n_lineages, n_steps, n_subs, nu, optimmethod, optim_ids, params,
-  pars, pars_transform, pars_transformed, parsfix, precision, print_errors,
-  printit, project_folder, q_vector, q, quantiles_choice, recursive,
-  reltol, res, results, results_folder, s, seed, safety_threshold,
-  sample_interval, sequence_length, sim, sim_pars, sim_phylo, start_pars,
-  subsamp, t, t1, t2, t_0, t_0s, tips_interval, time_interval, tol, tr,
-  transition_matrix, trparsfix, trparsopt, true_pars, values, verbose, x,
-  x_name, x_splits, y, y_name, y_splits, z, z_name)
+  lambda, lambda_limit, loglik_function, loglik_functions, logs, lx, lx0,
+  matrix, matrix_builder, max_iter, max_k, max_number_of_species,
+  max_repetitions, max_sims, maxiter, mbd_lambda, message, methode,
+  minimum_multiple_births, missnumspec, models, mu, mu_limit,
+  mutation_rate, n_0, n_0s, n_species, init_n_lineages, n_steps, n_subs,
+  nu, nu_limit, optimmethod, optim_ids, params, pars, pars_transform,
+  pars_transformed, parsfix, precision, print_errors, printit,
+  project_folder, q_vector, q, quantiles_choice, recursive, reltol, res,
+  results, results_folder, s, seed, q_threshold, sample_interval,
+  sequence_length, sim, sim_pars, sim_phylo, start_pars, subsamp, t, t1,
+  t2, t_0, t_0s, tips_interval, time_interval, tol, tr, transition_matrix,
+  trparsfix, trparsopt, true_pars, values, verbose, x, x_name, x_splits, y,
+  y_name, y_splits, z, z_name)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -97,6 +98,8 @@ The ids are defined as follows:
 
 \item{lambda}{the sympatric speciation rate.}
 
+\item{lambda_limit}{Upper limit to lambda estimations.}
+
 \item{loglik_function}{the loglik function}
 
 \item{loglik_functions}{the loglik_functions you want to use}
@@ -145,6 +148,8 @@ but missing in the phylogeny.}
 
 \item{mu}{the extinction rate.}
 
+\item{mu_limit}{Upper limit to mu estimations.}
+
 \item{mutation_rate}{something}
 
 \item{n_0}{the number of lineages at time equals zero.}
@@ -160,6 +165,8 @@ but missing in the phylogeny.}
 \item{n_subs}{something}
 
 \item{nu}{the multiple allopatric speciation trigger rate.}
+
+\item{nu_limit}{Upper limit to nu estimations.}
 
 \item{optimmethod}{optimization routine: choose between subplex and simplex}
 
@@ -212,7 +219,7 @@ the numerical integration using deSolve.}
 
 \item{seed}{the seed}
 
-\item{safety_threshold}{adds a threshold for the evaluation of q. This is due
+\item{q_threshold}{adds a threshold for the evaluation of q. This is due
 because you never want \code{q} to actually be equal to zero or one.}
 
 \item{sample_interval}{something}

@@ -77,7 +77,7 @@ test_that("q is zero", {
       brts = brts,
       n_0 = n_0,
       cond = cond,
-      safety_threshold = 0
+      q_threshold = 0
     ),
     DDD::bd_loglik(
       pars1 = pars[1:3],
@@ -105,7 +105,7 @@ test_that("nu and q are zero", {
       brts = brts,
       n_0 = n_0,
       cond = cond,
-      safety_threshold = 0
+      q_threshold = 0
     ),
     DDD::bd_loglik(
       pars1 = pars[1:3],

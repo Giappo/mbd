@@ -6,7 +6,7 @@
 \usage{
 mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0, lx = 1 +
   2 * (length(brts) + length(missnumspec)), tips_interval = c(n_0 * (cond
-  > 0), Inf), methode = "lsodes", safety_threshold = 0.001,
+  > 0), Inf), methode = "lsodes", q_threshold = 0.001,
   abstol = 1e-16, reltol = 1e-10)
 }
 \arguments{
@@ -46,7 +46,8 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
   \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
 }}
 
-\item{safety_threshold}{It determines the precision on the parameters.}
+\item{q_threshold}{adds a threshold for the evaluation of q. This is due
+because you never want \code{q} to actually be equal to zero or one.}
 
 \item{abstol}{absolute error tolerance for
 the numerical integration using deSolve.}

@@ -337,14 +337,6 @@ mbd_count_n_spec_events <- function(brts) {
 #' @description Yields all the values of the q-vector obtained from a likelihood
 #'  computation.
 #' @inheritParams default_params_doc
-#' @param pars vector of parameters:
-#' \itemize{
-#'   \item pars[1] is lambda, the sympatric speciation rate;
-#'   \item pars[2] is mu, the extinction rate;
-#'   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
-#'   \item pars[4] is q, the single-lineage speciation probability;
-#' }
-#' @param safety_threshold It determines the precision on the parameters.
 #' @param correct_negatives Do you want to use the negative correction? See
 #'  \link{negatives_correction}.
 #' @return The q-vector in time
@@ -353,47 +345,24 @@ mbd_calculate_q_vector <- function(
   pars,
   brts,
   n_0 = 2,
-  cond = 1,
   missnumspec = 0,
   lx = 1 + 2 * (length(brts) + length(missnumspec)),
-  tips_interval = c(n_0 * (cond > 0), Inf),
   methode = "lsodes",
-  safety_threshold = 1e-3,
+  q_threshold = 1e-3,
   abstol = 1e-16,
   reltol = 1e-10,
   correct_negatives = FALSE
 ) {
   # BASIC SETTINGS AND CHECKS
   check_brts(brts = brts, n_0 = n_0)
-  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
   if (
-    check_pars(pars = pars, safety_threshold = safety_threshold) == "wrong"
+    check_pars(
+      pars = pars,
+      safety_checks = TRUE,
+      q_threshold = q_threshold
+    ) == "wrong"
   ) {
     return(-Inf)
-  }
-
-  # Calculate conditional probability
-  pc <- calculate_conditional_prob(
-    brts = brts,
-    pars = pars,
-    cond = cond,
-    n_0 = n_0,
-    lx = lx + 100,
-    tips_interval = tips_interval,
-    methode = methode,
-    abstol = abstol,
-    reltol = reltol
-  )
-
-  # Use Pure Multiple Birth when there is no extinction
-  if (
-    pars[2] == 0 &&
-    all(tips_interval == c(n_0 * (cond > 0), Inf))
-    && missnumspec == 0
-  ) {
-    return(
-      mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0) - log(pc)
-    )
   }
 
   # Adjusting data
