@@ -169,7 +169,12 @@ hyper_a_hanno <- function(
 #' @details This is not to be called by the user.
 #' @author Giovanni Laudanno
 #' @export
-create_a <- function(pars, k, lx, matrix_builder = hyper_a_hanno) {
+create_a <- function(
+  pars,
+  k,
+  lx,
+  matrix_builder = hyper_a_hanno
+) {
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
@@ -183,7 +188,7 @@ create_a <- function(pars, k, lx, matrix_builder = hyper_a_hanno) {
   m[row(m) == col(m) - 1] <- mu * nvec[2:(lx + 1)]
   m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] +
     lambda * (nvec[1:(lx)] + 2 * k)
-  m[length(nvec), length(nvec)] <- (-mu) * (k + nvec[length(nvec)])
+  # m[length(nvec), length(nvec)] <- (-mu) * (k + nvec[length(nvec)])
   m
 }
 
@@ -194,9 +199,15 @@ create_a <- function(pars, k, lx, matrix_builder = hyper_a_hanno) {
 #' @details This is not to be called by the user.
 #' @author Giovanni Laudanno
 #' @export
-create_b <- function(pars, k, b, lx, matrix_builder = hyper_a_hanno) {
+create_b <- function(
+  pars,
+  k,
+  b,
+  lx,
+  matrix_builder = hyper_a_hanno
+) {
   if (b > k) {
-    stop("you can't have more births than species present in the phylogeny")  # nolint
+    stop("you can't have more births than species present in the phylogeny") # nolint
   }
 
   lambda <- pars[1]
@@ -405,11 +416,9 @@ mbd_calculate_q_vector <- function(
       reltol = reltol
     )
     if (correct_negatives == TRUE) {
-      if (methode != "sexpm") {
-        # it removes some small negative values that can occur as bugs from the
-        # integration process
-        q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
-      }
+      # it removes some small negative values that can occur as bugs from the
+      # integration process
+      q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     }
 
     # Applying C operator (this is a trick to avoid precision issues)
@@ -432,9 +441,7 @@ mbd_calculate_q_vector <- function(
     # Applying B operator
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
     if (correct_negatives == TRUE) {
-      if (methode != "sexpm") {
-        q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
-      }
+      q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     }
 
     # Applying D operator (this works exactly like C)
@@ -446,5 +453,5 @@ mbd_calculate_q_vector <- function(
     t <- t + 1
   }
 
-  q_t
+  list(q_t = q_t, C = C, D = D)
 }

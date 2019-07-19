@@ -64,9 +64,9 @@
 #' @param methode
 #'   specifies how the integration must be performed:
 #'   \itemize{
-#'     \item \code{sexpm}: use \code{sexpm}
-#'     \item \code{expo}: use \code{expoRkit}
 #'     \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
+#'     \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
+#'     \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 #'   }
 #' @param minimum_multiple_births minimum amount of multiple births
 #' that have to be present in the simulated phylogeny.

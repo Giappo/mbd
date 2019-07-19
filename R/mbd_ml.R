@@ -55,7 +55,8 @@ mbd_ml <- function(
   tips_interval = c(0, Inf),
   q_threshold = 1e-3,
   verbose = TRUE,
-  lx = 1 + 2 * (length(brts))
+  lx = 1 + 2 * (length(brts)),
+  methode = "lsodes"
 ) {
   # setup and checks
   if (true_pars[3] == 0 | true_pars[4] == 0) {
@@ -86,7 +87,8 @@ mbd_ml <- function(
       cond = cond,
       n_0 = n_0,
       q_threshold = q_threshold,
-      lx = lx
+      lx = lx,
+      methode = methode
     )
     if (verbose == TRUE) {
       printed_values <- paste0(

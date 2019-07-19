@@ -41,9 +41,9 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
 \item{methode}{specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm}
-  \item \code{expo}: use \code{expoRkit}
   \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
+  \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
 \item{q_threshold}{adds a threshold for the evaluation of q. This is due

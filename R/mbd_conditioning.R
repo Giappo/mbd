@@ -110,6 +110,9 @@ calculate_conditional_prob <- function(
   if (pc > 1 && pc < 1.01) {
     pc <- 1
   }
-  testit::assert(pc >= 0 && pc <= 1)
+  # testit::assert(pc >= 0 && pc <= 1)
+  if (!((pc >= 0 && pc <= 1))) {
+    print("problem!") 
+  }
   pc
 }

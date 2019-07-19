@@ -8,9 +8,9 @@ is_on_ci <- function() {
 
 test_that("use", {
 
-  if (!is_on_ci()) {
-    skip("This is long")
-  }
+  # if (!is_on_ci()) {
+  #   skip("This is long")
+  # }
 
   brts <- c(10, 9, 7, 6, 5)
   start_pars <- c(0.2, 0.15, 1, 0.1)
@@ -22,7 +22,9 @@ test_that("use", {
     brts = brts,
     cond = cond,
     n_0 = n_0,
-    verbose = FALSE
+    verbose = TRUE,
+    lx = 100,
+    methode = "ode45"
   )
 
   for (var_name in get_param_names()) { # nolint internal function

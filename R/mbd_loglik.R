@@ -75,12 +75,13 @@ mbd_loglik <- function(
   # t is starting from 2 so all is ok with births[t] and time_intervals[t]
   t <- 2
   D <- C <- rep(1, lt)
+  matrix_a <- vector("list", lt)
 
   # Evolving the initial state to the present
   while (t <= lt) {
 
     # Creating A matrix
-    matrix_a <- create_a(
+    matrix_a[[t]] <- create_a(
       pars = pars,
       lx = lx,
       k = k
@@ -89,21 +90,22 @@ mbd_loglik <- function(
     # Applying A operator
     q_t[t, ] <- a_operator(
       q_vector = q_t[(t - 1), ],
-      transition_matrix = matrix_a,
+      transition_matrix = matrix_a[[t]],
       time_interval = time_intervals[t],
       precision = 50L,
       methode = methode,
       abstol = abstol,
       reltol = reltol
     )
-    if (methode != "sexpm") {
-      # it removes some small negative values that can occur as bugs from the
-      # integration process
-      q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
-    }
+    print(q_t[t, ]) # debug
+    # it removes some small negative values that can occur as bugs from the
+    # integration process
+    #q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
 
     # Applying C operator (this is a trick to avoid precision issues)
-    C[t] <- 1 / (sum(q_t[t, ]))
+    v <- sort(q_t[t, ])
+    C[t] <- 1 / (sum(v))
+    # C[t] <- 1 / (sum(q_t[t, ]))
     q_t[t, ] <- q_t[t, ] * C[t]
 
     # Loop has to end after integrating to t_p
@@ -121,19 +123,24 @@ mbd_loglik <- function(
 
     # Applying B operator
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
-    if (methode != "sexpm") {
-      q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
-    }
+    print(q_t[t, ]) # debug
+    #q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
 
     # Applying D operator (this works exactly like C)
-    D[t] <- 1 / (sum(q_t[t, ]))
+    v <- sort(q_t[t, ])
+    D[t] <- 1 / (sum(v))
+    # D[t] <- 1 / (sum(q_t[t, ]))
     q_t[t, ] <- q_t[t, ] * D[t]
 
     # Updating running parameters
     k <- k + births[t]
     t <- t + 1
   }
-  testit::assert(all(q_t >= 0)) # q_t has been correctly integrated
+  # testit::assert(all(q_t >= 0)) # q_t has been correctly integrated
+  if (!all(q_t >= 0)) {
+    print(pars)
+    stop("problems!") #!!!
+  }
   testit::assert(k == n_0 + sum(births)) # k is the number of tips
   testit::assert(t == lt) # t refers to the last time interval
 
@@ -142,7 +149,11 @@ mbd_loglik <- function(
   likelihood <- vm * q_t[t, (missnumspec + 1)]
 
   # Removing C and D effects from the LL
-  testit::assert(all(C >= 0))
+  # testit::assert(all(C >= 0))
+  if (!(all(C >= 0))) {
+    print(pars)
+    stop("problems!") 
+  }
   testit::assert(all(D >= 0))
   loglik <- log(likelihood) - sum(log(C)) - sum(log(D))
 

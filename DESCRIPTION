@@ -7,15 +7,13 @@ Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
 Depends: 
   R (>= 3.2.0)
 Imports: 
-  ape,
   DDD,
   deSolve,
-  expoRkit,
-  rappdirs,
   R.utils,
   subplex,
   testit
-Suggests: 
+Suggests:
+  ape,
   knitr,
   lintr,
   rmarkdown, 
