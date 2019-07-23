@@ -24,7 +24,7 @@ test_that("use", {
     n_0 = n_0,
     verbose = TRUE,
     lx = 100,
-    methode = "ode45"
+    methode = "lsodes"
   )
 
   for (var_name in get_param_names()) { # nolint internal function

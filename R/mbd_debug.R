@@ -7,7 +7,7 @@
 #' @return The function returns the natural logarithm
 #'   of the likelihood for the process.
 #' @export
-mbd_loglik <- function(
+mbd_loglik_debug <- function(
   pars,
   brts,
   n_0 = 2,
@@ -34,7 +34,7 @@ mbd_loglik <- function(
   }
 
   # Calculate conditional probability
-  pc <- calculate_conditional_prob(
+  pc <- calculate_conditional_prob_debug(
     brts = brts,
     pars = pars,
     cond = cond,
@@ -49,8 +49,8 @@ mbd_loglik <- function(
   # Use Pure Multiple Birth when there is no extinction
   if (
     pars[2] == 0 &&
-    all(tips_interval == c(n_0 * (cond > 0), Inf))
-    && missnumspec == 0
+    all(tips_interval == c(n_0 * (cond > 0), Inf)) &&
+    missnumspec == 0
   ) {
     return(
       mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0) - log(pc)
@@ -100,9 +100,6 @@ mbd_loglik <- function(
     if (any(q_t[t, ] < 0)) { # debug
       print(q_t[t, ]) # debug
     } # debug
-    # it removes some small negative values that can occur as bugs from the
-    # integration process
-    q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
 
     # Applying C operator (this is a trick to avoid precision issues)
     C[t] <- 1 / sum(sort(q_t[t, ]))
@@ -126,7 +123,6 @@ mbd_loglik <- function(
     if (any(q_t[t, ] < 0)) { # debug
       print(q_t[t, ]) # debug
     } # debug
-    q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
 
     # Applying D operator (this works exactly like C)
     D[t] <- 1 / sum(sort(q_t[t, ]))
@@ -167,4 +163,84 @@ mbd_loglik <- function(
   }
 
   loglik
+}
+
+#' @noRd
+a_operator_debug <- function(
+  q_vector,
+  time_interval,
+  transition_matrix,
+  abstol = 1e-16,
+  reltol = 1e-12,
+  methode = "lsodes"
+) {
+  out <- deSolve::ode( # nolint internal function
+    y = q_vector,
+    times = c(0, time_interval),
+    func = mbd_loglik_rhs,
+    parms = transition_matrix,
+    atol = abstol,
+    rtol = reltol,
+    method = methode
+  )[2, -1]
+  out
+}
+
+#' Called by \link{mbd_loglik} if there is a conditioning != 0
+#' @inheritParams default_params_doc
+#' @return the pc. If \code{is.nan(log(pc))} the log-likelihood estimation
+#'   by \link{mbd_loglik} is -Inf
+#' @author Giovanni Laudanno
+#' @noRd
+calculate_conditional_prob_debug <- function(
+  brts,
+  pars,
+  cond,
+  lx = 1000,
+  n_0 = 2,
+  tips_interval = c(n_0 * (cond > 0), Inf),
+  methode = "lsodes",
+  abstol = 1e-16,
+  reltol = 1e-10
+) {
+  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
+  if (cond == 0) {
+    return(1)
+  }
+  pc0 <- pc1
+  total_time <- max(abs(brts))
+  m <- 0:lx
+  one_over_cm <- (3 * (m + 1)) / (m + 3)
+  one_over_qm_binom <- 1 / choose(m + n_0, n_0)
+  q_i <- c(1, rep(0, lx))
+  testit::assert(length(one_over_cm) == length(m))
+  testit::assert(length(one_over_qm_binom) == length(m))
+  testit::assert(length(q_i) == length(m))
+  # creating a_matrix
+  matrix_a <- create_a(pars = pars, k = n_0, lx = lx) # nolint internal function
+  # integrating the starting q_vector to t_p
+  a2_v1 <- a_operator(
+    q_vector = q_i,
+    transition_matrix = matrix_a,
+    time_interval = total_time,
+    precision = 250L,
+    methode = methode,
+    abstol = abstol,
+    reltol = reltol
+  )
+  names(a2_v1) <- paste0("Q", 0:lx)
+
+  total_product <- a2_v1 * one_over_cm * one_over_qm_binom
+  missingspecies_min <- max(tips_interval[1] - n_0, 0)
+  missingspecies_max <- min(tips_interval[2] - n_0, lx)
+  # +1 is because of the zero-th component
+  tips_components <- 1 + c(missingspecies_min, missingspecies_max)
+  pc1 <- sum(total_product[tips_components[1]:tips_components[2]])
+
+  pc <- pc0 * (cond == 0) + pc1 * (cond == 1)
+  # testit::assert(pc >= 0 && pc <= 1)
+  if (!((pc >= 0 && pc <= 1))) {
+    print("problem!") 
+  }
+  pc
 }

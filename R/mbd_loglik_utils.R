@@ -45,7 +45,7 @@ a_operator <- function(
   times <- c(0, time_interval)
   ode_matrix <- transition_matrix
   out <- list(
-    value = NULL,
+    value = q_vector,
     warning = 1,
     error = 1
   )
@@ -55,7 +55,12 @@ a_operator <- function(
   for (methode in methodes) {
     rtol <- reltol
     while (
-      (!is.null(out$warning) || !is.null(out$error)) && rtol >= 1e-14
+      (
+        !is.null(out$warning) ||
+        !is.null(out$error) ||
+        any(negatives_correction(v = out$value) < 0)
+      ) &&
+      rtol >= 1e-14
     ) {
       x <- utils::capture.output(R.utils::withTimeout(
         out <- my_try_catch(deSolve::ode( # nolint internal function
@@ -85,35 +90,6 @@ a_operator <- function(
   }
   rm(x)
   result
-}
-
-#' @noRd
-a_operator2 <- function(
-  q_vector,
-  transition_matrix,
-  time_interval,
-  precision = 50L,
-  abstol = 1e-16,
-  reltol = 1e-12,
-  methode = "lsodes"
-) {
-  times <- c(0, time_interval)
-  ode_matrix <- transition_matrix
-  out <- list(
-    value = NULL,
-    warning = 1,
-    error = 1
-  )
-  out <- deSolve::ode( # nolint internal function
-    y = q_vector,
-    times = times,
-    func = mbd_loglik_rhs,
-    parms = ode_matrix,
-    atol = abstol,
-    rtol = reltol,
-    method = methode
-  )[2, -1]
-  out
 }
 
 #' Function to build a matrix, used in creating the A and B operators.
@@ -317,7 +293,7 @@ negatives_correction <- function(v, pars, display_output = 0) {
     problems <- 1
     na_components <- which(is.na(v) & !is.nan(v))
     nan_components <- which(is.nan(v))
-    if (display_output == 1) {
+    if (display_output == 1 && !missing(pars)) {
       cat("There are non-numeric components for par values:", pars, "\n")
       if (length(na_components) > 0) {
         cat("NA component are:", na_components)
