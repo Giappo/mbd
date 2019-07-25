@@ -46,7 +46,8 @@ calculate_conditional_prob <- function(
   tips_interval = c(n_0 * (cond > 0), Inf),
   methode = "lsodes",
   abstol = 1e-16,
-  reltol = 1e-10
+  reltol = 1e-10,
+  debug_mode = FALSE
 ) {
   check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
   if (cond == 0) {
@@ -111,8 +112,12 @@ calculate_conditional_prob <- function(
     pc <- 1
   }
   # testit::assert(pc >= 0 && pc <= 1)
-  if (!((pc >= 0 && pc <= 1))) {
-    print("problem!") 
-  }
+  if (!((pc >= 0 && pc <= 1))) { # debug
+    print(pc) # debug
+    if (debug_mode == FALSE) {
+      stop("problems: pc is wrong!") # debug
+    }
+  } # debug
+  
   pc
 }

@@ -4,6 +4,8 @@
 #'   in which multiple births (from different parents) at the same time
 #'   are possible, along with usual sympatric speciation and extinction events.
 #' @inheritParams default_params_doc
+#' @param debug_mode If TRUE allows to run even when there are errors and
+#'  expose them.
 #' @return The function returns the natural logarithm
 #'   of the likelihood for the process.
 #' @export
@@ -18,7 +20,8 @@ mbd_loglik <- function(
   methode = "lsodes",
   q_threshold = 1e-3,
   abstol = 1e-16,
-  reltol = 1e-10
+  reltol = 1e-10,
+  debug_mode = FALSE
 ) {
   # BASIC SETTINGS AND CHECKS
   check_brts(brts = brts, n_0 = n_0)
@@ -43,7 +46,8 @@ mbd_loglik <- function(
     tips_interval = tips_interval,
     methode = methode,
     abstol = abstol,
-    reltol = reltol
+    reltol = reltol,
+    debug_mode = debug_mode
   )
 
   # Use Pure Multiple Birth when there is no extinction
@@ -103,7 +107,9 @@ mbd_loglik <- function(
     if (any(q_t[t, ] < 0)) { # debug
       print(q_t[t, ]) # debug
       plot(q_t[t, ]) # debug
-      stop("problems: q_t is negative!") # debug
+      if (debug_mode == FALSE) {
+        stop("problems: q_t is negative!") # debug
+      }
     } # debug
 
     # Applying C operator (this is a trick to avoid precision issues)
@@ -129,7 +135,9 @@ mbd_loglik <- function(
     if (any(q_t[t, ] < 0)) { # debug
       print(q_t[t, ]) # debug
       plot(q_t[t, ], xlab = "m", ylab = "Q_m^k(t)") # debug
-      stop("problems: q_t is negative!") # debug
+      if (debug_mode == FALSE) {
+        stop("problems: q_t is negative!") # debug
+      }
     } # debug
 
     # Applying D operator (this works exactly like C)
@@ -144,7 +152,9 @@ mbd_loglik <- function(
   if (any(q_t[t, ] < 0)) { # debug
     print(q_t[t, ]) # debug
     plot(q_t[t, ]) # debug
-    stop("problems: q_t is negative!") # debug
+    if (debug_mode == FALSE) {
+      stop("problems: q_t is negative!") # debug
+    }
   } # debug
   testit::assert(k == n_0 + sum(births)) # k is the number of tips
   testit::assert(t == lt) # t refers to the last time interval
@@ -157,11 +167,17 @@ mbd_loglik <- function(
   # testit::assert(all(C >= 0))
   if (!(all(C >= 0))) {
     print(pars)
-    stop("problems: C is negative!") 
+    print(C)
+    if (debug_mode == FALSE) {
+      stop("problems: C is negative!")
+    }
   }
   if (!(all(D >= 0))) {
     print(pars)
-    stop("problems: D is negative!") 
+    print(D)
+    if (debug_mode == FALSE) {
+      stop("problems: D is negative!") 
+    }
   }
   loglik <- log(likelihood) - sum(log(C)) - sum(log(D))
 

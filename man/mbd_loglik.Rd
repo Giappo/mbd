@@ -7,7 +7,7 @@
 mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0, lx = 1 +
   2 * (length(brts) + length(missnumspec)), tips_interval = c(n_0 * (cond
   > 0), Inf), methode = "lsodes", q_threshold = 0.001,
-  abstol = 1e-16, reltol = 1e-10)
+  abstol = 1e-16, reltol = 1e-10, debug_mode = FALSE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -54,6 +54,9 @@ the numerical integration using deSolve.}
 
 \item{reltol}{relative error tolerance for
 the numerical integration using deSolve.}
+
+\item{debug_mode}{If TRUE allows to run even when there are errors and
+expose them.}
 }
 \value{
 The function returns the natural logarithm
