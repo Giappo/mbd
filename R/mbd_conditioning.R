@@ -37,7 +37,7 @@ create_a_cond_2 <- function(pars, k, lx) {
 #'   by \link{mbd_loglik} is -Inf
 #' @author Giovanni Laudanno
 #' @noRd
-calculate_conditional_prob2 <- function(
+calculate_conditional_prob <- function(
   brts,
   pars,
   cond,
