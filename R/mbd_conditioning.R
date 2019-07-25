@@ -37,7 +37,71 @@ create_a_cond_2 <- function(pars, k, lx) {
 #'   by \link{mbd_loglik} is -Inf
 #' @author Giovanni Laudanno
 #' @noRd
-calculate_conditional_prob <- function(
+calculate_conditional_prob2 <- function(
+  brts,
+  pars,
+  cond,
+  lx = 1000,
+  n_0 = 2,
+  tips_interval = c(n_0 * (cond > 0), Inf),
+  methode = "lsodes",
+  abstol = 1e-16,
+  reltol = 1e-10,
+  debug_mode = FALSE
+) {
+  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
+  if (cond == 0) {
+    return(1)
+  }
+  total_time <- max(abs(brts))
+  m <- 0:lx
+  one_over_cm <- (3 * (m + 1)) / (m + 3)
+  one_over_qm_binom <- 1 / choose(m + n_0, n_0)
+  q_i <- c(1, rep(0, lx)); names(q_i) <- paste0("Q", 0:lx)
+  testit::assert(length(one_over_cm) == length(m))
+  testit::assert(length(one_over_qm_binom) == length(m))
+  testit::assert(length(q_i) == length(m))
+  # creating a_matrix
+  matrix_a <- create_a(pars = pars, k = n_0, lx = lx) # nolint internal function
+  # integrating the starting q_vector to t_p
+  q_t <- a_operator(
+    q_vector = q_i,
+    transition_matrix = matrix_a,
+    time_interval = total_time,
+    precision = 250L,
+    methode = methode,
+    abstol = abstol,
+    reltol = reltol
+  )
+  names(q_t) <- names(q_i)
+
+  total_product <- q_t * one_over_cm * one_over_qm_binom
+  missingspecies_min <- max(tips_interval[1] - n_0, 0)
+  missingspecies_max <- min(tips_interval[2] - n_0, lx)
+  # +1 is because of the zero-th component
+  tips_components <- 1 + c(missingspecies_min, missingspecies_max)
+  pc <- sum(total_product[tips_components[1]:tips_components[2]])
+
+  # small numerical errors can occur for short trees
+  if (pc > 1 && pc < 1.01) {
+    pc <- 1
+  }
+  if (!((pc >= 0 && pc <= 1))) { # debug
+    print(pc) # debug
+    if (debug_mode == FALSE) {
+      stop("problems: pc is wrong!") # debug
+    }
+  } # debug
+  pc
+}
+
+#' Called by \link{mbd_loglik} if there is a conditioning != 0
+#' @inheritParams default_params_doc
+#' @return the pc. If \code{is.nan(log(pc))} the log-likelihood estimation
+#'   by \link{mbd_loglik} is -Inf
+#' @author Giovanni Laudanno
+#' @noRd
+calculate_conditional_prob2 <- function(
   brts,
   pars,
   cond,

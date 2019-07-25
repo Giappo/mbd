@@ -79,13 +79,12 @@ mbd_loglik <- function(
   # t is starting from 2 so all is ok with births[t] and time_intervals[t]
   t <- 2
   D <- C <- rep(1, lt)
-  matrix_a <- vector("list", lt)
 
   # Evolving the initial state to the present
   while (t <= lt) {
 
     # Creating A matrix
-    matrix_a[[t]] <- create_a(
+    matrix_a <- create_a(
       pars = pars,
       lx = lx,
       k = k
@@ -94,7 +93,7 @@ mbd_loglik <- function(
     # Applying A operator
     q_t[t, ] <- a_operator(
       q_vector = q_t[(t - 1), ],
-      transition_matrix = matrix_a[[t]],
+      transition_matrix = matrix_a,
       time_interval = time_intervals[t],
       precision = 50L,
       methode = methode,

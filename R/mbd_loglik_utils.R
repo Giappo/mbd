@@ -432,7 +432,7 @@ mbd_calculate_q_vector <- function(
     )
 
     # Applying C operator (this is a trick to avoid precision issues)
-    C[t] <- 1 / (sum(q_t[t, ]))
+    C[t] <- 1 / sum(sort(q_t[t, ]))
     q_t[t, ] <- q_t[t, ] * C[t]
 
     # Loop has to end after integrating to t_p
@@ -452,7 +452,7 @@ mbd_calculate_q_vector <- function(
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
 
     # Applying D operator (this works exactly like C)
-    D[t] <- 1 / (sum(q_t[t, ]))
+    D[t] <- 1 / sum(sort(q_t[t, ]))
     q_t[t, ] <- q_t[t, ] * D[t]
 
     # Updating running parameters
@@ -464,7 +464,6 @@ mbd_calculate_q_vector <- function(
   one_over_cm <- (3 * (m + 1)) / (m + 3)
   one_over_qm_binom <- 1 / choose(m + n_0, n_0)
   vm <- one_over_qm_binom * one_over_cm
-  q_f2 <- vm * q_f
-
-  list(q_f = q_f2, q_t = q_t, C = C, D = D)
+  q_f2 <- vm * q_f / (prod(C) * prod(D))
+  q_f2
 }
