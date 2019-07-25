@@ -138,6 +138,31 @@ hyper_a_hanno <- function(
   matrix_a[1:n_species, 1:n_species]
 }
 
+#' @title N matrix
+#' @description Creates the N matrix,
+#' used to express the probabilities for multiple speciations.
+#' @inheritParams default_params_doc
+#' @details This is not to be called by the user.
+#' @author Giovanni Laudanno
+#' @export
+create_n <- function(
+  pars,
+  k,
+  b,
+  lx,
+  matrix_builder = hyper_a_hanno
+) {
+  if (b > k) {
+    stop("you can't have more births than species present in the phylogeny") # nolint
+  }
+
+  q <- pars[4]
+
+  matrix <- choose(k, b) * (q ^ b) *
+    matrix_builder(n_species = lx, k = k - b, q = q) 
+  matrix
+}
+
 #' @title The A matrix
 #' @description Creates the A matrix,
 #' used for likelihood integration between branching times.
@@ -159,13 +184,20 @@ create_a <- function(
   testit::assert(lx < 2 ^ 31)
   nvec <- 0:lx
 
-  m <- nu * matrix_builder(n_species = lx, k = k, q = q)
-  diag(m) <- (-nu) * (1 - (1 - q) ^ (k + nvec)) - (lambda + mu) * (k + nvec)
-  m[row(m) == col(m) - 1] <- mu * nvec[2:(lx + 1)]
-  m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] +
-    lambda * (nvec[1:(lx)] + 2 * k)
-  # m[length(nvec), length(nvec)] <- (-mu) * (k + nvec[length(nvec)])
-  m
+  # matrix <- nu * matrix_builder(n_species = lx, k = k, q = q)
+  matrix <- nu * create_n(
+    pars = pars,
+    k = k,
+    b = 0,
+    lx = lx,
+    matrix_builder = matrix_builder
+  )
+  diag(matrix) <- -nu * (1 - (1 - q) ^ (k + nvec)) - (lambda + mu) * (k + nvec)
+  matrix[row(matrix) == col(matrix) - 1] <- mu * nvec[2:(lx + 1)]
+  matrix[row(matrix) == col(matrix) + 1] <- 
+    matrix[row(matrix) == col(matrix) + 1] + lambda * (nvec[1:(lx)] + 2 * k)
+  # matrix[length(nvec), length(nvec)] <- (-mu) * (k + nvec[length(nvec)])
+  matrix
 }
 
 #' @title B matrix
@@ -188,12 +220,20 @@ create_b <- function(
 
   lambda <- pars[1]
   nu <- pars[3]
-  q <- pars[4]
+  # q <- pars[4]
 
-  k2 <- k - b
-  m <- matrix_builder(n_species = lx, k = k2, q = q)
-
-  lambda * k * diag(lx + 1) * (b == 1) + nu * choose(k, b) * (q ^ b) * m
+  # k2 <- k - b
+  # matrix <- matrix_builder(n_species = lx, k = k2, q = q)
+  # lambda * k * diag(lx + 1) * (b == 1) + nu * choose(k, b) * (q ^ b) * matrix
+  n_matrix <- create_n(
+    pars = pars,
+    k = k,
+    b = b,
+    lx = lx,
+    matrix_builder = matrix_builder
+  )
+  matrix <- lambda * k * diag(lx + 1) * (b == 1) + nu * n_matrix
+  matrix
 }
 
 #' @title Builds the right hand side of the ODE set for multiple birth model
@@ -337,8 +377,7 @@ mbd_calculate_q_vector <- function(
   methode = "lsodes",
   q_threshold = 1e-3,
   abstol = 1e-16,
-  reltol = 1e-10,
-  correct_negatives = FALSE
+  reltol = 1e-10
 ) {
   # BASIC SETTINGS AND CHECKS
   check_brts(brts = brts, n_0 = n_0)
@@ -391,11 +430,6 @@ mbd_calculate_q_vector <- function(
       abstol = abstol,
       reltol = reltol
     )
-    if (correct_negatives == TRUE) {
-      # it removes some small negative values that can occur as bugs from the
-      # integration process
-      q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
-    }
 
     # Applying C operator (this is a trick to avoid precision issues)
     C[t] <- 1 / (sum(q_t[t, ]))
@@ -416,9 +450,6 @@ mbd_calculate_q_vector <- function(
 
     # Applying B operator
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
-    if (correct_negatives == TRUE) {
-      q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
-    }
 
     # Applying D operator (this works exactly like C)
     D[t] <- 1 / (sum(q_t[t, ]))
@@ -428,6 +459,12 @@ mbd_calculate_q_vector <- function(
     k <- k + births[t]
     t <- t + 1
   }
+  q_f <- q_t[t, ]
+  m <- 0:(ncol(q_t) - 1)
+  one_over_cm <- (3 * (m + 1)) / (m + 3)
+  one_over_qm_binom <- 1 / choose(m + n_0, n_0)
+  vm <- one_over_qm_binom * one_over_cm
+  q_f2 <- vm * q_f
 
-  list(q_t = q_t, C = C, D = D)
+  list(q_f = q_f2, q_t = q_t, C = C, D = D)
 }

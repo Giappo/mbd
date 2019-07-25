@@ -62,7 +62,7 @@ test_that("a_matrix: # entries are in accordance with the theory", {
   pars <- c(lambda, mu, nu, q)
   k <- 2
   lx <- 200
-  m1 <- mbd::create_a(
+  a_matrix <- mbd::create_a(
     pars,
     k = k,
     lx = lx
@@ -72,7 +72,7 @@ test_that("a_matrix: # entries are in accordance with the theory", {
     for (n in 0:(m - 1)) {
       j <- 0:min(m - n, k)
       entry_m_n <- 
-        (m - n == 1) * lambda * (m - 1 + 2 * k) +
+        (m == n + 1) * lambda * (m - 1 + 2 * k) +
         nu *
         (1 - q) ^ k *
         q ^ (m - n) * 
@@ -82,7 +82,7 @@ test_that("a_matrix: # entries are in accordance with the theory", {
         )
       testthat::expect_equal(
         entry_m_n,
-        m1[m + 1, n + 1]
+        a_matrix[m + 1, n + 1]
       )
     }
   }
@@ -93,11 +93,13 @@ test_that("a_matrix: # entries are in accordance with the theory", {
     -mu * (m + k) +
     -lambda * (m + k)
   testthat::expect_equal(
-    diag(m1)[-length(entry_m_m)],
+    diag(a_matrix)[-length(entry_m_m)],
     entry_m_m[-length(entry_m_m)]
   )
+  # this might differ according to the definition
   testthat::expect_equal(
-    diag(m1)[length(entry_m_m)]
+    diag(a_matrix)[length(entry_m_m)],
+    entry_m_m[length(entry_m_m)]
   )
 })
 
@@ -157,7 +159,7 @@ test_that("b_matrix", {
     k = k,
     b = b,
     lx = lx
-  ); m1
+  )
   testthat::expect_true(
     # b is lower triangular
     all(m1[col(m1) > row(m1)] == 0)
@@ -177,28 +179,30 @@ test_that("b_matrix: # entries are in accordance with the theory", {
   pars <- c(lambda, mu, nu, q)
   k <- 8; b <- 3
   lx <- 200
-  m1 <- mbd::create_b(
+  b_matrix <- mbd::create_b(
     pars,
     k = k,
     lx = lx,
     b = b
   )
-  # lower triangular matrix: m > n
-  for (m in 1:lx) {
-    for (n in 0:(m - 1)) {
-      j <- 0:k
+  # lower triangular matrix with diagonal: m >= n
+  for (m in 0:lx) {
+    for (n in 0:m) {
+      a <- m - n
+      j <- 0:min(m - n, k)
       entry_m_n <- 
-        (m - n == 1) * (b == 1) * lambda * k +
+        (m == n) * (b == 1) * lambda * k +
         nu *
-        choose(k, b) * q ^ b * (1 - q) ^ (k - b) *
-        q ^ (m - n) * 
-        (1 - q) ^ (2 * n - m) *
+        choose(k, b) * q ^ b *
+        (1 - q) ^ (k - b + m) *
+        q ^ a * 
+        (1 - q) ^ (-2 * a) *
         sum(
-          2 ^ j * choose(k - b, j) * choose(n, m - n - j) 
+          2 ^ j * choose(k - b, j) * choose(m - a, a - j)
         )
       testthat::expect_equal(
         entry_m_n,
-        m1[m + 1, n + 1]
+        b_matrix[m + 1, n + 1]
       )
     }
   }

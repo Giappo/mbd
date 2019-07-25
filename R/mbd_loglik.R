@@ -97,12 +97,14 @@ mbd_loglik <- function(
       abstol = abstol,
       reltol = reltol
     )
-    if (any(q_t[t, ] < 0)) { # debug
-      print(q_t[t, ]) # debug
-    } # debug
     # it removes some small negative values that can occur as bugs from the
     # integration process
     q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
+    if (any(q_t[t, ] < 0)) { # debug
+      print(q_t[t, ]) # debug
+      plot(q_t[t, ]) # debug
+      stop("problems: q_t is negative!") # debug
+    } # debug
 
     # Applying C operator (this is a trick to avoid precision issues)
     C[t] <- 1 / sum(sort(q_t[t, ]))
@@ -123,10 +125,12 @@ mbd_loglik <- function(
 
     # Applying B operator
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
+    q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     if (any(q_t[t, ] < 0)) { # debug
       print(q_t[t, ]) # debug
+      plot(q_t[t, ], xlab = "m", ylab = "Q_m^k(t)") # debug
+      stop("problems: q_t is negative!") # debug
     } # debug
-    q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
 
     # Applying D operator (this works exactly like C)
     D[t] <- 1 / sum(sort(q_t[t, ]))
@@ -137,10 +141,11 @@ mbd_loglik <- function(
     t <- t + 1
   }
   # testit::assert(all(q_t >= 0)) # q_t has been correctly integrated
-  if (!all(q_t >= 0)) {
-    print(pars)
-    stop("problems!") #!!!
-  }
+  if (any(q_t[t, ] < 0)) { # debug
+    print(q_t[t, ]) # debug
+    plot(q_t[t, ]) # debug
+    stop("problems: q_t is negative!") # debug
+  } # debug
   testit::assert(k == n_0 + sum(births)) # k is the number of tips
   testit::assert(t == lt) # t refers to the last time interval
 
@@ -152,9 +157,12 @@ mbd_loglik <- function(
   # testit::assert(all(C >= 0))
   if (!(all(C >= 0))) {
     print(pars)
-    stop("problems!") 
+    stop("problems: C is negative!") 
   }
-  testit::assert(all(D >= 0))
+  if (!(all(D >= 0))) {
+    print(pars)
+    stop("problems: D is negative!") 
+  }
   loglik <- log(likelihood) - sum(log(C)) - sum(log(D))
 
   # Various checks

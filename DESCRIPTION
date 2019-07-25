@@ -11,7 +11,8 @@ Imports:
   deSolve,
   R.utils,
   subplex,
-  testit
+  testit,
+  ggplot2
 Suggests:
   ape,
   knitr,
