@@ -4,8 +4,6 @@
 #'   in which multiple births (from different parents) at the same time
 #'   are possible, along with usual sympatric speciation and extinction events.
 #' @inheritParams default_params_doc
-#' @param debug_mode If TRUE allows to run even when there are errors and
-#'  expose them.
 #' @return The function returns the natural logarithm
 #'   of the likelihood for the process.
 #' @export
@@ -103,17 +101,13 @@ mbd_loglik <- function(
     # it removes some small negative values that can occur as bugs from the
     # integration process
     q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
-    if (any(q_t[t, ] < 0)) { # debug
-      w <- data.frame(matrix(NA, nrow = length(q_t[t, ]), ncol = 0))
-      w$values <- q_t[t, ]
-      w$x <- 1:length(q_t[t, ])
-      w$cols <- ifelse(sign(q_t[t, ]) > 0, "blue", "red")
-      print(w$values)
-      plot(values~x, w, col = cols, pch = 16, xlab = "m", ylab = "Q_m^k(t)")
-      if (debug_mode == FALSE) {
-        stop("problems: q_t is negative!")
-      }
-    }
+    check_q_vector(
+      q_t = q_t,
+      t = t,
+      pars = pars,
+      brts = brts,
+      debug_mode = debug_mode
+    )
 
     # Applying C operator (this is a trick to avoid precision issues)
     C[t] <- 1 / sum(sort(q_t[t, ]))
@@ -135,17 +129,13 @@ mbd_loglik <- function(
     # Applying B operator
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
     q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
-    if (any(q_t[t, ] < 0)) { # debug
-      w <- data.frame(matrix(NA, nrow = length(q_t[t, ]), ncol = 0))
-      w$values <- q_t[t, ]
-      w$x <- 1:length(q_t[t, ])
-      w$cols <- ifelse(sign(q_t[t, ]) > 0, "blue", "red")
-      print(w$values)
-      plot(values~x, w, col = cols, pch = 16, xlab = "m", ylab = "Q_m^k(t)")
-      if (debug_mode == FALSE) {
-        stop("problems: q_t is negative!")
-      }
-    }
+    check_q_vector(
+      q_t = q_t,
+      t = t,
+      pars = pars,
+      brts = brts,
+      debug_mode = debug_mode
+    )
 
     # Applying D operator (this works exactly like C)
     D[t] <- 1 / sum(sort(q_t[t, ]))
@@ -166,28 +156,31 @@ mbd_loglik <- function(
   # Removing C and D effects from the LL
   # testit::assert(all(C >= 0))
   if (!(all(C > 0))) {
-    print(C)
+    cat("The value of C is: ", C, "\n")
     if (debug_mode == FALSE) {
       stop("problems: C is non positive!")
     }
   }
   if (!(all(D > 0))) {
-    print(D)
+    cat("The value of D is: ", D, "\n")
     if (debug_mode == FALSE) {
       stop("problems: D is non positive!")
     }
   }
   if (any(is.na(C) || is.nan(C))) {
-    print(C)
+    cat("The value of C is: ", C, "\n")
     if (debug_mode == FALSE) {
       stop("problems: C is Na or NaN!")
     }
   }
   if (any(is.na(D) || is.nan(D))) {
-    print(D)
+    cat("The value of D is: ", D, "\n")
     if (debug_mode == FALSE) {
       stop("problems: D is Na or NaN!")
     }
+  }
+  if (debug_mode == TRUE) {
+   cat("The value of the likelihood is: ", likelihood, "\n")
   }
   loglik <- log(likelihood) - sum(log(C)) - sum(log(D))
 

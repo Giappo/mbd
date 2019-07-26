@@ -33,8 +33,7 @@ create_a_cond_2 <- function(pars, k, lx) {
 
 #' Called by \link{mbd_loglik} if there is a conditioning != 0
 #' @inheritParams default_params_doc
-#' @return the pc. If \code{is.nan(log(pc))} the log-likelihood estimation
-#'   by \link{mbd_loglik} is -Inf
+#' @return the conditional probability
 #' @author Giovanni Laudanno
 #' @noRd
 calculate_conditional_prob <- function(
@@ -87,9 +86,21 @@ calculate_conditional_prob <- function(
     pc <- 1
   }
   if (!((pc >= 0 && pc <= 1))) { # debug
-    print(pc) # debug
-    if (debug_mode == FALSE) {
-      stop("problems: pc is wrong!") # debug
+    if (debug_mode == TRUE) {
+      plot(
+        q_t,
+        xlab = "m",
+        ylab = "Q_m^k(t_p - t_c)",
+        main = paste0(
+          "pars = ", pars[1], ", ", pars[2], ", ", pars[3], ", ", pars[4]
+        ),
+        sub = paste0(
+          "Conditional probability = ", pc
+        )
+      )
+      cat("The value of pc is: ", pc, "\n")
+    } else {
+      stop("problems: pc is wrong!")
     }
   } # debug
   pc

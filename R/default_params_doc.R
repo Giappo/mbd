@@ -24,6 +24,8 @@
 #'  event in the phylogeny
 #' }
 #' @param data_folder The data folder insider the project folder.
+#' @param debug_mode If TRUE allows to run even when there are errors and
+#'  expose them.
 #' @param function_name function name
 #' @param function_names function names
 #' @param functions_names function names
@@ -102,6 +104,7 @@
 #' @param printit something
 #' @param print_errors something
 #' @param project_folder the folder when you want to save data and results
+#' @param q_t the q_vector in time
 #' @param q_vector the \code{Q} vector from
 #' 'Etienne et al. 2012 - Proc. R. Soc. B'.
 #' @param q the single-lineage speciation probability at a triggered event.
@@ -175,6 +178,7 @@ default_params_doc <- function(
   colormap,
   cond,
   data_folder,
+  debug_mode,
   function_name,
   function_names,
   functions_names,
@@ -230,6 +234,7 @@ default_params_doc <- function(
   print_errors,
   printit,
   project_folder,
+  q_t,
   q_vector,
   q,
   quantiles_choice,

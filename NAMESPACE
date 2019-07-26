@@ -2,6 +2,7 @@
 
 export(cat2)
 export(check_brts_consistency)
+export(check_q_vector)
 export(create_a)
 export(create_a_cond_2)
 export(create_b)
