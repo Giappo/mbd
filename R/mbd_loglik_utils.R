@@ -327,13 +327,13 @@ brts2time_intervals_and_births <- function(brts, brts_precision = 8) {
 #' @param v a vector
 #' @param display_output If TRUE it prints the flags
 #' @noRd
-negatives_correction <- function(v, pars, display_output = 0) {
+negatives_correction <- function(v, pars, display_output = FALSE) {
   problems <- 0
   if (any(is.na(v))) {
     problems <- 1
     na_components <- which(is.na(v) & !is.nan(v))
     nan_components <- which(is.nan(v))
-    if (display_output == 1 && !missing(pars)) {
+    if (display_output == TRUE && !missing(pars)) {
       cat("There are non-numeric components for par values:", pars, "\n")
       if (length(na_components) > 0) {
         cat("NA component are:", na_components)
