@@ -104,14 +104,16 @@ mbd_loglik <- function(
     # integration process
     q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     if (any(q_t[t, ] < 0)) { # debug
-      v <- q_t[t, ] # debug
-      print(v) # debug
-      plot(v[v >= 0], xlab = "m", ylab = "Q_m^k(t)") # debug
-      points(v[v < 0], col = "red") # debug
+      w <- data.frame(matrix(NA, nrow = length(q_t[t, ]), ncol = 0))
+      w$values <- q_t[t, ]
+      w$x <- 1:length(q_t[t, ])
+      w$cols <- ifelse(sign(q_t[t, ]) > 0, "blue", "red")
+      print(w$values)
+      plot(values~x, w, col = cols, pch = 16, xlab = "m", ylab = "Q_m^k(t)")
       if (debug_mode == FALSE) {
-        stop("problems: q_t is negative!") # debug
+        stop("problems: q_t is negative!")
       }
-    } # debug
+    }
 
     # Applying C operator (this is a trick to avoid precision issues)
     C[t] <- 1 / sum(sort(q_t[t, ]))
@@ -134,14 +136,16 @@ mbd_loglik <- function(
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
     q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     if (any(q_t[t, ] < 0)) { # debug
-      v <- q_t[t, ] # debug
-      print(v) # debug
-      plot(v[v >= 0], xlab = "m", ylab = "Q_m^k(t)") # debug
-      points(v[v < 0], col = "red") # debug
+      w <- data.frame(matrix(NA, nrow = length(q_t[t, ]), ncol = 0))
+      w$values <- q_t[t, ]
+      w$x <- 1:length(q_t[t, ])
+      w$cols <- ifelse(sign(q_t[t, ]) > 0, "blue", "red")
+      print(w$values)
+      plot(values~x, w, col = cols, pch = 16, xlab = "m", ylab = "Q_m^k(t)")
       if (debug_mode == FALSE) {
-        stop("problems: q_t is negative!") # debug
+        stop("problems: q_t is negative!")
       }
-    } # debug
+    }
 
     # Applying D operator (this works exactly like C)
     D[t] <- 1 / sum(sort(q_t[t, ]))
