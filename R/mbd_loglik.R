@@ -165,18 +165,28 @@ mbd_loglik <- function(
 
   # Removing C and D effects from the LL
   # testit::assert(all(C >= 0))
-  if (!(all(C >= 0))) {
-    print(pars)
+  if (!(all(C > 0))) {
     print(C)
     if (debug_mode == FALSE) {
-      stop("problems: C is negative!")
+      stop("problems: C is non positive!")
     }
   }
-  if (!(all(D >= 0))) {
-    print(pars)
+  if (!(all(D > 0))) {
     print(D)
     if (debug_mode == FALSE) {
-      stop("problems: D is negative!") 
+      stop("problems: D is non positive!")
+    }
+  }
+  if (any(is.na(C) || is.nan(C))) {
+    print(C)
+    if (debug_mode == FALSE) {
+      stop("problems: C is Na or NaN!")
+    }
+  }
+  if (any(is.na(D) || is.nan(D))) {
+    print(D)
+    if (debug_mode == FALSE) {
+      stop("problems: D is Na or NaN!")
     }
   }
   loglik <- log(likelihood) - sum(log(C)) - sum(log(D))
