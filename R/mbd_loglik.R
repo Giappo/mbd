@@ -104,8 +104,10 @@ mbd_loglik <- function(
     # integration process
     q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     if (any(q_t[t, ] < 0)) { # debug
-      print(q_t[t, ]) # debug
-      plot(q_t[t, ]) # debug
+      v <- q_t[t, ] # debug
+      print(v) # debug
+      plot(v[v >= 0], xlab = "m", ylab = "Q_m^k(t)") # debug
+      points(v[v < 0], col = "red") # debug
       if (debug_mode == FALSE) {
         stop("problems: q_t is negative!") # debug
       }
@@ -132,8 +134,10 @@ mbd_loglik <- function(
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
     q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     if (any(q_t[t, ] < 0)) { # debug
-      print(q_t[t, ]) # debug
-      plot(q_t[t, ], xlab = "m", ylab = "Q_m^k(t)") # debug
+      v <- q_t[t, ] # debug
+      print(v) # debug
+      plot(v[v >= 0], xlab = "m", ylab = "Q_m^k(t)") # debug
+      points(v[v < 0], col = "red") # debug
       if (debug_mode == FALSE) {
         stop("problems: q_t is negative!") # debug
       }
@@ -147,14 +151,7 @@ mbd_loglik <- function(
     k <- k + births[t]
     t <- t + 1
   }
-  # testit::assert(all(q_t >= 0)) # q_t has been correctly integrated
-  if (any(q_t[t, ] < 0)) { # debug
-    print(q_t[t, ]) # debug
-    plot(q_t[t, ]) # debug
-    if (debug_mode == FALSE) {
-      stop("problems: q_t is negative!") # debug
-    }
-  } # debug
+
   testit::assert(k == n_0 + sum(births)) # k is the number of tips
   testit::assert(t == lt) # t refers to the last time interval
 
