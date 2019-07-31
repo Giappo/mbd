@@ -52,15 +52,16 @@ a_operator <- function(
   methodes <- mbd_methodes()
   other_methodes <- methodes[!methodes == methode]
   methodes <- c(methode, other_methodes)
+  max_rtol <- 1e-32
   for (methode in methodes) {
     rtol <- reltol
     while (
       (
         !is.null(out$warning) ||
         !is.null(out$error) ||
-        any(negatives_correction(v = out$value) < 0)
+        any(out$value < 0)
       ) &&
-      rtol >= 1e-14
+      rtol >= max_rtol
     ) {
       x <- utils::capture.output(R.utils::withTimeout(
         out <- my_try_catch(deSolve::ode( # nolint internal function
@@ -74,7 +75,7 @@ a_operator <- function(
         )[2, -1]),
         timeout = 1001
       ))
-      rtol <- rtol * 1e-1
+      rtol <- rtol * 1e-4
     }
     if (is.null(out$warning) && is.null(out$error)) {
       break

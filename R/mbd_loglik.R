@@ -98,9 +98,6 @@ mbd_loglik <- function(
       abstol = abstol,
       reltol = reltol
     )
-    # it removes some small negative values that can occur as bugs from the
-    # integration process
-    q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     check_q_vector(
       q_t = q_t,
       t = t,
@@ -110,8 +107,8 @@ mbd_loglik <- function(
     )
 
     # Applying C operator (this is a trick to avoid precision issues)
-    C[t] <- 1 / sum(sort(q_t[t, ]))
-    q_t[t, ] <- q_t[t, ] * C[t]
+    C[t] <- sum(sort(q_t[t, ]))
+    q_t[t, ] <- q_t[t, ] / C[t]
 
     # Loop has to end after integrating to t_p
     if (!(t < lt)) {
@@ -128,7 +125,6 @@ mbd_loglik <- function(
 
     # Applying B operator
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
-    q_t[t, ] <- negatives_correction(q_t[t, ], pars)  # nolint internal function
     check_q_vector(
       q_t = q_t,
       t = t,
@@ -138,8 +134,8 @@ mbd_loglik <- function(
     )
 
     # Applying D operator (this works exactly like C)
-    D[t] <- 1 / sum(sort(q_t[t, ]))
-    q_t[t, ] <- q_t[t, ] * D[t]
+    D[t] <- sum(sort(q_t[t, ]))
+    q_t[t, ] <- q_t[t, ] / D[t]
 
     # Updating running parameters
     k <- k + births[t]
@@ -182,7 +178,7 @@ mbd_loglik <- function(
   if (debug_mode == TRUE) {
    cat("The value of the likelihood is: ", likelihood, "\n")
   }
-  loglik <- log(likelihood) - sum(log(C)) - sum(log(D))
+  loglik <- log(likelihood) + sum(log(C)) + sum(log(D))
 
   # Various checks
   loglik <- as.numeric(loglik)
