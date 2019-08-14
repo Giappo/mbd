@@ -81,10 +81,6 @@ calculate_conditional_prob <- function(
   tips_components <- 1 + c(missingspecies_min, missingspecies_max)
   pc <- sum(total_product[tips_components[1]:tips_components[2]])
 
-  # small numerical errors can occur for short trees
-  if (pc > 1 && pc < 1.01) {
-    pc <- 1
-  }
   if (!((pc >= 0 && pc <= 1))) { # debug
     if (debug_mode == TRUE) {
       plot(

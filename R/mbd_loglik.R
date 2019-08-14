@@ -51,8 +51,8 @@ mbd_loglik <- function(
   # Use Pure Multiple Birth when there is no extinction
   if (
     pars[2] == 0 &&
-    all(tips_interval == c(n_0 * (cond > 0), Inf))
-    && missnumspec == 0
+    all(tips_interval == c(n_0 * (cond > 0), Inf)) &&
+    missnumspec == 0
   ) {
     return(
       mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0) - log(pc)
@@ -60,7 +60,7 @@ mbd_loglik <- function(
   }
 
   # Adjusting data
-  data <- brts2time_intervals_and_births(brts) # nolint internal function
+  data <- mbd:::brts2time_intervals_and_births(brts) # nolint internal function
   time_intervals <- data$time_intervals
   births <- data$births
   lt <- length(time_intervals)

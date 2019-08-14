@@ -49,15 +49,134 @@ a_operator <- function(
     warning = 1,
     error = 1
   )
+  methodes <- c(mbd_methodes(), "daspk")
+  other_methodes <- methodes[!methodes == methode]
+  methodes <- c(methode, other_methodes)
+  # methodes <- c(
+  #   "lsoda", "lsode", "lsodes", "lsodar", "vode", "daspk",
+  #   "euler", "rk4", "ode23", "ode45", "radau", 
+  #   "bdf", "bdf_d", "adams", "impAdams", "impAdams_d", "iteration"
+  # )
+  max_rtol <- 1e-68
+  max_atol <- 1e-16
+
+  atol_step <- -4
+  rtol_step <- -4
+
+  atol_vec <- 10 ^ seq(from = log10(abstol), to = log10(max_atol), by = atol_step)
+  rtol_vec <- 10 ^ seq(from = log10(reltol), to = log10(max_rtol), by = rtol_step)
+  
+  res <- vector("list", length(methodes))
+  names(res) <- methodes
+  for (atol in atol_vec) {
+    for (methode in methodes) {
+      print(methode)
+      for (rtol in rtol_vec) {
+        x <- utils::capture.output(R.utils::withTimeout(
+          out <- mbd:::my_try_catch(deSolve::ode( # nolint internal function
+            y = q_vector,
+            times = times,
+            func = mbd_loglik_rhs,
+            parms = ode_matrix,
+            atol = atol,
+            rtol = rtol,
+            method = methode
+          )[2, -1]),
+          timeout = 1001
+        ))
+        out$value[is.na(out$value)] <- -1
+        if (is.null(out$error) && all(out$value >= 0)) {
+          print(out$value)
+          res[[which(methodes == methode)]]$value <- out$value
+          res[[which(methodes == methode)]]$atol <- atol
+          res[[which(methodes == methode)]]$rtol <- rtol
+          break
+        }
+      }
+    }
+  }; print(methode);print(atol); print(rtol);
+  for (i in seq_along(res)) {
+    if (!is.null(res[[i]])) {
+      plot(
+        res[[i]]$value,
+        main = paste0(
+          names(res)[i],
+          "\n",
+          "atol=", res[[i]]$atol,
+          "; ",
+          "rtol=", res[[i]]$rtol
+        )
+      )
+    }
+  }
+
+  y <- deSolve::ode( # nolint internal function
+    y = q_vector,
+    times = times,
+    func = mbd_loglik_rhs,
+    parms = ode_matrix,
+    atol = 1e-16,
+    rtol = 1e-26,
+    method = "lsoda"
+  )
+  plot(y[2, -1])
+
+  if (1 == 2) {
+    
+  }
+  if (
+    !is.null(out$error) ||
+    any(out$value < 0)
+  ) {
+    result <- rep(NA, length(q_vector))
+  } else {
+    result <- out$value
+  }
+  rm(x)
+  names(result) <- names(q_vector)
+  result
+}
+
+#' The A operator is given by the integration of a set of differential equations
+#' between two consecutive nodes. So, defined the set in the time interval
+#' [t_{i-1}, t_i], where k species are present in the phylogeny, as:
+#'
+#' d
+#' --Q^k_m(t) = SUM_n(M^k_m,n * Q^k_n(t)
+#' dt
+#'
+#' where m, n, label the amount of unseen species in the phylogeny,
+#' A is thus defined as:
+#'
+#' A(t_i - t_{i-1}) = exp(M(t_k - t_{k-1})
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @noRd
+a_operator2 <- function(
+  q_vector,
+  transition_matrix,
+  time_interval,
+  precision = 50L,
+  abstol = 1e-16,
+  reltol = 1e-12,
+  methode = "lsodes"
+) {
+  times <- c(0, time_interval)
+  ode_matrix <- transition_matrix
+  out <- list(
+    value = q_vector,
+    warning = 1,
+    error = 1
+  )
   methodes <- mbd_methodes()
   other_methodes <- methodes[!methodes == methode]
   methodes <- c(methode, other_methodes)
-  max_rtol <- 1e-32
+  max_rtol <- 1e-50
   for (methode in methodes) {
+    print(methode)
     rtol <- reltol
     while (
       (
-        !is.null(out$warning) ||
         !is.null(out$error) ||
         any(out$value < 0)
       ) &&
@@ -75,21 +194,30 @@ a_operator <- function(
         )[2, -1]),
         timeout = 1001
       ))
+      out$value[is.na(out$value)] <- -1
       rtol <- rtol * 1e-4
+      print(out$value)
     }
-    if (is.null(out$warning) && is.null(out$error)) {
+    if (
+      is.null(out$error) &&
+      all(out$value > 0)
+    ) {
       break
     } else {
-      out$value <- rep(NA, length(q_vector))
+      out$value <- rep(-1, length(q_vector))
     }
   }
 
-  if (!is.null(out$warning) || !is.null(out$error)) {
+  if (
+    !is.null(out$error) ||
+    any(out$value < 0)
+  ) {
     result <- rep(NA, length(q_vector))
   } else {
     result <- out$value
   }
   rm(x)
+  names(result) <- names(q_vector)
   result
 }
 
