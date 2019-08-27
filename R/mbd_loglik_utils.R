@@ -262,6 +262,9 @@ mbd_solve <- function(
       # atol <- atol / 100
       # rtol <- rtol / 100
       if (aa >= atol_len) {
+        if (debug_mode == TRUE) {
+          plot(y, main = "Vector obtained with smallest tolerance")
+        }
         stop("Integration failed")
       }
       if (any(grepl(x = x, pattern = "too much accuracy requested"))) {
