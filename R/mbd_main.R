@@ -14,6 +14,7 @@ mbd_main <- function(
   start_pars = c(0.3, 0.1, 1.5, 0.15),
   optim_ids = rep(TRUE, length(start_pars)),
   loglik_functions = mbd_loglik,
+  methode = "lsoda",
   project_folder = NULL,
   verbose = FALSE,
   q_threshold = 1e-4
@@ -70,6 +71,7 @@ mbd_main <- function(
     }
     mle_out <- mbd_ml(
       loglik_function = get(function_names[m]),
+      methode = methode,
       brts = sim$brts,
       cond = cond,
       n_0 = n_0,

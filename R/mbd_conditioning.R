@@ -35,7 +35,7 @@ create_a_cond_2 <- function(pars, k, lx) {
 #' @inheritParams default_params_doc
 #' @return the conditional probability
 #' @author Giovanni Laudanno
-#' @noRd
+#' @export
 calculate_conditional_prob <- function(
   brts,
   pars,
@@ -63,14 +63,11 @@ calculate_conditional_prob <- function(
   # creating a_matrix
   matrix_a <- create_a(pars = pars, k = n_0, lx = lx) # nolint internal function
   # integrating the starting q_vector to t_p
-  q_t <- a_operator(
+  q_t <- mbd_solve(
     q_vector = q_i,
-    transition_matrix = matrix_a,
+    matrix_a = matrix_a,
     time_interval = total_time,
-    precision = 250L,
-    methode = methode,
-    abstol = abstol,
-    reltol = reltol
+    debug_mode = debug_mode
   )
   names(q_t) <- names(q_i)
 
@@ -81,7 +78,7 @@ calculate_conditional_prob <- function(
   tips_components <- 1 + c(missingspecies_min, missingspecies_max)
   pc <- sum(total_product[tips_components[1]:tips_components[2]])
 
-  if (!((pc >= 0 && pc <= 1))) { # debug
+  if (!(pc >= 0 && pc <= 1)) {
     if (debug_mode == TRUE) {
       plot(
         q_t,
@@ -182,13 +179,12 @@ calculate_conditional_prob2 <- function(
   if (pc > 1 && pc < 1.01) {
     pc <- 1
   }
-  # testit::assert(pc >= 0 && pc <= 1)
-  if (!((pc >= 0 && pc <= 1))) { # debug
+  if (!(pc >= 0 && pc <= 1)) {
     print(pc) # debug
     if (debug_mode == FALSE) {
       stop("problems: pc is wrong!") # debug
     }
   } # debug
-  
+
   pc
 }

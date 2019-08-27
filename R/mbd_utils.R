@@ -55,7 +55,12 @@ mbd_conds <- function() {
 #' @return the integration methodes
 #' @export
 mbd_methodes <- function() {
-  methodes <- c("lsodes", "ode45", "lsoda")
+  methodes <- c(
+    "lsoda", "lsodar", "vode", "bdf", "radau", # seems better
+    "lsode", "daspk", "lsodes", # usually good
+    "bdf_d", "adams", "impAdams_d", # big values (in abs)
+    "impAdams" # weird value
+  )
   methodes
 }
 

@@ -1,5 +1,11 @@
 context("mbd_matrices")
 
+is_on_ci <- function() {
+  is_it_on_appveyor <- Sys.getenv("APPVEYOR") != ""
+  is_it_on_travis <- Sys.getenv("TRAVIS") != ""
+  is_it_on_appveyor || is_it_on_travis # nolint internal function
+}
+
 # a_matrix ----
 test_that("a_matrix: mbd vs ddd", {
 
@@ -61,24 +67,26 @@ test_that("a_matrix: # entries are in accordance with the theory", {
   lambda <- 3; mu <- 1.5; nu <- 7; q <- 0.4
   pars <- c(lambda, mu, nu, q)
   k <- 2
-  lx <- 200
+  lx <- 50 + 150 * is_on_ci()
+  adjust_last_entry <- TRUE
   a_matrix <- mbd::create_a(
     pars,
     k = k,
-    lx = lx
+    lx = lx,
+    adjust_last_entry = adjust_last_entry
   )
   # lower triangular matrix: m > n
   for (m in 1:lx) {
     for (n in 0:(m - 1)) {
       j <- 0:min(m - n, k)
-      entry_m_n <- 
+      entry_m_n <-
         (m == n + 1) * lambda * (m - 1 + 2 * k) +
         nu *
         (1 - q) ^ k *
-        q ^ (m - n) * 
+        q ^ (m - n) *
         (1 - q) ^ (2 * n - m) *
         sum(
-          2 ^ j * choose(k, j) * choose(n, m - n - j)
+          (2 ^ j) * choose(k, j) * choose(n, m - n - j)
         )
       testthat::expect_equal(
         entry_m_n,
@@ -99,7 +107,8 @@ test_that("a_matrix: # entries are in accordance with the theory", {
   # this might differ according to the definition
   testthat::expect_equal(
     diag(a_matrix)[length(entry_m_m)],
-    entry_m_m[length(entry_m_m)]
+    adjust_last_entry * (-mu) * (k + lx) +
+      (1 - adjust_last_entry) * entry_m_m[length(entry_m_m)]
   )
 })
 
@@ -178,7 +187,7 @@ test_that("b_matrix: # entries are in accordance with the theory", {
   lambda <- 4; mu <- 2; nu <- 7.2; q <- 0.5
   pars <- c(lambda, mu, nu, q)
   k <- 8; b <- 3
-  lx <- 200
+  lx <- 50 + 150 * is_on_ci()
   b_matrix <- mbd::create_b(
     pars,
     k = k,
@@ -190,12 +199,12 @@ test_that("b_matrix: # entries are in accordance with the theory", {
     for (n in 0:m) {
       a <- m - n
       j <- 0:min(m - n, k)
-      entry_m_n <- 
+      entry_m_n <-
         (m == n) * (b == 1) * lambda * k +
         nu *
         choose(k, b) * q ^ b *
         (1 - q) ^ (k - b + m) *
-        q ^ a * 
+        q ^ a *
         (1 - q) ^ (-2 * a) *
         sum(
           2 ^ j * choose(k - b, j) * choose(m - a, a - j)

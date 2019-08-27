@@ -13,12 +13,12 @@ mbd_loglik <- function(
   n_0 = 2,
   cond = 1,
   missnumspec = 0,
-  lx = 1 + 2 * (length(brts) + length(missnumspec)),
+  lx = min(1 + 2 * (length(brts) + length(missnumspec)), 1400),
   tips_interval = c(n_0 * (cond > 0), Inf),
-  methode = "lsodes",
+  methode = "lsoda",
   q_threshold = 1e-3,
-  abstol = 1e-16,
-  reltol = 1e-10,
+  abstol = 1e-10,
+  reltol = 1e-12,
   debug_mode = FALSE
 ) {
   # BASIC SETTINGS AND CHECKS
@@ -40,7 +40,7 @@ mbd_loglik <- function(
     pars = pars,
     cond = cond,
     n_0 = n_0,
-    lx = lx + 100,
+    lx = min(lx + 100, 1400),
     tips_interval = tips_interval,
     methode = methode,
     abstol = abstol,
@@ -89,14 +89,10 @@ mbd_loglik <- function(
     )
 
     # Applying A operator
-    q_t[t, ] <- a_operator(
+    q_t[t, ] <- mbd_solve(
       q_vector = q_t[(t - 1), ],
-      transition_matrix = matrix_a,
-      time_interval = time_intervals[t],
-      precision = 50L,
-      methode = methode,
-      abstol = abstol,
-      reltol = reltol
+      matrix_a = matrix_a,
+      time_interval = time_intervals[t]
     )
     check_q_vector(
       q_t = q_t,
@@ -150,7 +146,6 @@ mbd_loglik <- function(
   likelihood <- vm * q_t[t, (missnumspec + 1)]
 
   # Removing C and D effects from the LL
-  # testit::assert(all(C >= 0))
   if (!(all(C > 0))) {
     cat("The value of C is: ", C, "\n")
     if (debug_mode == FALSE) {

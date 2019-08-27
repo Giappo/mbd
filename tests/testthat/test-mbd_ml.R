@@ -8,8 +8,8 @@ is_on_ci <- function() {
 
 test_that("use", {
 
-  # if (!is_on_ci()) {
-  #   skip("This is long")
+  # if !is_on_ci() {
+  #   skip "This is long"
   # }
 
   brts <- c(10, 9, 7, 6, 5)
@@ -22,7 +22,7 @@ test_that("use", {
     brts = brts,
     cond = cond,
     n_0 = n_0,
-    verbose = TRUE,
+    verbose = FALSE,
     lx = 100,
     methode = "lsodes"
   )
