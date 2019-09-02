@@ -12,7 +12,7 @@ test_that("use", {
     skip("This is long")
   }
 
-  seed_interval <- 8:10
+  seed_interval <- 8:9
   for (seed in seed_interval) {
     # seed = 8 is critical
     sim_pars <- c(0.2, 0.15, 1.2, 0.1)
@@ -184,6 +184,7 @@ test_that("it works also for a subset of parameters", {
   t_0s <- age <- 6
   loglik_functions <- mbd_loglik
   optim_ids <- c(TRUE, FALSE, FALSE, FALSE)
+  verbose <- FALSE
 
   test <- mbd_main(
     seed = seed,
@@ -195,7 +196,7 @@ test_that("it works also for a subset of parameters", {
     start_pars = c(0.3, 0.1, 1, 0.1),
     loglik_functions = loglik_functions,
     optim_ids = optim_ids,
-    verbose = FALSE
+    verbose = verbose
   )
 
   testthat::expect_true(

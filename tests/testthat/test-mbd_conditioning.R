@@ -1,4 +1,4 @@
-context("mbd_loglik - conditioning")
+context("mbd_conditioning")
 
 # cond == 0 yields pc == 1; cond == 1 yields pc <= 1;
 test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
@@ -8,7 +8,7 @@ test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
   n_0 <- 2
 
   testthat::expect_equal(
-    calculate_conditional_prob(
+    cond_prob(
       pars = pars,
       brts = brts,
       n_0  = n_0,
@@ -17,12 +17,12 @@ test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
     1
   )
   testthat::expect_lt(
-    calculate_conditional_prob(
+    cond_prob(
       pars = pars,
       brts = brts,
       n_0  = n_0,
       cond = 1,
-      lx = 300
+      lx = 16
     ),
     1
   )

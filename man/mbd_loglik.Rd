@@ -5,7 +5,7 @@
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
 mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + length(missnumspec)), 1400),
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
   tips_interval = c(n_0 * (cond > 0), Inf), methode = "lsoda",
   q_threshold = 0.001, abstol = 1e-10, reltol = 1e-12,
   debug_mode = FALSE)

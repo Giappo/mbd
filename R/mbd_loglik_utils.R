@@ -521,3 +521,9 @@ mbd_calculate_q_vector <- function(
   q_f2 <- vm * q_f / (prod(C) * prod(D))
   q_f2
 }
+
+#' @noRd
+max_lx <- function() {
+  maximum_lx <- 1400
+  maximum_lx
+}

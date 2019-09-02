@@ -8,8 +8,9 @@
 mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
   0.5, 0.3), n_0 = 2, cond = 1, optim_ids = rep(TRUE,
   length(start_pars)), true_pars = start_pars, tips_interval = c(0,
-  Inf), q_threshold = 0.001, verbose = TRUE, lx = 1 + 2 *
-  (length(brts)), methode = "lsodes")
+  Inf), q_threshold = 0.001, verbose = TRUE, missnumspec = 0,
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
+  methode = "lsodes")
 }
 \arguments{
 \item{loglik_function}{the loglik function}
@@ -40,6 +41,9 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 because you never want \code{q} to actually be equal to zero or one.}
 
 \item{verbose}{choose if you want to print the output or not}
+
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny.}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
 

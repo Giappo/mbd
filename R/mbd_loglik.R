@@ -13,7 +13,7 @@ mbd_loglik <- function(
   n_0 = 2,
   cond = 1,
   missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + length(missnumspec)), 1400),
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
   tips_interval = c(n_0 * (cond > 0), Inf),
   methode = "lsoda",
   q_threshold = 1e-3,
@@ -35,16 +35,13 @@ mbd_loglik <- function(
   }
 
   # Calculate conditional probability
-  pc <- calculate_conditional_prob(
-    brts = brts,
+  pc <- cond_prob(
     pars = pars,
+    brts = brts,
     cond = cond,
     n_0 = n_0,
-    lx = lx,
     tips_interval = tips_interval,
-    methode = methode,
-    abstol = abstol,
-    reltol = reltol,
+    lx = min(lx, 31),
     debug_mode = debug_mode
   )
 
