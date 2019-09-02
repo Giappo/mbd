@@ -40,7 +40,7 @@ mbd_loglik <- function(
     pars = pars,
     cond = cond,
     n_0 = n_0,
-    lx = min(lx + 100, 1400),
+    lx = lx,
     tips_interval = tips_interval,
     methode = methode,
     abstol = abstol,

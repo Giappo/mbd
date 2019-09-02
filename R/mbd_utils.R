@@ -47,23 +47,6 @@ mbd_conds <- function() {
   conds
 }
 
-#' @title Integration methodes
-#' @author Giovanni Laudanno
-#' @description Gives the integration methodes (methods for odes)
-#'  accepted by mbd
-#' @inheritParams default_params_doc
-#' @return the integration methodes
-#' @export
-mbd_methodes <- function() {
-  methodes <- c(
-    "lsoda", "lsodar", "vode", "bdf", "radau", # seems better
-    "lsode", "daspk", "lsodes", # usually good
-    "bdf_d", "adams", "impAdams_d", # big values (in abs)
-    "impAdams" # weird value
-  )
-  methodes
-}
-
 #' @title Logliks for the experiment
 #' @author Giovanni Laudanno
 #' @description Get the loglik functions to use for the experiment
@@ -295,4 +278,13 @@ read_results <- function(project_folder = NULL) {
       result = result
     )
   )
+}
+
+#' Count the number of multiple speciation events
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+mbd_count_n_spec_events <- function(brts) {
+  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
+  sum(births > 1)
 }

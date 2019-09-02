@@ -150,3 +150,44 @@ check_seed <- function(seed) {
   }
   return()
 }
+
+#' @title Check q_t
+#' @description Check q_t
+#' @inheritParams default_params_doc
+#' @return Nothing
+#' @author Giovanni Laudanno
+#' @export
+check_q_vector <- function(
+  q_t,
+  t,
+  pars,
+  brts,
+  debug_mode = FALSE
+) {
+  q_vector <- q_t[t, ]
+  if (any(q_vector < 0)) {
+    if (debug_mode == TRUE) {
+      brts2 <- c(brts, 0)
+      w <- data.frame(matrix(NA, nrow = length(q_vector), ncol = 0))
+      w$values <- q_vector
+      w$x <- 1:length(q_vector)
+      w$cols <- ifelse(sign(q_vector) > 0, "blue", "red")
+      print(w$values)
+      plot(
+        values ~ x,
+        w,
+        pch = 15,
+        xlab = "m",
+        ylab = "Q_m^k(t)",
+        main = paste0(
+          "pars = ", pars[1], ", ", pars[2], ", ", pars[3], ", ", pars[4]
+        ),
+        sub = paste0(
+          "Problems in time interval: (", brts2[t - 1], ", ", brts2[t], ")"
+        )
+      )
+    } else {
+      stop("problems: q_t is negative!")
+    }
+  }
+}
