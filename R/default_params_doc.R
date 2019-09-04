@@ -200,6 +200,7 @@ default_params_doc <- function(
   lx,
   lx0,
   matrix,
+  matrix_a,
   matrix_builder,
   max_iter,
   max_k,

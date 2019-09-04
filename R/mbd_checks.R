@@ -173,7 +173,7 @@ check_q_vector <- function(
       w$x <- 1:length(q_vector)
       w$cols <- ifelse(sign(q_vector) > 0, "blue", "red")
       print(w$values)
-      plot(
+      graphics::plot(
         values ~ x,
         w,
         pch = 15,

@@ -54,7 +54,7 @@ mbd_loglik <- function(
   }
 
   # Adjusting data
-  data <- mbd:::brts2time_intervals_and_births(brts) # nolint internal function
+  data <- brts2time_intervals_and_births(brts) # nolint internal function
   time_intervals <- data$time_intervals
   births <- data$births
   lt <- length(time_intervals)

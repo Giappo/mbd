@@ -153,7 +153,7 @@ cond_prob <- function(
 
   if (!(pc >= 0 && pc <= 1)) {
     if (debug_mode == TRUE) {
-      plot(
+      graphics::plot(
         p_m1_m2,
         xlab = "m",
         ylab = "Q_m^k(t_p - t_c)",

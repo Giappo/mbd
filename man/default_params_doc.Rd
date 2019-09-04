@@ -11,7 +11,7 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   function_name, function_names, functions_names, idparsfix, idparsopt,
   initparsopt, input_trees_path, input_xml, interval_max, interval_min,
   iterations, k, lambda, lambda_limit, loglik_function, loglik_functions,
-  logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
+  logs, lx, lx0, matrix, matrix_a, matrix_builder, max_iter, max_k,
   max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
   message, methode, minimum_multiple_births, missnumspec, models, mu,
   mu_limit, mutation_rate, n_0, n_0s, n_species, init_n_lineages, n_steps,
@@ -114,6 +114,8 @@ The ids are defined as follows:
 \item{lx0}{something}
 
 \item{matrix}{a matrix}
+
+\item{matrix_a}{The A matrix from the theory that represents the ODE system.}
 
 \item{matrix_builder}{function used to build the transition matrix.
 Default option is \code{hyper_a_hanno}}
@@ -293,8 +295,6 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 \item{z}{something}
 
 \item{z_name}{something}
-
-\item{matrix_a}{The A matrix from the theory that represents the ODE system.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'
