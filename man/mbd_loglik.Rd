@@ -6,8 +6,7 @@
 \usage{
 mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0,
   lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
-  tips_interval = c(n_0 * (cond > 0), Inf), methode = "lsoda",
-  q_threshold = 0.001, abstol = 1e-10, reltol = 1e-12,
+  tips_interval = c(n_0 * (cond > 0), Inf), q_threshold = 0.001,
   debug_mode = FALSE)
 }
 \arguments{
@@ -40,21 +39,8 @@ but missing in the phylogeny.}
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
-\item{methode}{specifies how the integration must be performed:
-\itemize{
-  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
-  \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
-  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
-}}
-
 \item{q_threshold}{adds a threshold for the evaluation of q. This is due
 because you never want \code{q} to actually be equal to zero or one.}
-
-\item{abstol}{absolute error tolerance for
-the numerical integration using deSolve.}
-
-\item{reltol}{relative error tolerance for
-the numerical integration using deSolve.}
 
 \item{debug_mode}{If TRUE allows to run even when there are errors and
 expose them.}

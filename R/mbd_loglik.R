@@ -15,10 +15,7 @@ mbd_loglik <- function(
   missnumspec = 0,
   lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
   tips_interval = c(n_0 * (cond > 0), Inf),
-  methode = "lsoda",
   q_threshold = 1e-3,
-  abstol = 1e-10,
-  reltol = 1e-12,
   debug_mode = FALSE
 ) {
   # BASIC SETTINGS AND CHECKS

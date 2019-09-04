@@ -56,8 +56,7 @@ mbd_ml <- function(
   q_threshold = 1e-3,
   verbose = TRUE,
   missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
-  methode = "lsodes"
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx())
 ) {
   # setup and checks
   if (true_pars[3] == 0 | true_pars[4] == 0) {
@@ -89,7 +88,6 @@ mbd_ml <- function(
       n_0 = n_0,
       q_threshold = q_threshold,
       lx = lx,
-      methode = methode,
       missnumspec = missnumspec
     )
     if (verbose == TRUE) {

@@ -9,8 +9,7 @@ mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
   0.5, 0.3), n_0 = 2, cond = 1, optim_ids = rep(TRUE,
   length(start_pars)), true_pars = start_pars, tips_interval = c(0,
   Inf), q_threshold = 0.001, verbose = TRUE, missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
-  methode = "lsodes")
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()))
 }
 \arguments{
 \item{loglik_function}{the loglik function}
@@ -46,13 +45,6 @@ because you never want \code{q} to actually be equal to zero or one.}
 but missing in the phylogeny.}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
-
-\item{methode}{specifies how the integration must be performed:
-\itemize{
-  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
-  \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
-  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
-}}
 }
 \value{
 The output is a dataframe containing

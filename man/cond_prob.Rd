@@ -4,8 +4,8 @@
 \alias{cond_prob}
 \title{Called by \link{mbd_loglik} if there is a conditioning != 0}
 \usage{
-cond_prob(pars, brts, cond, n_0, tips_interval = c(n_0 * (cond > 0),
-  Inf), lx = 30, debug_mode = FALSE)
+cond_prob(pars, brts, cond, n_0 = 2, tips_interval = c(n_0 * (cond >
+  0), Inf), lx = 30, debug_mode = FALSE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -44,5 +44,5 @@ the conditional probability
 Called by \link{mbd_loglik} if there is a conditioning != 0
 }
 \author{
-Giovanni Laudanno
+Giovanni Laudanno, Bart Haegeman
 }

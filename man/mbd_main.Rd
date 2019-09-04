@@ -7,8 +7,8 @@
 mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
   tips_interval = c(n_0 * (cond > 0), Inf), seed, start_pars = c(0.3,
   0.1, 1.5, 0.15), optim_ids = rep(TRUE, length(start_pars)),
-  loglik_functions = mbd_loglik, methode = "lsoda",
-  project_folder = NULL, verbose = FALSE, q_threshold = 1e-04)
+  loglik_functions = mbd_loglik, project_folder = NULL,
+  verbose = FALSE, q_threshold = 1e-04)
 }
 \arguments{
 \item{sim_pars}{vector of parameters:
@@ -42,13 +42,6 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 \item{optim_ids}{ids of the parameters you want to optimize.}
 
 \item{loglik_functions}{the loglik_functions you want to use}
-
-\item{methode}{specifies how the integration must be performed:
-\itemize{
-  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
-  \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
-  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
-}}
 
 \item{project_folder}{the folder when you want to save data and results}
 

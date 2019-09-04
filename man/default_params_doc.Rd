@@ -113,7 +113,7 @@ The ids are defined as follows:
 
 \item{lx0}{something}
 
-\item{matrix}{something}
+\item{matrix}{a matrix}
 
 \item{matrix_builder}{function used to build the transition matrix.
 Default option is \code{hyper_a_hanno}}
@@ -293,6 +293,8 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 \item{z}{something}
 
 \item{z_name}{something}
+
+\item{matrix_a}{The A matrix from the theory that represents the ODE system.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

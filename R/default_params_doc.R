@@ -52,7 +52,8 @@
 #' @param logs something
 #' @param lx it is the number of ODEs considered for the computation.
 #' @param lx0 something
-#' @param matrix something
+#' @param matrix a matrix
+#' @param matrix_a The A matrix from the theory that represents the ODE system.
 #' @param matrix_builder function used to build the transition matrix.
 #' Default option is \code{hyper_a_hanno}
 #' @param max_iter Sets the maximum number of iterations in the optimization

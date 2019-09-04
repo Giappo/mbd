@@ -1,15 +1,15 @@
 #' Auxilary function for cond_prob
+#' @author Giovanni Laudanno, Bart Haegeman
 #' @noRd
-cond_prob_nu_matrix <- function(
+cond_prob_matrices <- function(
   q,
   lq
 ) {
-  
+
   pq <- q #bart's translation
-  
   nu_matrix <- matrix(0, nrow = lq, ncol = lq)
   for (m1 in 0:(lq - 1)) {
-    for (a1 in 0:floor((m1 + 1) / 2)) {
+    for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
       aux <- log(m1 + 1) +
         lgamma(m1 - a1 + 1) -
         lgamma(m1 - 2 * a1 + 2) -
@@ -19,42 +19,61 @@ cond_prob_nu_matrix <- function(
       nu_matrix[m1 + 1, m1 - a1 + 1] <- aux
     }
   }
-  nu_matrix
+
+  empty_qq <- matrix(0, nrow = (lq + 2), ncol = (lq + 2))
+  m1 <- col(nu_matrix) - 1
+  m2 <- row(nu_matrix) - 1
+  list(
+    nu_matrix = nu_matrix,
+    empty_qq = empty_qq,
+    m1 = m1,
+    m2 = m2
+  )
 }
 
 #' Auxilary function for cond_prob
+#' @author Giovanni Laudanno, Bart Haegeman
 #' @noRd
 cond_prob_rhs1 <- function(
   qvec,
   lambda,
   mu,
   nu,
+  k,
   nu_matrix,
-  k
+  m1,
+  m2,
+  empty_qq
 ) {
   lq2 <- length(qvec)
   lq <- sqrt(lq2)
+
+  mm <- 2:(lq + 1)
+  mm_plus_one <- mm + 1
+  mm_minus_one <- mm - 1
+
   qq <- matrix(qvec, nrow = lq, ncol = lq)
-  m1 <- col(qq) - 1
-  m2 <- row(qq) - 1
-  
-  dq1 <- (2 * k + m1 - 1) * cbind(rep(0, lq), qq[, 1:(lq - 1)]) +
-    (2 * k + m2 - 1) * rbind(rep(0, lq), qq[1:(lq - 1), ]) -
+  qq2 <- empty_qq
+  qq2[mm, mm] <- qq
+
+  dq1 <- (2 * k + m1 - 1) * qq2[mm, mm_minus_one] +
+    (2 * k + m2 - 1) * qq2[mm_minus_one, mm] -
     (2 * k + m1 + m2) * qq # ok
-  
-  dq2 <- (2 * k + m1 - 1) * cbind(qq[, 2:lq], rep(0, lq)) +
-    (2 * k + m2 - 1) * rbind(qq[2:lq, ], rep(0, lq)) -
+
+  dq2 <- (m1 + 1) * qq2[mm, mm_plus_one] +
+    (m2 + 1) * qq2[mm_plus_one, mm] -
     (2 * k + m1 + m2) * qq # ok
-  
+
   dq3 <- nu_matrix %*% qq %*% t(nu_matrix) - qq # first cc is m1, t(cc) is m2
-  
+
   dq <- lambda * dq1 + mu * dq2 + nu * dq3
-  
+
   dq <- matrix(dq, nrow = lq2, ncol = 1)
   dq
 }
 
 #' Auxilary function for cond_prob
+#' @author Giovanni Laudanno, Bart Haegeman
 #' @noRd
 cond_prob_rhs2 <- function(t, x, parms) {
   list(cond_prob_rhs1(
@@ -63,20 +82,23 @@ cond_prob_rhs2 <- function(t, x, parms) {
     mu = parms$mu,
     nu = parms$nu,
     nu_matrix = parms$nu_matrix,
-    k = parms$k
+    k = parms$k,
+    m1 = parms$m1,
+    m2 = parms$m2,
+    empty_qq = parms$empty_qq
   ))
 }
 
 #' Called by \link{mbd_loglik} if there is a conditioning != 0
 #' @inheritParams default_params_doc
 #' @return the conditional probability
-#' @author Giovanni Laudanno
+#' @author Giovanni Laudanno, Bart Haegeman
 #' @export
 cond_prob <- function(
   pars,
   brts,
   cond,
-  n_0,
+  n_0 = 2,
   tips_interval = c(n_0 * (cond > 0), Inf),
   lx = 30,
   debug_mode = FALSE
@@ -93,21 +115,24 @@ cond_prob <- function(
   q <- pars[4]
   tt <- max(abs(brts)) # time between crown age and present
   times <- c(0, tt)
-  
+
   lq <- lx # maximal number of missing species for both m1 and m2
-  
+
   # construct auxiliary matrix
-  nu_matrix <- cond_prob_nu_matrix(q = q, lq = lq)
-  
+  matrices <- cond_prob_matrices(q = q, lq = lq)
+
   # integrate equations
   parms <- list()
   parms$lambda <- lambda
   parms$mu <- mu
   parms$nu <- nu
-  parms$nu_matrix <- nu_matrix
   parms$kk <- 1
+  parms$nu_matrix <- matrices$nu_matrix
+  parms$m1 <- matrices$m1
+  parms$m2 <- matrices$m2
+  parms$empty_qq <- matrices$empty_qq
   q_0 <- c(y = c(1, rep(0, lq ^ 2 - 1)))
-  
+
   ode_out <- deSolve::ode(
     y = q_0,
     times = times,
@@ -119,17 +144,17 @@ cond_prob <- function(
     tcrit = tt
   )[2, -1]
   q_m1_m2 <- matrix(ode_out, nrow = lq, ncol = lq)
-  
+
   # compute conditioning probability
   m1 <- col(q_m1_m2) - 1
   m2 <- row(q_m1_m2) - 1
-  p_m1_m2 <- q_m1_m2 / ((m1 + 1) * (m2 + 1))
+  p_m1_m2 <- q_m1_m2 / ((m1 + 1) * (m2 + 1)) # nolint lintr doesn't know math
   pc <- sum(p_m1_m2)
-  
+
   if (!(pc >= 0 && pc <= 1)) {
     if (debug_mode == TRUE) {
       plot(
-        q_t,
+        p_m1_m2,
         xlab = "m",
         ylab = "Q_m^k(t_p - t_c)",
         main = paste0(
@@ -144,6 +169,6 @@ cond_prob <- function(
       stop("problems: pc is wrong!")
     }
   } # debug
-  
+
   pc
 }

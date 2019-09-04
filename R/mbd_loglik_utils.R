@@ -64,113 +64,14 @@ hyper_a_hanno <- function(
   matrix_a[1:n_species, 1:n_species]
 }
 
-# integrates func from 0 to t1
+#' @title mbd ODE system integrator
+#' @description Integrates "func" in the time interval
 # *if* this function returns, the result doesn't contains
 # any negative number
+#' @inheritParams default_params_doc
+#' @param func function for the right hand side of the ODE
 #' @export
-mbd_solve2 <- function(
-  q_vector,
-  time_interval,
-  func = mbd_loglik_rhs,
-  matrix_a,
-  debug_mode = FALSE
-) {
-
-  atol_min <- 1e-6
-  rtol_min <- 1e-10
-  atol_max <- 1e-24
-  rtol_max <- 1e-100
-  atol_step <- -2
-  rtol_step <- -10
-
-  atol_vec <-
-    10 ^ seq(from = log10(atol_min), to = log10(atol_max), by = atol_step)
-  rtol_vec <-
-    10 ^ seq(from = log10(rtol_min), to = log10(rtol_max), by = rtol_step)
-  
-  atol_len <- length(atol_vec)
-  rtol_len <- length(rtol_vec)
-
-  y <- q_vector
-  parms <- matrix_a
-  t1 <- time_interval
-  if (debug_mode == TRUE) {
-    cat("----------------------------------\n")
-  }
-  g <- 10         # granularity
-  t0 <- 0
-  # atol <- 1e-4;   # something reasonable, hopefully
-  # rtol <- 1e-5;   # something reasonable, hopefully
-  aa <- rr <- 1
-  while (TRUE) {
-    atol <- atol_vec[aa]
-    rtol <- rtol_vec[rr]
-    if (debug_mode == TRUE) {
-      cat(atol, rtol, t0, t1, "\n")
-    }
-    tseq <- seq(t0, t1, length.out = g)
-    x <- capture.output(my_try_catch(
-      out <- deSolve::ode(
-        y = y,
-        times = tseq,
-        func = func,
-        parms = parms,
-        atol = atol,
-        rtol = rtol,
-        tcrit = t1
-      )
-    ))
-    # istate = attributes(out)$istate
-    # rstate = attributes(out)$rstate
-    lkg <- 0    # last known good
-    for (ff in 1:g) {
-      a <- any(out[ff, -1] < 0)
-      if (!is.na(a) && a) { 
-        break;
-      }
-      lkg <- lkg + 1
-    }
-    if (lkg == g) {
-      break;  # done and dusted
-    }
-    if (lkg > 1) {
-      # trace back to last known good and try from there
-      t0 <- as.numeric(out[lkg, 1])
-      y <- as.numeric(out[lkg, -1])
-      # relax tol to default
-      # atol <- 1e-4
-      # rtol <- 1e-5
-      aa <- rr <- 1
-    } else {
-      # no progress, make tol more strict
-      # atol <- atol / 100
-      # rtol <- rtol / 100
-      if (aa >= atol_len) {
-        if (debug_mode == TRUE) {
-          plot(y, main = "Vector obtained with smallest tolerance")
-        }
-        stop("Integration failed")
-      }
-      if (any(grepl(x = x, pattern = "too much accuracy requested"))) {
-        rr <- 1
-        aa <- aa + 1
-      } else {
-        if (rr < rtol_len) {
-          rr <- rr + 1
-        } else {
-          rr <- 1
-          aa <- aa + 1
-        }
-      }
-    }
-  }
-  out[g, -1]
-}
-
-# integrates func from 0 to t1 (old version)
-# *if* this function returns, the result doesn't contains
-# any negative number
-#' @export
+#' @author Hanno Hildenbrandt, adapted by Giovanni Laudanno
 mbd_solve <- function(
   q_vector,
   time_interval,
@@ -186,13 +87,13 @@ mbd_solve <- function(
   if (debug_mode == TRUE) {
     cat("----------------------------------\n")
   }
-  g = 10         # granularity
-  t0 = 0
+  g <- 10 # granularity
+  t0 <- 0
   start_rtol <- 1e-8
-  atol = 1e-100;  # realistically zero
-  rtol = start_rtol;   # something reasonable, hopefully
+  atol <- 1e-100 # realistically zero
+  rtol <- start_rtol # something reasonable, hopefully
   while (TRUE) {
-    tseq = seq(t0, t1, length.out = g)
+    tseq <- seq(t0, t1, length.out = g)
     if (debug_mode == TRUE) {
       cat(atol, rtol, t0, t1, "\n")
     }
@@ -205,29 +106,29 @@ mbd_solve <- function(
       rtol = rtol,
       tcrit = t1
     )
-    istate = attributes(out)$istate
-    rstate = attributes(out)$rstate
-    lkg = 0    # last known good
+    # it might be useful for debug istate = attributes(out)$istate
+    # it might be useful for debug rstate = attributes(out)$rstate
+    lkg <- 0    # last known good
     for (ff in 1:g) {
-      a = any(out[ff, -1] < 0)
-      if (!is.na(a) && a) { 
+      a <- any(out[ff, -1] < 0)
+      if (!is.na(a) && a) {
         break;
       }
-      lkg = lkg + 1
+      lkg <- lkg + 1
     }
     if (lkg == g) {
       break;  # done and dusted
     }
     if (lkg > 1) {
       # trace back to last known good and try from there
-      t0 = as.numeric(out[lkg, 1])
-      y = as.numeric(out[lkg, -1])
+      t0 <- as.numeric(out[lkg, 1])
+      y <- as.numeric(out[lkg, -1])
       # relax tol to default
-      rtol = start_rtol
+      rtol <- start_rtol
     }
     else {
       # no progress, make tol more strict
-      rtol = rtol / 100
+      rtol <- rtol / 100
     }
   }
   out[g, -1]
@@ -275,16 +176,16 @@ create_a <- function(
   no_species_out_of_the_matrix = FALSE
 ) {
   if (k > lx) {
-    stop("The matrix is too small. Increase lx.") 
+    stop("The matrix is too small. Increase lx.")
   }
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
   q <- pars[4]
-  
+
   testit::assert(lx < 2 ^ 31)
   nvec <- 0:lx
-  
+
   matrix <- nu * create_n(
     pars = pars,
     k = k,
@@ -295,11 +196,11 @@ create_a <- function(
 
   # mu terms
   matrix[row(matrix) == col(matrix) - 1] <- mu * nvec[2:(lx + 1)]
-  
+
   # lambda terms
   matrix[row(matrix) == col(matrix) + 1] <-
     matrix[row(matrix) == col(matrix) + 1] + lambda * (nvec[1:(lx)] + 2 * k)
-  
+
   # diagonal
   # (it is forbidden to speciate outside of the matrix)
   if (no_species_out_of_the_matrix == TRUE) {
@@ -314,10 +215,12 @@ create_a <- function(
     diag(matrix) <- diag(matrix) - (lambda + mu) * (k + nvec)
     matrix[length(nvec), length(nvec)] <- (-mu) * (k + nvec[lx + 1])
     # check if probabilities are imported into the system
-    testit::assert(colSums(matrix)[-(lx + 1)] >= 0)
+    testit::assert(
+      colSums(matrix)[-c(lx + 1)] >= -1e-13
+    )
   } else {
     diag(matrix) <- -nu * (1 - (1 - q) ^ (k + nvec)) -
-      (lambda + mu) * (k + nvec) 
+      (lambda + mu) * (k + nvec)
   }
 
   matrix_a <- matrix
@@ -431,10 +334,7 @@ mbd_calculate_q_vector <- function(
   n_0 = 2,
   missnumspec = 0,
   lx = 1 + 2 * (length(brts) + length(missnumspec)),
-  methode = "lsodes",
-  q_threshold = 1e-3,
-  abstol = 1e-16,
-  reltol = 1e-10
+  q_threshold = 1e-3
 ) {
   # BASIC SETTINGS AND CHECKS
   check_brts(brts = brts, n_0 = n_0)

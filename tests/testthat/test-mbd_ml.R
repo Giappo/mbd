@@ -6,37 +6,6 @@ is_on_ci <- function() {
   is_it_on_appveyor || is_it_on_travis # nolint internal function
 }
 
-test_that("use", {
-
-  # if !is_on_ci() {
-  #   skip "This is long"
-  # }
-
-  brts <- c(10, 9, 7, 6, 5)
-  start_pars <- c(0.2, 0.15, 1, 0.1)
-  n_0 <- 2
-  cond <- 1
-
-  test <- mbd::mbd_ml(
-    start_pars = start_pars,
-    brts = brts,
-    cond = cond,
-    n_0 = n_0,
-    verbose = FALSE,
-    lx = 100,
-    methode = "lsodes"
-  )
-
-  for (var_name in get_param_names()) { # nolint internal function
-    testthat::expect_true(test[var_name] >= 0)
-  }
-  testthat::expect_true(test$q <= 1)
-  testthat::expect_true(is.numeric(test$loglik) == TRUE)
-  testthat::expect_true(test$loglik <= 0)
-  testthat::expect_true(test$df == length(start_pars))
-  testthat::expect_true(test$conv == 0)
-})
-
 test_that("compare results from bd and mbd in case of nu = q = 0", {
 
   if (!is_on_ci()) {
@@ -57,6 +26,15 @@ test_that("compare results from bd and mbd in case of nu = q = 0", {
     optim_ids = optim_ids,
     verbose = FALSE
   )
+
+  for (var_name in get_param_names()) { # nolint internal function
+    testthat::expect_true(mbd_out[var_name] >= 0)
+  }
+  testthat::expect_true(mbd_out$q <= 1)
+  testthat::expect_true(is.numeric(mbd_out$loglik) == TRUE)
+  testthat::expect_true(mbd_out$loglik <= 0)
+  testthat::expect_true(mbd_out$df == length(start_pars))
+  testthat::expect_true(mbd_out$conv == 0)
 
   x <- capture.output(bd_out <- DDD::bd_ML(
     brts = brts,

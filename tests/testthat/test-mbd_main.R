@@ -177,11 +177,12 @@ test_that("use", {
 })
 
 test_that("it works also for a subset of parameters", {
-  seed <- 10
-  sim_pars <- c(0.3, 0.2, 1.5, 0.1)
+  seed <- 2
+  t_0s <- age <- 5
+  lambda <- 0.2; mu <- 0.15; nu <- 1.5; q <- 0.1
+  sim_pars <- c(lambda, mu, nu, q)
   cond <- 1
   n_0 <- 2
-  t_0s <- age <- 6
   loglik_functions <- mbd_loglik
   optim_ids <- c(TRUE, FALSE, FALSE, FALSE)
   verbose <- FALSE
@@ -193,7 +194,7 @@ test_that("it works also for a subset of parameters", {
     n_0 = n_0,
     age = age,
     tips_interval = c(n_0, Inf),
-    start_pars = c(0.3, 0.1, 1, 0.1),
+    start_pars = sim_pars,
     loglik_functions = loglik_functions,
     optim_ids = optim_ids,
     verbose = verbose

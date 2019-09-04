@@ -17,7 +17,8 @@ test_that("a_matrix: mbd vs ddd", {
   m1 <- mbd::create_a(
     pars,
     k = 0,
-    lx = lx
+    lx = lx,
+    no_species_out_of_the_matrix = TRUE
   )
   m2 <- matrix(
     DDD:::dd_loglik_M_aux(
@@ -43,7 +44,8 @@ test_that("a_matrix: mbd vs ddd", {
   m1 <- mbd::create_a(
     pars,
     k = 0,
-    lx = lx
+    lx = lx,
+    no_species_out_of_the_matrix = TRUE
   )
   m2 <- matrix(
     DDD:::dd_loglik_M_aux(
@@ -68,12 +70,12 @@ test_that("a_matrix: # entries are in accordance with the theory", {
   pars <- c(lambda, mu, nu, q)
   k <- 2
   lx <- 50 + 150 * is_on_ci()
-  adjust_last_entry <- TRUE
+  no_species_out_of_the_matrix <- TRUE
   a_matrix <- mbd::create_a(
     pars,
     k = k,
     lx = lx,
-    adjust_last_entry = adjust_last_entry
+    no_species_out_of_the_matrix = no_species_out_of_the_matrix
   )
   # lower triangular matrix: m > n
   for (m in 1:lx) {
@@ -96,19 +98,28 @@ test_that("a_matrix: # entries are in accordance with the theory", {
   }
   # main diagonal
   m <- 0:lx
+  nu_terms <- rep(0, lx + 1)
+  if (no_species_out_of_the_matrix == TRUE) {
+    for (n in 0:(lx - 1)) {
+      limit <- min(n + k, lx - n)
+      avec <- 1:limit
+      nu_terms[n + 1] <-
+        sum(
+          choose(n + k, avec) * (q ^ avec) * (1 - q) ^ (n + k - avec)
+        )
+    }
+  } else {
+    nu_terms <- (1 - (1 - q) ^ (m + k))
+  }
   entry_m_m <-
-    -nu * (1 - (1 - q) ^ (m + k)) +
+    -nu * nu_terms +
     -mu * (m + k) +
-    -lambda * (m + k)
+    -lambda * (m + k) +
+    no_species_out_of_the_matrix * lambda * c(rep(0, lx), 1) * (m + k)
+
   testthat::expect_equal(
-    diag(a_matrix)[-length(entry_m_m)],
-    entry_m_m[-length(entry_m_m)]
-  )
-  # this might differ according to the definition
-  testthat::expect_equal(
-    diag(a_matrix)[length(entry_m_m)],
-    adjust_last_entry * (-mu) * (k + lx) +
-      (1 - adjust_last_entry) * entry_m_m[length(entry_m_m)]
+    diag(a_matrix),
+    entry_m_m
   )
 })
 
