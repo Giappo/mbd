@@ -16,7 +16,8 @@ mbd_main <- function(
   loglik_functions = mbd_loglik,
   project_folder = NULL,
   verbose = FALSE,
-  q_threshold = 1e-4
+  q_threshold = 1e-4,
+  maxit = 10000
 ) {
   # check formats
   sim_pars <- as.numeric(sim_pars)
@@ -79,7 +80,8 @@ mbd_main <- function(
       true_pars = sim_pars,
       verbose = verbose,
       lx = min(1 + 3 * (length(brts)), 1200),
-      q_threshold = q_threshold
+      q_threshold = q_threshold,
+      maxit = maxit
     )
     mle[m, ] <- mle_out
     colnames(mle) <- names(mle_out)

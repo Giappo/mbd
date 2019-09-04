@@ -39,6 +39,7 @@
 #'   start_pars = start_pars,
 #'   optim_ids = optim_ids,
 #'   brts = sim$brts,
+#'   true_pars = sim_pars,
 #'   cond = cond,
 #'   n_0 = n_0,
 #'   verbose = FALSE
@@ -56,7 +57,8 @@ mbd_ml <- function(
   q_threshold = 1e-3,
   verbose = TRUE,
   missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx())
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
+  maxit = 10000
 ) {
   # setup and checks
   if (true_pars[3] == 0 | true_pars[4] == 0) {
@@ -118,7 +120,8 @@ mbd_ml <- function(
   # maximum likelihood
   out <- subplex::subplex(
     par = tr_start_pars,
-    fn = function(x) optim_fun(x)
+    fn = function(x) optim_fun(x),
+    control = list(maxit = maxit)
   )
 
   # report missed convergence

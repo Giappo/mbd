@@ -62,6 +62,7 @@
 #' @param max_repetitions something
 #' @param max_sims something
 #' @param maxiter something
+#' @param maxit maximum number of subplex iterations
 #' @param mbd_lambda something
 #' @param message a message
 #' @param methode
@@ -207,6 +208,7 @@ default_params_doc <- function(
   max_number_of_species,
   max_repetitions,
   max_sims,
+  maxit,
   maxiter,
   mbd_lambda,
   message,

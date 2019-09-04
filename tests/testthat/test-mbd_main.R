@@ -16,18 +16,20 @@ test_that("use", {
   sim_pars <- c(0.2, 0.15, 1.2, 0.1)
   cond <- 1
   n_0 <- 2
-  t_0s <- age <- 10
+  t_0s <- age <- 6
   loglik_functions <- mbd_loglik
   optim_ids <- c(TRUE, TRUE, TRUE, TRUE)
+  maxit <- 200 # maximum number of subplex iterations
   test <- mbd_main(
     seed = seed,
     sim_pars = sim_pars,
     cond = cond,
     n_0 = n_0,
     age = age,
-    start_pars = c(0.3, 0.1, 1, 0.1),
+    start_pars = sim_pars,
     loglik_functions = loglik_functions,
     optim_ids = optim_ids,
+    maxit = maxit,
     verbose = FALSE
   )
   # test output shape
@@ -182,7 +184,7 @@ test_that("it works also for a subset of parameters", {
   loglik_functions <- mbd_loglik
   optim_ids <- c(TRUE, FALSE, FALSE, FALSE)
   verbose <- FALSE
-
+  maxit <- 200
   test <- mbd_main(
     seed = seed,
     sim_pars = sim_pars,
@@ -193,6 +195,7 @@ test_that("it works also for a subset of parameters", {
     start_pars = sim_pars,
     loglik_functions = loglik_functions,
     optim_ids = optim_ids,
+    maxit = maxit,
     verbose = verbose
   )
 

@@ -12,17 +12,18 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   initparsopt, input_trees_path, input_xml, interval_max, interval_min,
   iterations, k, lambda, lambda_limit, loglik_function, loglik_functions,
   logs, lx, lx0, matrix, matrix_a, matrix_builder, max_iter, max_k,
-  max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
-  message, methode, minimum_multiple_births, missnumspec, models, mu,
-  mu_limit, mutation_rate, n_0, n_0s, n_species, init_n_lineages, n_steps,
-  n_subs, nu, nu_limit, optimmethod, optim_ids, params, pars,
-  pars_transform, pars_transformed, parsfix, precision, print_errors,
-  printit, project_folder, q_t, q_vector, q, quantiles_choice, recursive,
-  reltol, res, results, results_folder, s, seed, q_threshold,
-  sample_interval, sequence_length, sim, sim_pars, sim_phylo, start_pars,
-  subsamp, t, t1, t2, t_0, t_0s, tips_interval, time_interval, tol, tr,
-  transition_matrix, trparsfix, trparsopt, true_pars, values, verbose, x,
-  x_name, x_splits, y, y_name, y_splits, z, z_name)
+  max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
+  mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
+  models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species,
+  init_n_lineages, n_steps, n_subs, nu, nu_limit, optimmethod, optim_ids,
+  params, pars, pars_transform, pars_transformed, parsfix, precision,
+  print_errors, printit, project_folder, q_t, q_vector, q,
+  quantiles_choice, recursive, reltol, res, results, results_folder, s,
+  seed, q_threshold, sample_interval, sequence_length, sim, sim_pars,
+  sim_phylo, start_pars, subsamp, t, t1, t2, t_0, t_0s, tips_interval,
+  time_interval, tol, tr, transition_matrix, trparsfix, trparsopt,
+  true_pars, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
+  z_name)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -129,6 +130,8 @@ Default option is \code{hyper_a_hanno}}
 \item{max_repetitions}{something}
 
 \item{max_sims}{something}
+
+\item{maxit}{maximum number of subplex iterations}
 
 \item{maxiter}{something}
 
