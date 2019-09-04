@@ -153,13 +153,13 @@ mbd_loglik <- function(
       stop("problems: D is non positive!")
     }
   }
-  if (any(is.na(C) || is.nan(C))) {
+  if (any(is.na(C) | is.nan(C))) {
     cat("The value of C is: ", C, "\n")
     if (debug_mode == FALSE) {
       stop("problems: C is Na or NaN!")
     }
   }
-  if (any(is.na(D) || is.nan(D))) {
+  if (any(is.na(D) | is.nan(D))) {
     cat("The value of D is: ", D, "\n")
     if (debug_mode == FALSE) {
       stop("problems: D is Na or NaN!")
