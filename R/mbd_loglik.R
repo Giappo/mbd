@@ -70,8 +70,7 @@ mbd_loglik <- function(
   k <- n_0 # n_0 is the number of species at t = 1
   # t is starting from 2 so all is ok with births[t] and time_intervals[t]
   t <- 2
-  C <- rep(1, lt)
-  D <- C
+  sum_probs_2 <- sum_probs_1 <- rep(1, lt)
 
   # Evolving the initial state to the present
   while (t <= lt) {
@@ -98,9 +97,9 @@ mbd_loglik <- function(
       debug_mode = debug_mode
     )
 
-    # Applying C operator (this is a trick to avoid precision issues)
-    C[t] <- sum(sort(q_t[t, ]))
-    q_t[t, ] <- q_t[t, ] / C[t]
+    # Normalizing the q_vector
+    sum_probs_1[t] <- sum(sort(q_t[t, ]))
+    q_t[t, ] <- q_t[t, ] / sum_probs_1[t]
 
     # Loop has to end after integrating to t_p
     if (!(t < lt)) {
@@ -125,9 +124,9 @@ mbd_loglik <- function(
       debug_mode = debug_mode
     )
 
-    # Applying D operator (this works exactly like C)
-    D[t] <- sum(sort(q_t[t, ]))
-    q_t[t, ] <- q_t[t, ] / D[t]
+    # Normalizing the q_vector
+    sum_probs_2[t] <- sum(sort(q_t[t, ]))
+    q_t[t, ] <- q_t[t, ] / sum_probs_2[t]
 
     # Updating running parameters
     k <- k + births[t]
@@ -141,35 +140,35 @@ mbd_loglik <- function(
   vm <- 1 / choose(k + missnumspec, k)
   likelihood <- vm * q_t[t, (missnumspec + 1)]
 
-  # Removing C and D effects from the LL
-  if (!(all(C > 0))) {
-    cat("The value of C is: ", C, "\n")
+  # Removing sum_probs_1 and sum_probs_2 effects from the LL
+  if (!(all(sum_probs_1 > 0))) {
+    cat("The value of sum_probs_1 is: ", sum_probs_1, "\n")
     if (debug_mode == FALSE) {
-      stop("problems: C is non positive!")
+      stop("problems: sum_probs_1 is non positive!")
     }
   }
-  if (!(all(D > 0))) {
-    cat("The value of D is: ", D, "\n")
+  if (!(all(sum_probs_2 > 0))) {
+    cat("The value of sum_probs_2 is: ", sum_probs_2, "\n")
     if (debug_mode == FALSE) {
-      stop("problems: D is non positive!")
+      stop("problems: sum_probs_2 is non positive!")
     }
   }
-  if (any(is.na(C) | is.nan(C))) {
-    cat("The value of C is: ", C, "\n")
+  if (any(is.na(sum_probs_1) | is.nan(sum_probs_1))) {
+    cat("The value of sum_probs_1 is: ", sum_probs_1, "\n")
     if (debug_mode == FALSE) {
-      stop("problems: C is Na or NaN!")
+      stop("problems: sum_probs_1 is Na or NaN!")
     }
   }
-  if (any(is.na(D) | is.nan(D))) {
-    cat("The value of D is: ", D, "\n")
+  if (any(is.na(sum_probs_2) | is.nan(sum_probs_2))) {
+    cat("The value of sum_probs_2 is: ", sum_probs_2, "\n")
     if (debug_mode == FALSE) {
-      stop("problems: D is Na or NaN!")
+      stop("problems: sum_probs_2 is Na or NaN!")
     }
   }
   if (debug_mode == TRUE) {
    cat("The value of the likelihood is: ", likelihood, "\n")
   }
-  loglik <- log(likelihood) + sum(log(C)) + sum(log(D))
+  loglik <- log(likelihood) + sum(log(sum_probs_1)) + sum(log(sum_probs_2))
 
   # Various checks
   loglik <- as.numeric(loglik)
