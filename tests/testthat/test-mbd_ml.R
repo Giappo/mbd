@@ -12,11 +12,13 @@ test_that("compare results from bd and mbd in case of nu = q = 0", {
     skip("To be performed on ci.")
   }
 
-  brts <- c(10, 9, 7, 6, 5, 4, 3, 2, 1)
-  start_pars <- c(0.2, 0.15, 0, 0)
+  brts <- c(10, 7, 6, 4, 2, 1)
+  start_pars <- c(0.20, 0.10, 0, 0)
   n_0 <- 2
   cond <- 1
   optim_ids <- c(TRUE, TRUE, FALSE, FALSE)
+  verbose <- FALSE
+  maxit <- 300
 
   mbd_out <- mbd::mbd_ml(
     start_pars = start_pars,
@@ -24,7 +26,8 @@ test_that("compare results from bd and mbd in case of nu = q = 0", {
     cond = cond,
     n_0 = n_0,
     optim_ids = optim_ids,
-    verbose = FALSE
+    verbose = verbose,
+    maxit = maxit
   )
 
   for (var_name in get_param_names()) { # nolint internal function
@@ -33,8 +36,7 @@ test_that("compare results from bd and mbd in case of nu = q = 0", {
   testthat::expect_true(mbd_out$q <= 1)
   testthat::expect_true(is.numeric(mbd_out$loglik) == TRUE)
   testthat::expect_true(mbd_out$loglik <= 0)
-  testthat::expect_true(mbd_out$df == length(start_pars))
-  testthat::expect_true(mbd_out$conv == 0)
+  testthat::expect_true(mbd_out$df == sum(optim_ids))
 
   x <- capture.output(bd_out <- DDD::bd_ML(
     brts = brts,
@@ -44,16 +46,15 @@ test_that("compare results from bd and mbd in case of nu = q = 0", {
     cond = cond
   ))
   rm(x)
-
-  testthat::expect_true(
-    abs(
-      unname(mbd_out$lambda) - unname(bd_out$lambda0)
-    ) < 1e-3
+  testthat::expect_equal(
+    unname(mbd_out$lambda),
+    unname(bd_out$lambda0),
+    tolerance = 1e-2
   )
-  testthat::expect_true(
-    abs(
-      unname(mbd_out$mu) - unname(bd_out$mu0)
-    ) < 1e-3
+  testthat::expect_equal(
+    unname(mbd_out$mu),
+    unname(bd_out$mu0),
+    tolerance = 1e-2
   )
 })
 
@@ -63,10 +64,12 @@ test_that("mbd_ml can be silent", {
     skip("To be performed on ci.")
   }
 
-  brts <- c(10, 9, 7, 6, 5, 3)
+  brts <- c(10, 6, 3)
   optim_ids <- c(FALSE, TRUE, FALSE, FALSE)
   n_0 <- 2
   cond <- 1
+  verbose <- FALSE
+  maxit <- 30
   testthat::expect_silent(
     mbd::mbd_ml(
       start_pars = c(0.2, 0.15, 1, 0.1),
@@ -74,7 +77,8 @@ test_that("mbd_ml can be silent", {
       brts = brts,
       cond = cond,
       n_0 = n_0,
-      verbose = FALSE
+      verbose = verbose,
+      maxit = maxit
     )
   )
 })
@@ -85,10 +89,12 @@ test_that("mbd_ml can produce output", {
     skip("To be performed on ci.")
   }
 
-  brts <- c(10, 9, 7, 6, 5, 3)
+  brts <- c(10, 5, 2)
   optim_ids <- c(FALSE, TRUE, FALSE, FALSE)
   n_0 <- 2
   cond <- 1
+  verbose <- TRUE
+  maxit <- 30
   output <- capture.output(
     mbd::mbd_ml(
       start_pars = c(0.2, 0.15, 1, 0.1),
@@ -96,7 +102,8 @@ test_that("mbd_ml can produce output", {
       brts = brts,
       cond = cond,
       n_0 = n_0,
-      verbose = TRUE
+      verbose = verbose,
+      maxit = maxit
     )
   )
   testthat::expect_true(
