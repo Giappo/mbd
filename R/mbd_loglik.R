@@ -70,7 +70,8 @@ mbd_loglik <- function(
   k <- n_0 # n_0 is the number of species at t = 1
   # t is starting from 2 so all is ok with births[t] and time_intervals[t]
   t <- 2
-  D <- C <- rep(1, lt)
+  C <- rep(1, lt)
+  D <- C
 
   # Evolving the initial state to the present
   while (t <= lt) {
