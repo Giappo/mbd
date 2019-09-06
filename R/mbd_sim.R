@@ -120,15 +120,25 @@ mbd_sim <- function(
           (tips >= tips_interval[1] & tips <= tips_interval[2])
       )
   }
-  time_points <- unlist(unname(sort(
-    DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE
-  )))
-
+  n_survivors <- sum(l_matrix[, 4] == -1)
+  if (n_survivors >= 2) {
+    time_points <- unlist(unname(sort(
+      DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE
+    )))
+    reconstructed_tree <- DDD::L2phylo(unname(l_matrix), dropextinct = TRUE)
+  }
+  if (n_survivors == 1) {
+    time_points <- unname(l_matrix[which(l_matrix[, 4] == -1), 1])
+    reconstructed_tree <- create_singleton_phylo(time_points)
+  }
+  if (n_survivors == 0) {
+    time_points <- c()
+    reconstructed_tree <- create_empty_phylo()
+  }
   colnames(l_matrix) <- c("birth_time", "parent", "id", "death_time")
-
   brts <- sort(abs(as.numeric(time_points)), decreasing = TRUE)
   brts <- DDD::roundn(brts, digits = brts_precision)
-  reconstructed_tree <- DDD::L2phylo(unname(l_matrix), dropextinct = TRUE)
+
   full_tree <- DDD::L2phylo(l_matrix, dropextinct = FALSE)
 
   list(
