@@ -42,69 +42,65 @@ mbd_sim <- function(
   crown_species_dead <- cond
   keep_the_sim <- 0
   while (keep_the_sim == 0) {
-    total_count <- init_n_lineages
-    pool <- 1:init_n_lineages
-    while (
-      total_count == init_n_lineages |
-      length(pool) < init_n_lineages
-    ) {
-      total_count <- init_n_lineages
-      n_species <- init_n_lineages
-      pool <- c(-1, 2)
-      t <- age
-      l_matrix <- matrix(0, nrow = 1e+06, 4)
-      l_matrix[, 4] <- -1
-      l_matrix[, 3] <- 0
-      l_matrix[1, 1:4] <- c(t, 0, -1, -1)
+    total_count <- init_n_lineages # all the species that ever appeared
+    n_species <- init_n_lineages # all the surviving species
+    t <- age
+    l_matrix <- matrix(0, nrow = 1e+06, 4)
+    l_matrix[, 4] <- -1
+    l_matrix[, 3] <- 0
+    l_matrix[1, 1:4] <- c(t, 0, -1, -1)
+    if (n_0 == 2) {
       l_matrix[2, 1:4] <- c(t, -1, 2, -1)
-      while (t > 0) {
-        n_species <- length(pool)
-        total_rate <- n_species * (lambda + mu) + nu
-        if (total_rate > 0) {
-          delta_t <- stats::rexp(1, rate = total_rate)
-          outcome <- sample(
-            c(-1, 1, 2),
-            size = 1,
-            prob = c(n_species * mu, n_species * lambda, nu)
+    }
+    pool <- unique(l_matrix[, 3])[unique(l_matrix[, 3]) != 0]
+    while (t > 0) {
+      n_species <- length(pool)
+      total_rate <- n_species * (lambda + mu) + nu
+      if (total_rate > 0) {
+        delta_t <- stats::rexp(1, rate = total_rate)
+        outcome <- sample(
+          c(-1, 1, 2),
+          size = 1,
+          prob = c(n_species * mu, n_species * lambda, nu)
+        )
+        delta_n <- (outcome == -1) * -1 +
+          (outcome == 1) * 1 +
+          (outcome == 2) * stats::rbinom(
+            n = 1,
+            size = n_species,
+            prob = q
           )
-          delta_n <- (outcome == -1) * -1 +
-                     (outcome == 1) * 1 +
-                     (outcome == 2) * stats::rbinom(
-                       n = 1,
-                       size = n_species,
-                       prob = q
-                     )
-          t <- t - delta_t
+        t <- t - delta_t
 
-          if (delta_n > 0 & t > 0) {
-            if (n_species > 1) {
-              parents <- sample(pool, replace = FALSE, size = delta_n)
-            } else {
-              parents <- pool
-            }
-            new_interval <- (total_count + 1):(total_count + delta_n)
-            #-(delta_n:1)* 1e-5 add this if you need separate time points
-            l_matrix[new_interval, 1] <- t
-            l_matrix[new_interval, 2] <- parents
-            l_matrix[new_interval, 3] <- abs(new_interval) * sign(parents)
-            pool <- c(pool, abs(new_interval) * sign(parents))
-            total_count <- total_count + delta_n
+        if (delta_n > 0 & t > 0) {
+          if (n_species > 1) {
+            parents <- sample(pool, replace = FALSE, size = delta_n)
+          } else {
+            parents <- pool
           }
-          if (delta_n < 0 & t > 0) {
-            if (n_species > 1) {
-              dead <- sample(pool, replace = FALSE, size = 1)
-            } else {
-              dead <- pool
-            }
-            l_matrix[abs(dead), 4] <- t
-            pool <- pool[pool != dead]
-          }
-        } else {
-          t <- 0
+          new_interval <- (total_count + 1):(total_count + delta_n)
+          #-(delta_n:1)* 1e-5 add this if you need separate time points
+          l_matrix[new_interval, 1] <- t
+          l_matrix[new_interval, 2] <- parents
+          l_matrix[new_interval, 3] <- abs(new_interval) * sign(parents)
+          pool <- c(pool, abs(new_interval) * sign(parents))
+          total_count <- total_count + delta_n
         }
+        if (delta_n < 0 & t > 0) {
+          if (n_species > 1) {
+            dead <- sample(pool, replace = FALSE, size = 1)
+          } else {
+            dead <- pool
+          }
+          l_matrix[abs(dead), 4] <- t
+          pool <- pool[pool != dead]
+        }
+      } else {
+        t <- 0
       }
     }
-    l_matrix <- l_matrix[(1:total_count), ]
+    l_matrix <- l_matrix[1:total_count, ]
+    dim(l_matrix) <- c(total_count, 4)
     l_matrix[, 1] <- DDD::roundn(l_matrix[, 1], digits = brts_precision)
 
     # tips check
@@ -113,18 +109,7 @@ mbd_sim <- function(
     # survival of crown check
     alive <- l_matrix[l_matrix[, 4] == -1, ]
     alive <- matrix(alive, ncol = 4)
-    crown_species_dead <- (length(unique(sign(alive[, 3]))) != 2) * (cond > 0)
-
-    # multiple births check
-    births_rec_tree <- unlist(unname(sort(
-      DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE
-    )))
-    births_rec_tree <- DDD::roundn(births_rec_tree, digits = brts_precision)
-    multiple_births_rec_tree <- length(
-      which(
-        births_rec_tree %in% births_rec_tree[duplicated(births_rec_tree)]
-      )
-    )
+    crown_species_dead <- (length(unique(sign(alive[, 3]))) != n_0) * (cond > 0)
 
     # should i keep this simulation?
     keep_the_sim <- (cond == 0) *
@@ -133,12 +118,6 @@ mbd_sim <- function(
       (
         (!crown_species_dead) &
           (tips >= tips_interval[1] & tips <= tips_interval[2])
-      ) +
-      (cond == 2) *
-      (
-        (!crown_species_dead) &
-          (tips >= tips_interval[1] & tips <= tips_interval[2]) &
-          multiple_births_rec_tree >= 2
       )
   }
   time_points <- unlist(unname(sort(
