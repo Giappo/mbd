@@ -6,8 +6,25 @@ test_that("get_pkg_name", {
   )
 })
 
-test_that("get_function_names & get_model_names", {
-  #use
+test_that("get_function_names", {
+  # use
+  testthat::expect_true(
+    get_function_names(
+      loglik_functions = "mbd_loglik"
+    ) == "mbd_loglik"
+  )
+  testthat::expect_true(
+    get_function_names(
+      loglik_functions = c("mbd_loglik")
+    ) == "mbd_loglik"
+  )
+  testthat::expect_true(
+    all(
+      get_function_names(
+        loglik_functions = c("mbd_loglik", "pmb_loglik")
+      ) == c("mbd_loglik", "pmb_loglik")
+    )
+  )
   testthat::expect_true(
     all(
       get_function_names(
@@ -20,20 +37,14 @@ test_that("get_function_names & get_model_names", {
       loglik_functions = mbd_loglik
     ) == "mbd_loglik"
   )
-  testthat::expect_silent(
-    get_model_names(
-      function_names = mbd_logliks_function(),
-      verbose = FALSE
+  testthat::expect_true(
+    all(
+      get_function_names(
+        loglik_functions = c(mbd_loglik, pmb_loglik)
+      ) == c("mbd_loglik", "pmb_loglik")
     )
   )
-  testthat::expect_output(
-    get_model_names(
-      function_names = mbd_logliks_function(),
-      verbose = TRUE
-    ),
-    "You are using the functions: mbd pmb"
-  )
-  #abuse
+  # abuse
   error_message <- paste0(
     "This is not a likelihood function provided by ",
     get_pkg_name(),
@@ -62,6 +73,29 @@ test_that("get_function_names & get_model_names", {
       loglik_functions = c(exp, grepl)
     ),
     error_message
+  )
+})
+
+test_that("get_model_names", {
+  # use
+  testthat::expect_silent(
+    get_model_names(
+      function_names = mbd_logliks_function(),
+      verbose = FALSE
+    )
+  )
+  testthat::expect_output(
+    get_model_names(
+      function_names = mbd_logliks_function(),
+      verbose = TRUE
+    ),
+    "You are using the functions: mbd pmb"
+  )
+  # abuse
+  error_message <- paste0(
+    "This is not a likelihood function provided by ",
+    get_pkg_name(),
+    "!"
   )
   testthat::expect_error(
     get_model_names(

@@ -148,7 +148,7 @@ cond_prob <- function(
   # compute conditioning probability
   m1 <- col(q_m1_m2) - 1
   m2 <- row(q_m1_m2) - 1
-  p_m1_m2 <- q_m1_m2 / ((m1 + 1) * (m2 + 1)) # nolint lintr doesn't know math
+  p_m1_m2 <- q_m1_m2 / ((m1 + 1) * (m2 + 1)) # nolint lintr has issues with math
   pc <- sum(p_m1_m2)
 
   if (!(pc >= 0 && pc <= 1)) {
