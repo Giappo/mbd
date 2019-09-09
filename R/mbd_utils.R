@@ -75,11 +75,11 @@ cat2 <- function(
   message,
   verbose
 ) {
- if (verbose == TRUE) {
-   cat(message)
- } else {
-   return()
- }
+  if (verbose == TRUE) {
+    cat(message)
+  } else {
+    return()
+  }
 }
 
 #' @title Transform parameters

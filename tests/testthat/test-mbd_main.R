@@ -148,9 +148,9 @@ test_that("use", {
     t_0s = t_0s,
     seed = seed
   )
-  testthat::expect_true(
-    file.exists(data_file_name)
-  )
+  testthat::expect_true(file.exists(data_file_name))
+  suppressWarnings(file.remove(data_file_name))
+  testthat::expect_true(!file.exists(data_file_name))
   # check results file existence
   results_file_name <- create_results_file_name( # nolint internal function
     results_folder = results_folder,
@@ -161,9 +161,7 @@ test_that("use", {
     t_0s = t_0s,
     seed = seed
   )
-  testthat::expect_true(
-    file.exists(results_file_name)
-  )
+  testthat::expect_true(file.exists(results_file_name))
   # check if saved results are the right ones
   testthat::expect_equal(
     utils::read.csv(results_file_name)[, -1],
@@ -238,10 +236,9 @@ test_that("it works also for a subset of parameters", {
     t_0s = t_0s,
     seed = seed
   )
-  testthat::expect_true(
-    file.exists(data_file_name)
-  )
+  testthat::expect_true(file.exists(data_file_name))
   suppressWarnings(file.remove(data_file_name))
+  testthat::expect_true(!file.exists(data_file_name))
   # check results file existence
   results_file_name <- create_results_file_name( # nolint internal function
     results_folder = results_folder,
@@ -252,10 +249,10 @@ test_that("it works also for a subset of parameters", {
     t_0s = t_0s,
     seed = seed
   )
-  testthat::expect_true(
-    file.exists(results_file_name)
-  )
+  testthat::expect_true(file.exists(results_file_name))
   suppressWarnings(file.remove(results_file_name))
+  testthat::expect_true(!file.exists(results_file_name))
+
 })
 
 test_that("abuse", {

@@ -86,8 +86,7 @@ mbd_loglik <- function(
     q_t[t, ] <- mbd_solve(
       q_vector = q_t[(t - 1), ],
       matrix_a = matrix_a,
-      time_interval = time_intervals[t],
-      debug_mode = debug_mode
+      time_interval = time_intervals[t]
     )
     check_q_vector(
       q_t = q_t,
@@ -140,44 +139,13 @@ mbd_loglik <- function(
   vm <- 1 / choose(k + missnumspec, k)
   likelihood <- vm * q_t[t, (missnumspec + 1)]
 
-  # Removing sum_probs_1 and sum_probs_2 effects from the LL
-  if (!(all(sum_probs_1 > 0))) {
-    cat("The value of sum_probs_1 is: ", sum_probs_1, "\n")
-    if (debug_mode == FALSE) {
-      stop("problems: sum_probs_1 is non positive!")
-    }
-  }
-  if (!(all(sum_probs_2 > 0))) {
-    cat("The value of sum_probs_2 is: ", sum_probs_2, "\n")
-    if (debug_mode == FALSE) {
-      stop("problems: sum_probs_2 is non positive!")
-    }
-  }
-  if (any(is.na(sum_probs_1) | is.nan(sum_probs_1))) {
-    cat("The value of sum_probs_1 is: ", sum_probs_1, "\n")
-    if (debug_mode == FALSE) {
-      stop("problems: sum_probs_1 is Na or NaN!")
-    }
-  }
-  if (any(is.na(sum_probs_2) | is.nan(sum_probs_2))) {
-    cat("The value of sum_probs_2 is: ", sum_probs_2, "\n")
-    if (debug_mode == FALSE) {
-      stop("problems: sum_probs_2 is Na or NaN!")
-    }
-  }
-  if (debug_mode == TRUE) {
-   cat("The value of the likelihood is: ", likelihood, "\n")
-  }
-  loglik <- log(likelihood) + sum(log(sum_probs_1)) + sum(log(sum_probs_2))
-
-  # Various checks
-  loglik <- as.numeric(loglik)
-  if (is.nan(loglik) | is.na(loglik)) {
-    loglik <- -Inf
-  } else {
-    # conditioned likelihood
-    loglik <- loglik - log(pc) * (cond > 0)
-  }
-
+  loglik <- deliver_loglik(
+    likelihood = likelihood,
+    sum_probs_1 = sum_probs_1,
+    sum_probs_2 = sum_probs_2,
+    cond = cond,
+    pc = pc,
+    debug_mode = debug_mode
+  )
   loglik
 }

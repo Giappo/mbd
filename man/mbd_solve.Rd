@@ -4,8 +4,7 @@
 \alias{mbd_solve}
 \title{mbd ODE system integrator}
 \usage{
-mbd_solve(q_vector, time_interval, func = mbd_loglik_rhs, matrix_a,
-  debug_mode = FALSE)
+mbd_solve(q_vector, time_interval, func = mbd_loglik_rhs, matrix_a)
 }
 \arguments{
 \item{q_vector}{the \code{Q} vector from
@@ -16,9 +15,6 @@ mbd_solve(q_vector, time_interval, func = mbd_loglik_rhs, matrix_a,
 \item{func}{function for the right hand side of the ODE}
 
 \item{matrix_a}{The A matrix from the theory that represents the ODE system.}
-
-\item{debug_mode}{If TRUE allows to run even when there are errors and
-expose them.}
 }
 \description{
 Integrates "func" in the time interval

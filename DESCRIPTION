@@ -13,6 +13,7 @@ Imports:
   testit
 Suggests:
   ape,
+  cyclocomp,
   knitr,
   lintr,
   rmarkdown, 

@@ -38,8 +38,6 @@ mbd_sim <- function(
   nu <- pars[3]
   q <- pars[4]
   init_n_lineages <- n_0
-  tips <- -1
-  crown_species_dead <- cond
   keep_the_sim <- 0
   while (keep_the_sim == 0) {
     total_count <- init_n_lineages # all the species that ever appeared
@@ -103,48 +101,22 @@ mbd_sim <- function(
     dim(l_matrix) <- c(total_count, 4)
     l_matrix[, 1] <- DDD::roundn(l_matrix[, 1], digits = brts_precision)
 
-    # tips check
-    tips <- length(l_matrix[, 4][l_matrix[, 4] == -1])
-
-    # survival of crown check
-    alive <- l_matrix[l_matrix[, 4] == -1, ]
-    alive <- matrix(alive, ncol = 4)
-    crown_species_dead <- (length(unique(sign(alive[, 3]))) != n_0) * (cond > 0)
-
-    # should i keep this simulation?
-    keep_the_sim <- (cond == 0) *
-      1 +
-      (cond == 1) *
-      (
-        (!crown_species_dead) &
-          (tips >= tips_interval[1] & tips <= tips_interval[2])
-      )
+    keep_the_sim <- evaluate_sim(
+      l_matrix = l_matrix,
+      cond = cond,
+      n_0 = n_0,
+      tips_interval = tips_interval
+    )
   }
-  n_survivors <- sum(l_matrix[, 4] == -1)
-  if (n_survivors >= 2) {
-    time_points <- unlist(unname(sort(
-      DDD::L2brts(l_matrix, dropextinct = TRUE), decreasing = TRUE
-    )))
-    reconstructed_tree <- DDD::L2phylo(unname(l_matrix), dropextinct = TRUE)
-  }
-  if (n_survivors == 1) {
-    time_points <- unname(l_matrix[which(l_matrix[, 4] == -1), 1])
-    reconstructed_tree <- create_singleton_phylo(time_points)
-  }
-  if (n_survivors == 0) {
-    time_points <- c()
-    reconstructed_tree <- create_empty_phylo()
-  }
-  colnames(l_matrix) <- c("birth_time", "parent", "id", "death_time")
-  brts <- sort(abs(as.numeric(time_points)), decreasing = TRUE)
-  brts <- DDD::roundn(brts, digits = brts_precision)
-
-  full_tree <- DDD::L2phylo(l_matrix, dropextinct = FALSE)
+  info <- get_info_l_matrix(
+    l_matrix = l_matrix,
+    brts_precision = brts_precision
+  )
 
   list(
-    brts = brts,
-    reconstructed_tree = reconstructed_tree,
-    full_tree = full_tree,
+    brts = info$brts,
+    reconstructed_tree = info$reconstructed_tree,
+    full_tree = info$full_tree,
     l_matrix = l_matrix
   )
 }

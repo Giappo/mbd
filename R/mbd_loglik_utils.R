@@ -76,17 +76,13 @@ mbd_solve <- function(
   q_vector,
   time_interval,
   func = mbd_loglik_rhs,
-  matrix_a,
-  debug_mode = FALSE
+  matrix_a
 ) {
 
   y <- q_vector
   parms <- matrix_a
   t1 <- time_interval
 
-  if (debug_mode == TRUE) {
-    cat("----------------------------------\n")
-  }
   g <- 10 # granularity
   t0 <- 0
   start_rtol <- 1e-8
@@ -94,9 +90,6 @@ mbd_solve <- function(
   rtol <- start_rtol # something reasonable, hopefully
   while (TRUE) {
     tseq <- seq(t0, t1, length.out = g)
-    if (debug_mode == TRUE) {
-      cat(atol, rtol, t0, t1, "\n")
-    }
     out <- deSolve::ode(
       y = y,
       times = tseq,
@@ -108,7 +101,7 @@ mbd_solve <- function(
     )
     # it might be useful for debug istate = attributes(out)$istate
     # it might be useful for debug rstate = attributes(out)$rstate
-    lkg <- 0    # last known good
+    lkg <- 0 # last known good
     for (ff in 1:g) {
       a <- any(out[ff, -1] < 0)
       if (!is.na(a) && a) {
@@ -117,7 +110,7 @@ mbd_solve <- function(
       lkg <- lkg + 1
     }
     if (lkg == g) {
-      break;  # done and dusted
+      break; # done and dusted
     }
     if (lkg > 1) {
       # trace back to last known good and try from there
@@ -323,4 +316,70 @@ brts2time_intervals_and_births <- function(brts, brts_precision = 8) {
 max_lx <- function() {
   maximum_lx <- 1400
   maximum_lx
+}
+
+#' @noRd
+check_sum_probs <- function(
+  sum_probs_1,
+  sum_probs_2,
+  debug_mode
+) {
+  # Removing sum_probs_1 and sum_probs_2 effects from the LL
+  if (!(all(sum_probs_1 > 0))) {
+    cat("The value of sum_probs_1 is: ", sum_probs_1, "\n")
+    if (debug_mode == FALSE) {
+      stop("problems: sum_probs_1 is non positive!")
+    }
+  }
+  if (!(all(sum_probs_2 > 0))) {
+    cat("The value of sum_probs_2 is: ", sum_probs_2, "\n")
+    if (debug_mode == FALSE) {
+      stop("problems: sum_probs_2 is non positive!")
+    }
+  }
+  if (any(is.na(sum_probs_1) | is.nan(sum_probs_1))) {
+    cat("The value of sum_probs_1 is: ", sum_probs_1, "\n")
+    if (debug_mode == FALSE) {
+      stop("problems: sum_probs_1 is Na or NaN!")
+    }
+  }
+  if (any(is.na(sum_probs_2) | is.nan(sum_probs_2))) {
+    cat("The value of sum_probs_2 is: ", sum_probs_2, "\n")
+    if (debug_mode == FALSE) {
+      stop("problems: sum_probs_2 is Na or NaN!")
+    }
+  }
+}
+
+#' @noRd
+deliver_loglik <- function(
+  likelihood,
+  sum_probs_1,
+  sum_probs_2,
+  cond,
+  pc,
+  debug_mode
+) {
+  if (debug_mode == TRUE) {
+    cat("The value of the likelihood is: ", likelihood, "\n")
+  }
+
+  # Removing sum_probs_1 and sum_probs_2 effects from the LL
+  check_sum_probs(
+    sum_probs_1 = sum_probs_1,
+    sum_probs_2 = sum_probs_2,
+    debug_mode = debug_mode
+  )
+  loglik <- log(likelihood) + sum(log(sum_probs_1)) + sum(log(sum_probs_2))
+
+  # Various checks
+  loglik <- as.numeric(loglik)
+  if (is.nan(loglik) | is.na(loglik)) {
+    loglik <- -Inf
+  } else {
+    # conditioned likelihood
+    loglik <- loglik - log(pc) * (cond > 0)
+  }
+
+  loglik
 }
