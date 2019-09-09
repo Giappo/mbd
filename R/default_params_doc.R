@@ -24,6 +24,8 @@
 #'  event in the phylogeny
 #' }
 #' @param data_folder The data folder insider the project folder.
+#' @param debug_mode If TRUE allows to run even when there are errors and
+#'  expose them.
 #' @param function_name function name
 #' @param function_names function names
 #' @param functions_names function names
@@ -50,7 +52,8 @@
 #' @param logs something
 #' @param lx it is the number of ODEs considered for the computation.
 #' @param lx0 something
-#' @param matrix something
+#' @param matrix a matrix
+#' @param matrix_a The A matrix from the theory that represents the ODE system.
 #' @param matrix_builder function used to build the transition matrix.
 #' Default option is \code{hyper_a_hanno}
 #' @param max_iter Sets the maximum number of iterations in the optimization
@@ -59,6 +62,7 @@
 #' @param max_repetitions something
 #' @param max_sims something
 #' @param maxiter something
+#' @param maxit maximum number of subplex iterations
 #' @param mbd_lambda something
 #' @param message a message
 #' @param methode
@@ -102,6 +106,7 @@
 #' @param printit something
 #' @param print_errors something
 #' @param project_folder the folder when you want to save data and results
+#' @param q_t the q_vector in time
 #' @param q_vector the \code{Q} vector from
 #' 'Etienne et al. 2012 - Proc. R. Soc. B'.
 #' @param q the single-lineage speciation probability at a triggered event.
@@ -175,6 +180,7 @@ default_params_doc <- function(
   colormap,
   cond,
   data_folder,
+  debug_mode,
   function_name,
   function_names,
   functions_names,
@@ -195,12 +201,14 @@ default_params_doc <- function(
   lx,
   lx0,
   matrix,
+  matrix_a,
   matrix_builder,
   max_iter,
   max_k,
   max_number_of_species,
   max_repetitions,
   max_sims,
+  maxit,
   maxiter,
   mbd_lambda,
   message,
@@ -230,6 +238,7 @@ default_params_doc <- function(
   print_errors,
   printit,
   project_folder,
+  q_t,
   q_vector,
   q,
   quantiles_choice,

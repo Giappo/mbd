@@ -8,8 +8,9 @@
 mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
   0.5, 0.3), n_0 = 2, cond = 1, optim_ids = rep(TRUE,
   length(start_pars)), true_pars = start_pars, tips_interval = c(0,
-  Inf), q_threshold = 0.001, verbose = TRUE, lx = 1 + 2 *
-  (length(brts)), methode = "lsodes")
+  Inf), q_threshold = 0.001, verbose = TRUE, missnumspec = 0,
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
+  maxit = 10000)
 }
 \arguments{
 \item{loglik_function}{the loglik function}
@@ -41,14 +42,12 @@ because you never want \code{q} to actually be equal to zero or one.}
 
 \item{verbose}{choose if you want to print the output or not}
 
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny.}
+
 \item{lx}{it is the number of ODEs considered for the computation.}
 
-\item{methode}{specifies how the integration must be performed:
-\itemize{
-  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
-  \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
-  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
-}}
+\item{maxit}{maximum number of subplex iterations}
 }
 \value{
 The output is a dataframe containing
@@ -91,6 +90,7 @@ out <- mbd::mbd_ml(
   start_pars = start_pars,
   optim_ids = optim_ids,
   brts = sim$brts,
+  true_pars = sim_pars,
   cond = cond,
   n_0 = n_0,
   verbose = FALSE

@@ -47,18 +47,6 @@ mbd_conds <- function() {
   conds
 }
 
-#' @title Integration methodes
-#' @author Giovanni Laudanno
-#' @description Gives the integration methodes (methods for odes)
-#'  accepted by mbd
-#' @inheritParams default_params_doc
-#' @return the integration methodes
-#' @export
-mbd_methodes <- function() {
-  methodes <- c("lsodes", "ode45", "lsoda")
-  methodes
-}
-
 #' @title Logliks for the experiment
 #' @author Giovanni Laudanno
 #' @description Get the loglik functions to use for the experiment
@@ -87,11 +75,11 @@ cat2 <- function(
   message,
   verbose
 ) {
- if (verbose == TRUE) {
-   cat(message)
- } else {
-   return()
- }
+  if (verbose == TRUE) {
+    cat(message)
+  } else {
+    return()
+  }
 }
 
 #' @title Transform parameters
@@ -161,55 +149,40 @@ get_function_names <- function(
     "!"
   )
 
-  if (is.vector(loglik_functions)) {
-    function_names <- rep(NA, length(loglik_functions))
-    model_names <- which_function <- function_names
-    for (m in seq_along(loglik_functions)) {
-      fun <- eval(loglik_functions[m])[[1]]
-      if (is.character(loglik_functions[m])) {
-        if (length(
-          (find_function <- which(fun_list == loglik_functions[m]))
-        ) == 0) {
-          stop(error_message)
-        }
-        which_function[m] <- find_function
-      } else {
-        for (i in seq_along(fun_list)) {
-          if (all.equal(get(fun_list[i]), fun) == TRUE) {
-            which_function[m] <- i
-          }
-        }
-      }
-      if (is.null(which_function[m]) | is.na(which_function[m])) {
-        stop(error_message)
-      }
-      function_names[m] <- toString(fun_list[which_function[m]])
-      model_names[m] <- cut_loglik_from_name(function_names[m]) # nolint internal function
+  if (!is.list(loglik_functions)) {
+    if (length(loglik_functions) == 1) {
+      loglik_functions <- list(loglik_functions)
     }
-  } else {
-    fun <- eval(loglik_functions)
-    if (is.character(loglik_functions)) {
+  }
+
+  function_names <- rep(NA, length(loglik_functions))
+  model_names <- which_function <- function_names
+  for (m in seq_along(loglik_functions)) {
+    if (is.character(loglik_functions[[m]])) {
       if (length(
-        (find_function <- which(fun_list == loglik_functions))
+        (find_function <- which(fun_list == loglik_functions[[m]]))
       ) == 0) {
         stop(error_message)
       }
-      which_function <- find_function
+      which_function[m] <- find_function
     } else {
-      which_function <- 0
+      fun <- eval(loglik_functions[m])[[1]]
       for (i in seq_along(fun_list)) {
         if (all.equal(get(fun_list[i]), fun) == TRUE) {
-          which_function <- i
+          which_function[m] <- i
         }
       }
     }
-    if (is.null(which_function) | is.na(which_function)) {
+    if (is.null(which_function[m]) | is.na(which_function[m])) {
       stop(error_message)
     }
-    function_names <- toString(fun_list[which_function])
-    model_names <- cut_loglik_from_name(function_names) # nolint internal function
+    function_names[m] <- toString(fun_list[which_function[m]])
+    model_names[m] <- cut_loglik_from_name(function_names[m]) # nolint internal function
   }
-
+  function_names <- fun_list[which_function]
+  model_names <- unname(
+    sapply(function_names, FUN = cut_loglik_from_name) # nolint internal function
+  )
   if (any(is.na(model_names))) {
     stop(error_message)
   }
@@ -290,4 +263,35 @@ read_results <- function(project_folder = NULL) {
       result = result
     )
   )
+}
+
+#' Count the number of multiple speciation events
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+mbd_count_n_spec_events <- function(brts) {
+  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
+  sum(births > 1)
+}
+
+#' Create an empty phylogeny
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+create_empty_phylo <- function() {
+  tr <- list(edge = matrix(c(2, 1), 1, 2), tip.label = "", Nnode = 0L)
+  class(tr) <- "phylo"
+  tr$tip.label <- c() # nolint
+  tr
+}
+
+#' Create an empty phylogeny
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+create_singleton_phylo <- function(age) {
+  tr <- list(edge = matrix(c(2, 1), 1, 2), tip.label = "t1", Nnode = 1L)
+  class(tr) <- "phylo"
+  tr$edge.length <- age # nolint
+  tr
 }

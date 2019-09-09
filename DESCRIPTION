@@ -9,11 +9,11 @@ Depends:
 Imports: 
   DDD,
   deSolve,
-  R.utils,
   subplex,
   testit
 Suggests:
   ape,
+  cyclocomp,
   knitr,
   lintr,
   rmarkdown, 

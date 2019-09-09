@@ -1,5 +1,11 @@
 context("mbd_matrices")
 
+is_on_ci <- function() {
+  is_it_on_appveyor <- Sys.getenv("APPVEYOR") != ""
+  is_it_on_travis <- Sys.getenv("TRAVIS") != ""
+  is_it_on_appveyor || is_it_on_travis # nolint internal function
+}
+
 # a_matrix ----
 test_that("a_matrix: mbd vs ddd", {
 
@@ -11,7 +17,8 @@ test_that("a_matrix: mbd vs ddd", {
   m1 <- mbd::create_a(
     pars,
     k = 0,
-    lx = lx
+    lx = lx,
+    no_species_out_of_the_matrix = TRUE
   )
   m2 <- matrix(
     DDD:::dd_loglik_M_aux(
@@ -37,7 +44,8 @@ test_that("a_matrix: mbd vs ddd", {
   m1 <- mbd::create_a(
     pars,
     k = 0,
-    lx = lx
+    lx = lx,
+    no_species_out_of_the_matrix = TRUE
   )
   m2 <- matrix(
     DDD:::dd_loglik_M_aux(
@@ -61,43 +69,57 @@ test_that("a_matrix: # entries are in accordance with the theory", {
   lambda <- 3; mu <- 1.5; nu <- 7; q <- 0.4
   pars <- c(lambda, mu, nu, q)
   k <- 2
-  lx <- 200
-  m1 <- mbd::create_a(
+  lx <- 50 + 150 * is_on_ci()
+  no_species_out_of_the_matrix <- TRUE
+  a_matrix <- mbd::create_a(
     pars,
     k = k,
-    lx = lx
+    lx = lx,
+    no_species_out_of_the_matrix = no_species_out_of_the_matrix
   )
   # lower triangular matrix: m > n
   for (m in 1:lx) {
     for (n in 0:(m - 1)) {
       j <- 0:min(m - n, k)
-      entry_m_n <- 
-        (m - n == 1) * lambda * (m - 1 + 2 * k) +
+      entry_m_n <-
+        (m == n + 1) * lambda * (m - 1 + 2 * k) +
         nu *
         (1 - q) ^ k *
-        q ^ (m - n) * 
+        q ^ (m - n) *
         (1 - q) ^ (2 * n - m) *
         sum(
-          2 ^ j * choose(k, j) * choose(n, m - n - j)
+          (2 ^ j) * choose(k, j) * choose(n, m - n - j)
         )
       testthat::expect_equal(
         entry_m_n,
-        m1[m + 1, n + 1]
+        a_matrix[m + 1, n + 1]
       )
     }
   }
   # main diagonal
   m <- 0:lx
+  nu_terms <- rep(0, lx + 1)
+  if (no_species_out_of_the_matrix == TRUE) {
+    for (n in 0:(lx - 1)) {
+      limit <- min(n + k, lx - n)
+      avec <- 1:limit
+      nu_terms[n + 1] <-
+        sum(
+          choose(n + k, avec) * (q ^ avec) * (1 - q) ^ (n + k - avec)
+        )
+    }
+  } else {
+    nu_terms <- (1 - (1 - q) ^ (m + k))
+  }
   entry_m_m <-
-    -nu * (1 - (1 - q) ^ (m + k)) +
+    -nu * nu_terms +
     -mu * (m + k) +
-    -lambda * (m + k)
+    -lambda * (m + k) +
+    no_species_out_of_the_matrix * lambda * c(rep(0, lx), 1) * (m + k)
+
   testthat::expect_equal(
-    diag(m1)[-length(entry_m_m)],
-    entry_m_m[-length(entry_m_m)]
-  )
-  testthat::expect_equal(
-    diag(m1)[length(entry_m_m)]
+    diag(a_matrix),
+    entry_m_m
   )
 })
 
@@ -157,7 +179,7 @@ test_that("b_matrix", {
     k = k,
     b = b,
     lx = lx
-  ); m1
+  )
   testthat::expect_true(
     # b is lower triangular
     all(m1[col(m1) > row(m1)] == 0)
@@ -176,29 +198,31 @@ test_that("b_matrix: # entries are in accordance with the theory", {
   lambda <- 4; mu <- 2; nu <- 7.2; q <- 0.5
   pars <- c(lambda, mu, nu, q)
   k <- 8; b <- 3
-  lx <- 200
-  m1 <- mbd::create_b(
+  lx <- 50 + 150 * is_on_ci()
+  b_matrix <- mbd::create_b(
     pars,
     k = k,
     lx = lx,
     b = b
   )
-  # lower triangular matrix: m > n
-  for (m in 1:lx) {
-    for (n in 0:(m - 1)) {
-      j <- 0:k
-      entry_m_n <- 
-        (m - n == 1) * (b == 1) * lambda * k +
+  # lower triangular matrix with diagonal: m >= n
+  for (m in 0:lx) {
+    for (n in 0:m) {
+      a <- m - n
+      j <- 0:min(m - n, k)
+      entry_m_n <-
+        (m == n) * (b == 1) * lambda * k +
         nu *
-        choose(k, b) * q ^ b * (1 - q) ^ (k - b) *
-        q ^ (m - n) * 
-        (1 - q) ^ (2 * n - m) *
+        choose(k, b) * q ^ b *
+        (1 - q) ^ (k - b + m) *
+        q ^ a *
+        (1 - q) ^ (-2 * a) *
         sum(
-          2 ^ j * choose(k - b, j) * choose(n, m - n - j) 
+          2 ^ j * choose(k - b, j) * choose(m - a, a - j)
         )
       testthat::expect_equal(
         entry_m_n,
-        m1[m + 1, n + 1]
+        b_matrix[m + 1, n + 1]
       )
     }
   }
