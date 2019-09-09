@@ -30,10 +30,6 @@ check_pars <- function(
   nu_limit = Inf,
   q_threshold = 1e-3
 ) {
-  lambda <- pars[1]
-  mu <- pars[2]
-  nu <- pars[3]
-  q <- pars[4]
   if (missing(q_threshold)) {
     q_threshold <- 0
   }
@@ -45,31 +41,22 @@ check_pars <- function(
   if (any(is.nan(pars))) {
     stop("'pars' cannot contain NaNs")
   }
-  is_it_wrong <-
-    (any(is.infinite(pars))) ||
-    (lambda < 0) ||
-    (mu < 0) ||
-    (nu < 0) ||
-    (q < 0) ||
-    (q > 1)
-  if (is_it_wrong == TRUE) {
-    return("wrong")
-  }
-
-  # safety checks
   if (safety_checks == TRUE) {
-    is_it_wrong <-
-      (lambda > lambda_limit) ||
-      (mu > mu_limit) ||
-      (nu > nu_limit) ||
-      (q < 0 + q_threshold) ||
-      (q > 1 - q_threshold)
-  }
-  if (is_it_wrong == TRUE) {
-    return("wrong")
+    pars_mins <- c(0, 0, 0, 0 + q_threshold)
+    pars_maxs <- c(lambda_limit, mu_limit, nu_limit, 1 - q_threshold)
   } else {
-    return("right")
+    pars_mins <- c(0, 0, 0, 0)
+    pars_maxs <- c(Inf, Inf, Inf, 1 + .Machine$double.xmin)
   }
+  right <- all(
+    (pars >= pars_mins) & (pars < pars_maxs)
+  )
+  if (right) {
+    out <- "right"
+  } else {
+    out <- "wrong"
+  }
+  out
 }
 
 #' @title Check 'brts'

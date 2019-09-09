@@ -13,12 +13,17 @@ test_that("cyclomatic complexity", {
   }
 
   max_complexity <- 15
-  fun_list <- ls(paste0("package:", get_pkg_name())) # nolint internal function
-  for (i in seq_along(fun_list)) {
-    expect_true(
-      cyclocomp::cyclocomp(get(fun_list[[i]])) < max_complexity
+  out <- cyclocomp::cyclocomp_package("mbd")
+  too_complex <- !all(out$cyclocomp < max_complexity)
+  if (too_complex) {
+    print(
+      "These functions are too complex:"
+    )
+    print(
+      out$name[out$cyclocomp >= max_complexity]
     )
   }
+  expect_false(too_complex)
 })
 
 test_that("package style", {
