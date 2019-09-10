@@ -12,7 +12,7 @@ pmb_loglik <- function(
 # BASIC SETTINGS AND CHECKS
   check_brts(brts = brts, n_0 = n_0)
   if (
-    check_pars(pars = pars) == "wrong"
+    check_pars(pars = pars, safety_checks = FALSE) == "wrong"
   ) {
     return(-Inf)
   }

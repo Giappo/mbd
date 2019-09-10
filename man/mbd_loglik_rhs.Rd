@@ -21,5 +21,5 @@ for multiple birth model
 This is not to be called by the user.
 }
 \author{
-Giovanni Laudanno
+Hanno Hildebrandt
 }

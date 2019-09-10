@@ -1,110 +1,174 @@
-#' @title Transition matrix for cond = 2
-#' @description Creates the A matrix,
-#' used for the cond = 2 calculation
-#' @inheritParams default_params_doc
-#' @details This is not to be called by the user.
-#' @author Giovanni Laudanno
-#' @export
-create_a_cond_2 <- function(pars, k, lx) {
-  lambda <- pars[1]
-  mu <- pars[2]
-  nu <- pars[3]
-  q <- pars[4]
+#' Auxilary function for cond_prob
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @noRd
+cond_prob_matrices <- function(
+  q,
+  lq
+) {
 
-  testit::assert(lx < 2 ^ 31)
-  nvec <- 0:lx
-  m_visible <- 2
-  mvec <- 0:(m_visible - 1)
-  nu_terms <- rep(1, lx + 1)
-  for (m in mvec) {
-    nu_terms <- nu_terms -
-      choose(k + nvec, m) * q ^ m * (1 - q) ^ (nvec + k - m)
+  pq <- q #bart's translation
+  nu_matrix <- matrix(0, nrow = lq, ncol = lq)
+  for (m1 in 0:(lq - 1)) {
+    for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
+      aux <- log(m1 + 1) +
+        lgamma(m1 - a1 + 1) -
+        lgamma(m1 - 2 * a1 + 2) -
+        lgamma(a1 + 1)
+      aux <- exp(aux)
+      aux <- aux * pq ^ a1 * (1 - pq) ^ (m1 + 1 - 2 * a1)
+      nu_matrix[m1 + 1, m1 - a1 + 1] <- aux
+    }
   }
 
-  m <- matrix(0, lx + 1, lx + 1)
-  diag(m) <- (-nu) * nu_terms - (lambda + mu) * (k + nvec)
-  m[row(m) == col(m) - 1] <- mu * nvec[2:(lx + 1)]
-  m[row(m) == col(m) + 1] <- m[row(m) == col(m) + 1] +
-    lambda * (nvec[1:(lx)] + 2 * k)
-  m[length(nvec), length(nvec)] <- (-mu) * (k + nvec[length(nvec)])
+  empty_qq <- matrix(0, nrow = (lq + 2), ncol = (lq + 2))
+  m1 <- col(nu_matrix) - 1
+  m2 <- row(nu_matrix) - 1
+  list(
+    nu_matrix = nu_matrix,
+    empty_qq = empty_qq,
+    m1 = m1,
+    m2 = m2
+  )
+}
 
-  m
+#' Auxilary function for cond_prob
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @noRd
+cond_prob_rhs1 <- function(
+  qvec,
+  lambda,
+  mu,
+  nu,
+  k,
+  nu_matrix,
+  m1,
+  m2,
+  empty_qq
+) {
+  lq2 <- length(qvec)
+  lq <- sqrt(lq2)
+
+  mm <- 2:(lq + 1)
+  mm_plus_one <- mm + 1
+  mm_minus_one <- mm - 1
+
+  qq <- matrix(qvec, nrow = lq, ncol = lq)
+  qq2 <- empty_qq
+  qq2[mm, mm] <- qq
+
+  dq1 <- (2 * k + m1 - 1) * qq2[mm, mm_minus_one] +
+    (2 * k + m2 - 1) * qq2[mm_minus_one, mm] -
+    (2 * k + m1 + m2) * qq # ok
+
+  dq2 <- (m1 + 1) * qq2[mm, mm_plus_one] +
+    (m2 + 1) * qq2[mm_plus_one, mm] -
+    (2 * k + m1 + m2) * qq # ok
+
+  dq3 <- nu_matrix %*% qq %*% t(nu_matrix) - qq # first cc is m1, t(cc) is m2
+
+  dq <- lambda * dq1 + mu * dq2 + nu * dq3
+
+  dq <- matrix(dq, nrow = lq2, ncol = 1)
+  dq
+}
+
+#' Auxilary function for cond_prob
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @noRd
+cond_prob_rhs2 <- function(t, x, parms) {
+  list(cond_prob_rhs1(
+    qvec = x,
+    lambda = parms$lambda,
+    mu = parms$mu,
+    nu = parms$nu,
+    nu_matrix = parms$nu_matrix,
+    k = parms$k,
+    m1 = parms$m1,
+    m2 = parms$m2,
+    empty_qq = parms$empty_qq
+  ))
 }
 
 #' Called by \link{mbd_loglik} if there is a conditioning != 0
 #' @inheritParams default_params_doc
-#' @return the pc. If \code{is.nan(log(pc))} the log-likelihood estimation
-#'   by \link{mbd_loglik} is -Inf
-#' @author Giovanni Laudanno
-#' @noRd
-calculate_conditional_prob <- function(
-  brts,
+#' @return the conditional probability
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @export
+cond_prob <- function(
   pars,
+  brts,
   cond,
-  lx = 1000,
   n_0 = 2,
   tips_interval = c(n_0 * (cond > 0), Inf),
-  methode = "lsodes",
-  abstol = 1e-16,
-  reltol = 1e-10
+  lx = 30,
+  debug_mode = FALSE
 ) {
-  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
+  if (n_0 != 2) {
+    stop("This works only for n_0 == 2.")
+  }
   if (cond == 0) {
     return(1)
   }
-  pc0 <- pc1 <- pc2 <- 1
-  total_time <- max(abs(brts))
-  m <- 0:lx
-  one_over_cm <- (3 * (m + 1)) / (m + 3)
-  one_over_qm_binom <- 1 / choose(m + n_0, n_0)
-  q_i <- c(1, rep(0, lx))
-  testit::assert(length(one_over_cm) == length(m))
-  testit::assert(length(one_over_qm_binom) == length(m))
-  testit::assert(length(q_i) == length(m))
-  # creating a_matrix
-  matrix_a <- create_a(pars = pars, k = n_0, lx = lx) # nolint internal function
-  # integrating the starting q_vector to t_p
-  a2_v1 <- a_operator(
-    q_vector = q_i,
-    transition_matrix = matrix_a,
-    time_interval = total_time,
-    precision = 250L,
-    methode = methode,
-    abstol = abstol,
-    reltol = reltol
-  )
-  names(a2_v1) <- paste0("Q", 0:lx)
+  lambda <- pars[1]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4]
+  tt <- max(abs(brts)) # time between crown age and present
+  times <- c(0, tt)
 
-  total_product <- a2_v1 * one_over_cm * one_over_qm_binom
-  missingspecies_min <- max(tips_interval[1] - n_0, 0)
-  missingspecies_max <- min(tips_interval[2] - n_0, lx)
-  # +1 is because of the zero-th component
-  tips_components <- 1 + c(missingspecies_min, missingspecies_max)
-  pc1 <- sum(total_product[tips_components[1]:tips_components[2]])
+  lq <- lx # maximal number of missing species for both m1 and m2
 
-  if (cond == 2) {
-    # integrating the starting q_vector to t_p
-    a2_v1_2 <- a_operator(
-      q_vector = q_i,
-      transition_matrix = create_a_cond_2(
-        pars = pars,
-        k = n_0,
-        lx = lx
-      ),
-      time_interval = total_time,
-      precision = 250L,
-      methode = methode,
-      abstol = abstol,
-      reltol = reltol
-    )
-    total_product_2 <- a2_v1_2 * one_over_cm * one_over_qm_binom
-    missingspecies_min <- max(tips_interval[1] - n_0, 0)
-    missingspecies_max <- min(tips_interval[2] - n_0, lx)
-    # +1 is because of the zero-th component
-    tips_components <- 1 + c(missingspecies_min, missingspecies_max)
-    pc2 <- pc1 - sum(total_product_2[tips_components[1]:tips_components[2]])
-  }
+  # construct auxiliary matrix
+  matrices <- cond_prob_matrices(q = q, lq = lq)
 
-  pc <- pc0 * (cond == 0) + pc1 * (cond == 1) + pc2 * (cond == 2)
+  # integrate equations
+  parms <- list()
+  parms$lambda <- lambda
+  parms$mu <- mu
+  parms$nu <- nu
+  parms$kk <- 1
+  parms$nu_matrix <- matrices$nu_matrix
+  parms$m1 <- matrices$m1
+  parms$m2 <- matrices$m2
+  parms$empty_qq <- matrices$empty_qq
+  q_0 <- c(y = c(1, rep(0, lq ^ 2 - 1)))
+
+  ode_out <- deSolve::ode(
+    y = q_0,
+    times = times,
+    func = cond_prob_rhs2,
+    parms = parms,
+    method = "lsoda",
+    atol = 1e-100,
+    rtol = 1e-10,
+    tcrit = tt
+  )[2, -1]
+  q_m1_m2 <- matrix(ode_out, nrow = lq, ncol = lq)
+
+  # compute conditioning probability
+  m1 <- col(q_m1_m2) - 1
+  m2 <- row(q_m1_m2) - 1
+  p_m1_m2 <- q_m1_m2 / ((m1 + 1) * (m2 + 1)) # nolint lintr has issues with math
+  pc <- sum(p_m1_m2)
+
+  if (!(pc >= 0 && pc <= 1)) {
+    if (debug_mode == TRUE) {
+      graphics::plot(
+        p_m1_m2,
+        xlab = "m",
+        ylab = "Q_m^k(t_p - t_c)",
+        main = paste0(
+          "pars = ", pars[1], ", ", pars[2], ", ", pars[3], ", ", pars[4]
+        ),
+        sub = paste0(
+          "Conditional probability = ", pc
+        )
+      )
+      cat("The value of pc is: ", pc, "\n")
+    } else {
+      stop("problems: pc is wrong!")
+    }
+  } # debug
+
   pc
 }

@@ -7,21 +7,23 @@ documentation.}
 \usage{
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
-  checked_functions, colormap, cond, data_folder, function_name,
-  function_names, functions_names, idparsfix, idparsopt, initparsopt,
-  input_trees_path, input_xml, interval_max, interval_min, iterations, k,
-  lambda, loglik_function, loglik_functions, logs, lx, lx0, matrix,
-  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
-  max_sims, maxiter, mbd_lambda, message, methode, minimum_multiple_births,
-  missnumspec, models, mu, mutation_rate, n_0, n_0s, n_species,
-  init_n_lineages, n_steps, n_subs, nu, optimmethod, optim_ids, params,
-  pars, pars_transform, pars_transformed, parsfix, precision, print_errors,
-  printit, project_folder, q_vector, q, quantiles_choice, recursive,
-  reltol, res, results, results_folder, s, seed, safety_threshold,
-  sample_interval, sequence_length, sim, sim_pars, sim_phylo, start_pars,
-  subsamp, t, t1, t2, t_0, t_0s, tips_interval, time_interval, tol, tr,
-  transition_matrix, trparsfix, trparsopt, true_pars, values, verbose, x,
-  x_name, x_splits, y, y_name, y_splits, z, z_name)
+  checked_functions, colormap, cond, data_folder, debug_mode,
+  function_name, function_names, functions_names, idparsfix, idparsopt,
+  initparsopt, input_trees_path, input_xml, interval_max, interval_min,
+  iterations, k, lambda, lambda_limit, loglik_function, loglik_functions,
+  logs, lx, lx0, matrix, matrix_a, matrix_builder, max_iter, max_k,
+  max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
+  mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
+  models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species,
+  init_n_lineages, n_steps, n_subs, nu, nu_limit, optimmethod, optim_ids,
+  params, pars, pars_transform, pars_transformed, parsfix, precision,
+  print_errors, printit, project_folder, q_t, q_vector, q,
+  quantiles_choice, recursive, reltol, res, results, results_folder, s,
+  seed, q_threshold, sample_interval, sequence_length, sim, sim_pars,
+  sim_phylo, start_pars, subsamp, t, t1, t2, t_0, t_0s, tips_interval,
+  time_interval, tol, tr, transition_matrix, trparsfix, trparsopt,
+  true_pars, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
+  z_name)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -64,6 +66,9 @@ the numerical integration using deSolve.}
 
 \item{data_folder}{The data folder insider the project folder.}
 
+\item{debug_mode}{If TRUE allows to run even when there are errors and
+expose them.}
+
 \item{function_name}{function name}
 
 \item{function_names}{function names}
@@ -97,6 +102,8 @@ The ids are defined as follows:
 
 \item{lambda}{the sympatric speciation rate.}
 
+\item{lambda_limit}{Upper limit to lambda estimations.}
+
 \item{loglik_function}{the loglik function}
 
 \item{loglik_functions}{the loglik_functions you want to use}
@@ -107,7 +114,9 @@ The ids are defined as follows:
 
 \item{lx0}{something}
 
-\item{matrix}{something}
+\item{matrix}{a matrix}
+
+\item{matrix_a}{The A matrix from the theory that represents the ODE system.}
 
 \item{matrix_builder}{function used to build the transition matrix.
 Default option is \code{hyper_a_hanno}}
@@ -122,6 +131,8 @@ Default option is \code{hyper_a_hanno}}
 
 \item{max_sims}{something}
 
+\item{maxit}{maximum number of subplex iterations}
+
 \item{maxiter}{something}
 
 \item{mbd_lambda}{something}
@@ -130,9 +141,9 @@ Default option is \code{hyper_a_hanno}}
 
 \item{methode}{specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm}
-  \item \code{expo}: use \code{expoRkit}
   \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
+  \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
 \item{minimum_multiple_births}{minimum amount of multiple births
@@ -144,6 +155,8 @@ but missing in the phylogeny.}
 \item{models}{the models you want to use to define the likelihood}
 
 \item{mu}{the extinction rate.}
+
+\item{mu_limit}{Upper limit to mu estimations.}
 
 \item{mutation_rate}{something}
 
@@ -160,6 +173,8 @@ but missing in the phylogeny.}
 \item{n_subs}{something}
 
 \item{nu}{the multiple allopatric speciation trigger rate.}
+
+\item{nu_limit}{Upper limit to nu estimations.}
 
 \item{optimmethod}{optimization routine: choose between subplex and simplex}
 
@@ -190,6 +205,8 @@ according to y = x / (1 + x)}
 
 \item{project_folder}{the folder when you want to save data and results}
 
+\item{q_t}{the q_vector in time}
+
 \item{q_vector}{the \code{Q} vector from
 'Etienne et al. 2012 - Proc. R. Soc. B'.}
 
@@ -212,7 +229,7 @@ the numerical integration using deSolve.}
 
 \item{seed}{the seed}
 
-\item{safety_threshold}{adds a threshold for the evaluation of q. This is due
+\item{q_threshold}{adds a threshold for the evaluation of q. This is due
 because you never want \code{q} to actually be equal to zero or one.}
 
 \item{sample_interval}{something}

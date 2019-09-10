@@ -24,36 +24,37 @@ check_n_0 <- function(
 #' @noRd
 check_pars <- function(
   pars,
-  safety_threshold
+  safety_checks = TRUE,
+  lambda_limit = 10,
+  mu_limit = 10,
+  nu_limit = Inf,
+  q_threshold = 1e-3
 ) {
-  lambda <- pars[1]
-  mu <- pars[2]
-  nu <- pars[3]
-  q <- pars[4]
-  if (missing(safety_threshold)) {
-    safety_threshold <- 0
+  if (missing(q_threshold)) {
+    q_threshold <- 0
   }
 
-  # checks
+  # standard checks
   if (length(pars) != length(get_param_names())) {
     stop("'pars' must have a length of four.")
   }
   if (any(is.nan(pars))) {
     stop("'pars' cannot contain NaNs")
   }
-
-  check <- (any(is.infinite(pars))) ||
-    (lambda < 0) ||
-    (mu < 0) ||
-    (nu < 0) ||
-    (q < 0) ||
-    (q > 1) ||
-    (q < 0 + safety_threshold) ||
-    (q > 1 - safety_threshold)
-  if (check == TRUE) {
-    out <- "wrong"
+  if (safety_checks == TRUE) {
+    pars_mins <- c(0, 0, 0, 0 + q_threshold)
+    pars_maxs <- c(lambda_limit, mu_limit, nu_limit, 1 - q_threshold)
   } else {
+    pars_mins <- c(0, 0, 0, 0)
+    pars_maxs <- c(Inf, Inf, Inf, 1 + .Machine$double.xmin)
+  }
+  right <- all(
+    (pars >= pars_mins) & (pars < pars_maxs)
+  )
+  if (right) {
     out <- "right"
+  } else {
+    out <- "wrong"
   }
   out
 }
@@ -135,4 +136,45 @@ check_seed <- function(seed) {
     }
   }
   return()
+}
+
+#' @title Check q_t
+#' @description Check q_t
+#' @inheritParams default_params_doc
+#' @return Nothing
+#' @author Giovanni Laudanno
+#' @export
+check_q_vector <- function(
+  q_t,
+  t,
+  pars,
+  brts,
+  debug_mode = FALSE
+) {
+  q_vector <- q_t[t, ]
+  if (any(q_vector < 0)) {
+    if (debug_mode == TRUE) {
+      brts2 <- c(brts, 0)
+      w <- data.frame(matrix(NA, nrow = length(q_vector), ncol = 0))
+      w$values <- q_vector
+      w$x <- 1:length(q_vector)
+      w$cols <- ifelse(sign(q_vector) > 0, "blue", "red")
+      print(w$values)
+      graphics::plot(
+        values ~ x,
+        w,
+        pch = 15,
+        xlab = "m",
+        ylab = "Q_m^k(t)",
+        main = paste0(
+          "pars = ", pars[1], ", ", pars[2], ", ", pars[3], ", ", pars[4]
+        ),
+        sub = paste0(
+          "Problems in time interval: (", brts2[t - 1], ", ", brts2[t], ")"
+        )
+      )
+    } else {
+      stop("problems: q_t is negative!")
+    }
+  }
 }

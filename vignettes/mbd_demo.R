@@ -56,6 +56,7 @@ out <- mbd::mbd_ml(
   brts = brts,
   cond = cond,
   n_0 = n_0,
+  optim_ids = c(FALSE, FALSE, FALSE, TRUE),
   verbose = TRUE
 )
 knitr::kable(out)

@@ -19,22 +19,6 @@ test_that("silent if verbose is FALSE", {
   )
 })
 
-# likelihoods using expo and lsodes are identical ----
-test_that("likelihoods using expo and lsodes are identical", {
-
-  pars <- c(0.23, 0.12, 0.5, 0.24)
-  brts <- c(3, 2, 1)
-  n_0  <- 2
-  cond <- 1
-  loglik_expo  <- mbd::mbd_loglik(
-    pars = pars, brts = brts, n_0 = n_0, cond = cond, methode = "expo"
-  )
-  loglik_lsodes <- mbd::mbd_loglik(
-    pars = pars, brts = brts, n_0 = n_0, cond = cond, methode = "lsodes"
-  )
-  testthat::expect_equal(loglik_expo, loglik_lsodes)
-})
-
 # nu is zero ----
 test_that("nu is zero", {
 
@@ -57,7 +41,8 @@ test_that("nu is zero", {
       pars2 = pars2,
       brts = brts,
       missnumspec = 0
-    )
+    ),
+    tolerance = 1e-5
   )
 })
 
@@ -77,14 +62,15 @@ test_that("q is zero", {
       brts = brts,
       n_0 = n_0,
       cond = cond,
-      safety_threshold = 0
+      q_threshold = 0
     ),
     DDD::bd_loglik(
       pars1 = pars[1:3],
       pars2 = pars2,
       brts = brts,
       missnumspec = 0
-    )
+    ),
+    tolerance = 1e-5
   )
 })
 
@@ -105,14 +91,15 @@ test_that("nu and q are zero", {
       brts = brts,
       n_0 = n_0,
       cond = cond,
-      safety_threshold = 0
+      q_threshold = 0
     ),
     DDD::bd_loglik(
       pars1 = pars[1:3],
       pars2 = pars2,
       brts = brts,
       missnumspec = 0
-    )
+    ),
+    tolerance = 1e-5
   )
 })
 
