@@ -269,9 +269,10 @@ read_results <- function(project_folder = NULL) {
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
-mbd_count_n_spec_events <- function(brts) {
+count_n_mb_events <- function(brts) {
   births <- brts2time_intervals_and_births(brts)$births # nolint internal function
-  sum(births > 1)
+  mb_species <- sum(births[births > 1] - 1)
+  mb_species
 }
 
 #' Create an empty phylogeny
