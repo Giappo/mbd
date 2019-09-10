@@ -39,6 +39,7 @@
 #'   start_pars = start_pars,
 #'   optim_ids = optim_ids,
 #'   brts = sim$brts,
+#'   true_pars = sim_pars,
 #'   cond = cond,
 #'   n_0 = n_0,
 #'   verbose = FALSE
@@ -53,13 +54,15 @@ mbd_ml <- function(
   optim_ids = rep(TRUE, length(start_pars)),
   true_pars = start_pars,
   tips_interval = c(0, Inf),
-  safety_threshold = 1e-3,
+  q_threshold = 1e-3,
   verbose = TRUE,
-  lx = 1 + 2 * (length(brts))
+  missnumspec = 0,
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
+  maxit = 10000
 ) {
   # setup and checks
   if (true_pars[3] == 0 | true_pars[4] == 0) {
-    safety_threshold <- 0
+    q_threshold <- 0
   }
   par_names <- get_param_names() # nolint internal function
   testit::assert(length(optim_ids) == length(start_pars))
@@ -85,8 +88,9 @@ mbd_ml <- function(
       brts = brts,
       cond = cond,
       n_0 = n_0,
-      safety_threshold = safety_threshold,
-      lx = lx
+      q_threshold = q_threshold,
+      lx = lx,
+      missnumspec = missnumspec
     )
     if (verbose == TRUE) {
       printed_values <- paste0(
@@ -116,7 +120,8 @@ mbd_ml <- function(
   # maximum likelihood
   out <- subplex::subplex(
     par = tr_start_pars,
-    fn = function(x) optim_fun(x)
+    fn = function(x) optim_fun(x),
+    control = list(maxit = maxit)
   )
 
   # report missed convergence

@@ -1,4 +1,4 @@
-context("mbd_loglik - conditioning")
+context("mbd_conditioning")
 
 # cond == 0 yields pc == 1; cond == 1 yields pc <= 1;
 test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
@@ -8,7 +8,7 @@ test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
   n_0 <- 2
 
   testthat::expect_equal(
-    calculate_conditional_prob(
+    cond_prob(
       pars = pars,
       brts = brts,
       n_0  = n_0,
@@ -17,12 +17,12 @@ test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
     1
   )
   testthat::expect_lt(
-    calculate_conditional_prob(
+    cond_prob(
       pars = pars,
       brts = brts,
       n_0  = n_0,
       cond = 1,
-      lx = 300
+      lx = 16
     ),
     1
   )
@@ -75,6 +75,37 @@ test_that("right conditioning", {
       missnumspec = 0
     ),
     tolerance = 1e-5
+  )
+})
+
+test_that("accurate and fast", {
+
+  skip("Issue #77: https://github.com/Giappo/mbd/issues/77")
+
+  lxs <- seq(from = 50, to = 500, by = 50)
+  for (l in seq_along(lxs)) {
+    lx <- lxs[l]
+    time_cond <- system.time(prob_cond <- cond_prob(
+      pars = pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      lx = lx
+    ))[[3]]
+    # unconditioned likelihood time for the same branching times
+    time_likelihood <- system.time(
+      mbd_loglik(pars = pars, brts = brts, n_0 = n_0, cond = 0, lx = lx)
+    )
+    if (time_cond < time_likelihood && (1 - prob_cond) <= 0.05) {
+      break
+    }
+  }
+  # we want the conditioning time to be smaller than the time
+  #  for the full likelihood computation.
+  expect_true(time_cond < time_likelihood)
+  # we want the result to be accurate enough to have an error smaller than 5%
+  expect_true(
+    (1 - prob_cond) <= 0.05
   )
 })
 

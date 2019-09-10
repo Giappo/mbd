@@ -4,10 +4,10 @@
 \alias{mbd_loglik}
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
-mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0, lx = 1 +
-  2 * (length(brts) + length(missnumspec)), tips_interval = c(n_0 * (cond
-  > 0), Inf), methode = "lsodes", safety_threshold = 0.001,
-  abstol = 1e-16, reltol = 1e-10)
+mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0,
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
+  tips_interval = c(n_0 * (cond > 0), Inf), q_threshold = 0.001,
+  debug_mode = FALSE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -39,20 +39,11 @@ but missing in the phylogeny.}
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
-\item{methode}{specifies how the integration must be performed:
-\itemize{
-  \item \code{sexpm}: use \code{sexpm}
-  \item \code{expo}: use \code{expoRkit}
-  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
-}}
+\item{q_threshold}{adds a threshold for the evaluation of q. This is due
+because you never want \code{q} to actually be equal to zero or one.}
 
-\item{safety_threshold}{It determines the precision on the parameters.}
-
-\item{abstol}{absolute error tolerance for
-the numerical integration using deSolve.}
-
-\item{reltol}{relative error tolerance for
-the numerical integration using deSolve.}
+\item{debug_mode}{If TRUE allows to run even when there are errors and
+expose them.}
 }
 \value{
 The function returns the natural logarithm
