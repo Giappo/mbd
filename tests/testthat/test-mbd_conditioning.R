@@ -104,7 +104,9 @@ test_that("accurate and fast", {
   #  for the full likelihood computation.
   expect_true(time_cond < time_likelihood)
   # we want the result to be accurate enough to have an error smaller than 5%
-  expect_true((1 - prob_cond) <= 0.05)
+  expect_true(
+    (1 - prob_cond) <= 0.05
+  )
 })
 
 # abuse ----
