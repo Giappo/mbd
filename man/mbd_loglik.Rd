@@ -4,10 +4,10 @@
 \alias{mbd_loglik}
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
-mbd_loglik(pars, brts, n_0 = 2, cond = 1, lx = 1 + 2 * (length(brts)
-  + length(missnumspec)), tips_interval = c(0, Inf), missnumspec = 0,
-  methode = "expo", safety_threshold = 0.001, abstol = 1e-16,
-  reltol = 1e-10)
+mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0,
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
+  tips_interval = c(n_0 * (cond > 0), Inf), q_threshold = 0.001,
+  debug_mode = FALSE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -22,39 +22,35 @@ mbd_loglik(pars, brts, n_0 = 2, cond = 1, lx = 1 + 2 * (length(brts)
 
 \item{n_0}{the number of lineages at time equals zero.}
 
-\item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
-
-\item{lx}{it is the number of ODEs considered for the computation.}
-
-\item{tips_interval}{sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually
-do with a standard usage of mbd_sim.}
+\item{cond}{sets the conditioning
+\itemize{
+ \item cond = 0: no conditioning;
+ \item cond = 1: conditioning on stem or crown age
+  and non-extinction of the phylogeny;
+ \item cond = 2: like cond = 1 but forces at least one visible multiple
+ event in the phylogeny
+}}
 
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny.}
 
-\item{methode}{specifies how the integration must be performed:
-\itemize{
-  \item \code{sexpm}: use \code{sexpm}
-  \item \code{expo}: use \code{expoRkit}
-  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
-}}
+\item{lx}{it is the number of ODEs considered for the computation.}
 
-\item{safety_threshold}{It determines the precision on the parameters.}
+\item{tips_interval}{sets tips boundaries constrain on simulated dataset.
+It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
-\item{abstol}{absolute error tolerance for
-the numerical integration using deSolve.}
+\item{q_threshold}{adds a threshold for the evaluation of q. This is due
+because you never want \code{q} to actually be equal to zero or one.}
 
-\item{reltol}{relative error tolerance for
-the numerical integration using deSolve.}
+\item{debug_mode}{If TRUE allows to run even when there are errors and
+expose them.}
 }
 \value{
 The function returns the natural logarithm
   of the likelihood for the process.
 }
 \description{
-mbd_loglik_basic provides the likelihood for a process
+mbd_loglik provides the likelihood for a process
   in which multiple births (from different parents) at the same time
   are possible, along with usual sympatric speciation and extinction events.
 }

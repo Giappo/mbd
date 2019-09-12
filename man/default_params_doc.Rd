@@ -6,20 +6,24 @@
 documentation.}
 \usage{
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
-  alpha, alpha0, b, brts, changeloglikifnoconv, checked_functions,
-  colormap, cond, function_name, idparsfix, idparsopt, initparsopt,
-  input_trees_path, input_xml, interval_max, interval_min, iterations, k,
-  lambda, logs, lx, lx0, matrix, matrix_builder, max_iter, max_k,
-  max_number_of_species, max_repetitions, max_sims, maxiter, mbd_lambda,
-  methode, minimum_multiple_births, missnumspec, mu, mutation_rate, n_0,
-  n_species, init_n_lineages, n_steps, n_subs, nu, optimmethod, params,
-  pars, pars_transform, parsfix, precision, print_errors, printit,
-  q_vector, q, quantiles_choice, recursive, reltol, res, results, s,
-  safety_threshold, sample_interval, sequence_length, sim_pars, sim_phylo,
-  subsamp, t, t1, t2, tips_interval, time_interval, tol, tr,
-  transition_matrix, trparsfix, trparsopt, values, verbose, x, x_name,
-  x_splits, y, y_name, y_splits, z, z_name, start_pars, true_pars,
-  optim_ids)
+  alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
+  checked_functions, colormap, cond, data_folder, debug_mode,
+  function_name, function_names, functions_names, idparsfix, idparsopt,
+  initparsopt, input_trees_path, input_xml, interval_max, interval_min,
+  iterations, k, lambda, lambda_limit, loglik_function, loglik_functions,
+  logs, lx, lx0, matrix, matrix_a, matrix_builder, max_iter, max_k,
+  max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
+  mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
+  models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species,
+  init_n_lineages, n_steps, n_subs, nu, nu_limit, optimmethod, optim_ids,
+  params, pars, pars_transform, pars_transformed, parsfix, precision,
+  print_errors, printit, project_folder, q_t, q_vector, q,
+  quantiles_choice, recursive, reltol, res, results, results_folder, s,
+  seed, q_threshold, sample_interval, sequence_length, sim, sim_pars,
+  sim_phylo, start_pars, subsamp, t, t1, t2, t_0, t_0s, tips_interval,
+  time_interval, tol, tr, transition_matrix, trparsfix, trparsopt,
+  true_pars, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
+  z_name)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -43,16 +47,33 @@ the numerical integration using deSolve.}
 
 \item{brts}{A set of branching times of a phylogeny.}
 
+\item{brts_precision}{set the level of approximation on the branching times.}
+
 \item{changeloglikifnoconv}{something}
 
 \item{checked_functions}{something}
 
 \item{colormap}{something}
 
-\item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
+\item{cond}{sets the conditioning
+\itemize{
+ \item cond = 0: no conditioning;
+ \item cond = 1: conditioning on stem or crown age
+  and non-extinction of the phylogeny;
+ \item cond = 2: like cond = 1 but forces at least one visible multiple
+ event in the phylogeny
+}}
 
-\item{function_name}{something}
+\item{data_folder}{The data folder insider the project folder.}
+
+\item{debug_mode}{If TRUE allows to run even when there are errors and
+expose them.}
+
+\item{function_name}{function name}
+
+\item{function_names}{function names}
+
+\item{functions_names}{function names}
 
 \item{idparsfix}{something}
 
@@ -81,13 +102,21 @@ The ids are defined as follows:
 
 \item{lambda}{the sympatric speciation rate.}
 
+\item{lambda_limit}{Upper limit to lambda estimations.}
+
+\item{loglik_function}{the loglik function}
+
+\item{loglik_functions}{the loglik_functions you want to use}
+
 \item{logs}{something}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{lx0}{something}
 
-\item{matrix}{something}
+\item{matrix}{a matrix}
+
+\item{matrix_a}{The A matrix from the theory that represents the ODE system.}
 
 \item{matrix_builder}{function used to build the transition matrix.
 Default option is \code{hyper_a_hanno}}
@@ -102,14 +131,18 @@ Default option is \code{hyper_a_hanno}}
 
 \item{max_sims}{something}
 
+\item{maxit}{maximum number of subplex iterations}
+
 \item{maxiter}{something}
 
 \item{mbd_lambda}{something}
 
+\item{message}{a message}
+
 \item{methode}{specifies how the integration must be performed:
 \itemize{
-  \item \code{sexpm}: use \code{sexpm}
-  \item \code{expo}: use \code{expoRkit}
+  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
+  \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
 
@@ -119,11 +152,17 @@ that have to be present in the simulated phylogeny.}
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny.}
 
+\item{models}{the models you want to use to define the likelihood}
+
 \item{mu}{the extinction rate.}
+
+\item{mu_limit}{Upper limit to mu estimations.}
 
 \item{mutation_rate}{something}
 
 \item{n_0}{the number of lineages at time equals zero.}
+
+\item{n_0s}{starting number of lineages for all the clades}
 
 \item{n_species}{number of species.}
 
@@ -135,7 +174,11 @@ but missing in the phylogeny.}
 
 \item{nu}{the multiple allopatric speciation trigger rate.}
 
+\item{nu_limit}{Upper limit to nu estimations.}
+
 \item{optimmethod}{optimization routine: choose between subplex and simplex}
+
+\item{optim_ids}{ids of the parameters you want to optimize.}
 
 \item{params}{transition matrix for the rhs of the ode system.}
 
@@ -149,6 +192,9 @@ but missing in the phylogeny.}
 
 \item{pars_transform}{something}
 
+\item{pars_transformed}{parameters of the likelihood functions, transformed
+according to y = x / (1 + x)}
+
 \item{parsfix}{the values of the parameters that should not be optimized.}
 
 \item{precision}{something}
@@ -156,6 +202,10 @@ but missing in the phylogeny.}
 \item{print_errors}{something}
 
 \item{printit}{something}
+
+\item{project_folder}{the folder when you want to save data and results}
+
+\item{q_t}{the q_vector in time}
 
 \item{q_vector}{the \code{Q} vector from
 'Etienne et al. 2012 - Proc. R. Soc. B'.}
@@ -171,16 +221,22 @@ the numerical integration using deSolve.}
 
 \item{res}{something}
 
-\item{results}{something}
+\item{results}{mle results}
 
-\item{s}{something}
+\item{results_folder}{The results folder insider the project folder.}
 
-\item{safety_threshold}{adds a threshold for the evaluation of q. This is due
+\item{s}{the seed}
+
+\item{seed}{the seed}
+
+\item{q_threshold}{adds a threshold for the evaluation of q. This is due
 because you never want \code{q} to actually be equal to zero or one.}
 
 \item{sample_interval}{something}
 
 \item{sequence_length}{something}
+
+\item{sim}{the results of a sim run}
 
 \item{sim_pars}{vector of parameters:
 \itemize{
@@ -192,6 +248,8 @@ because you never want \code{q} to actually be equal to zero or one.}
 
 \item{sim_phylo}{something}
 
+\item{start_pars}{starting parameter values for the ml process.}
+
 \item{subsamp}{something}
 
 \item{t}{something}
@@ -200,9 +258,12 @@ because you never want \code{q} to actually be equal to zero or one.}
 
 \item{t2}{something}
 
+\item{t_0}{starting time}
+
+\item{t_0s}{starting time for each clade}
+
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually
-do with a standard usage of mbd_sim.}
+It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
 \item{time_interval}{something}
 
@@ -215,6 +276,8 @@ do with a standard usage of mbd_sim.}
 \item{trparsfix}{something}
 
 \item{trparsopt}{something}
+
+\item{true_pars}{true parameter values when running the ml process.}
 
 \item{values}{something}
 
@@ -235,12 +298,6 @@ do with a standard usage of mbd_sim.}
 \item{z}{something}
 
 \item{z_name}{something}
-
-\item{start_pars}{starting parameter values for the ml process.}
-
-\item{true_pars}{true parameter values when running the ml process.}
-
-\item{optim_ids}{ids of the parameters you want to optimize.}
 }
 \description{
 This function does nothing. It is intended to inherit is parameters'

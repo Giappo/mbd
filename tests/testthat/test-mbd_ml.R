@@ -1,88 +1,155 @@
 context("mbd_ml")
 
-test_that("use", {
-  set.seed(10)
-  brts <- c(10, 9, 7, 6, 5, 3, 2, 1)
-  test_pars <- c(0.3, 0.1, 1, 0.10)
-  optim_ids <- c(FALSE, TRUE, FALSE, FALSE)
-  n_0 <- 2
-  cond <- 1
-
-  mbd_out <- mbd::mbd_ml(
-    start_pars = c(0.2, 0.15, 1, 0.1),
-    true_pars = test_pars,
-    optim_ids = optim_ids,
-    brts = brts,
-    cond = cond,
-    n_0 = n_0,
-    verbose = FALSE
-  )
-
-  testthat::expect_equal(mbd_out$lambda, test_pars[1])
-  testthat::expect_equal(mbd_out$nu, test_pars[3])
-  testthat::expect_equal(mbd_out$q, test_pars[4])
-  testthat::expect_equal(mbd_out$conv, 0)
-  testthat::expect_equal(mbd_out$df, sum(optim_ids))
-  testthat::expect_true(mbd_out$loglik <= 0)
-})
+is_on_ci <- function() {
+  is_it_on_appveyor <- Sys.getenv("APPVEYOR") != ""
+  is_it_on_travis <- Sys.getenv("TRAVIS") != ""
+  is_it_on_appveyor || is_it_on_travis # nolint internal function
+}
 
 test_that("compare results from bd and mbd in case of nu = q = 0", {
-  set.seed(10)
-  brts <- c(10, 9, 7, 6, 5, 3)
-  test_pars <- c(0.3, 0.1, 0, 0.10)
-  optim_ids <- c(FALSE, TRUE, FALSE, FALSE)
-  start_pars <- c(0.2, 0.15, 1, 0.1)
+
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
+
+  brts <- c(10, 7, 6, 4, 2, 1)
+  start_pars <- c(0.20, 0.10, 0, 0)
   n_0 <- 2
   cond <- 1
+  optim_ids <- c(TRUE, TRUE, FALSE, FALSE)
+  verbose <- FALSE
+  maxit <- 300
+
   mbd_out <- mbd::mbd_ml(
     start_pars = start_pars,
-    true_pars = test_pars,
-    optim_ids = optim_ids,
     brts = brts,
     cond = cond,
     n_0 = n_0,
-    verbose = FALSE
+    optim_ids = optim_ids,
+    verbose = verbose,
+    maxit = maxit
   )
 
-  if (rappdirs::app_dir()$os != "win") {
-    sink("/dev/null")
-  } else {
-    sink(rappdirs::user_cache_dir())
+  for (var_name in get_param_names()) { # nolint internal function
+    testthat::expect_true(mbd_out[var_name] >= 0)
   }
-  bd_out <- DDD::bd_ML(
+  testthat::expect_true(mbd_out$q <= 1)
+  testthat::expect_true(is.numeric(mbd_out$loglik) == TRUE)
+  testthat::expect_true(mbd_out$loglik <= 0)
+  testthat::expect_true(mbd_out$df == sum(optim_ids))
+
+  x <- capture.output(bd_out <- DDD::bd_ML(
     brts = brts,
-    idparsopt = (1:4)[optim_ids],
-    idparsfix = (1:4)[!optim_ids],
-    initparsopt = start_pars[(1:4)[optim_ids]],
-    parsfix = test_pars[(1:4)[!optim_ids]],
+    idparsopt = 1:2,
+    initparsopt = start_pars[1:2],
     soc = n_0,
     cond = cond
+  ))
+  rm(x)
+  testthat::expect_equal(
+    unname(mbd_out$lambda),
+    unname(bd_out$lambda0),
+    tolerance = 1e-2
   )
-  sink()
-
-  testthat::expect_true(
-    abs(
-      unname(mbd_out$mu) - unname(bd_out$mu0)
-    ) < 10 ^ -3
+  testthat::expect_equal(
+    unname(mbd_out$mu),
+    unname(bd_out$mu0),
+    tolerance = 1e-2
   )
 })
 
 test_that("mbd_ml can be silent", {
-  set.seed(10)
-  brts <- c(10, 9, 7, 6, 5, 3)
-  test_pars <- c(0.3, 0.1, 0, 0.10)
+
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
+
+  brts <- c(10, 6, 3)
   optim_ids <- c(FALSE, TRUE, FALSE, FALSE)
   n_0 <- 2
   cond <- 1
+  verbose <- FALSE
+  maxit <- 30
   testthat::expect_silent(
     mbd::mbd_ml(
       start_pars = c(0.2, 0.15, 1, 0.1),
-      true_pars = test_pars,
       optim_ids = optim_ids,
       brts = brts,
       cond = cond,
       n_0 = n_0,
-      verbose = FALSE
+      verbose = verbose,
+      maxit = maxit
     )
+  )
+})
+
+test_that("mbd_ml can produce output", {
+
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
+
+  brts <- c(10, 5, 2)
+  optim_ids <- c(FALSE, TRUE, FALSE, FALSE)
+  n_0 <- 2
+  cond <- 1
+  verbose <- TRUE
+  maxit <- 30
+  output <- capture.output(
+    mbd::mbd_ml(
+      start_pars = c(0.2, 0.15, 1, 0.1),
+      optim_ids = optim_ids,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      verbose = verbose,
+      maxit = maxit
+    )
+  )
+  testthat::expect_true(
+    length(output) > 0
+  )
+  testthat::expect_false(
+    is.null(output)
+  )
+})
+
+test_that("abuse", {
+
+  brts <- c(10, 9, 7, 6, 5)
+  start_pars <- c(0.2, 0.15, 1, 0.1)
+  n_0 <- 2
+  cond <- 1
+
+  testthat::expect_error(
+    mbd::mbd_ml(
+      start_pars = c(0.2, 0.15, -1, 0.1),
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      verbose = FALSE
+    ),
+    "You cannot start from negative parameters!"
+  )
+  testthat::expect_output(
+    suppressWarnings(mbd::mbd_ml(
+      start_pars = c(60, 50, 100, 0.5),
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      verbose = FALSE
+    )),
+    "The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values." # nolint
+  )
+  testthat::expect_error(
+    test <- mbd_ml(
+      loglik_function = mbd_loglik,
+      brts = brts,
+      start_pars = c(-1, 0.1, 2, 0.1),
+      cond = cond,
+      n_0 = 2,
+      verbose = FALSE
+    ),
+    "You cannot start from negative parameters!"
   )
 })

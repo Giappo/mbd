@@ -5,8 +5,8 @@
 \title{Creates simulated trees under the multiple birth death process,
   including both sympatric and allopatric speciation}
 \usage{
-mbd_sim(pars, n_0 = 2, age = 10, cond = 1, tips_interval = c(0,
-  Inf), minimum_multiple_births = 0)
+mbd_sim(pars, n_0 = 2, age = 10, cond = 1, seed = NA,
+  tips_interval = c(n_0 * (cond > 0), Inf), brts_precision = 8)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -21,15 +21,21 @@ mbd_sim(pars, n_0 = 2, age = 10, cond = 1, tips_interval = c(0,
 
 \item{age}{the age of the tree.}
 
-\item{cond}{set 1 if you want to condition on stem or crown age
-and non-extinction of the phylogeny_ Set 0 otherwise.}
+\item{cond}{sets the conditioning
+\itemize{
+ \item cond = 0: no conditioning;
+ \item cond = 1: conditioning on stem or crown age
+  and non-extinction of the phylogeny;
+ \item cond = 2: like cond = 1 but forces at least one visible multiple
+ event in the phylogeny
+}}
+
+\item{seed}{the seed}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
-You can also define the tips_interval as you can usually
-do with a standard usage of mbd_sim.}
+It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
-\item{minimum_multiple_births}{minimum amount of multiple births
-that have to be present in the simulated phylogeny.}
+\item{brts_precision}{set the level of approximation on the branching times.}
 }
 \description{
 mbd_sim produces simulated trees allowing for
@@ -41,8 +47,7 @@ out <- mbd_sim(
   pars = c(0.6, 0.1, 0.4, 0.1),
   n_0 = 2,
   age = 10,
-  cond = 1,
-  tips_interval = c(0, Inf)
+  cond = 1
 )
 graphics::plot(out$full_tree)
 graphics::plot(out$reconstructed_tree)

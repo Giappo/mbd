@@ -97,7 +97,7 @@ test_that("abuse", {
       brts = c(1, 2, 3),
       n_0 = 2
     ),
-    "this function works only for mu = 0!"
+    "This function works only for mu = 0!"
   )
   testthat::expect_equal(
     mbd::pmb_loglik(
@@ -130,7 +130,7 @@ test_that("pmb_loglik is called correctly by mbd_loglik", {
 
   pars <- c(0.2, 0, 1.5, 0.2)
   brts <- c(5, 4, 3, 3, 2, 2)
-  n_0   <- 2
+  n_0 <- 2
 
   testthat::expect_equal(
     pmb <- mbd::pmb_loglik(
@@ -141,8 +141,8 @@ test_that("pmb_loglik is called correctly by mbd_loglik", {
     mbd <- mbd::mbd_loglik(
       pars = pars,
       brts = brts,
-      n_0 = n_0
+      n_0 = n_0,
+      cond = 0
     )
   )
-
 })

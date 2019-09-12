@@ -1,5 +1,11 @@
 context("hyper_a_hanno")
 
+is_on_ci <- function() {
+  is_it_on_appveyor <- Sys.getenv("APPVEYOR") != ""
+  is_it_on_travis <- Sys.getenv("TRAVIS") != ""
+  is_it_on_appveyor || is_it_on_travis # nolint internal function
+}
+
 # big but not too big ----
 test_that("big but not too big", {
 
@@ -18,11 +24,11 @@ test_that("big but not too big", {
 # is silent ----
 test_that("is silent", {
 
-  if (!ribir::is_on_travis()) {
+  if (!is_on_ci()) {
     testthat::expect_true(TRUE)
   } else {
     testthat::expect_silent(
-      mbd:::hyper_a_hanno(n_species = 10000, k = 2, q = 0.1)
+      hyper_a_hanno(n_species = 10000, k = 2, q = 0.1) # nolint internal function
     )
     gc()
   }
@@ -31,11 +37,11 @@ test_that("is silent", {
 # abuse ----
 test_that("abuse", {
 
-  if (!ribir::is_on_travis()) {
+  if (!is_on_ci()) {
     testthat::expect_true(TRUE)
   } else {
     testthat::expect_error(
-      mbd:::hyper_a_hanno(n_species = 100000, k = 2, q = 0.1),
+      hyper_a_hanno(n_species = 100000, k = 2, q = 0.1), # nolint internal function
       "'n_species' must be below 46340"
     )
     gc()

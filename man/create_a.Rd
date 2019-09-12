@@ -2,9 +2,10 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{create_a}
 \alias{create_a}
-\title{A matrix}
+\title{The A matrix}
 \usage{
-create_a(pars, k, lx, matrix_builder = hyper_a_hanno)
+create_a(pars, k, lx, matrix_builder = mbd:::hyper_a_hanno,
+  no_species_out_of_the_matrix = FALSE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -21,6 +22,9 @@ create_a(pars, k, lx, matrix_builder = hyper_a_hanno)
 
 \item{matrix_builder}{function used to build the transition matrix.
 Default option is \code{hyper_a_hanno}}
+
+\item{no_species_out_of_the_matrix}{If true prevents interactions from states
+describing number of species greater than lx}
 }
 \description{
 Creates the A matrix,

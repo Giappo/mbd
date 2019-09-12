@@ -12,54 +12,289 @@
 
 <meta name="author" content="Giovanni Laudanno and Richel J.C. Bilderbeek" />
 
-<meta name="date" content="2018-11-07" />
+<meta name="date" content="2019-09-04" />
 
 <title>Using mbd</title>
 
 
 
 <style type="text/css">code{white-space: pre;}</style>
-<style type="text/css">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 </head>
 
@@ -69,15 +304,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 <h1 class="title toc-ignore">Using mbd</h1>
-<h4 class="author"><em>Giovanni Laudanno and Richel J.C. Bilderbeek</em></h4>
-<h4 class="date"><em>2018-11-07</em></h4>
+<h4 class="author">Giovanni Laudanno and Richel J.C. Bilderbeek</h4>
+<h4 class="date">2019-09-04</h4>
 
 
 
 <div id="introduction" class="section level2">
 <h2>1. Introduction</h2>
 <p><code>mbd</code> is a package to support multiple birth model. This model accounts for a diversification process in which multiple birth (at different nodes) are allowed to occur at the same time.</p>
-<p>The basic framework is described in Etienne et al. 2012<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. The main purpose of the package is to provide a tool to estimate, given a phylogenetic tree, the likelihood for a set of four parameters: <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\nu\)</span> and <span class="math inline">\(q\)</span>. Here:</p>
+<p>The basic framework is described in Etienne et al. 2012<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. The main purpose of the package is to provide a tool to estimate, given a phylogenetic tree, the likelihood for a set of four parameters: <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\mu\)</span>, <span class="math inline">\(\nu\)</span> and <span class="math inline">\(q\)</span>. Here:</p>
 <ul>
 <li><p><span class="math inline">\(\lambda\)</span> is the sympatric speciation rate;</p></li>
 <li><p><span class="math inline">\(\mu\)</span> is the extinction rate;</p></li>
@@ -89,38 +324,39 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="setup" class="section level2">
 <h2>2. Setup</h2>
 <p>We will need to load the package:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mbd)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># devtools::install_github(&quot;Giappo/mbd&quot;, quiet = TRUE)</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(mbd)</span></code></pre></div>
 <p>Also, we will set the random number generator seed to a value, so that this vignette always produces the same results:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">set.seed</span>(<span class="dv">2</span>)</span></code></pre></div>
 </div>
 <div id="simulating-an-mbd-tree" class="section level2">
 <h2>3. Simulating an MBD tree</h2>
 <p>First we set the parameters of the MBD speciation model:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lambda &lt;-<span class="st"> </span><span class="fl">0.2</span> <span class="co"># sympatric speciation rate</span>
-mu &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># extinction rate;</span>
-nu &lt;-<span class="st"> </span><span class="fl">2.0</span> <span class="co"># multiple allopatric speciation trigger rate</span>
-q &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># single-lineage speciation probability</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>lambda &lt;-<span class="st"> </span><span class="fl">0.2</span> <span class="co"># sympatric speciation rate</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>mu &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># extinction rate;</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>nu &lt;-<span class="st"> </span><span class="fl">2.0</span> <span class="co"># multiple allopatric speciation trigger rate</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>q &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># single-lineage speciation probability</span></span></code></pre></div>
 <p>Then we set some basic parameters to create a simulated tree:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">crown_age &lt;-<span class="st"> </span><span class="dv">1</span>
-sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu, q)
-sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
-  <span class="dt">pars =</span> sim_pars, 
-  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Use a crown age </span>
-  <span class="dt">age =</span> crown_age,
-  <span class="dt">cond =</span> <span class="dv">1</span> <span class="co"># Condition on non-extinction</span>
-)</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>crown_age &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu, q)</span>
+<span id="cb4-3"><a href="#cb4-3"></a>sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="dt">pars =</span> sim_pars, </span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Use a crown age </span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="dt">age =</span> crown_age,</span>
+<span id="cb4-7"><a href="#cb4-7"></a>  <span class="dt">cond =</span> <span class="dv">1</span> <span class="co"># Condition on non-extinction</span></span>
+<span id="cb4-8"><a href="#cb4-8"></a>)</span></code></pre></div>
 <p>These are additional auxilary parameters such as <code>n_0</code> (equal to 1 if we want a stem, or 2 if we want a crown), <code>cond</code> (let us condition the tree on the survival of crown species) and <code>crown_age</code> (being the total age of the tree).</p>
 </div>
 <div id="showing-the-results" class="section level2">
 <h2>4. Showing the results</h2>
 <p>The <code>sim</code> list contain different objects. You can visualize the full tree and keep track of species that die before present time (missing species):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>full_tree)</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>full_tree)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>If you want you can also show the reconstructed tree, obtained cutting the kinks from the previous tree:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>reconstructed_tree)</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>reconstructed_tree)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>The dataframe containing all the information related to this tree is labeled as L (or L-table). You can access it by typing:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>l_matrix))</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>l_matrix))</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -135,7 +371,7 @@ sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
 <td align="right">1.0000000</td>
 <td align="right">0</td>
 <td align="right">-1</td>
-<td align="right">0.0531426</td>
+<td align="right">-1.0000000</td>
 </tr>
 <tr class="even">
 <td align="right">1.0000000</td>
@@ -151,9 +387,9 @@ sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
 </tr>
 <tr class="even">
 <td align="right">0.4396944</td>
-<td align="right">-1</td>
-<td align="right">-4</td>
-<td align="right">-1.0000000</td>
+<td align="right">3</td>
+<td align="right">4</td>
+<td align="right">0.0531426</td>
 </tr>
 </tbody>
 </table>
@@ -165,7 +401,7 @@ sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
 <li><p>the fourth contains the extinction times of the species. If this is equal to -1, then the species is still extant.</p></li>
 </ul>
 <p>To recover the vector of branching times use:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>brts))</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>brts))</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -196,64 +432,188 @@ sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(
 <li>the branching times of the tree we generated</li>
 </ul>
 <p>The function <code>mbd_loglik</code> shows the likelihood of the parameters having generated the branching times:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mbd<span class="op">::</span><span class="kw">mbd_loglik</span>(
-  <span class="dt">pars =</span> <span class="kw">c</span>(lambda, mu, nu, q), 
-  <span class="dt">brts =</span> sim<span class="op">$</span>brts, 
-  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Crown age </span>
-  <span class="dt">cond =</span> <span class="dv">1</span>  <span class="co"># Non-extinction </span>
-)</code></pre></div>
-<pre><code>## [1] -1.237561</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>mbd<span class="op">::</span><span class="kw">mbd_loglik</span>(</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="dt">pars =</span> <span class="kw">c</span>(lambda, mu, nu, q), </span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="dt">brts =</span> sim<span class="op">$</span>brts, </span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Crown age </span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="dt">cond =</span> <span class="dv">1</span>  <span class="co"># Non-extinction </span></span>
+<span id="cb9-6"><a href="#cb9-6"></a>)</span></code></pre></div>
+<pre><code>## [1] -1.227304</code></pre>
 </div>
 <div id="maximum-likelihood-estimation" class="section level2">
 <h2>6. Maximum likelihood estimation</h2>
 <p>You can also ask for an optimization of the likelihood function using the function mbd_ml either considering a variation of all the parameters (<span class="math inline">\(\lambda, \mu, \nu, q\)</span>) or any their subset of your choice.</p>
 <p>Because this is a heavy calculation, we will use a simpler tree:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">phylogeny &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">read.tree</span>(<span class="dt">text =</span> <span class="st">&quot;((A:1, B:1):2, C:3);&quot;</span>)  
-ape<span class="op">::</span><span class="kw">plot.phylo</span>(phylogeny)</code></pre></div>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAABsFBMVEUAAAABAQECAgIDAwMEBAQFBQUHBwcICAgKCgoLCwsMDAwNDQ0REREVFRUYGBgZGRkaGhobGxsdHR0eHh4fHx8gICAiIiIjIyMoKCgpKSksLCwtLS0uLi4vLy8wMDAyMjI0NDQ1NTU3Nzc4ODg8PDw9PT0+Pj4/Pz9AQEBCQkJHR0dJSUlLS0tMTExNTU1PT09TU1NVVVVWVlZXV1dZWVlaWlpcXFxdXV1eXl5fX19hYWFkZGRnZ2dqampra2ttbW1ubm5vb292dnZ3d3d5eXl6enp7e3uAgICBgYGCgoKEhISFhYWGhoaIiIiKioqNjY2Ojo6Pj4+QkJCSkpKUlJSWlpaYmJiampqbm5ucnJyenp6fn5+ioqKjo6OkpKSlpaWmpqaqqqqrq6usrKytra2vr6+wsLCxsbGysrK1tbW3t7e5ubm+vr6/v7/AwMDBwcHCwsLDw8PFxcXLy8vOzs7S0tLU1NTV1dXW1tbX19fY2Nja2trb29vd3d3e3t7i4uLj4+Pn5+fo6Ojp6ent7e3w8PD09PT19fX29vb4+Pj5+fn6+vr7+/v8/Pz9/f3///+lmBjqAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAEJ0lEQVR4nO3d11MTURhA8SuoWLBX7L333sHee+8g9oJdwF5Rsey/LInvnMlddyR3znnIfcl83+Y3w/CS3YTMei387wvo6wkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkEpQ70sH7K8ZY9gxZGD0gcqGPw5p89x5nwOHZC4kAzZv0qHZ8mXo6dkDbQ3XAn74hCgA4tWNkXWn1349jcn6UQoG1rWvpEbycsy/1ZCgHafbCIqRHVNf09r12MHpE20MgV5eP1gBPRI9IGWl73pue1a0ZDd/SItIHa64YfvX5k3Jh38SPSBsral40YOnXvlxwTEgfKn0CQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQFDiQC9CT/3G7I2fkDjQxXCutfXU4nA1ekLiQFuHlV6/99sRPSFxoJnlG8ZehkvRE9IG6h54IMu+PZk+7Xv0iCoD6n71poJ+PA3l5nyO31hlQBvrx1fQ2dOhubW1eX7NyfiNVQZ0aFdFb980oXw0NMRvTBto0qrysXRB/MakgbpqD5eO94PPx29MGuhR2HPz5o1jo9fn2Jg00LHSv7CaudGPpSiVNNC/SCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggqBCgxsKe5bq2sYjr7a1CgPbNL+oBv5NXFXG9vVVlz5NO5E+suASCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEggSCBIIEgiKAnteEDzk2pg+0aGh4kmNj8kD3wrmQ516E1IF+T1nyq3+Ou8KTB7rQvzMbuyHHxioDapy9s4IeZ19HNWXZvDk5NlYZ0J3thyvoWba//nOWrRuRY2OVAVXYxyF/b3v+Gj8ibaAt4x+0tbXtDO3xI5IG6qi9UjruhdvxM5IGWjrpd+noDPG/Q5s00P1wq3x2hRzfKkoZ6J8kECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQJBAkECQQ9AfQTMsji7njOwAAAABJRU5ErkJggg==" /><!-- --></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brts &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">branching.times</span>(phylogeny)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>phylogeny &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">read.tree</span>(<span class="dt">text =</span> <span class="st">&quot;((A:1, B:1):2, C:3);&quot;</span>)  </span>
+<span id="cb11-2"><a href="#cb11-2"></a>ape<span class="op">::</span><span class="kw">plot.phylo</span>(phylogeny)</span></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAQlBMVEUAAAAAADoAAGYAOpAAZmYAZrY6AAA6kNtmAABmtv+QOgCQ27aQ2/+2ZgC2///bkDrb////tmb/25D//7b//9v////tkscoAAAACXBIWXMAAA7DAAAOwwHHb6hkAAADoUlEQVR4nO3d0VLbVhRAUactDqF1KQb+/1cLRnnqNHssIcm5WfshvJBzzRpbygw59uFVP+yw9wO49QBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaBofKDT4XD47e/Zf310oPPx7u3P05e/5g4YHOj5/uv7l5eHu7kTBgc6/f7P5evj7BfZKkCHW+n5/tvin+UzQDYZOqen+dee7w0OtOD2NQUoGhxoeoktuBaNDTTd5V8fp5vZjMYGen06vAudbu1f0rcD9PYcervbf10wYHSgxQGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQNDjQy8NlLWrBf5QeHOhjF+F8nL82NjjQ0+Gd5uVh/lNocKDHy7rP952WOQ0O9LGz+ists1y3szpdo+cvQ/2EQFd99/l4eW39Us+gq7572jhcsvw8NtC0Lg/o/5reV2DJbu/QQNPtfboSbXDgrkNnjD4fP25mS95+YWigmz0Q0B5DVx+94YGA9hi6+ugNDwS0x9DVR294IKA9hq4+esMDAe0xdPXRGx4IaI+hq4/e8EBAewxdffSGBwLaY+jqozc8ENAeQ1cfveGBn/h+vv9pjcf7w59l6wMXBigCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEXXP97zcdHH1I0PdPpj0QcdDg/09OXPBQuZ4wO9PNwt+JDVGQfu3bW/ZXxfqTvd3Erm7XR59sz/FNrX4YEuO5mLPm11bKCPy8+SN14YHOhxuhbd2sbhrfR8f7l/LbqNDQ30GQGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFP0LBoxnoJbq110AAAAASUVORK5CYII=" /><!-- --></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>brts &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">branching.times</span>(phylogeny)</span></code></pre></div>
 <p>If you want for example to maximize the likelihood only for the parameter <span class="math inline">\(q\)</span>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">brts &lt;-<span class="st"> </span>sim<span class="op">$</span>brts
-start_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="dv">1</span>, <span class="fl">0.15</span>)
-optim_ids &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>)
-n_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">2</span>
-cond &lt;-<span class="st"> </span><span class="dv">1</span>
-out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">mbd_ml</span>(
-  <span class="dt">start_pars =</span> start_pars,
-  <span class="dt">true_pars =</span> sim_pars,
-  <span class="dt">optim_ids =</span> optim_ids,
-  <span class="dt">brts =</span> brts,
-  <span class="dt">cond =</span> cond,
-  <span class="dt">n_0 =</span> n_<span class="dv">0</span>,
-  <span class="dt">verbose =</span> <span class="ot">TRUE</span>
-)</code></pre></div>
-<pre><code>## You are optimizing q 
-## You are fixing lambda mu nu 
-## Optimizing the likelihood - this may take a while. 
-## The loglikelihood for the initial parameter values is -1.24789 
-## 1 0.15 -1.24788982671216 initial 
-## 2 0.135287846481876 -1.24103363564973 expand 
-## 3 0.106964656964657 -1.23648686307913 expand 
-## 4 0.106964656964657 -1.23648686307913 contract inside 
-## 5 0.113912133891213 -1.23636226608897 contract inside 
-## 6 0.110427528675704 -1.23631219027019 contract inside 
-## 7 0.112167101827676 -1.23630954234395 contract inside 
-## 8 0.111296634489955 -1.2363038943574 contract inside 
-## 9 0.111296634489955 -1.2363038943574 contract inside 
-## 10 0.111296634489955 -1.2363038943574 contract inside 
-## 11 0.111405368383288 -1.23630383988072 contract inside 
-## 12 0.111405368383288 -1.23630383988072 contract inside 
-## 13 0.111378182915195 -1.23630383308519 contract inside 
-## 14 0.111378182915195 -1.23630383308519 contract inside 
-## 15 0.111378182915195 -1.23630383308519 contract inside 
-## 16 0.111378182915195 -1.23630383308519 contract inside 
-## 17 0.111378182915195 -1.23630383308519 contract inside 
-## 18 0.111378182915195 -1.23630383308519 contract inside 
-## Optimization has terminated successfully. 
-## 
-##  Maximum likelihood parameter estimates: lambda: 0.2 mu: 0.15 nu: 2 q: 0.111 
-##  Maximum loglikelihood: -1.236304</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">knitr<span class="op">::</span><span class="kw">kable</span>(out)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>brts &lt;-<span class="st"> </span>sim<span class="op">$</span>brts</span>
+<span id="cb13-2"><a href="#cb13-2"></a>start_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="dv">1</span>, <span class="fl">0.15</span>)</span>
+<span id="cb13-3"><a href="#cb13-3"></a>n_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">2</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a>cond &lt;-<span class="st"> </span><span class="dv">1</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">mbd_ml</span>(</span>
+<span id="cb13-6"><a href="#cb13-6"></a>  <span class="dt">start_pars =</span> start_pars,</span>
+<span id="cb13-7"><a href="#cb13-7"></a>  <span class="dt">brts =</span> brts,</span>
+<span id="cb13-8"><a href="#cb13-8"></a>  <span class="dt">cond =</span> cond,</span>
+<span id="cb13-9"><a href="#cb13-9"></a>  <span class="dt">n_0 =</span> n_<span class="dv">0</span>,</span>
+<span id="cb13-10"><a href="#cb13-10"></a>  <span class="dt">optim_ids =</span> <span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>),</span>
+<span id="cb13-11"><a href="#cb13-11"></a>  <span class="dt">verbose =</span> <span class="ot">TRUE</span></span>
+<span id="cb13-12"><a href="#cb13-12"></a>)</span></code></pre></div>
+<pre><code>## lambda = 0.2 mu = 0.15 nu = 1 q = 0.15 loglik = -1.2571 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.15 loglik = -1.2571 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -8.6667 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.46512 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.26984 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 1.7059 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.26984 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.1068 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.61404 loglik = -1.3866 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.1068 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.61404 loglik = -1.3866 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.34307 loglik = -1.2598 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0054645 loglik = -1.4344 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23906 loglik = -1.2422 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.34307 loglik = -1.2598 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.19287 loglik = -1.2451 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.34307 loglik = -1.2598 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.15 loglik = -1.2571 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.19287 loglik = -1.2451 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.28897 loglik = -1.2474 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.21552 loglik = -1.2426 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.21552 loglik = -1.2426 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.26352 loglik = -1.2438 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.22718 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.21552 loglik = -1.2426 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23309 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.22718 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23906 loglik = -1.2422 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23013 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.22718 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23161 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23013 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23309 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23087 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23235 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23124 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23087 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23161 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23142 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23161 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23133 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23142 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23124 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23142 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23135 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23133 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(out)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -270,9 +630,9 @@ out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">
 <tr class="odd">
 <td align="right">0.2</td>
 <td align="right">0.15</td>
-<td align="right">2</td>
-<td align="right">0.1113782</td>
-<td align="right">-1.236304</td>
+<td align="right">1</td>
+<td align="right">0.2313623</td>
+<td align="right">-1.242101</td>
 <td align="right">1</td>
 <td align="right">0</td>
 </tr>
@@ -282,7 +642,7 @@ out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Etienne, R.S., Haegeman, B., Stadler, T., Aze, T., Pearson, P.N., Purvis, A., Phillimore, A.B.: Diversity-dependence brings molecular phylogenies closer to agreement with the fossil record. Proceedings of the Royal Society of London B: Biological Sciences 279(1732), 1300–1309 (2012)<a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p> Etienne, R.S., Haegeman, B., Stadler, T., Aze, T., Pearson, P.N., Purvis, A., Phillimore, A.B.: Diversity-dependence brings molecular phylogenies closer to agreement with the fossil record. Proceedings of the Royal Society of London B: Biological Sciences 279(1732), 1300–1309 (2012)<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 
