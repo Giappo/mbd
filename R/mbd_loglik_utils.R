@@ -284,7 +284,10 @@ brts2time_intervals_and_births <- function(brts, brts_precision = 8) {
   )
 
   testit::assert(length(births) == length(time_intervals))
-  testit::assert(sum(time_intervals) == max(abs(brts)))
+  testit::assert(
+    abs(sum(time_intervals) - max(abs(brts))) <=
+      .Machine$double.eps * max(abs(brts))
+  )
   testit::assert(
     all.equal(
       rev(cumsum(rev(time_intervals)))[-1], unique_branching_times
@@ -380,6 +383,5 @@ deliver_loglik <- function(
     # conditioned likelihood
     loglik <- loglik - log(pc) * (cond > 0)
   }
-
   loglik
 }
