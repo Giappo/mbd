@@ -383,5 +383,6 @@ deliver_loglik <- function(
     # conditioned likelihood
     loglik <- loglik - log(pc) * (cond > 0)
   }
+
   loglik
 }
