@@ -271,8 +271,19 @@ read_results <- function(project_folder = NULL) {
 #' @export
 count_n_mb_events <- function(brts) {
   births <- brts2time_intervals_and_births(brts)$births # nolint internal function
-  mb_species <- sum(births[births > 1] - 1)
+  mb_species <- sum(births[births > 1])
   mb_species
+}
+
+#' Count the percentage of multiple speciation events
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+count_percentage_mb_events <- function(brts) {
+  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
+  n_species <- sum(births)
+  percentage_mb_species <- sum(births[births > 1]) / n_species
+  percentage_mb_species
 }
 
 #' Create an empty phylogeny

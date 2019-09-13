@@ -149,8 +149,7 @@ test_that("use", {
     seed = seed
   )
   testthat::expect_true(file.exists(data_file_name))
-  suppressWarnings(file.remove(data_file_name))
-  testthat::expect_true(!file.exists(data_file_name))
+
   # check results file existence
   results_file_name <- create_results_file_name( # nolint internal function
     results_folder = results_folder,
@@ -167,9 +166,15 @@ test_that("use", {
     utils::read.csv(results_file_name)[, -1],
     test
   )
-  file.remove(results_file_name)
-  testthat::expect_true(!file.exists(results_file_name))
 
+  # remove files
+  suppressWarnings(file.remove(results_file_name))
+  suppressWarnings(file.remove(data_file_name))
+  Sys.sleep(1)
+  suppressWarnings(file.remove(data_file_name))
+  suppressWarnings(file.remove(results_file_name))
+  testthat::expect_true(!file.exists(data_file_name))
+  testthat::expect_true(!file.exists(results_file_name))
 })
 
 test_that("it works also for a subset of parameters", {
@@ -237,8 +242,7 @@ test_that("it works also for a subset of parameters", {
     seed = seed
   )
   testthat::expect_true(file.exists(data_file_name))
-  suppressWarnings(file.remove(data_file_name))
-  testthat::expect_true(!file.exists(data_file_name))
+
   # check results file existence
   results_file_name <- create_results_file_name( # nolint internal function
     results_folder = results_folder,
@@ -250,9 +254,15 @@ test_that("it works also for a subset of parameters", {
     seed = seed
   )
   testthat::expect_true(file.exists(results_file_name))
-  suppressWarnings(file.remove(results_file_name))
-  testthat::expect_true(!file.exists(results_file_name))
 
+  # remove files
+  suppressWarnings(file.remove(results_file_name))
+  suppressWarnings(file.remove(data_file_name))
+  Sys.sleep(1)
+  suppressWarnings(file.remove(data_file_name))
+  suppressWarnings(file.remove(results_file_name))
+  testthat::expect_true(!file.exists(data_file_name))
+  testthat::expect_true(!file.exists(results_file_name))
 })
 
 test_that("abuse", {
