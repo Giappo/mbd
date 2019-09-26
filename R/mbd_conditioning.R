@@ -43,7 +43,8 @@ cond_prob_rhs1 <- function(
   nu_matrix,
   m1,
   m2,
-  empty_qq
+  empty_qq,
+  t
 ) {
   lq2 <- length(qvec)
   lq <- sqrt(lq2)
@@ -85,7 +86,8 @@ cond_prob_rhs2 <- function(t, x, parms) {
     k = parms$k,
     m1 = parms$m1,
     m2 = parms$m2,
-    empty_qq = parms$empty_qq
+    empty_qq = parms$empty_qq,
+    t = t
   ))
 }
 
@@ -140,7 +142,7 @@ cond_prob <- function(
     parms = parms,
     method = "lsoda",
     atol = 1e-100,
-    rtol = 1e-10,
+    rtol = 1e-6,
     tcrit = tt
   )[2, -1]
   q_m1_m2 <- matrix(ode_out, nrow = lq, ncol = lq)
