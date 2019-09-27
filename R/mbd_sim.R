@@ -99,7 +99,10 @@ mbd_sim <- function(
     }
     l_matrix <- l_matrix[1:total_count, ]
     dim(l_matrix) <- c(total_count, 4)
-    l_matrix[, 1] <- DDD::roundn(l_matrix[, 1], digits = brts_precision)
+    l_matrix[, 1] <- approximate_brts(
+      brts = l_matrix[, 1],
+      brts_precision = brts_precision
+    )
 
     keep_the_sim <- evaluate_sim(
       l_matrix = l_matrix,
