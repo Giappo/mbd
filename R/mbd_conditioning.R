@@ -1,14 +1,24 @@
+##### cond_prob
+#' Called by \link{mbd_loglik} if there is a conditioning != 0
+#' @inheritParams default_params_doc
+#' @return the conditional probability
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @export
+cond_prob <- cond_prob_p
+
+##### cond_prob_q
+
 #' Auxilary function for cond_prob
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @noRd
-cond_prob_matrices <- function(
+cond_prob_q_matrices <- function(
   q,
-  lq
+  lx
 ) {
 
   pq <- q #bart's translation
-  nu_matrix <- matrix(0, nrow = lq, ncol = lq)
-  for (m1 in 0:(lq - 1)) {
+  nu_matrix <- matrix(0, nrow = lx, ncol = lx)
+  for (m1 in 0:(lx - 1)) {
     for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
       aux <- log(m1 + 1) +
         lgamma(m1 - a1 + 1) -
@@ -20,7 +30,7 @@ cond_prob_matrices <- function(
     }
   }
 
-  empty_qq <- matrix(0, nrow = (lq + 2), ncol = (lq + 2))
+  empty_qq <- matrix(0, nrow = (lx + 2), ncol = (lx + 2))
   m1 <- col(nu_matrix) - 1
   m2 <- row(nu_matrix) - 1
   list(
@@ -31,10 +41,10 @@ cond_prob_matrices <- function(
   )
 }
 
-#' Auxilary function for cond_prob
+#' Auxilary function for cond_prob_q
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @noRd
-cond_prob_rhs1 <- function(
+cond_prob_q_rhs1 <- function(
   qvec,
   lambda,
   mu,
@@ -45,14 +55,14 @@ cond_prob_rhs1 <- function(
   m2,
   empty_qq
 ) {
-  lq2 <- length(qvec)
-  lq <- sqrt(lq2)
+  lx2 <- length(qvec)
+  lx <- sqrt(lx2)
 
-  mm <- 2:(lq + 1)
+  mm <- 2:(lx + 1)
   mm_plus_one <- mm + 1
   mm_minus_one <- mm - 1
 
-  qq <- matrix(qvec, nrow = lq, ncol = lq)
+  qq <- matrix(qvec, nrow = lx, ncol = lx)
   qq2 <- empty_qq
   qq2[mm, mm] <- qq
 
@@ -68,15 +78,15 @@ cond_prob_rhs1 <- function(
 
   dq <- lambda * dq1 + mu * dq2 + nu * dq3
 
-  dq <- matrix(dq, nrow = lq2, ncol = 1)
+  dq <- matrix(dq, nrow = lx2, ncol = 1)
   dq
 }
 
-#' Auxilary function for cond_prob
+#' Auxilary function for cond_prob_q
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @noRd
-cond_prob_rhs2 <- function(t, x, parms) {
-  list(cond_prob_rhs1(
+cond_prob_q_rhs2 <- function(t, x, parms) {
+  list(cond_prob_q_rhs1(
     qvec = x,
     lambda = parms$lambda,
     mu = parms$mu,
@@ -94,13 +104,13 @@ cond_prob_rhs2 <- function(t, x, parms) {
 #' @return the conditional probability
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @export
-cond_prob <- function(
+cond_prob_q <- function(
   pars,
   brts,
   cond,
   n_0 = 2,
-  tips_interval = c(n_0 * (cond > 0), Inf),
   lx = 30,
+  tips_interval = c(n_0 * (cond > 0), Inf),
   debug_mode = FALSE
 ) {
   if (n_0 != 2) {
@@ -116,10 +126,8 @@ cond_prob <- function(
   tt <- max(abs(brts)) # time between crown age and present
   times <- c(0, tt)
 
-  lq <- lx # maximal number of missing species for both m1 and m2
-
   # construct auxiliary matrix
-  matrices <- cond_prob_matrices(q = q, lq = lq)
+  matrices <- cond_prob_q_matrices(q = q, lx = lx)
 
   # integrate equations
   parms <- list()
@@ -131,19 +139,19 @@ cond_prob <- function(
   parms$m1 <- matrices$m1
   parms$m2 <- matrices$m2
   parms$empty_qq <- matrices$empty_qq
-  q_0 <- c(y = c(1, rep(0, lq ^ 2 - 1)))
+  q_0 <- c(y = c(1, rep(0, lx ^ 2 - 1)))
 
   ode_out <- deSolve::ode(
     y = q_0,
     times = times,
-    func = cond_prob_rhs2,
+    func = cond_prob_q_rhs2,
     parms = parms,
     method = "lsoda",
     atol = 1e-100,
     rtol = 1e-10,
     tcrit = tt
   )[2, -1]
-  q_m1_m2 <- matrix(ode_out, nrow = lq, ncol = lq)
+  q_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
 
   # compute conditioning probability
   m1 <- col(q_m1_m2) - 1
@@ -171,4 +179,171 @@ cond_prob <- function(
   } # debug
 
   pc
+}
+
+##### cond_prob_p
+
+##### pc2
+
+#' Auxilary function for cond_prob_p
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @export
+cond_prob_p_matrices <- function(
+  q,
+  lx
+) {
+
+  pq <- q #bart's translation
+  nu_matrix <- matrix(0, nrow = lx, ncol = lx)
+  for (n1 in 0:(lx - 1)) {
+    for (m1 in n1:(lx - 1)) {
+      aux <- lchoose(n1, max(0, m1 - n1))
+      aux <- exp(aux)
+      aux <- aux * pq ^ (m1 - n1) * (1 - pq) ^ (2* n1 - m1)
+      nu_matrix[m1 + 1, n1 + 1] <- aux
+    }
+  }
+  rownames(nu_matrix) <- paste0("m1=", 0:(lx - 1))
+  colnames(nu_matrix) <- paste0("n1=", 0:(lx - 1))
+
+  empty_pp <- matrix(0, nrow = (lx + 2), ncol = (lx + 2))
+  m1 <- col(nu_matrix) - 1
+  m2 <- row(nu_matrix) - 1
+  list(
+    nu_matrix = nu_matrix,
+    empty_pp = empty_pp,
+    m1 = m1,
+    m2 = m2
+  )
+}
+
+#' Auxilary function for cond_prob_p
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @export
+cond_prob_p_rhs1 <- function(
+  pvec,
+  lambda,
+  mu,
+  nu,
+  nu_matrix,
+  m1,
+  m2,
+  empty_pp,
+  t
+) {
+  lx2 <- length(pvec)
+  lx <- sqrt(lx2)
+
+  mm <- 2:(lx + 1)
+  mm_plus_one <- mm + 1
+  mm_minus_one <- mm - 1
+
+  pp <- matrix(pvec, nrow = lx, ncol = lx)
+  rownames(m2) <- rownames(m1) <- rownames(pp) <-
+    paste0("n2=", 0:(lx - 1))
+  colnames(m2) <- colnames(m1) <- colnames(pp) <-
+    paste0("n1=", 0:(lx - 1))
+  pp2 <- empty_pp
+  rownames(pp2) <- paste0("n2=", -1:lx)
+  colnames(pp2) <- paste0("n1=", -1:lx)
+  pp2[mm, mm] <- pp
+
+  dp1 <- (m1 - 1) * pp2[mm, mm_minus_one] +
+    (m2 - 1) * pp2[mm_minus_one, mm] -
+    (m1 + m2) * pp # ok
+
+  dp2 <- (m1 + 1) * pp2[mm, mm_plus_one] +
+    (m2 + 1) * pp2[mm_plus_one, mm] -
+    (m1 + m2) * pp # ok
+
+  dp3 <- nu_matrix %*% pp %*% t(nu_matrix) - pp # first cc is m1, t(cc) is m2
+  # dp3 <- t(nu_matrix) %*% pp %*% nu_matrix - pp # first cc is m1, t(cc) is m2
+
+  dp <- lambda * dp1 + mu * dp2 + nu * dp3
+
+  dp <- matrix(dp, nrow = lx2, ncol = 1)
+  dp
+}
+
+#' Auxilary function for cond_prob_p
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @export
+cond_prob_p_rhs2 <- function(t, x, parms) {
+  list(cond_prob_p_rhs1(
+    pvec = x,
+    lambda = parms$lambda,
+    mu = parms$mu,
+    nu = parms$nu,
+    nu_matrix = parms$nu_matrix,
+    m1 = parms$m1,
+    m2 = parms$m2,
+    empty_pp = parms$empty_pp,
+    t = t
+  ))
+}
+
+#' Called by \link{mbd_loglik} if there is a conditioning != 0
+#' @return the conditional probability
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @export
+cond_prob_p <- function(
+  pars,
+  brts,
+  cond,
+  n_0 = 2,
+  lx = 30,
+  debug_mode = FALSE
+) {
+  if (n_0 != 2) {
+    stop("This works only for n_0 == 2.")
+  }
+  if (cond == 0) {
+    return(1)
+  }
+  lambda <- pars[1]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4]
+  tt <- max(abs(brts)) # time between crown age and present
+  times <- c(0, tt)
+
+  # construct auxiliary matrix
+  matrices <- cond_prob_p_matrices(q = q, lx = lx)
+
+  # integrate equations
+  parms <- list()
+  parms$lambda <- lambda
+  parms$mu <- mu
+  parms$nu <- nu
+  parms$nu_matrix <- matrices$nu_matrix
+  parms$m1 <- matrices$m1
+  parms$m2 <- matrices$m2
+  parms$empty_pp <- matrices$empty_pp
+  p_0 <- matrix(0, nrow = lx, ncol = lx)
+  p_0[2, 2] <- 1
+  p_0 <- matrix(p_0, nrow = lx ^ 2, ncol = 1)
+
+  ode_out <- deSolve::ode(
+    y = p_0,
+    times = times,
+    func = cond_prob_p_rhs2,
+    parms = parms,
+    method = "lsoda",
+    atol = 1e-100,
+    rtol = 1e-6,
+    tcrit = tt
+  )[2, -1]
+  p_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
+  somma <- sum(p_m1_m2)
+
+  # compute conditioning probability
+  pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
+
+  if (!(pc >= 0 && pc <= 1)) {
+    if (debug_mode != TRUE) {
+      stop("problems: pc is wrong!")
+    }
+  } # debug
+
+  list(pc = pc, p_sum = somma)
 }
