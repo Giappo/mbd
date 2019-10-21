@@ -1,11 +1,3 @@
-##### cond_prob
-#' Called by \link{mbd_loglik} if there is a conditioning != 0
-#' @inheritParams default_params_doc
-#' @return the conditional probability
-#' @author Giovanni Laudanno, Bart Haegeman
-#' @export
-cond_prob <- cond_prob_p
-
 ##### cond_prob_q
 
 #' Auxilary function for cond_prob
@@ -74,7 +66,8 @@ cond_prob_q_rhs1 <- function(
     (m2 + 1) * qq2[mm_plus_one, mm] -
     (2 * k + m1 + m2) * qq # ok
 
-  dq3 <- nu_matrix %*% qq %*% t(nu_matrix) - qq # first cc is m1, t(cc) is m2
+  # dq3 <- nu_matrix %*% qq %*% t(nu_matrix) - qq # first cc is m1, t(cc) is m2
+  dq3 <- t(nu_matrix) %*% qq %*% nu_matrix - qq # first cc is m1, t(cc) is m2
 
   dq <- lambda * dq1 + mu * dq2 + nu * dq3
 
@@ -239,13 +232,7 @@ cond_prob_p_rhs1 <- function(
   mm_minus_one <- mm - 1
 
   pp <- matrix(pvec, nrow = lx, ncol = lx)
-  rownames(m2) <- rownames(m1) <- rownames(pp) <-
-    paste0("n2=", 0:(lx - 1))
-  colnames(m2) <- colnames(m1) <- colnames(pp) <-
-    paste0("n1=", 0:(lx - 1))
   pp2 <- empty_pp
-  rownames(pp2) <- paste0("n2=", -1:lx)
-  colnames(pp2) <- paste0("n1=", -1:lx)
   pp2[mm, mm] <- pp
 
   dp1 <- (m1 - 1) * pp2[mm, mm_minus_one] +
@@ -256,8 +243,8 @@ cond_prob_p_rhs1 <- function(
     (m2 + 1) * pp2[mm_plus_one, mm] -
     (m1 + m2) * pp # ok
 
-  dp3 <- nu_matrix %*% pp %*% t(nu_matrix) - pp # first cc is m1, t(cc) is m2
-  # dp3 <- t(nu_matrix) %*% pp %*% nu_matrix - pp # first cc is m1, t(cc) is m2
+  # dp3 <- nu_matrix %*% pp %*% t(nu_matrix) - pp # first cc is m1, t(cc) is m2
+  dp3 <- t(nu_matrix) %*% pp %*% nu_matrix - pp # first cc is m1, t(cc) is m2
 
   dp <- lambda * dp1 + mu * dp2 + nu * dp3
 
@@ -292,6 +279,7 @@ cond_prob_p <- function(
   cond,
   n_0 = 2,
   lx = 30,
+  tips_interval = c(n_0 * (cond > 0), Inf),
   debug_mode = FALSE
 ) {
   if (n_0 != 2) {
@@ -300,6 +288,7 @@ cond_prob_p <- function(
   if (cond == 0) {
     return(1)
   }
+  rm(tips_interval)
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
@@ -335,6 +324,7 @@ cond_prob_p <- function(
   )[2, -1]
   p_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
   somma <- sum(p_m1_m2)
+  testit::assert(somma >= 0.98)
 
   # compute conditioning probability
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
@@ -345,5 +335,77 @@ cond_prob_p <- function(
     }
   } # debug
 
-  list(pc = pc, p_sum = somma)
+  pc
 }
+
+#' @export
+cond_prob_sim <- function(
+  pars,
+  brts,
+  cond = 1,
+  n_0 = 2,
+  lx = 30,
+  tips_interval = c(n_0 * (cond > 0), Inf),
+  n_sims = 1e4,
+  saveit = TRUE
+) {
+  age <- max(brts)
+  n_0 <- 2
+  testit::assert(cond == 1)
+  rm(tips_interval)
+  full_filename <- get_full_filename(
+    pars = pars,
+    age = age
+  )
+  delete_file <- FALSE
+  if (file.exists(full_filename)) {
+    load(full_filename)
+    if (measure$n_sims >= n_sims) {
+      return(measure$pc_sim)
+    } else {
+      delete_file <- TRUE
+    }
+  }
+
+  score <- 0
+  for (seed in 1:n_sims) {
+    sim <- mbd_sim(
+      pars = pars,
+      n_0 = n_0,
+      cond = 0,
+      age = age,
+      seed = seed
+    )
+
+    l_matrix <- sim$l_matrix
+    alive <- l_matrix[l_matrix[, 4] == -1, ]
+    alive <- matrix(alive, ncol = 4)
+    crown_species_dead <- (length(unique(sign(alive[, 3]))) != n_0)
+    crown_survival <- !crown_species_dead
+
+    score <- score + 1 * crown_survival
+  }
+  pc_sim <- score / n_sims
+  if (saveit == TRUE) {
+    measure <- list(
+      pc_sim = pc_sim,
+      n_sims = n_sims
+    )
+    if (delete_file == TRUE) {
+      file.remove(full_filename)
+    }
+    save(
+      measure,
+      file = full_filename
+    )
+  }
+  pc_sim
+}
+
+##### cond_prob
+#' Called by \link{mbd_loglik} if there is a conditioning != 0
+#' @inheritParams default_params_doc
+#' @return the conditional probability
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @export
+cond_prob <- cond_prob_p

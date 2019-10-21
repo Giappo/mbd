@@ -38,7 +38,7 @@ mbd_loglik <- function(
     cond = cond,
     n_0 = n_0,
     tips_interval = tips_interval,
-    lx = min(lx, 31),
+    lx = ceiling(sqrt(lx)),
     debug_mode = debug_mode
   )
 

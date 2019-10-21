@@ -82,6 +82,13 @@ cat2 <- function(
   }
 }
 
+#' @export
+to_string2 <- function(
+  var
+) {
+  gsub(x = toString(var), pattern = " ", replacement = "")
+}
+
 #' @title Transform parameters
 #' @description Transform parameters according to y = x / (1 + x)
 #' @inheritParams default_params_doc
@@ -312,4 +319,40 @@ create_singleton_phylo <- function(age) {
   class(tr) <- "phylo"
   tr$edge.length <- age # nolint
   tr
+}
+
+#' Create an empty phylogeny
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+get_full_filename <- function(
+  pars,
+  age
+) {
+  # folder structure
+  data_folder0 <- system.file("extdata", package = get_pkg_name())
+  if (!dir.exists(data_folder0)) {
+    dir.create(data_folder0)
+  }
+  data_folder <- file.path(data_folder0, "cond_probs")
+  if (!dir.exists(data_folder)) {
+    dir.create(data_folder)
+  }
+
+  parsetting <- paste0(
+    "pars=", to_string2(pars),
+    "-",
+    "age=", to_string2(age)
+  )
+  parsetting <- gsub(parsetting, pattern = " ", replacement = "")
+  parsetting_folder <- file.path(data_folder, parsetting)
+  if (!dir.exists(parsetting_folder)) {
+    dir.create(parsetting_folder)
+  }
+  filename <- paste0(
+    "pc_sim",
+    ".Rdata"
+  )
+  full_filename <- file.path(parsetting_folder, filename)
+  full_filename
 }
