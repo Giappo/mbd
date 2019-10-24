@@ -35,20 +35,24 @@ evaluate_sim <- function(
   l_matrix,
   cond,
   n_0,
-  tips_interval
+  tips_interval,
+  pool
 ) {
 
   tips <- -1
   crown_species_dead <- cond
 
+  # count extants species
+  alive <- l_matrix[l_matrix[, 4] == -1, ]
+  alive <- matrix(alive, ncol = 4)
+  tips <- nrow(alive)
+  testit::assert(length(pool) == tips)
+
   # tips check
-  tips <- length(l_matrix[, 4][l_matrix[, 4] == -1])
   tips_condition <- tips >= tips_interval[1] & tips <= tips_interval[2]
 
   # survival of crown check
-  alive <- l_matrix[l_matrix[, 4] == -1, ]
-  alive <- matrix(alive, ncol = 4)
-  crown_species_dead <- (length(unique(sign(alive[, 3]))) != n_0) * (cond > 0)
+  crown_species_dead <- length(unique(sign(alive[, 3]))) != n_0
   crown_survival <- !crown_species_dead
 
   # should i keep this simulation?

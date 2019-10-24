@@ -1,6 +1,56 @@
 context("cond_probs")
 
-# cond == 0 yields pc == 1; cond == 1 yields pc <= 1;
+is_on_ci <- function() {
+  is_it_on_appveyor <- Sys.getenv("APPVEYOR") != ""
+  is_it_on_travis <- Sys.getenv("TRAVIS") != ""
+  is_it_on_appveyor || is_it_on_travis # nolint internal function
+}
+
+test_that("dps sum up to zero", {
+
+  q <- 0.2
+  lx <- 300
+  pp <- matrix(0, ncol = lx_max, nrow = lx_max)
+  pp[2:10, 2:10] <- 1
+  pp <- pp / sum(pp)
+  mm <- 2:(lx + 1)
+  matrices <- cond_prob_p_matrices(q = q, lx = lx)
+  nu_matrix <- matrices$nu_matrix
+  pp2 <- matrices$empty_pp
+  m1 <- matrices$m1
+  m2 <- matrices$m2
+  pp2[mm, mm] <- pp
+
+  dp_lambda <- calc_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+
+  dp_mu <- calc_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+
+  dp_nu <- calc_dp_nu(pp = pp, nu_matrix = nu_matrix)
+
+  dp_nu2 <- calc_dp_nu2(pp = pp, nu_matrix = nu_matrix)
+
+  expect_equal(
+    sum(dp_lambda),
+    0,
+    tolerance = 10 * .Machine$double.eps
+  )
+  expect_equal(
+    sum(dp_mu),
+    0,
+    tolerance = 10 * .Machine$double.eps
+  )
+  expect_equal(
+    sum(dp_nu),
+    0,
+    tolerance = 10 * .Machine$double.eps
+  )
+  expect_equal(
+    sum(dp_nu2),
+    0,
+    tolerance = 10 * .Machine$double.eps
+  )
+})
+
 test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
 
   pars <- c(0.2, 0.15, 2.0, 0.1)
@@ -50,45 +100,182 @@ test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
   )
 })
 
-test_that("accurate and fast", {
-
-  pars <- c(0.2, 0.10, 2.0, 0.15)
-  brts <- c(10)
+test_that("mu = 0", {
+  pars <- c(0.2, 0, 1, 0.1)
+  brts <- c(3)
+  cond <- 1
   n_0 <- 2
+  lx <- 30
+  test_p <- cond_prob_p(
+    pars = pars,
+    brts = brts,
+    cond = cond,
+    n_0 = n_0,
+    lx = lx
+  )
+  test_q <- cond_prob_q(
+    pars = pars,
+    brts = brts,
+    cond = cond,
+    n_0 = n_0,
+    lx = lx
+  )
+  testthat::expect_equal(
+    test_p,
+    1,
+    tolerance = 1e-3
+  )
+  testthat::expect_equal(
+    test_q,
+    1,
+    tolerance = 1e-3
+  )
+})
+
+test_that("bd", {
+  pars <- c(0.2, 0.15, 0, 0)
+  brts <- c(1)
+  cond <- 1
+  n_0 <- 2
+  lx <- 35
+  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 3)
+  for (m in seq_along(mu_vec)) {
+    pars[2] <- mu_vec[m]
+    test0 <- exp(
+      DDD::bd_loglik(
+        pars1 = c(pars[1], pars[2], 0, 0),
+        pars2 = c(0, 0, 0, 0, n_0),
+        brts = brts,
+        missnumspec = 0
+      ) -
+        DDD::bd_loglik(
+          pars1 = c(pars[1], pars[2], 0, 0),
+          pars2 = c(0, 1, 0, 0, n_0),
+          brts = brts,
+          missnumspec = 0
+        )
+    )
+    test_p <- cond_prob_p(
+      pars = pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      lx = lx
+    )
+    test_q <- cond_prob_p(
+      pars = pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      lx = lx
+    )
+    testthat::expect_equal(
+      test0,
+      test_p,
+      tolerance = 1e-3
+    )
+    testthat::expect_equal(
+      test0,
+      test_q,
+      tolerance = 1e-3
+    )
+  }
+})
+
+test_that("accurate and fast - gentle parameters", {
+
+  pars <- c(0.2, 0.10, 1.0, 0.15)
+  brts <- c(3)
+  n_0 <- 2
+  cond <- 1
+  n_sims <- 1e2
   prob_cond_sim <- cond_prob_sim(
     pars = pars,
     brts = brts,
     cond = cond,
-    n_0 = n_0
+    n_0 = n_0,
+    n_sims = n_sims
   )
-  lxs <- seq(from = 25, to = 33, by = 4)
-  for (l in seq_along(lxs)) {
-    lx <- lxs[l]
-    time_cond_p <- system.time(
-      prob_cond_p <- cond_prob_p(
-        pars = pars,
-        brts = brts,
-        cond = cond,
-        n_0 = n_0,
-        lx = lx
-      )
-    )[[3]]
-    time_cond_q <- system.time(
-      prob_cond_q <- cond_prob_q(
-        pars = pars,
-        brts = brts,
-        cond = cond,
-        n_0 = n_0,
-        lx = lx
-      )
-    )[[3]]
-    # unconditioned likelihood time for the same branching times
-    time_likelihood <- system.time(
-      mbd_loglik(pars = pars, brts = brts, n_0 = n_0, cond = 0, lx = lx ^ 2)
-    )[[3]]
-    # we want the conditioning time to be smaller than the time
-    #  for the full likelihood computation.
-    expect_true(time_cond_p < time_likelihood)
-    expect_true(time_cond_q < time_likelihood)
+  lx <- 30
+  time_cond_p <- system.time(
+    prob_cond_p <- cond_prob_p(
+      pars = pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      lx = lx
+    )
+  )[[3]]
+  time_cond_q <- system.time(
+    prob_cond_q <- cond_prob_q(
+      pars = pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      lx = lx
+    )
+  )[[3]]
+  # unconditioned likelihood time for the same branching times
+  time_likelihood <- system.time(
+    mbd_loglik(pars = pars, brts = brts, n_0 = n_0, cond = 0, lx = lx ^ 2)
+  )[[3]]
+
+  # conditioning time must be smaller than the time for full likelihood
+  expect_true(time_cond_p < time_likelihood)
+  expect_true(time_cond_q < time_likelihood)
+
+  # conditional likelihood must be "close" to simulations
+  expect_equal(prob_cond_p, prob_cond_sim, tolerance = n_sims ^ -1)
+  expect_equal(prob_cond_q, prob_cond_sim, tolerance = n_sims ^ -1)
+})
+
+test_that("accurate and fast - harder parameters", {
+
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
   }
+
+  pars <- c(0.2, 0.10, 1.5, 0.15)
+  brts <- c(5)
+  n_0 <- 2
+  cond <- 1
+  n_sims <- 1e4
+  prob_cond_sim <- cond_prob_sim(
+    pars = pars,
+    brts = brts,
+    cond = cond,
+    n_0 = n_0,
+    n_sims = n_sims
+  )
+  lx <- 35
+  time_cond_p <- system.time(
+    prob_cond_p <- cond_prob_p(
+      pars = pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      lx = lx
+    )
+  )[[3]]
+  time_cond_q <- system.time(
+    prob_cond_q <- cond_prob_q(
+      pars = pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      lx = lx
+    )
+  )[[3]]
+  # unconditioned likelihood time for the same branching times
+  time_likelihood <- system.time(
+    mbd_loglik(pars = pars, brts = brts, n_0 = n_0, cond = 0, lx = lx ^ 2)
+  )[[3]]
+
+  # conditioning time must be smaller than the time for full likelihood
+  expect_true(time_cond_p < time_likelihood)
+  expect_true(time_cond_q < time_likelihood)
+
+  # conditional likelihood must be "close" to simulations
+  expect_equal(prob_cond_p, prob_cond_sim, tolerance = n_sims ^ -(1 / 2))
+  expect_equal(prob_cond_q, prob_cond_sim, tolerance = n_sims ^ -(1 / 2))
 })
