@@ -7,23 +7,24 @@ documentation.}
 \usage{
 default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
   alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
-  checked_functions, colormap, cond, data_folder, debug_mode,
-  function_name, function_names, functions_names, idparsfix, idparsopt,
-  initparsopt, input_trees_path, input_xml, interval_max, interval_min,
-  iterations, k, lambda, lambda_limit, loglik_function, loglik_functions,
-  logs, lx, lx0, matrix, matrix_a, matrix_builder, max_iter, max_k,
-  max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
-  mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
-  models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species,
-  init_n_lineages, n_steps, n_subs, nu, nu_limit, optimmethod, optim_ids,
+  checked_functions, colormap, cond, data_folder, debug_mode, empty_pp,
+  empty_qq, function_name, function_names, functions_names, idparsfix,
+  idparsopt, initparsopt, input_trees_path, input_xml, interval_max,
+  interval_min, iterations, k, lambda, lambda_limit, loglik_function,
+  loglik_functions, logs, lx, lx0, m1, m2, mm, matrices, matrix, matrix_a,
+  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
+  max_sims, maxit, maxiter, mbd_lambda, message, methode,
+  minimum_multiple_births, missnumspec, models, mu, mu_limit,
+  mutation_rate, n_0, n_0s, n_species, init_n_lineages, n_sims, n_steps,
+  n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids, pp, pp2, parms,
   params, pars, pars_transform, pars_transformed, parsfix, precision,
-  print_errors, printit, project_folder, q_t, q_vector, q,
-  quantiles_choice, recursive, reltol, res, results, results_folder, s,
-  seed, q_threshold, sample_interval, sequence_length, sim, sim_pars,
-  sim_phylo, start_pars, subsamp, t, t1, t2, t_0, t_0s, tips_interval,
-  time_interval, tol, tr, transition_matrix, trparsfix, trparsopt,
-  true_pars, values, verbose, x, x_name, x_splits, y, y_name, y_splits, z,
-  z_name)
+  print_errors, printit, project_folder, pvec, q, qq, qq2, q_t, q_vector,
+  q_threshold, quantiles_choice, qvec, recursive, reltol, res, results,
+  results_folder, rhs_function, s, saveit, seed, sample_interval,
+  sequence_length, sim, sim_pars, sim_phylo, start_pars, subsamp, t, t1,
+  t2, t_0, t_0s, tips_interval, time_interval, tol, tr, transition_matrix,
+  trparsfix, trparsopt, true_pars, values, vector, verbose, x, x_name,
+  x_splits, y, y_name, y_splits, z, z_name)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -69,6 +70,10 @@ the numerical integration using deSolve.}
 \item{debug_mode}{If TRUE allows to run even when there are errors and
 expose them.}
 
+\item{empty_pp}{empty pp matrix. See \code{pp}.}
+
+\item{empty_qq}{empty qq matrix. See \code{qq}.}
+
 \item{function_name}{function name}
 
 \item{function_names}{function names}
@@ -113,6 +118,14 @@ The ids are defined as follows:
 \item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{lx0}{something}
+
+\item{m1}{a matrix keeping track of columns}
+
+\item{m2}{a matrix keeping track of rows}
+
+\item{mm}{indexes of missing species}
+
+\item{matrices}{matrices}
 
 \item{matrix}{a matrix}
 
@@ -168,6 +181,8 @@ but missing in the phylogeny.}
 
 \item{init_n_lineages}{the number of lineages at time equals zero.}
 
+\item{n_sims}{number of simulations}
+
 \item{n_steps}{something}
 
 \item{n_subs}{something}
@@ -176,9 +191,18 @@ but missing in the phylogeny.}
 
 \item{nu_limit}{Upper limit to nu estimations.}
 
+\item{nu_matrix}{matrix for the nu component. Component {m,n} is equal to
+choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)}
+
 \item{optimmethod}{optimization routine: choose between subplex and simplex}
 
 \item{optim_ids}{ids of the parameters you want to optimize.}
+
+\item{pp}{the matrix p_{n1, n2}}
+
+\item{pp2}{the matrix p_{n1, n2}, with an empty frame}
+
+\item{parms}{some parameters to pass on the ode function}
 
 \item{params}{transition matrix for the rhs of the ode system.}
 
@@ -205,14 +229,25 @@ according to y = x / (1 + x)}
 
 \item{project_folder}{the folder when you want to save data and results}
 
+\item{pvec}{a vector of probabilities P}
+
+\item{q}{the single-lineage speciation probability at a triggered event.}
+
+\item{qq}{the matrix q_{m1, m2}}
+
+\item{qq2}{the matrix q_{m1, m2}, with an empty frame}
+
 \item{q_t}{the q_vector in time}
 
 \item{q_vector}{the \code{Q} vector from
 'Etienne et al. 2012 - Proc. R. Soc. B'.}
 
-\item{q}{the single-lineage speciation probability at a triggered event.}
+\item{q_threshold}{adds a threshold for the evaluation of q. This is due
+because you never want \code{q} to actually be equal to zero or one.}
 
 \item{quantiles_choice}{something}
+
+\item{qvec}{a vector of probabilities Q}
 
 \item{recursive}{something}
 
@@ -225,12 +260,14 @@ the numerical integration using deSolve.}
 
 \item{results_folder}{The results folder insider the project folder.}
 
+\item{rhs_function}{a function for the right hand side of the differential
+equation}
+
 \item{s}{the seed}
 
-\item{seed}{the seed}
+\item{saveit}{do you want to save the results?}
 
-\item{q_threshold}{adds a threshold for the evaluation of q. This is due
-because you never want \code{q} to actually be equal to zero or one.}
+\item{seed}{the seed}
 
 \item{sample_interval}{something}
 
@@ -252,7 +289,7 @@ because you never want \code{q} to actually be equal to zero or one.}
 
 \item{subsamp}{something}
 
-\item{t}{something}
+\item{t}{time}
 
 \item{t1}{something}
 
@@ -280,6 +317,8 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 \item{true_pars}{true parameter values when running the ml process.}
 
 \item{values}{something}
+
+\item{vector}{a vector}
 
 \item{verbose}{choose if you want to print the output or not}
 

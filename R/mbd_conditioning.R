@@ -1,5 +1,7 @@
 # cond_prob_q -----
 
+#' Calculates the lambda component of dq
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_dq_lambda <- function(
   qq,
@@ -16,6 +18,8 @@ cond_prob_dq_lambda <- function(
   dq1
 }
 
+#' Calculates the mu component of dq
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_dq_mu <- function(
   qq,
@@ -32,6 +36,8 @@ cond_prob_dq_mu <- function(
   dq2
 }
 
+#' Calculates the nu component of dq
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_dq_nu <- function(
   qq,
@@ -43,7 +49,8 @@ cond_prob_dq_nu <- function(
   dq3
 }
 
-#' Auxilary function for cond_prob
+#' Auxilary function for cond_prob, creating useful matrices
+#' @inheritParams default_params_doc
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @export
 cond_prob_q_matrices <- function(
@@ -76,8 +83,9 @@ cond_prob_q_matrices <- function(
   )
 }
 
-#' Auxilary function for cond_prob_q
+#' Auxilary function for cond_prob_q, creating rhs
 #' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_q_rhs1 <- function(
   qvec,
@@ -111,8 +119,9 @@ cond_prob_q_rhs1 <- function(
   dq
 }
 
-#' Auxilary function for cond_prob_q
+#' Auxilary function for cond_prob_q, creating rhs
 #' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_q_rhs2 <- function(t, x, parms) {
   list(cond_prob_q_rhs1(
@@ -154,7 +163,6 @@ cond_prob_q <- function(
   nu <- pars[3]
   q <- pars[4]
   tt <- max(abs(brts)) # time between crown age and present
-  times <- c(0, tt)
 
   # construct auxiliary matrix
   matrices <- cond_prob_q_matrices(q = q, lx = lx)
@@ -210,6 +218,9 @@ cond_prob_q <- function(
 
 # cond_prob_p -----
 
+#' Calculates the lambda component of dp
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_dp_lambda <- function(
   pp,
@@ -225,6 +236,9 @@ cond_prob_dp_lambda <- function(
   dp1
 }
 
+#' Calculates the mu component of dp
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_dp_mu <- function(
   pp,
@@ -240,6 +254,9 @@ cond_prob_dp_mu <- function(
   dp2
 }
 
+#' Calculates the nu component of dp
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_dp_nu <- function(
   pp,
@@ -250,8 +267,9 @@ cond_prob_dp_nu <- function(
   dp3
 }
 
-#' Auxilary function for cond_prob_p
+#' Auxilary function for cond_prob_p, computing useful matrices
 #' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_p_matrices <- function(
   q,
@@ -284,8 +302,9 @@ cond_prob_p_matrices <- function(
   )
 }
 
-#' Auxilary function for cond_prob_p
+#' Auxilary function for cond_prob_p, computing rhs
 #' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_p_rhs1 <- function(
   pvec,
@@ -318,8 +337,9 @@ cond_prob_p_rhs1 <- function(
   dp
 }
 
-#' Auxilary function for cond_prob_p
+#' Auxilary function for cond_prob_p, computing rhs
 #' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_p_rhs2 <- function(t, x, parms) {
   list(cond_prob_p_rhs1(
@@ -335,6 +355,9 @@ cond_prob_p_rhs2 <- function(t, x, parms) {
   ))
 }
 
+#' Solutiof the integration of the ODE for p_{n1, n2}
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 prob_cond_get_p_m1_m2 <- function(
   pars,
@@ -371,6 +394,7 @@ prob_cond_get_p_m1_m2 <- function(
 #' Called by \link{mbd_loglik} if there is a conditioning != 0
 #' @return the conditional probability
 #' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_p <- function(
   pars,
@@ -415,6 +439,9 @@ cond_prob_p <- function(
 
 # cond_prob_sim -----
 
+#' Estimates conditional probability using simulations
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
 #' @export
 cond_prob_sim <- function(
   pars,
@@ -493,7 +520,7 @@ cond_prob <- cond_prob_p
 # cond_prob_p2 -----
 # cond_prob_p2 defined with the zero term in nu
 
-#' @export
+#' @noRd
 cond_prob_dp_nu2 <- function(
   pp,
   nu_matrix

@@ -2,12 +2,19 @@
 % Please edit documentation in R/mbd_conditioning.R
 \name{cond_prob_q_rhs2}
 \alias{cond_prob_q_rhs2}
-\title{Auxilary function for cond_prob_q}
+\title{Auxilary function for cond_prob_q, creating rhs}
 \usage{
 cond_prob_q_rhs2(t, x, parms)
 }
+\arguments{
+\item{t}{time}
+
+\item{x}{something}
+
+\item{parms}{some parameters to pass on the ode function}
+}
 \description{
-Auxilary function for cond_prob_q
+Auxilary function for cond_prob_q, creating rhs
 }
 \author{
 Giovanni Laudanno, Bart Haegeman

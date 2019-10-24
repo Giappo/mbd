@@ -127,3 +127,30 @@ for (ii in 1:nrow(parses)) {
     recursive = TRUE
   )
 }
+
+for (ii in 1:nrow(parses)) {
+  pars <- unlist(parses[ii, ])
+  settings_folder <- dirname(get_full_filename(pars = pars, age = max(brts)))
+  plotname <- file.path(
+    settings_folder,
+    "pc_plot.png"
+  )
+  cond_probs_folder <- dirname(dirname(plotname))
+  new_filename <- file_path(
+    dirname(plotname),
+    paste0("pc-", basename(settings_folder), ".png")
+  )
+  file.rename(
+    from = plotname,
+    to = new_filename
+  )
+  summary_folder <- file_path(cond_probs_folder, "pc_summary")
+  if (!dir.exists(summary_folder)) {dir.create(summary_folder)}
+  file.copy(from = new_filename, to = summary_folder)
+}
+file.copy(
+  from = summary_folder,
+  to = dirname(pkg_folder),
+  overwrite = TRUE,
+  recursive = TRUE
+)

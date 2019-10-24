@@ -82,7 +82,7 @@ cat2 <- function(
   }
 }
 
-#' @export
+#' @noRd
 to_string2 <- function(
   var
 ) {

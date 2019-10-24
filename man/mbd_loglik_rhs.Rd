@@ -7,7 +7,7 @@
 mbd_loglik_rhs(t, x, params)
 }
 \arguments{
-\item{t}{something}
+\item{t}{time}
 
 \item{x}{something}
 

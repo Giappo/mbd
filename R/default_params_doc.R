@@ -26,6 +26,8 @@
 #' @param data_folder The data folder insider the project folder.
 #' @param debug_mode If TRUE allows to run even when there are errors and
 #'  expose them.
+#' @param empty_pp empty pp matrix. See \code{pp}.
+#' @param empty_qq empty qq matrix. See \code{qq}.
 #' @param function_name function name
 #' @param function_names function names
 #' @param functions_names function names
@@ -52,6 +54,10 @@
 #' @param logs something
 #' @param lx it is the number of ODEs considered for the computation.
 #' @param lx0 something
+#' @param m1 a matrix keeping track of columns
+#' @param m2 a matrix keeping track of rows
+#' @param mm indexes of missing species
+#' @param matrices matrices
 #' @param matrix a matrix
 #' @param matrix_a The A matrix from the theory that represents the ODE system.
 #' @param matrix_builder function used to build the transition matrix.
@@ -84,12 +90,18 @@
 #' @param n_0s starting number of lineages for all the clades
 #' @param n_species number of species.
 #' @param init_n_lineages the number of lineages at time equals zero.
+#' @param n_sims number of simulations
 #' @param n_steps something
 #' @param n_subs something
 #' @param nu the multiple allopatric speciation trigger rate.
 #' @param nu_limit Upper limit to nu estimations.
+#' @param nu_matrix matrix for the nu component. Component {m,n} is equal to
+#'  choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)
 #' @param optimmethod optimization routine: choose between subplex and simplex
 #' @param optim_ids ids of the parameters you want to optimize.
+#' @param pp the matrix p_{n1, n2}
+#' @param pp2 the matrix p_{n1, n2}, with an empty frame
+#' @param parms some parameters to pass on the ode function
 #' @param params transition matrix for the rhs of the ode system.
 #' @param pars vector of parameters:
 #' \itemize{
@@ -106,20 +118,27 @@
 #' @param printit something
 #' @param print_errors something
 #' @param project_folder the folder when you want to save data and results
+#' @param pvec a vector of probabilities P
 #' @param q_t the q_vector in time
 #' @param q_vector the \code{Q} vector from
 #' 'Etienne et al. 2012 - Proc. R. Soc. B'.
 #' @param q the single-lineage speciation probability at a triggered event.
+#' @param qq the matrix q_{m1, m2}
+#' @param qq2 the matrix q_{m1, m2}, with an empty frame
 #' @param quantiles_choice something
+#' @param qvec a vector of probabilities Q
+#' @param q_threshold adds a threshold for the evaluation of q. This is due
+#' because you never want \code{q} to actually be equal to zero or one.
 #' @param recursive something
 #' @param reltol relative error tolerance for
 #' the numerical integration using deSolve.
 #' @param res something
 #' @param results mle results
 #' @param results_folder The results folder insider the project folder.
+#' @param rhs_function a function for the right hand side of the differential
+#'  equation
 #' @param s the seed
-#' @param q_threshold adds a threshold for the evaluation of q. This is due
-#' because you never want \code{q} to actually be equal to zero or one.
+#' @param saveit do you want to save the results?
 #' @param sample_interval something
 #' @param seed the seed
 #' @param sequence_length something
@@ -133,7 +152,7 @@
 #' }
 #' @param sim_phylo something
 #' @param subsamp something
-#' @param t something
+#' @param t time
 #' @param t1 something
 #' @param t2 something
 #' @param t_0 starting time
@@ -148,6 +167,7 @@
 #' @param trparsopt something
 #' @param true_pars true parameter values when running the ml process.
 #' @param values something
+#' @param vector a vector
 #' @param verbose choose if you want to print the output or not
 #' @param x something
 #' @param x_name something
@@ -181,6 +201,8 @@ default_params_doc <- function(
   cond,
   data_folder,
   debug_mode,
+  empty_pp,
+  empty_qq,
   function_name,
   function_names,
   functions_names,
@@ -200,6 +222,10 @@ default_params_doc <- function(
   logs,
   lx,
   lx0,
+  m1,
+  m2,
+  mm,
+  matrices,
   matrix,
   matrix_a,
   matrix_builder,
@@ -223,12 +249,17 @@ default_params_doc <- function(
   n_0s,
   n_species,
   init_n_lineages,
+  n_sims,
   n_steps,
   n_subs,
   nu,
   nu_limit,
+  nu_matrix,
   optimmethod,
   optim_ids,
+  pp,
+  pp2,
+  parms,
   params,
   pars,
   pars_transform,
@@ -238,18 +269,24 @@ default_params_doc <- function(
   print_errors,
   printit,
   project_folder,
+  pvec,
+  q,
+  qq,
+  qq2,
   q_t,
   q_vector,
-  q,
+  q_threshold,
   quantiles_choice,
+  qvec,
   recursive,
   reltol,
   res,
   results,
   results_folder,
+  rhs_function,
   s,
+  saveit,
   seed,
-  q_threshold,
   sample_interval,
   sequence_length,
   sim,
@@ -271,6 +308,7 @@ default_params_doc <- function(
   trparsopt,
   true_pars,
   values,
+  vector,
   verbose,
   x,
   x_name,
