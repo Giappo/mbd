@@ -2,12 +2,17 @@
 % Please edit documentation in R/mbd_conditioning.R
 \name{cond_prob_q_matrices}
 \alias{cond_prob_q_matrices}
-\title{Auxilary function for cond_prob}
+\title{Auxilary function for cond_prob, creating useful matrices}
 \usage{
 cond_prob_q_matrices(q, lx)
 }
+\arguments{
+\item{q}{the single-lineage speciation probability at a triggered event.}
+
+\item{lx}{it is the number of ODEs considered for the computation.}
+}
 \description{
-Auxilary function for cond_prob
+Auxilary function for cond_prob, creating useful matrices
 }
 \author{
 Giovanni Laudanno, Bart Haegeman

@@ -2,12 +2,32 @@
 % Please edit documentation in R/mbd_conditioning.R
 \name{cond_prob_p_rhs1}
 \alias{cond_prob_p_rhs1}
-\title{Auxilary function for cond_prob_p}
+\title{Auxilary function for cond_prob_p, computing rhs}
 \usage{
 cond_prob_p_rhs1(pvec, lambda, mu, nu, nu_matrix, m1, m2, empty_pp, t)
 }
+\arguments{
+\item{pvec}{a vector of probabilities P}
+
+\item{lambda}{the sympatric speciation rate.}
+
+\item{mu}{the extinction rate.}
+
+\item{nu}{the multiple allopatric speciation trigger rate.}
+
+\item{nu_matrix}{matrix for the nu component. Component {m,n} is equal to
+choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)}
+
+\item{m1}{a matrix keeping track of columns}
+
+\item{m2}{a matrix keeping track of rows}
+
+\item{empty_pp}{empty pp matrix. See \link{pp}.}
+
+\item{t}{time}
+}
 \description{
-Auxilary function for cond_prob_p
+Auxilary function for cond_prob_p, computing rhs
 }
 \author{
 Giovanni Laudanno, Bart Haegeman

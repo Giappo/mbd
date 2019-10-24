@@ -9,7 +9,7 @@ check_q_vector(q_t, t, pars, brts, debug_mode = FALSE)
 \arguments{
 \item{q_t}{the q_vector in time}
 
-\item{t}{something}
+\item{t}{time}
 
 \item{pars}{vector of parameters:
 \itemize{

@@ -216,6 +216,10 @@ test_that("bd", {
 
 test_that("accurate and fast - gentle parameters", {
 
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
+
   pars <- c(0.2, 0.10, 1.0, 0.15)
   brts <- c(3)
   n_0 <- 2

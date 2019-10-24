@@ -7,9 +7,13 @@
 mbd_solve(vector, time_interval, func = mbd_loglik_rhs, parms)
 }
 \arguments{
+\item{vector}{a vector}
+
 \item{time_interval}{something}
 
 \item{func}{function for the right hand side of the ODE}
+
+\item{parms}{some parameters to pass on the ode function}
 }
 \description{
 Integrates "func" in the time interval
