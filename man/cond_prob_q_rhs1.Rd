@@ -4,7 +4,7 @@
 \alias{cond_prob_q_rhs1}
 \title{Auxilary function for cond_prob_q}
 \usage{
-cond_prob_q_rhs1(qvec, lambda, mu, nu, k, nu_matrix, m1, m2, empty_qq)
+cond_prob_q_rhs1(qvec, lambda, mu, nu, k, nu_matrix, m1, m2, empty_qq, t)
 }
 \description{
 Auxilary function for cond_prob_q
