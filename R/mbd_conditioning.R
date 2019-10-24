@@ -52,14 +52,16 @@ cond_prob_q_matrices <- function(
 ) {
 
   nu_matrix <- matrix(0, nrow = lx, ncol = lx)
-  for (m1 in 0:(lx - 1)) {
-    for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
-      aux <- log(m1 + 1) +
-        lfactorial(m1 - a1) -
-        lfactorial(m1 - 2 * a1 + 1) -
-        lfactorial(a1)
-      aux <- aux + a1 * log(q) + (m1 + 1 - 2 * a1) * log(1 - q)
-      nu_matrix[m1 + 1, m1 - a1 + 1] <- exp(aux)
+  if (q != 0) {
+    for (m1 in 0:(lx - 1)) {
+      for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
+        aux <- log(m1 + 1) +
+          lfactorial(m1 - a1) -
+          lfactorial(m1 - 2 * a1 + 1) -
+          lfactorial(a1)
+        aux <- aux + a1 * log(q) + (m1 + 1 - 2 * a1) * log(1 - q)
+        nu_matrix[m1 + 1, m1 - a1 + 1] <- exp(aux)
+      }
     }
   }
 
@@ -92,8 +94,6 @@ cond_prob_q_rhs1 <- function(
   lx <- sqrt(lx2)
 
   mm <- 2:(lx + 1)
-  mm_plus_one <- mm + 1
-  mm_minus_one <- mm - 1
 
   qq <- matrix(qvec, nrow = lx, ncol = lx)
   qq2 <- empty_qq
@@ -101,15 +101,11 @@ cond_prob_q_rhs1 <- function(
 
   dq_lambda <-
     cond_prob_dq_lambda(qq = qq, qq2 = qq2, k = k, m1 = m1, m2 = m2, mm = mm)
-
   dq_mu <-
     cond_prob_dq_mu(qq = qq, qq2 = qq2, k = k, m1 = m1, m2 = m2, mm = mm)
-
   dq_nu <-
     cond_prob_dq_nu(qq = qq, nu_matrix = nu_matrix)
-
   dq <- lambda * dq_lambda + mu * dq_mu + nu * dq_nu
-
   dq <- matrix(dq, nrow = lx2, ncol = 1)
   dq
 }
@@ -173,16 +169,12 @@ cond_prob_q <- function(
   parms$empty_qq <- matrices$empty_qq
   q_0 <- c(y = c(1, rep(0, lx ^ 2 - 1)))
 
-  ode_out <- deSolve::ode(
-    y = q_0,
-    times = times,
+  ode_out <- mbd_solve(
+    vector = q_0,
     func = cond_prob_q_rhs2,
-    parms = parms,
-    method = "lsoda",
-    atol = 1e-100,
-    rtol = 1e-10,
-    tcrit = tt
-  )[2, -1]
+    time_interval = tt,
+    parms = parms
+  )
   q_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
 
   # compute conditioning probability
@@ -191,6 +183,7 @@ cond_prob_q <- function(
   p_m1_m2 <- q_m1_m2 / ((m1 + 1) * (m2 + 1)) # nolint lintr has issues with math
   pc <- sum(p_m1_m2)
 
+  pc <- DDD::roundn(pc, digits = 8)
   if (!(pc >= 0 && pc <= 1)) {
     if (debug_mode == TRUE) {
       graphics::plot(
@@ -307,21 +300,18 @@ cond_prob_p_rhs1 <- function(
   lx <- sqrt(lx2)
 
   mm <- 2:(lx + 1)
-  mm_plus_one <- mm + 1
-  mm_minus_one <- mm - 1
 
   pp <- matrix(pvec, nrow = lx, ncol = lx)
   pp2 <- empty_pp
   pp2[mm, mm] <- pp
 
-  dp_lambda <- cond_prob_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
-
-  dp_mu <- cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
-
-  dp_nu <- cond_prob_dp_nu(pp = pp, nu_matrix = nu_matrix)
-
+  dp_lambda <-
+    cond_prob_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+  dp_mu <-
+    cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+  dp_nu <-
+    cond_prob_dp_nu(pp = pp, nu_matrix = nu_matrix)
   dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
-
   dp <- matrix(dp, nrow = lx2, ncol = 1)
   dp
 }
@@ -351,7 +341,6 @@ prob_cond_get_p_m1_m2 <- function(
   rhs_function = cond_prob_p_rhs2
 ) {
   tt <- max(abs(brts)) # time between crown age and present
-  times <- c(0, tt)
   lx <- ncol(matrices$nu_matrix)
 
   parms <- list()
@@ -366,16 +355,13 @@ prob_cond_get_p_m1_m2 <- function(
   p_0[2, 2] <- 1
   p_0 <- matrix(p_0, nrow = lx ^ 2, ncol = 1)
 
-  ode_out <- deSolve::ode(
-    y = p_0,
-    times = times,
+  ode_out <- mbd_solve(
+    vector = p_0,
     func = rhs_function,
-    parms = parms,
-    method = "lsoda",
-    atol = 1e-100,
-    rtol = 1e-6,
-    tcrit = tt
-  )[2, -1]
+    time_interval = tt,
+    parms = parms
+  )
+
   p_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
   p_m1_m2
 }
@@ -411,12 +397,11 @@ cond_prob_p <- function(
     matrices = matrices,
     rhs_function = cond_prob_p_rhs2
   )
-  somma <- sum(p_m1_m2)
-  testit::assert(somma >= 0.95)
 
   # compute conditioning probability
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
 
+  pc <- DDD::roundn(pc, digits = 8)
   if (!(pc >= 0 && pc <= 1)) {
     if (debug_mode != TRUE) {
       stop("problems: pc is wrong!")
@@ -513,7 +498,7 @@ cond_prob_dp_nu2 <- function(
 ) {
   lx <- nrow(nu_matrix)
   diag_matrix <- matrix(0, nrow = lx, ncol = lx)
-  diag(diag_matrix) <- diag(nu_matrix) # diag((1 - q) ^ (0:(lx - 1)))
+  diag(diag_matrix) <- diag(nu_matrix) # this is (1 - q) ^ m
   loss_term <-
     diag_matrix %*% pp %*% t(nu_matrix) +
     nu_matrix %*% pp %*% t(diag_matrix) -
@@ -582,21 +567,18 @@ cond_prob_p2_rhs1 <- function(
   lx <- sqrt(lx2)
 
   mm <- 2:(lx + 1)
-  mm_plus_one <- mm + 1
-  mm_minus_one <- mm - 1
 
   pp <- matrix(pvec, nrow = lx, ncol = lx)
   pp2 <- empty_pp
   pp2[mm, mm] <- pp
 
-  dp_lambda <- cond_prob_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
-
-  dp_mu <- cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
-
-  dp_nu <- cond_prob_dp_nu2(pp = pp, nu_matrix = nu_matrix)
-
+  dp_lambda <-
+    cond_prob_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+  dp_mu <-
+    cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+  dp_nu <-
+    cond_prob_dp_nu2(pp = pp, nu_matrix = nu_matrix)
   dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
-
   dp <- matrix(dp, nrow = lx2, ncol = 1)
   dp
 }

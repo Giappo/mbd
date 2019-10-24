@@ -84,8 +84,8 @@ mbd_loglik <- function(
 
     # Applying A operator
     q_t[t, ] <- mbd_solve(
-      q_vector = q_t[(t - 1), ],
-      matrix_a = matrix_a,
+      vector = q_t[(t - 1), ],
+      parms = matrix_a,
       time_interval = time_intervals[t]
     )
     check_q_vector(

@@ -21,11 +21,12 @@ test_that("dps sum up to zero", {
   m2 <- matrices$m2
   pp2[mm, mm] <- pp
 
-  dp_lambda <- cond_prob_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
-
-  dp_mu <- cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
-
-  dp_nu <- cond_prob_dp_nu(pp = pp, nu_matrix = nu_matrix)
+  dp_lambda <-
+    cond_prob_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+  dp_mu <-
+    cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+  dp_nu <-
+    cond_prob_dp_nu(pp = pp, nu_matrix = nu_matrix)
 
   dp_nu2 <- cond_prob_dp_nu2(pp = pp, nu_matrix = nu_matrix)
 

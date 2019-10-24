@@ -356,3 +356,8 @@ get_full_filename <- function(
   full_filename <- file.path(parsetting_folder, filename)
   full_filename
 }
+
+#' @noRd
+file_path <- function(..., fsep = .Platform$file.sep){
+  gsub("//", "/", file.path(..., fsep = fsep))
+}
