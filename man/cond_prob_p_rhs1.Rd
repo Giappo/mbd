@@ -22,7 +22,7 @@ choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)}
 
 \item{m2}{a matrix keeping track of rows}
 
-\item{empty_pp}{empty pp matrix. See \link{pp}.}
+\item{empty_pp}{empty pp matrix. See \code{pp}.}
 
 \item{t}{time}
 }

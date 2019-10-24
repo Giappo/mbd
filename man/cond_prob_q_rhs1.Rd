@@ -24,7 +24,7 @@ choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)}
 
 \item{m2}{a matrix keeping track of rows}
 
-\item{empty_qq}{empty qq matrix. See \link{qq}.}
+\item{empty_qq}{empty qq matrix. See \code{qq}.}
 
 \item{t}{time}
 }

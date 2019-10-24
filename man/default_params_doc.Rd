@@ -70,9 +70,9 @@ the numerical integration using deSolve.}
 \item{debug_mode}{If TRUE allows to run even when there are errors and
 expose them.}
 
-\item{empty_pp}{empty pp matrix. See \link{pp}.}
+\item{empty_pp}{empty pp matrix. See \code{pp}.}
 
-\item{empty_qq}{empty qq matrix. See \link{qq}.}
+\item{empty_qq}{empty qq matrix. See \code{qq}.}
 
 \item{function_name}{function name}
 
