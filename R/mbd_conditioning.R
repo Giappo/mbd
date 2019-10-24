@@ -255,26 +255,6 @@ cond_prob_dp_nu <- function(
   dp3
 }
 
-#' @noRd
-cond_prob_dp_nu2 <- function(
-  pp,
-  nu_matrix
-) {
-  #N_{m1, n1} P_{n1, n2} N^T_{n2, m2}
-  diag_matrix <- diag(nu_matrix) # diag((1 - q) ^ (0:(lx - 1)))
-  loss_term <-
-    diag_matrix %*% pp %*% t(nu_matrix) +
-    nu_matrix %*% pp %*% t(diag_matrix) -
-    diag_matrix %*% pp %*% t(diag_matrix) -
-    pp
-  nu_matrix2 <- nu_matrix
-  diag(nu_matrix2) <- c(
-    1,
-    rep(0, nrow(nu_matrix) - 1)
-    )
-  dp3 <- nu_matrix %*% pp %*% t(nu_matrix) + loss_term
-}
-
 #' Auxilary function for cond_prob_p
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @export
@@ -512,9 +492,29 @@ cond_prob <- cond_prob_p
 # cond_prob_p2 -----
 # cond_prob_p2 defined with the zero term in nu
 
+#' @noRd
+cond_prob_dp_nu2 <- function(
+  pp,
+  nu_matrix
+) {
+  #N_{m1, n1} P_{n1, n2} N^T_{n2, m2}
+  diag_matrix <- diag(nu_matrix) # diag((1 - q) ^ (0:(lx - 1)))
+  loss_term <-
+    diag_matrix %*% pp %*% t(nu_matrix) +
+    nu_matrix %*% pp %*% t(diag_matrix) -
+    diag_matrix %*% pp %*% t(diag_matrix) -
+    pp
+  nu_matrix2 <- nu_matrix
+  diag(nu_matrix2) <- c(
+    1,
+    rep(0, nrow(nu_matrix) - 1)
+  )
+  dp3 <- nu_matrix %*% pp %*% t(nu_matrix) + loss_term
+}
+
 #' Auxilary function for cond_prob_p
 #' @author Giovanni Laudanno, Bart Haegeman
-#' @export
+#' @noRd
 cond_prob_p2_matrices <- function(
   q,
   lx
@@ -548,7 +548,7 @@ cond_prob_p2_matrices <- function(
 
 #' Auxilary function for cond_prob_p
 #' @author Giovanni Laudanno, Bart Haegeman
-#' @export
+#' @noRd
 cond_prob_p2_rhs1 <- function(
   pvec,
   lambda,
@@ -585,7 +585,7 @@ cond_prob_p2_rhs1 <- function(
 
 #' Auxilary function for cond_prob_p
 #' @author Giovanni Laudanno, Bart Haegeman
-#' @export
+#' @noRd
 cond_prob_p2_rhs2 <- function(t, x, parms) {
   list(cond_prob_p2_rhs1(
     pvec = x,
@@ -603,7 +603,7 @@ cond_prob_p2_rhs2 <- function(t, x, parms) {
 #' Called by \link{mbd_loglik} if there is a conditioning != 0
 #' @return the conditional probability
 #' @author Giovanni Laudanno, Bart Haegeman
-#' @export
+#' @noRd
 cond_prob_p2 <- function(
   pars,
   brts,
