@@ -148,3 +148,9 @@ for (ii in 1:nrow(parses)) {
   if (!dir.exists(summary_folder)) {dir.create(summary_folder)}
   file.copy(from = new_filename, to = summary_folder)
 }
+file.copy(
+  from = summary_folder,
+  to = dirname(pkg_folder),
+  overwrite = TRUE,
+  recursive = TRUE
+)
