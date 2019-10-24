@@ -73,14 +73,13 @@ hyper_a_hanno <- function(
 #' @export
 #' @author Hanno Hildenbrandt, adapted by Giovanni Laudanno
 mbd_solve <- function(
-  q_vector,
+  vector,
   time_interval,
   func = mbd_loglik_rhs,
-  matrix_a
+  parms
 ) {
 
-  y <- q_vector
-  parms <- matrix_a
+  y <- vector
   t1 <- time_interval
 
   g <- 10 # granularity

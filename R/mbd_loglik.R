@@ -38,7 +38,7 @@ mbd_loglik <- function(
     cond = cond,
     n_0 = n_0,
     tips_interval = tips_interval,
-    lx = min(lx, 31),
+    lx = ceiling(sqrt(lx)),
     debug_mode = debug_mode
   )
 
@@ -84,8 +84,8 @@ mbd_loglik <- function(
 
     # Applying A operator
     q_t[t, ] <- mbd_solve(
-      q_vector = q_t[(t - 1), ],
-      matrix_a = matrix_a,
+      vector = q_t[(t - 1), ],
+      parms = matrix_a,
       time_interval = time_intervals[t]
     )
     check_q_vector(

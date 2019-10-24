@@ -4,17 +4,12 @@
 \alias{mbd_solve}
 \title{mbd ODE system integrator}
 \usage{
-mbd_solve(q_vector, time_interval, func = mbd_loglik_rhs, matrix_a)
+mbd_solve(vector, time_interval, func = mbd_loglik_rhs, parms)
 }
 \arguments{
-\item{q_vector}{the \code{Q} vector from
-'Etienne et al. 2012 - Proc. R. Soc. B'.}
-
 \item{time_interval}{something}
 
 \item{func}{function for the right hand side of the ODE}
-
-\item{matrix_a}{The A matrix from the theory that represents the ODE system.}
 }
 \description{
 Integrates "func" in the time interval

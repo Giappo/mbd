@@ -51,7 +51,7 @@ mbd_sim <- function(
       l_matrix[2, 1:4] <- c(t, -1, 2, -1)
     }
     pool <- unique(l_matrix[, 3])[unique(l_matrix[, 3]) != 0]
-    while (t > 0) {
+    while (t > 0 && length(pool) > 0) {
       n_species <- length(pool)
       total_rate <- n_species * (lambda + mu) + nu
       if (total_rate > 0) {
@@ -108,7 +108,8 @@ mbd_sim <- function(
       l_matrix = l_matrix,
       cond = cond,
       n_0 = n_0,
-      tips_interval = tips_interval
+      tips_interval = tips_interval,
+      pool = pool
     )
   }
   info <- get_info_l_matrix(
