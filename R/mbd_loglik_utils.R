@@ -262,13 +262,30 @@ mbd_loglik_rhs <- function(t, x, params) {
   list(params %*% x)
 }
 
+#' Approximate the branching times to a fixed resolution. Events separated by
+#'  a time smaller than 10^-brts_precision can be considered simultaneous
+#' @inheritParams default_params_doc
+#' @noRd
+approximate_brts <- function(
+  brts,
+  brts_precision
+) {
+  brts <- DDD::roundn(brts, digits = brts_precision)
+  brts[brts <= 10 ^ (-brts_precision)] <- 10 ^ (-brts_precision)
+  brts
+}
+
 #' Converts branching times to 'time intervals between branching times'
 #'   and 'birth at nodes' vectors
 #' @inheritParams default_params_doc
 #' @noRd
-brts2time_intervals_and_births <- function(brts, brts_precision = 8) {
+brts2time_intervals_and_births <- function(
+  brts,
+  brts_precision = 8
+) {
 
-  brts <- DDD::roundn(brts, digits = brts_precision)
+  brts <- approximate_brts(brts = brts, brts_precision = brts_precision)
+
   branching_times <- unlist(unname(sort(abs(brts), decreasing = TRUE)))
   unique_branching_times <- unique(branching_times)
   time_intervals <- c(0, -diff(c(unique_branching_times, 0)))
@@ -293,10 +310,10 @@ brts2time_intervals_and_births <- function(brts, brts_precision = 8) {
     )
   )
   testit::assert(
-    all(time_intervals[-1] > .Machine$double.neg.eps) # nolint
+    all(time_intervals[-1] >= .Machine$double.neg.eps) # nolint
   )
   testit::assert(
-    all(time_intervals[-1] > 10 ^ (-brts_precision))
+    all(time_intervals[-1] >= 10 ^ (-brts_precision))
   )
   testit::assert(
     all(unique_branching_times[births > 1] == multiple_branching_times)

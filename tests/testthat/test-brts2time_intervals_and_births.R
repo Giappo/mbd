@@ -6,6 +6,16 @@ is_on_ci <- function() {
   is_it_on_appveyor || is_it_on_travis # nolint internal function
 }
 
+test_that("approximate_brts", {
+  brts <- c(6, 5, 4, 3, 1e-14)
+  brts_precision <- 6
+  approx_brts <- approximate_brts(
+    brts = brts,
+    brts_precision = brts_precision
+  )
+  expect_true(all(approx_brts > 0))
+})
+
 test_that("basic use", {
 
   brts <- c(10, 9, 8, 7, 7, 6, 6, 6, 5, 5, 5, 5)

@@ -88,7 +88,8 @@ cond_prob_q_rhs1 <- function(
   nu_matrix,
   m1,
   m2,
-  empty_qq
+  empty_qq,
+  t
 ) {
   lx2 <- length(qvec)
   lx <- sqrt(lx2)
@@ -123,7 +124,8 @@ cond_prob_q_rhs2 <- function(t, x, parms) {
     k = parms$k,
     m1 = parms$m1,
     m2 = parms$m2,
-    empty_qq = parms$empty_qq
+    empty_qq = parms$empty_qq,
+    t = t
   ))
 }
 
