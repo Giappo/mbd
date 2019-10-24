@@ -10,7 +10,7 @@ test_that("dps sum up to zero", {
 
   q <- 0.2
   lx <- 300
-  pp <- matrix(0, ncol = lx_max, nrow = lx_max)
+  pp <- matrix(0, ncol = lx, nrow = lx)
   pp[2:10, 2:10] <- 1
   pp <- pp / sum(pp)
   mm <- 2:(lx + 1)
@@ -21,13 +21,13 @@ test_that("dps sum up to zero", {
   m2 <- matrices$m2
   pp2[mm, mm] <- pp
 
-  dp_lambda <- calc_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+  dp_lambda <- cond_prob_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
 
-  dp_mu <- calc_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+  dp_mu <- cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
 
-  dp_nu <- calc_dp_nu(pp = pp, nu_matrix = nu_matrix)
+  dp_nu <- cond_prob_dp_nu(pp = pp, nu_matrix = nu_matrix)
 
-  dp_nu2 <- calc_dp_nu2(pp = pp, nu_matrix = nu_matrix)
+  dp_nu2 <- cond_prob_dp_nu2(pp = pp, nu_matrix = nu_matrix)
 
   expect_equal(
     sum(dp_lambda),
@@ -51,12 +51,43 @@ test_that("dps sum up to zero", {
   )
 })
 
+test_that("diagonal in p_nu_matrix is (1 - q) ^ m", {
+  q <- 0.2
+  lx <- 50
+  nu_matrix <- cond_prob_p_matrices(q = q, lx = lx)$nu_matrix
+  testthat::expect_equal(
+    diag(nu_matrix),
+    (1 - q) ^ (0:(lx - 1))
+  )
+})
+
+test_that("p_m1_m2 sums up to one", {
+  pars <- c(0.2, 0.1, 2.5, 0.2)
+  lx <- 30
+  brts <- c(2)
+  matrices <- cond_prob_p_matrices(
+    q = pars[4],
+    lx = lx
+  )
+
+  p_m1_m2 <- prob_cond_get_p_m1_m2(
+    pars = pars,
+    brts = brts,
+    matrices = matrices
+  )
+
+  testthat::expect_gt(
+    sum(p_m1_m2),
+    0.99
+  )
+})
+
 test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
 
   pars <- c(0.2, 0.15, 2.0, 0.1)
   brts <- c(5, 4, 3, 3, 1)
   n_0 <- 2
-  lx <- 25
+  lx <- 20
 
   testthat::expect_equal(
     cond_prob_p(
@@ -137,8 +168,8 @@ test_that("bd", {
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 35
-  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 3)
+  lx <- 27
+  mu_vec <- seq(from = 0.1, to = pars[1], length.out = 2)
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
     test0 <- exp(
@@ -196,7 +227,7 @@ test_that("accurate and fast - gentle parameters", {
     n_0 = n_0,
     n_sims = n_sims
   )
-  lx <- 30
+  lx <- 25
   time_cond_p <- system.time(
     prob_cond_p <- cond_prob_p(
       pars = pars,
@@ -235,7 +266,7 @@ test_that("accurate and fast - harder parameters", {
     skip("To be performed on ci.")
   }
 
-  pars <- c(0.2, 0.10, 1.5, 0.15)
+  pars <- c(0.2, 0.1, 1.5, 0.15)
   brts <- c(5)
   n_0 <- 2
   cond <- 1
@@ -247,7 +278,7 @@ test_that("accurate and fast - harder parameters", {
     n_0 = n_0,
     n_sims = n_sims
   )
-  lx <- 35
+  lx <- 40
   time_cond_p <- system.time(
     prob_cond_p <- cond_prob_p(
       pars = pars,
@@ -266,16 +297,8 @@ test_that("accurate and fast - harder parameters", {
       lx = lx
     )
   )[[3]]
-  # unconditioned likelihood time for the same branching times
-  time_likelihood <- system.time(
-    mbd_loglik(pars = pars, brts = brts, n_0 = n_0, cond = 0, lx = lx ^ 2)
-  )[[3]]
-
-  # conditioning time must be smaller than the time for full likelihood
-  expect_true(time_cond_p < time_likelihood)
-  expect_true(time_cond_q < time_likelihood)
 
   # conditional likelihood must be "close" to simulations
-  expect_equal(prob_cond_p, prob_cond_sim, tolerance = n_sims ^ -(1 / 2))
-  expect_equal(prob_cond_q, prob_cond_sim, tolerance = n_sims ^ -(1 / 2))
+  expect_equal(prob_cond_p, prob_cond_sim, tolerance = 1e-3)
+  expect_equal(prob_cond_q, prob_cond_sim, tolerance = 1e-3)
 })

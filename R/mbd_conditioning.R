@@ -343,6 +343,43 @@ cond_prob_p_rhs2 <- function(t, x, parms) {
   ))
 }
 
+#' @export
+prob_cond_get_p_m1_m2 <- function(
+  pars,
+  brts,
+  matrices,
+  rhs_function = cond_prob_p_rhs2
+) {
+  tt <- max(abs(brts)) # time between crown age and present
+  times <- c(0, tt)
+  lx <- ncol(matrices$nu_matrix)
+
+  parms <- list()
+  parms$lambda <- pars[1]
+  parms$mu <- pars[2]
+  parms$nu <- pars[3]
+  parms$nu_matrix <- matrices$nu_matrix
+  parms$m1 <- matrices$m1
+  parms$m2 <- matrices$m2
+  parms$empty_pp <- matrices$empty_pp
+  p_0 <- matrix(0, nrow = lx, ncol = lx)
+  p_0[2, 2] <- 1
+  p_0 <- matrix(p_0, nrow = lx ^ 2, ncol = 1)
+
+  ode_out <- deSolve::ode(
+    y = p_0,
+    times = times,
+    func = rhs_function,
+    parms = parms,
+    method = "lsoda",
+    atol = 1e-100,
+    rtol = 1e-6,
+    tcrit = tt
+  )[2, -1]
+  p_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
+  p_m1_m2
+}
+
 #' Called by \link{mbd_loglik} if there is a conditioning != 0
 #' @return the conditional probability
 #' @author Giovanni Laudanno, Bart Haegeman
@@ -363,42 +400,19 @@ cond_prob_p <- function(
     return(1)
   }
   rm(tips_interval)
-  lambda <- pars[1]
-  mu <- pars[2]
-  nu <- pars[3]
-  q <- pars[4]
-  tt <- max(abs(brts)) # time between crown age and present
-  times <- c(0, tt)
 
   # construct auxiliary matrix
-  matrices <- cond_prob_p_matrices(q = q, lx = lx)
+  matrices <- cond_prob_p_matrices(q = pars[4], lx = lx)
 
   # integrate equations
-  parms <- list()
-  parms$lambda <- lambda
-  parms$mu <- mu
-  parms$nu <- nu
-  parms$nu_matrix <- matrices$nu_matrix
-  parms$m1 <- matrices$m1
-  parms$m2 <- matrices$m2
-  parms$empty_pp <- matrices$empty_pp
-  p_0 <- matrix(0, nrow = lx, ncol = lx)
-  p_0[2, 2] <- 1
-  p_0 <- matrix(p_0, nrow = lx ^ 2, ncol = 1)
-
-  ode_out <- deSolve::ode(
-    y = p_0,
-    times = times,
-    func = cond_prob_p_rhs2,
-    parms = parms,
-    method = "lsoda",
-    atol = 1e-100,
-    rtol = 1e-6,
-    tcrit = tt
-  )[2, -1]
-  p_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
+  p_m1_m2 <- prob_cond_get_p_m1_m2(
+    pars = pars,
+    brts = brts,
+    matrices = matrices,
+    rhs_function = cond_prob_p_rhs2
+  )
   somma <- sum(p_m1_m2)
-  testit::assert(somma >= 0.98)
+  testit::assert(somma >= 0.95)
 
   # compute conditioning probability
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
@@ -492,24 +506,28 @@ cond_prob <- cond_prob_p
 # cond_prob_p2 -----
 # cond_prob_p2 defined with the zero term in nu
 
-#' @noRd
+#' @export
 cond_prob_dp_nu2 <- function(
   pp,
   nu_matrix
 ) {
-  #N_{m1, n1} P_{n1, n2} N^T_{n2, m2}
-  diag_matrix <- diag(nu_matrix) # diag((1 - q) ^ (0:(lx - 1)))
+  lx <- nrow(nu_matrix)
+  diag_matrix <- matrix(0, nrow = lx, ncol = lx)
+  diag(diag_matrix) <- diag(nu_matrix) # diag((1 - q) ^ (0:(lx - 1)))
   loss_term <-
     diag_matrix %*% pp %*% t(nu_matrix) +
     nu_matrix %*% pp %*% t(diag_matrix) -
     diag_matrix %*% pp %*% t(diag_matrix) -
     pp
+
   nu_matrix2 <- nu_matrix
   diag(nu_matrix2) <- c(
     1,
     rep(0, nrow(nu_matrix) - 1)
   )
-  dp3 <- nu_matrix %*% pp %*% t(nu_matrix) + loss_term
+  #N_{m1, n1} P_{n1, n2} N^T_{n2, m2}
+  dp3 <- nu_matrix2 %*% pp %*% t(nu_matrix2) + loss_term
+  dp3
 }
 
 #' Auxilary function for cond_prob_p
