@@ -1,7 +1,7 @@
 brts <- c(10)
 n_0 <- 2
 cond <- 1
-n_sims <- 1e2
+n_sims <- 1e3
 lx_min <- 10
 lx_max <- 60
 parses <- expand.grid(
@@ -10,10 +10,11 @@ parses <- expand.grid(
   nu = c(0, 0.5, 1, 1.5, 2),
   q = c(0.1, 0.15, 0.2)
 )
-parses <- parses[1:2, ]
+# parses <- parses[1:2, ]
 
-for (i in 1:nrow(parses)) {
-  pars <- unlist(parses[i, ])
+for (ii in 1:nrow(parses)) {
+  print(paste0("ii = ", ii))
+  pars <- unlist(parses[ii, ])
   # pars <- c(0.2, 0.10, 1.0, 0.12)
   pc_sim0 <- cond_prob_sim(
     pars = pars,
@@ -114,14 +115,15 @@ for (i in 1:nrow(parses)) {
     "inst",
     sub_folder
   )
+  if (!dir.exists(dirname(pkg_folder))) {dir.create(dirname(pkg_folder))}
   file.copy(
-    from = file_path(
-      system_folder,
-      list.files(system_folder)
-    ),
-    to = pkg_folder,
+    # from = file_path(
+    #   system_folder,
+    #   list.files(system_folder)
+    # ),
+    from = system_folder,
+    to = dirname(pkg_folder),
     overwrite = TRUE,
-    recursive = FALSE,
-    copy.mode = TRUE
+    recursive = TRUE
   )
 }
