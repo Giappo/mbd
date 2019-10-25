@@ -27,7 +27,8 @@ test_that("basic use", {
     time_intervals,
     c(0, abs(diff(unique(c(brts, 0)))))
   )
-  for (i in 1:length(unique(brts[duplicated(brts)]))) {
+  n_mbd_events <- length(unique(brts[duplicated(brts)]))
+  for (i in 1:n_mbd_events) {
     testthat::expect_equal(
       births[births != 1][i + 1],
       sum(unique(brts[duplicated(brts)])[i] == brts)
@@ -59,7 +60,8 @@ test_that("advanced check", {
       time_intervals,
       c(0, abs(diff(unique(c(brts, 0)))))
     )
-    for (i in 1:length(unique(brts[duplicated(brts)]))) {
+    n_mbd_events <- length(unique(brts[duplicated(brts)]))
+    for (i in 1:n_mbd_events) {
       testthat::expect_equal(
         births[births != 1][i + 1],
         sum(unique(brts[duplicated(brts)])[i] == brts)

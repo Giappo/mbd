@@ -60,3 +60,18 @@ evaluate_sim <- function(
     (cond == 1) * (crown_survival && tips_condition)
   keep_the_sim
 }
+
+#' @noRd
+initialize_l_matrix <- function(
+  age,
+  n_0
+) {
+  l_matrix <- matrix(0, nrow = 1e+06, 4)
+  l_matrix[, 4] <- -1
+  l_matrix[, 3] <- 0
+  l_matrix[1, 1:4] <- c(age, 0, -1, -1)
+  if (n_0 == 2) {
+    l_matrix[2, 1:4] <- c(age, -1, 2, -1)
+  }
+  l_matrix
+}

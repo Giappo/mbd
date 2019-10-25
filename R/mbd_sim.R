@@ -37,20 +37,13 @@ mbd_sim <- function(
   mu <- pars[2]
   nu <- pars[3]
   q <- pars[4]
-  init_n_lineages <- n_0
   keep_the_sim <- 0
   while (keep_the_sim == 0) {
-    total_count <- init_n_lineages # all the species that ever appeared
-    n_species <- init_n_lineages # all the surviving species
-    t <- age
-    l_matrix <- matrix(0, nrow = 1e+06, 4)
-    l_matrix[, 4] <- -1
-    l_matrix[, 3] <- 0
-    l_matrix[1, 1:4] <- c(t, 0, -1, -1)
-    if (n_0 == 2) {
-      l_matrix[2, 1:4] <- c(t, -1, 2, -1)
-    }
+    total_count <- n_0 # all the species that ever appeared
+    n_species <- n_0 # all the surviving species
+    l_matrix <- initialize_l_matrix(age = age, n_0 = n_0)
     pool <- unique(l_matrix[, 3])[unique(l_matrix[, 3]) != 0]
+    t <- age
     while (t > 0 && length(pool) > 0) {
       n_species <- length(pool)
       total_rate <- n_species * (lambda + mu) + nu
@@ -77,11 +70,11 @@ mbd_sim <- function(
             parents <- pool
           }
           new_interval <- (total_count + 1):(total_count + delta_n)
-          #-(delta_n:1)* 1e-5 add this if you need separate time points
+          new_ids <- abs(new_interval) * sign(parents)
           l_matrix[new_interval, 1] <- t
           l_matrix[new_interval, 2] <- parents
-          l_matrix[new_interval, 3] <- abs(new_interval) * sign(parents)
-          pool <- c(pool, abs(new_interval) * sign(parents))
+          l_matrix[new_interval, 3] <- new_ids
+          pool <- c(pool, new_ids)
           total_count <- total_count + delta_n
         }
         if (delta_n < 0 & t > 0) {
