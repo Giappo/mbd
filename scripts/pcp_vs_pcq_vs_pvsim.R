@@ -1,7 +1,7 @@
 brts <- c(10)
 n_0 <- 2
 cond <- 1
-n_sims <- 1e3
+n_sims <- 1e5
 lx_min <- 10
 lx_max <- 60
 parses <- expand.grid(
@@ -10,7 +10,7 @@ parses <- expand.grid(
   nu = c(0, 0.5, 1, 1.5, 2),
   q = c(0.1, 0.15, 0.2)
 )
-# parses <- parses[1:2, ]
+parses <- parses[parses$mu == 0.1 & parses$nu == 0 & parses$q == 0.1, ]
 
 for (ii in 1:nrow(parses)) {
   print(paste0("ii = ", ii))
