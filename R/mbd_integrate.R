@@ -1,3 +1,8 @@
+# mbd_ode_FORTRAN -----
+#' Performs the integration of the ode using FORTRAN code
+#' @inheritParams default_params_doc
+#' @author Rampal S. Etienne
+#' @export
 #' @useDynLib mbd
 mbd_ode_FORTRAN <- function(
   initprobs,
@@ -19,12 +24,16 @@ mbd_ode_FORTRAN <- function(
   probs <- deSolve::ode(y = initprobs, parms = c(N + 0.), rpar = parsvec,
                         times = tvec, func = runmod, initfunc = "mbd_initmod",
                         ynames = c("SV"), dimens = N + 1, nout = 1, outnames = c("Sum"),
-                        dllname = "mbd",atol = atol, rtol = rtol, method = methode)
-  #[,1:(N + 1)]
-  #if this fails then N + 2 instead of N + 1, or N?
+                        dllname = "mbd",atol = atol, rtol = rtol, method = methode)[,1:(N + 1)]
+  #print(probs)
   return(probs)
 }
 
+#  mbd_integrate -----
+#' performs integration of the ode
+#' @inheritParams default_params_doc
+#' @author Rampal S. Etienne
+#' @export
 mbd_integrate <- function(
   y = y,
   times = tseq,
@@ -36,7 +45,6 @@ mbd_integrate <- function(
 )
 {
   func_name <- 'no_name'
-  func <- 'mbd_runmod'
   if(is.character(func))
   {
     func_name <- func
@@ -54,9 +62,6 @@ mbd_integrate <- function(
     )
   } else
   {
-    #func_name <- 'mbd_runmod'
-    #print(times)
-    #print(parms)
     out <- mbd_ode_FORTRAN(
       initprobs = y,
       tvec = times,

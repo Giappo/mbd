@@ -77,11 +77,11 @@
 
 !......................... declaration section.............................
       INTEGER           :: neq, ip(*), i, ii
-      DOUBLE PRECISION  :: t, Conc(N), yout(*)
-      REAL(16)          :: dConc(N)
+      DOUBLE PRECISION  :: t, Conc(N), dConc(N), yout(*)
+      REAL(16)          :: V(N)
 
 ! parameters - named here
-      DOUBLE PRECISION rn(1)
+      DOUBLE PRECISION rn
       COMMON /XCBPar/rn
 
 ! local variables
@@ -106,10 +106,11 @@
 !}
 
       DO I = 1, N
-        dConc(I) = 0
+        V(I) = 0
         DO II = 1, N
-          dConc(I) = dConc(I) + P((I - 1) * N + II) * Conc(II)
+          V(I) = V(I) + P((II - 1) * N + I) * Conc(II)
         ENDDO
+        dConc(I) = V(I)
       ENDDO
 
       END SUBROUTINE mbd_runmod
