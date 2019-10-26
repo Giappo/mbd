@@ -1,4 +1,4 @@
-#' @useDynLib DDD
+#' @useDynLib mbd
 mbd_ode_FORTRAN <- function(
   initprobs,
   tvec,
@@ -9,7 +9,13 @@ mbd_ode_FORTRAN <- function(
   runmod = "mbd_runmod"
 )
 {
+  dimparsvec <- dim(parsvec)
   N <- length(initprobs)
+  assertthat::assert_that(prod(dimparsvec) == N^2)
+  if(all(dimparsvec) > 1)
+  {
+    dim(parsvec) <- c(N^2,1)
+  }
   probs <- deSolve::ode(y = initprobs, parms = c(N + 0.), rpar = parsvec,
                         times = tvec, func = runmod, initfunc = "mbd_initmod",
                         ynames = c("SV"), dimens = N + 1, nout = 1, outnames = c("Sum"),
@@ -30,6 +36,7 @@ mbd_integrate <- function(
 )
 {
   func_name <- 'no_name'
+  func <- 'mbd_runmod'
   if(is.character(func))
   {
     func_name <- func
@@ -48,6 +55,8 @@ mbd_integrate <- function(
   } else
   {
     #func_name <- 'mbd_runmod'
+    #print(times)
+    #print(parms)
     out <- mbd_ode_FORTRAN(
       initprobs = y,
       tvec = times,
