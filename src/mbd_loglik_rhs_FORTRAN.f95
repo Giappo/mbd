@@ -1,4 +1,4 @@
-! Helper function: 
+! Helper function:
 ! fill vec with N elements from parms, starting at position ii
 !==========================================================================
 
@@ -11,7 +11,7 @@
           II = II + 1
           vec(I) = parms(II)
         ENDDO
-        
+
       END SUBROUTINE mbd_fill1d
 
 !==========================================================================
@@ -24,8 +24,8 @@
       INTEGER  :: N
 
       ! 1 parameter vectors with unknown length
-      DOUBLE PRECISION, ALLOCATABLE  :: P(:)  
-      
+      DOUBLE PRECISION, ALLOCATABLE  :: P(:)
+
       ! Boolean: will become TRUE if the parameters have a value
       LOGICAL :: initialised = .FALSE.
 
@@ -39,38 +39,38 @@
 !==========================================================================
 
       SUBROUTINE mbd_initmod (steadyparms)
-      USE mbd_dimmod 
+      USE mbd_dimmod
 
       IMPLICIT NONE
       EXTERNAL steadyparms
 
       INTEGER, PARAMETER :: nparsmall = 1  ! constant-length parameters
-      
+
       DOUBLE PRECISION parms(nparsmall)
-      COMMON /XCBPar/parms                 ! common block 
+      COMMON /XCBPar/parms                 ! common block
 
 ! Set the fixed parameters obtained from R
       CALL steadyparms(nparsmall, parms)
 
-! first parameter has the length of the vector       
+! first parameter has the length of the vector
       N = INT(parms(1) + 1e-6)
 
 ! Allocate variable size arrays (state variables, derivatives and parameters)
 
-      IF (ALLOCATED(P)) DEALLOCATE(P)  
+      IF (ALLOCATED(P)) DEALLOCATE(P)
       ALLOCATE(P(N ** 2))
 
       initialised = .FALSE.
-       
+
       END SUBROUTINE mbd_initmod
-      
+
 !==========================================================================
 !==========================================================================
 ! Dynamic routine: name of this function as passed by "func" argument
 ! variable parameter values are passed via yout
 !==========================================================================
 !==========================================================================
-       
+
       SUBROUTINE mbd_runmod (neq, t, Conc, dConc, yout, ip)
       USE mbd_dimmod
       IMPLICIT NONE
@@ -91,7 +91,7 @@
 
       IF (.NOT. Initialised) THEN
         ! check memory allocated to output variables
-        IF (ip(1) < 1) CALL rexit("nout not large enough") 
+        IF (ip(1) < 1) CALL rexit("nout not large enough")
 
         ! save parameter values in yout
         ii = ip(1)   ! Start of parameter values
@@ -107,10 +107,10 @@
 
       DO I = 1, N
         dConc(I) = 0
-        DO J = 1, N
-          dConc(I) = dConc(I) + P((I - 1) * N + J) * Conc(J)
+        DO II = 1, N
+          dConc(I) = dConc(I) + P((I - 1) * N + II) * Conc(II)
         ENDDO
       ENDDO
-  
+
       END SUBROUTINE mbd_runmod
-      
+

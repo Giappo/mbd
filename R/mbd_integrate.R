@@ -10,9 +10,9 @@ mbd_ode_FORTRAN <- function(
 )
 {
   N <- length(initprobs)
-  probs <- deSolve::ode(y = initprobs, parms = c(N + 0.), rpar = parsvec, 
-                        times = tvec, func = runmod, initfunc = "mbd_initmod", 
-                        ynames = c("SV"), dimens = N + 1, nout = 1, outnames = c("Sum"), 
+  probs <- deSolve::ode(y = initprobs, parms = c(N + 0.), rpar = parsvec,
+                        times = tvec, func = runmod, initfunc = "mbd_initmod",
+                        ynames = c("SV"), dimens = N + 1, nout = 1, outnames = c("Sum"),
                         dllname = "mbd",atol = atol, rtol = rtol, method = methode)
   #[,1:(N + 1)]
   #if this fails then N + 2 instead of N + 1, or N?
@@ -33,24 +33,24 @@ mbd_integrate <- function(
   if(is.character(func))
   {
     func_name <- func
-    }  
+  }
   if(func_name == 'no_name')
   {
     out <- deSolve::ode(
       y = y,
-      times = tseq,
+      times = times,
       func = func,
       parms = parms,
       atol = atol,
       rtol = rtol,
-      tcrit = t1
+      tcrit = tcrit
     )
   } else
   {
     #func_name <- 'mbd_runmod'
     out <- mbd_ode_FORTRAN(
       initprobs = y,
-      tvec = tseq,
+      tvec = times,
       parsvec = parms,
       atol = atol,
       rtol = rtol,
