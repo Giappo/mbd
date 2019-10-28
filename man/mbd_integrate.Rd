@@ -4,13 +4,24 @@
 \alias{mbd_integrate}
 \title{performs integration of the ode}
 \usage{
-mbd_integrate(y = y, times = tseq, func = func, parms = parms,
-  atol = atol, rtol = rtol, tcrit = t1)
+mbd_integrate(y, times, func, parms, atol, rtol, tcrit)
 }
 \arguments{
 \item{y}{something}
 
+\item{times}{vector of times}
+
+\item{func}{a function}
+
 \item{parms}{some parameters to pass on the ode function}
+
+\item{atol}{absolute error tolerance for
+the numerical integration using deSolve.}
+
+\item{rtol}{relative error tolerance for
+the numerical integration using deSolve.}
+
+\item{tcrit}{the time you don't want to exceed in the integration}
 }
 \description{
 performs integration of the ode

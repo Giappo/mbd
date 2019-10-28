@@ -224,7 +224,7 @@ test_that("accurate and fast - gentle parameters", {
   brts <- c(10)
   n_0 <- 2
   cond <- 1
-  n_sims <- 1e3
+  n_sims <- 1e5
   prob_cond_sim <- cond_prob_sim(
     pars = pars,
     brts = brts,

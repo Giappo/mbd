@@ -5,31 +5,35 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
-default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
-  alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
+default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
+  age, alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
   checked_functions, colormap, cond, data_folder, debug_mode, empty_pp,
-  empty_qq, function_name, function_names, functions_names, idparsfix,
-  idparsopt, initparsopt, input_trees_path, input_xml, interval_max,
-  interval_min, iterations, k, lambda, lambda_limit, loglik_function,
-  loglik_functions, logs, lx, lx0, m1, m2, mm, matrices, matrix, matrix_a,
-  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
-  max_sims, maxit, maxiter, mbd_lambda, message, methode,
-  minimum_multiple_births, missnumspec, models, mu, mu_limit,
-  mutation_rate, n_0, n_0s, n_species, init_n_lineages, n_sims, n_steps,
-  n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids, pp, pp2, parms,
-  params, pars, pars_transform, pars_transformed, parsfix, precision,
-  print_errors, printit, project_folder, pvec, q, qq, qq2, q_t, q_vector,
-  q_threshold, quantiles_choice, qvec, recursive, reltol, res, results,
-  results_folder, rhs_function, s, saveit, seed, sample_interval,
-  sequence_length, sim, sim_pars, sim_phylo, start_pars, subsamp, t, t1,
-  t2, t_0, t_0s, tips_interval, time_interval, tol, tr, transition_matrix,
-  trparsfix, trparsopt, true_pars, values, vector, verbose, x, x_name,
-  x_splits, y, y_name, y_splits, z, z_name)
+  empty_qq, func, function_name, function_names, functions_names,
+  idparsfix, idparsopt, initparsopt, init_n_lineages, initprobs,
+  init_probs, input_trees_path, input_xml, interval_max, interval_min,
+  iterations, k, lambda, lambda_limit, loglik_function, loglik_functions,
+  logs, lx, lx0, m1, m2, mm, matrices, matrix, matrix_a, matrix_builder,
+  max_iter, max_k, max_number_of_species, max_repetitions, max_sims, maxit,
+  maxiter, mbd_lambda, message, methode, minimum_multiple_births,
+  missnumspec, models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species,
+  n_sims, n_steps, n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids,
+  pp, pp2, parms, params, pars, pars_transform, pars_transformed, parsfix,
+  parsvec, precision, print_errors, printit, project_folder, pvec, q, qq,
+  qq2, q_t, q_vector, q_threshold, quantiles_choice, qvec, recursive, rtol,
+  reltol, res, results, results_folder, rhs_function, runmod, s, saveit,
+  seed, sample_interval, sequence_length, sim, sim_pars, sim_phylo,
+  start_pars, subsamp, t, tcrit, times, tvec, t1, t2, t_0, t_0s,
+  tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
+  trparsopt, true_pars, values, vector, verbose, x, x_name, x_splits, y,
+  y_name, y_splits, z, z_name)
 }
 \arguments{
 \item{a_abstol}{something}
 
 \item{a_reltol}{something}
+
+\item{atol}{absolute error tolerance for
+the numerical integration using deSolve.}
 
 \item{abstol}{absolute error tolerance for
 the numerical integration using deSolve.}
@@ -74,6 +78,8 @@ expose them.}
 
 \item{empty_qq}{empty qq matrix. See \code{qq}.}
 
+\item{func}{a function}
+
 \item{function_name}{function name}
 
 \item{function_names}{function names}
@@ -92,6 +98,12 @@ The ids are defined as follows:
 }}
 
 \item{initparsopt}{something}
+
+\item{init_n_lineages}{the number of lineages at time equals zero.}
+
+\item{initprobs}{initial probabilities}
+
+\item{init_probs}{initial probabilities}
 
 \item{input_trees_path}{Path to \code{.trees} file.}
 
@@ -179,8 +191,6 @@ but missing in the phylogeny.}
 
 \item{n_species}{number of species.}
 
-\item{init_n_lineages}{the number of lineages at time equals zero.}
-
 \item{n_sims}{number of simulations}
 
 \item{n_steps}{something}
@@ -221,6 +231,8 @@ according to y = x / (1 + x)}
 
 \item{parsfix}{the values of the parameters that should not be optimized.}
 
+\item{parsvec}{vector of paramters for the FORTRAN subroutine.}
+
 \item{precision}{something}
 
 \item{print_errors}{something}
@@ -251,6 +263,9 @@ because you never want \code{q} to actually be equal to zero or one.}
 
 \item{recursive}{something}
 
+\item{rtol}{relative error tolerance for
+the numerical integration using deSolve.}
+
 \item{reltol}{relative error tolerance for
 the numerical integration using deSolve.}
 
@@ -262,6 +277,8 @@ the numerical integration using deSolve.}
 
 \item{rhs_function}{a function for the right hand side of the differential
 equation}
+
+\item{runmod}{FORTRAN subroutine's option}
 
 \item{s}{the seed}
 
@@ -290,6 +307,12 @@ equation}
 \item{subsamp}{something}
 
 \item{t}{time}
+
+\item{tcrit}{the time you don't want to exceed in the integration}
+
+\item{times}{vector of times}
+
+\item{tvec}{vector of times}
 
 \item{t1}{something}
 

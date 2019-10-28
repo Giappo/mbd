@@ -64,68 +64,6 @@ hyper_a_hanno <- function(
   matrix_a[1:n_species, 1:n_species]
 }
 
-#' @title mbd ODE system integrator
-#' @description Integrates "func" in the time interval
-# *if* this function returns, the result doesn't contains
-# any negative number
-#' @inheritParams default_params_doc
-#' @param func function for the right hand side of the ODE
-#' @export
-#' @author Hanno Hildenbrandt, adapted by Giovanni Laudanno
-mbd_solve <- function(
-  vector,
-  time_interval,
-  func = mbd_loglik_rhs,
-  parms
-) {
-
-  y <- vector
-  t1 <- time_interval
-
-  g <- 10 # granularity
-  t0 <- 0
-  start_rtol <- 1e-8
-  atol <- 1e-100 # realistically zero
-  rtol <- start_rtol # something reasonable, hopefully
-  while (TRUE) {
-    tseq <- seq(t0, t1, length.out = g)
-    out <- mbd_integrate(
-      y = y,
-      times = tseq,
-      func = func,
-      parms = parms,
-      atol = atol,
-      rtol = rtol,
-      tcrit = t1
-    )
-    # it might be useful for debug istate = attributes(out)$istate
-    # it might be useful for debug rstate = attributes(out)$rstate
-    lkg <- 0 # last known good
-    for (ff in 1:g) {
-      a <- any(out[ff, -1] < 0)
-      if (!is.na(a) && a) {
-        break;
-      }
-      lkg <- lkg + 1
-    }
-    if (lkg == g) {
-      break; # done and dusted
-    }
-    if (lkg > 1) {
-      # trace back to last known good and try from there
-      t0 <- as.numeric(out[lkg, 1])
-      y <- as.numeric(out[lkg, -1])
-      # relax tol to default
-      rtol <- start_rtol
-    }
-    else {
-      # no progress, make tol more strict
-      rtol <- rtol / 100
-    }
-  }
-  out[g, -1]
-}
-
 #' @title N matrix
 #' @description Creates the N matrix,
 #' used to express the probabilities for multiple speciations.

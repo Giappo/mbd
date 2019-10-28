@@ -4,6 +4,8 @@
 #' @param a_reltol something
 #' @param abstol absolute error tolerance for
 #' the numerical integration using deSolve.
+#' @param atol absolute error tolerance for
+#' the numerical integration using deSolve.
 #' @param account_name something
 #' @param after something
 #' @param age the age of the tree.
@@ -28,6 +30,7 @@
 #'  expose them.
 #' @param empty_pp empty pp matrix. See \code{pp}.
 #' @param empty_qq empty qq matrix. See \code{qq}.
+#' @param func a function
 #' @param function_name function name
 #' @param function_names function names
 #' @param functions_names function names
@@ -41,6 +44,9 @@
 #'     \item pars[4] is q, the single-lineage speciation probability_
 #'   }
 #' @param initparsopt something
+#' @param init_probs initial probabilities
+#' @param initprobs initial probabilities
+#' @param init_n_lineages the number of lineages at time equals zero.
 #' @param input_trees_path Path to \code{.trees} file.
 #' @param input_xml something
 #' @param interval_max something
@@ -89,7 +95,6 @@
 #' @param n_0 the number of lineages at time equals zero.
 #' @param n_0s starting number of lineages for all the clades
 #' @param n_species number of species.
-#' @param init_n_lineages the number of lineages at time equals zero.
 #' @param n_sims number of simulations
 #' @param n_steps something
 #' @param n_subs something
@@ -114,6 +119,7 @@
 #' @param pars_transformed parameters of the likelihood functions, transformed
 #' according to y = x / (1 + x)
 #' @param parsfix the values of the parameters that should not be optimized.
+#' @param parsvec vector of paramters for the FORTRAN subroutine.
 #' @param precision something
 #' @param printit something
 #' @param print_errors something
@@ -130,6 +136,8 @@
 #' @param q_threshold adds a threshold for the evaluation of q. This is due
 #' because you never want \code{q} to actually be equal to zero or one.
 #' @param recursive something
+#' @param rtol relative error tolerance for
+#' the numerical integration using deSolve.
 #' @param reltol relative error tolerance for
 #' the numerical integration using deSolve.
 #' @param res something
@@ -137,6 +145,7 @@
 #' @param results_folder The results folder insider the project folder.
 #' @param rhs_function a function for the right hand side of the differential
 #'  equation
+#' @param runmod FORTRAN subroutine's option
 #' @param s the seed
 #' @param saveit do you want to save the results?
 #' @param sample_interval something
@@ -153,6 +162,9 @@
 #' @param sim_phylo something
 #' @param subsamp something
 #' @param t time
+#' @param tcrit the time you don't want to exceed in the integration
+#' @param times vector of times
+#' @param tvec vector of times
 #' @param t1 something
 #' @param t2 something
 #' @param t_0 starting time
@@ -186,6 +198,7 @@
 default_params_doc <- function(
   a_abstol,
   a_reltol,
+  atol,
   abstol,
   account_name,
   after,
@@ -203,12 +216,16 @@ default_params_doc <- function(
   debug_mode,
   empty_pp,
   empty_qq,
+  func,
   function_name,
   function_names,
   functions_names,
   idparsfix,
   idparsopt,
   initparsopt,
+  init_n_lineages,
+  initprobs,
+  init_probs,
   input_trees_path,
   input_xml,
   interval_max,
@@ -248,7 +265,6 @@ default_params_doc <- function(
   n_0,
   n_0s,
   n_species,
-  init_n_lineages,
   n_sims,
   n_steps,
   n_subs,
@@ -265,6 +281,7 @@ default_params_doc <- function(
   pars_transform,
   pars_transformed,
   parsfix,
+  parsvec,
   precision,
   print_errors,
   printit,
@@ -279,11 +296,13 @@ default_params_doc <- function(
   quantiles_choice,
   qvec,
   recursive,
+  rtol,
   reltol,
   res,
   results,
   results_folder,
   rhs_function,
+  runmod,
   s,
   saveit,
   seed,
@@ -295,6 +314,9 @@ default_params_doc <- function(
   start_pars,
   subsamp,
   t,
+  tcrit,
+  times,
+  tvec,
   t1,
   t2,
   t_0,

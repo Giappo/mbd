@@ -8,12 +8,26 @@ mbd_ode_FORTRAN(initprobs, tvec, parsvec, atol, rtol, methode,
   runmod = "mbd_runmod")
 }
 \arguments{
+\item{initprobs}{initial probabilities}
+
+\item{tvec}{vector of times}
+
+\item{parsvec}{vector of paramters for the FORTRAN subroutine.}
+
+\item{atol}{absolute error tolerance for
+the numerical integration using deSolve.}
+
+\item{rtol}{relative error tolerance for
+the numerical integration using deSolve.}
+
 \item{methode}{specifies how the integration must be performed:
 \itemize{
   \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
   \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
   \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
 }}
+
+\item{runmod}{FORTRAN subroutine's option}
 }
 \description{
 Performs the integration of the ode using FORTRAN code

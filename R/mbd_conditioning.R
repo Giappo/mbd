@@ -523,7 +523,7 @@ cond_prob_sim <- function(
       ggplot2::geom_histogram(bins = 30) +
       ggplot2::theme_bw() +
       ggplot2::ggtitle(
-        paste0(mbd:::get_param_names(), " = ", pars, collapse = ", "),
+        paste0(get_param_names(), " = ", pars, collapse = ", "),
         subtitle = paste0("crown_age = ", max(brts), ", n_sims = ", n_sims)
       )
     ggplot2::ggsave(filename = taxa_plot_filename, plot = taxa_plot)

@@ -101,6 +101,21 @@ test_that("nu and q are zero", {
     ),
     tolerance = 1e-5
   )
+
+  pars <- c(0.2, 0.1, 0.0, 0.0)
+  brts <- c(1, 2, 3)
+  n_0  <- 2
+  cond <- 0
+  testthat::expect_equal(
+    mbd::mbd_loglik(
+      pars = pars,
+      brts = brts,
+      n_0 = n_0,
+      cond = cond,
+      q_threshold = 0
+    ),
+    -3.7639495150482691
+  )
 })
 
 # abuse ----
@@ -182,16 +197,4 @@ test_that("abuse", {
     "At any time you cannot have more speciations than number of species."
   )
 
-  pars <- c(0.2, 0.1, 0.0, 0.0)
-  brts <- c(1, 2, 3)
-  n_0  <- 2
-  cond <- 0
-  testthat::expect_equal(
-    mbd::mbd_loglik(
-      pars = pars,
-      brts = brts,
-      n_0 = n_0,
-      cond = cond,
-      q_threshold = 0
-    ),-3.7639495150482691)
 })

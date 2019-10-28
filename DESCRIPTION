@@ -9,6 +9,7 @@ Depends:
 Imports: 
   DDD,
   deSolve,
+  ggplot2,
   rappdirs,
   subplex,
   testit
