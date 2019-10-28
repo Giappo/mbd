@@ -89,7 +89,7 @@ mbd_solve <- function(
   rtol <- start_rtol # something reasonable, hopefully
   while (TRUE) {
     tseq <- seq(t0, t1, length.out = g)
-    out <- deSolve::ode(
+    out <- mbd_integrate(
       y = y,
       times = tseq,
       func = func,
