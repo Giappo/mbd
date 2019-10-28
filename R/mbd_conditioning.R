@@ -440,7 +440,7 @@ cond_prob_p <- function(
 # cond_prob_sim -----
 
 #' Estimates conditional probability using simulations
-#' @author Giovanni Laudanno, Bart Haegeman
+#' @author Giovanni Laudanno
 #' @inheritParams default_params_doc
 #' @export
 cond_prob_sim <- function(
@@ -457,13 +457,17 @@ cond_prob_sim <- function(
   n_0 <- 2
   testit::assert(cond == 1)
   rm(tips_interval)
-  full_filename <- get_full_filename(
+
+  # folder and files structure
+  pars_filename <- get_pars_filename(
     pars = pars,
     age = age
   )
+  sim_filename <- paste0(pars_filename, "-pc_sim.Rdata")
+  taxa_plot_filename <- paste0(pars_filename, "-taxa_plot.png")
   delete_file <- FALSE
-  if (file.exists(full_filename)) {
-    load(full_filename)
+  if (file.exists(sim_filename)) {
+    load(sim_filename)
     if (measure$n_sims >= n_sims) {
       return(measure$pc_sim)
     } else {
@@ -471,6 +475,7 @@ cond_prob_sim <- function(
     }
   }
 
+  # calculate pc_sim
   score <- 0
   n_tips <- rep(0, n_sims)
   for (seed in 1:n_sims) {
@@ -492,19 +497,37 @@ cond_prob_sim <- function(
     score <- score + 1 * crown_survival
   }
   pc_sim <- score / n_sims
+
   if (saveit == TRUE) {
     measure <- list(
       pc_sim = pc_sim,
       n_sims = n_sims,
       n_tips = n_tips
     )
+
     if (delete_file == TRUE) {
-      file.remove(full_filename)
+      file.remove(sim_filename)
+      file.remove(taxa_plot_filename)
     }
+
+    # save pc_sim
     save(
       measure,
-      file = full_filename
+      file = sim_filename
     )
+
+    # save plot taxa
+    taxa_plot <- ggplot2::ggplot(
+      data = data.frame(measure), ggplot2::aes(x = n_tips)
+    ) +
+      ggplot2::geom_histogram(bins = 30) +
+      ggplot2::theme_bw() +
+      ggplot2::ggtitle(
+        paste0(mbd:::get_param_names(), " = ", pars, collapse = ", "),
+        subtitle = paste0("crown_age = ", max(brts), ", n_sims = ", n_sims)
+      )
+    ggplot2::ggsave(filename = taxa_plot_filename, plot = taxa_plot)
+
   }
   pc_sim
 }

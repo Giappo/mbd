@@ -9,6 +9,7 @@ Depends:
 Imports: 
   DDD,
   deSolve,
+  rappdirs,
   subplex,
   testit
 Suggests:

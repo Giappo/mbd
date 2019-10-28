@@ -321,11 +321,16 @@ create_singleton_phylo <- function(age) {
   tr
 }
 
+#' @noRd
+file_path <- function(..., fsep = .Platform$file.sep){
+  gsub("//", "/", file.path(..., fsep = fsep))
+}
+
 #' Create an empty phylogeny
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
-get_full_filename <- function(
+get_pars_filename <- function(
   pars,
   age
 ) {
@@ -345,19 +350,7 @@ get_full_filename <- function(
     "age=", to_string2(age)
   )
   parsetting <- gsub(parsetting, pattern = " ", replacement = "")
-  parsetting_folder <- file.path(data_folder, parsetting)
-  if (!dir.exists(parsetting_folder)) {
-    dir.create(parsetting_folder)
-  }
-  filename <- paste0(
-    "pc_sim",
-    ".Rdata"
-  )
-  full_filename <- file.path(parsetting_folder, filename)
-  full_filename
-}
+  pars_filename <- file.path(data_folder, parsetting)
 
-#' @noRd
-file_path <- function(..., fsep = .Platform$file.sep){
-  gsub("//", "/", file.path(..., fsep = fsep))
+  pars_filename
 }

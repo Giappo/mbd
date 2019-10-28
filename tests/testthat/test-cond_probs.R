@@ -220,11 +220,11 @@ test_that("accurate and fast - gentle parameters", {
     skip("To be performed on ci.")
   }
 
-  pars <- c(0.2, 0.10, 1.0, 0.15)
-  brts <- c(3)
+  pars <- c(0.2, 0.1, 1.0, 0.15)
+  brts <- c(10)
   n_0 <- 2
   cond <- 1
-  n_sims <- 1e2
+  n_sims <- 1e3
   prob_cond_sim <- cond_prob_sim(
     pars = pars,
     brts = brts,
@@ -261,8 +261,8 @@ test_that("accurate and fast - gentle parameters", {
   expect_true(time_cond_q < time_likelihood)
 
   # conditional likelihood must be "close" to simulations
-  expect_equal(prob_cond_p, prob_cond_sim, tolerance = n_sims ^ -1)
-  expect_equal(prob_cond_q, prob_cond_sim, tolerance = n_sims ^ -1)
+  expect_equal(prob_cond_p, prob_cond_sim, tolerance = 1e-2)
+  expect_equal(prob_cond_q, prob_cond_sim, tolerance = 1e-2)
 })
 
 test_that("accurate and fast - harder parameters", {
@@ -272,7 +272,7 @@ test_that("accurate and fast - harder parameters", {
   }
 
   pars <- c(0.2, 0.1, 1.5, 0.15)
-  brts <- c(5)
+  brts <- c(10)
   n_0 <- 2
   cond <- 1
   n_sims <- 1e4
@@ -283,7 +283,7 @@ test_that("accurate and fast - harder parameters", {
     n_0 = n_0,
     n_sims = n_sims
   )
-  lx <- 40
+  lx <- 50
   time_cond_p <- system.time(
     prob_cond_p <- cond_prob_p(
       pars = pars,
