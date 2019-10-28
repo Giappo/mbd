@@ -27,8 +27,8 @@ test_that("dps sum up to zero", {
     cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
   dp_nu <-
     cond_prob_dp_nu(pp = pp, nu_matrix = nu_matrix)
-
-  dp_nu2 <- cond_prob_dp_nu2(pp = pp, nu_matrix = nu_matrix)
+  dp_nu2 <-
+    mbd:::cond_prob_dp_nu2(pp = pp, nu_matrix = nu_matrix)
 
   expect_equal(
     sum(dp_lambda),
@@ -253,7 +253,7 @@ test_that("accurate and fast - gentle parameters", {
   )[[3]]
   # unconditioned likelihood time for the same branching times
   time_likelihood <- system.time(
-    mbd_loglik(pars = pars, brts = brts, n_0 = n_0, cond = 0, lx = lx ^ 2)
+    mbd_loglik(pars = pars, brts = brts, n_0 = n_0, cond = 0, lx = (lx ^ 2) / 2)
   )[[3]]
 
   # conditioning time must be smaller than the time for full likelihood
@@ -271,19 +271,20 @@ test_that("accurate and fast - harder parameters", {
     skip("To be performed on ci.")
   }
 
-  pars <- c(0.2, 0.1, 1.5, 0.15)
+  pars <- c(0.2, 0.1, 1.5, 0.1)
   brts <- c(10)
   n_0 <- 2
   cond <- 1
-  n_sims <- 1e4
+  n_sims <- 1e5
   prob_cond_sim <- cond_prob_sim(
     pars = pars,
     brts = brts,
     cond = cond,
     n_0 = n_0,
-    n_sims = n_sims
+    n_sims = n_sims,
+    saveit = FALSE
   )
-  lx <- 50
+  lx <- 80
   time_cond_p <- system.time(
     prob_cond_p <- cond_prob_p(
       pars = pars,
@@ -304,6 +305,6 @@ test_that("accurate and fast - harder parameters", {
   )[[3]]
 
   # conditional likelihood must be "close" to simulations
-  expect_equal(prob_cond_p, prob_cond_sim, tolerance = 1e-3)
-  expect_equal(prob_cond_q, prob_cond_sim, tolerance = 1e-3)
+  expect_equal(prob_cond_p, prob_cond_sim, tolerance = 1e-2)
+  expect_equal(prob_cond_q, prob_cond_sim, tolerance = 1e-2)
 })
