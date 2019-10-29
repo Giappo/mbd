@@ -86,7 +86,7 @@ mbd_loglik <- function(
     q_t[t, ] <- mbd_solve(
       vector = q_t[(t - 1), ],
       parms = matrix_a,
-      func = 'mbd_runmod',
+      func = "mbd_runmod",
       time_interval = time_intervals[t]
     )
     check_q_vector(

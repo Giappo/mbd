@@ -19,6 +19,7 @@ for (ii in 1:nrow(parses)) {
   pars <- unlist(parses[ii, ])
   datafilename <- # check n_sims in the file
     paste0(get_pars_filename(pars = pars, age = age), "-pc_sim.Rdata")
+  already_done <- FALSE
   if (file.exists(datafilename)) {
     load(file = datafilename)
     already_done <- measure$n_sims >= n_sims
@@ -94,17 +95,17 @@ for (ii in 1:nrow(parses)) {
     )
     ggplot2::ggsave(filename = pc_plot_filename, plot = pc_plot)
   }
-}
 
-# copy file to pkg
-if (rappdirs::app_dir()$os == "win") {
-  from_folder <- dirname(get_pars_filename(pars = pars, age = age))
-  to_folder <- file_path(getwd(), "inst", "extdata")
-  if (!dir.exists(dirname(to_folder))) {dir.create(dirname(to_folder))}
-  file.copy(
-    from = from_folder,
-    to = to_folder,
-    overwrite = TRUE,
-    recursive = TRUE
-  )
+  # copy file to pkg
+  if (rappdirs::app_dir()$os == "win") {
+    from_folder <- dirname(get_pars_filename(pars = pars, age = age))
+    to_folder <- file_path(getwd(), "inst", "extdata")
+    if (!dir.exists(dirname(to_folder))) {dir.create(dirname(to_folder))}
+    file.copy(
+      from = from_folder,
+      to = to_folder,
+      overwrite = TRUE,
+      recursive = TRUE
+    )
+  }
 }

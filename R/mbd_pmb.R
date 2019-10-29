@@ -33,7 +33,7 @@ pmb_loglik <- function(
 
   # calculating branches contribution
   i <- 0:1e6
-  for (t in 1:length(time_intervals)) {
+  for (t in seq_along(time_intervals)) {
     #(nu *(t_k-t_k-1))^i * exp(-nu * (t_k - t_k - 1)) / k!
     poisson_term <- stats::dpois(i, nu * time_intervals[t], log = FALSE)[
       stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]

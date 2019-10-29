@@ -7,17 +7,18 @@ documentation.}
 \usage{
 default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   age, alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
-  checked_functions, colormap, cond, data_folder, debug_mode, empty_pp,
-  empty_qq, func, function_name, function_names, functions_names,
-  idparsfix, idparsopt, initparsopt, init_n_lineages, initprobs,
-  init_probs, input_trees_path, input_xml, interval_max, interval_min,
-  iterations, k, lambda, lambda_limit, loglik_function, loglik_functions,
-  logs, lx, lx0, m1, m2, mm, matrices, matrix, matrix_a, matrix_builder,
-  max_iter, max_k, max_number_of_species, max_repetitions, max_sims, maxit,
-  maxiter, mbd_lambda, message, methode, minimum_multiple_births,
-  missnumspec, models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species,
-  n_sims, n_steps, n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids,
-  pp, pp2, parms, params, pars, pars_transform, pars_transformed, parsfix,
+  checked_functions, colormap, cond, data_folder, debug_mode, empty_mat,
+  empty_pp, empty_qq, eq, func, function_name, function_names,
+  functions_names, idparsfix, idparsopt, initparsopt, init_n_lineages,
+  initprobs, init_probs, input_trees_path, input_xml, interval_max,
+  interval_min, iterations, k, lambda, lambda_limit, loglik_function,
+  loglik_functions, logs, log_nu_mat, log_q_mat, lx, lx0, lx_top, m1, m2,
+  m1_mat, m2_mat, mm, matrices, matrix, matrix_a, matrix_builder, max_iter,
+  max_k, max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
+  mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
+  models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species, n_sims,
+  n_steps, n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids, pp,
+  pp2, parms, params, pars, pars_transform, pars_transformed, parsfix,
   parsvec, precision, print_errors, printit, project_folder, pvec, q, qq,
   qq2, q_t, q_vector, q_threshold, quantiles_choice, qvec, recursive, rtol,
   reltol, res, results, results_folder, rhs_function, runmod, s, saveit,
@@ -74,9 +75,14 @@ the numerical integration using deSolve.}
 \item{debug_mode}{If TRUE allows to run even when there are errors and
 expose them.}
 
+\item{empty_mat}{an empty matrix}
+
 \item{empty_pp}{empty pp matrix. See \code{pp}.}
 
 \item{empty_qq}{empty qq matrix. See \code{qq}.}
+
+\item{eq}{the equation approach you want to use. It can be "q_eq" for the
+Q-equation of "p_eq" for the P-equation.}
 
 \item{func}{a function}
 
@@ -127,13 +133,23 @@ The ids are defined as follows:
 
 \item{logs}{something}
 
+\item{log_nu_mat}{logarithmic nu-matrix, used for condprob}
+
+\item{log_q_mat}{logarithmic q-matrix, used for condprob}
+
 \item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{lx0}{something}
 
+\item{lx_top}{maximum lx to produce pre-calculated matrices for condprob}
+
 \item{m1}{a matrix keeping track of columns}
 
 \item{m2}{a matrix keeping track of rows}
+
+\item{m1_mat}{a matrix keeping track of columns}
+
+\item{m2_mat}{a matrix keeping track of rows}
 
 \item{mm}{indexes of missing species}
 

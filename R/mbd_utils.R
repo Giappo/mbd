@@ -321,8 +321,11 @@ create_singleton_phylo <- function(age) {
   tr
 }
 
-#' @noRd
-file_path <- function(..., fsep = .Platform$file.sep){
+#' Like file.path, but cooler
+#' @param fsep path separator for the OS
+#' @param ... additional arguments
+#' @export
+file_path <- function(..., fsep = .Platform$file.sep) {
   gsub("//", "/", file.path(..., fsep = fsep))
 }
 

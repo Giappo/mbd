@@ -30,6 +30,9 @@
 #'  expose them.
 #' @param empty_pp empty pp matrix. See \code{pp}.
 #' @param empty_qq empty qq matrix. See \code{qq}.
+#' @param empty_mat an empty matrix
+#' @param eq the equation approach you want to use. It can be "q_eq" for the
+#'  Q-equation of "p_eq" for the P-equation.
 #' @param func a function
 #' @param function_name function name
 #' @param function_names function names
@@ -58,10 +61,15 @@
 #' @param loglik_function the loglik function
 #' @param loglik_functions the loglik_functions you want to use
 #' @param logs something
+#' @param log_nu_mat logarithmic nu-matrix, used for condprob
+#' @param log_q_mat logarithmic q-matrix, used for condprob
 #' @param lx it is the number of ODEs considered for the computation.
 #' @param lx0 something
+#' @param lx_top maximum lx to produce pre-calculated matrices for condprob
 #' @param m1 a matrix keeping track of columns
 #' @param m2 a matrix keeping track of rows
+#' @param m1_mat a matrix keeping track of columns
+#' @param m2_mat a matrix keeping track of rows
 #' @param mm indexes of missing species
 #' @param matrices matrices
 #' @param matrix a matrix
@@ -214,8 +222,10 @@ default_params_doc <- function(
   cond,
   data_folder,
   debug_mode,
+  empty_mat,
   empty_pp,
   empty_qq,
+  eq,
   func,
   function_name,
   function_names,
@@ -237,10 +247,15 @@ default_params_doc <- function(
   loglik_function,
   loglik_functions,
   logs,
+  log_nu_mat,
+  log_q_mat,
   lx,
   lx0,
+  lx_top,
   m1,
   m2,
+  m1_mat,
+  m2_mat,
   mm,
   matrices,
   matrix,

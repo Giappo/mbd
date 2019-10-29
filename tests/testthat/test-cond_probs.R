@@ -232,7 +232,7 @@ test_that("accurate and fast - gentle parameters", {
     n_0 = n_0,
     n_sims = n_sims
   )
-  lx <- 25
+  lx <- 40
   time_cond_p <- system.time(
     prob_cond_p <- cond_prob_p(
       pars = pars,

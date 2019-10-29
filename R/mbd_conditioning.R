@@ -57,7 +57,7 @@ cond_prob_q_matrices <- function(
   q,
   lx
 ) {
-
+  nvec <- 1:lx - 1
   nu_matrix <- matrix(0, nrow = lx, ncol = lx)
   if (q != 0) {
     for (m1 in 0:(lx - 1)) {
@@ -71,6 +71,8 @@ cond_prob_q_matrices <- function(
       }
     }
   }
+  rownames(nu_matrix) <- paste0("m1=", nvec)
+  colnames(nu_matrix) <- paste0("n1=", nvec)
 
   empty_qq <- matrix(0, nrow = (lx + 2), ncol = (lx + 2))
   m1 <- col(nu_matrix) - 1
@@ -275,12 +277,12 @@ cond_prob_p_matrices <- function(
   q,
   lx
 ) {
-
+  nvec <- 1:lx - 1
   nu_matrix <- matrix(0, nrow = lx, ncol = lx)
   if (q != 0) {
     # alt: for (m1 in 0:(lx - 1)) {
     # alt: for (n1 in 0:m1) {
-    for (n1 in 0:(lx - 1)) {
+    for (n1 in nvec) {
       for (m1 in n1:(lx - 1)) {
         aux <- lchoose(n1, max(0, m1 - n1))
         aux <- aux + (m1 - n1) * log(q) + (2 * n1 - m1) * log(1 - q)
@@ -288,8 +290,8 @@ cond_prob_p_matrices <- function(
       }
     }
   }
-  rownames(nu_matrix) <- paste0("m1=", 0:(lx - 1))
-  colnames(nu_matrix) <- paste0("n1=", 0:(lx - 1))
+  rownames(nu_matrix) <- paste0("m1=", nvec)
+  colnames(nu_matrix) <- paste0("n1=", nvec)
 
   empty_pp <- matrix(0, nrow = (lx + 2), ncol = (lx + 2))
   m1 <- col(nu_matrix) - 1
