@@ -19,13 +19,18 @@ mbd_ode_FORTRAN <- function(
   if (all(dimparsvec) > 1) {
     dim(parsvec) <- c(N ^ 2, 1)
   }
+  if (runmod == 'mbd_runmd') {
+    initfunc <- 'mbd_initmod'
+  } else if (runmod == 'mbd_runmodpc'){
+    initfunc <- 'mbd_initmodpc'
+  }
   probs <- deSolve::ode(
     y = initprobs,
     parms = c(N + 0.),
     rpar = parsvec,
     times = tvec,
     func = runmod,
-    initfunc = "mbd_initmod",
+    initfunc = initfunc,
     ynames = c("SV"),
     dimens = N + 1,
     nout = 1,
