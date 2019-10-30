@@ -4,7 +4,8 @@
 \alias{mbd_integrate}
 \title{performs integration of the ode}
 \usage{
-mbd_integrate(y, times, func, parms, atol, rtol, tcrit)
+mbd_integrate(y, times, func, parms, atol, rtol, tcrit,
+  methode = "lsoda")
 }
 \arguments{
 \item{y}{something}
@@ -22,6 +23,13 @@ the numerical integration using deSolve.}
 the numerical integration using deSolve.}
 
 \item{tcrit}{the time you don't want to exceed in the integration}
+
+\item{methode}{specifies how the integration must be performed:
+\itemize{
+  \item \code{lsodes}: use \code{lsodes} and \code{deSolve::ode}
+  \item \code{ode45}: use \code{ode45} and \code{deSolve::ode}
+  \item \code{lsoda}: use \code{lsoda} and \code{deSolve::ode}
+}}
 }
 \description{
 performs integration of the ode
