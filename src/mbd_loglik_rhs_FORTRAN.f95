@@ -58,7 +58,8 @@
 ! Allocate variable size arrays (state variables, derivatives and parameters)
 
       IF (ALLOCATED(P)) DEALLOCATE(P)
-      ALLOCATE(P(N ** 2))
+      !ALLOCATE(P(N ** 2))
+      ALLOCATE(P(3 + 4 * N ** 2))
 
       initialised = .FALSE.
 
@@ -114,4 +115,71 @@
       ENDDO
 
       END SUBROUTINE mbd_runmod
+
+
+!==========================================================================
+!==========================================================================
+! Dynamic routine: name of this function as passed by "func" argument
+! variable parameter values are passed via yout
+!==========================================================================
+!==========================================================================
+
+      SUBROUTINE mbd_runmodpc (neq, t, Conc, dConc, yout, ip)
+      USE mbd_dimmod
+      IMPLICIT NONE
+
+!......................... declaration section.............................
+      INTEGER           :: neq, ip(*), i, ii
+      DOUBLE PRECISION  :: t, Conc(N), dConc(N), yout(*)
+      DOUBLE PRECISION  :: lambda, mu, nu
+      DOUBLE PRECISION  :: nu_q_mat(N ** 2), m1_mat(N ** 2), m2_mat(N ** 2)
+      DOUBLE PRECISION  :: empty_mat(N ** 2)
+      REAL(16)          :: V(N)
+
+! parameters - named here
+      DOUBLE PRECISION rn
+      COMMON /XCBPar/rn
+
+! local variables
+      CHARACTER(len=100) msg
+
+!............................ statements ..................................
+
+      IF (.NOT. Initialised) THEN
+        ! check memory allocated to output variables
+        IF (ip(1) < 1) CALL rexit("nout not large enough")
+
+        ! save parameter values in yout
+        ii = ip(1)   ! Start of parameter values
+        CALL mbd_fill1d(P, 3 + 4 * N ** 2, yout, ii)   ! ii is updated in fill1d
+        Initialised = .TRUE.          ! to prevent from initialising more than once
+      ENDIF
+
+! dynamics
+
+      lambda = P(1)
+      mu = P(2)
+      nu = P(3)
+      DO I = 1, N
+        empty_mat(I,1) = 0
+        empty_mat(I,N + 2) = 0
+        empty_mat(1,I) = 0
+        empty_mat(N + 2,I) = 0
+        DO II = 1, N
+           nu_q_mat(I,II) = P(3 + (II - 1) * N + I)
+           m1_mat(I,II) = P(3 + N ** 2 + (II - 1) * N + I)
+           m2_mat(I,II) = P(3 + 2 * N ** 2 + (II - 1) * N + I)
+           empty_mat(I + 1,II + 1) = 0
+        ENDDO
+      ENDDO
+
+      DO I = 1, N
+        V(I) = 0
+        DO II = 1, N
+          V(I) = V(I) + P((II - 1) * N + I) * Conc(II)
+        ENDDO
+        dConc(I) = V(I)
+      ENDDO
+
+      END SUBROUTINE mbd_runmodpc
 
