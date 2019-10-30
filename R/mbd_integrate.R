@@ -52,7 +52,7 @@ mbd_integrate <- function(
   atol,
   rtol,
   tcrit,
-  methode = 'lsoda'
+  methode = "lsoda"
 ) {
   func_name <- "no_name"
   if (is.character(func)) {

@@ -133,14 +133,14 @@ mbd_main <- function(
     tips_label <- "tips"
   }
   colnames(results) <- c(
-    paste0("sim_", colnames(mle[1:length(start_pars)])),
+    paste0("sim_", colnames(mle[seq_along(start_pars)])),
     colnames(mle),
     "seed",
     "cond",
     "n_0",
     t_0s_label,
     tips_label,
-    paste0("optim_", colnames(mle[1:length(start_pars)])),
+    paste0("optim_", colnames(mle[seq_along(start_pars)])),
     "model"
   )
   rownames(results) <- NULL
