@@ -58,12 +58,46 @@
 ! Allocate variable size arrays (state variables, derivatives and parameters)
 
       IF (ALLOCATED(P)) DEALLOCATE(P)
-      !ALLOCATE(P(N ** 2))
-      ALLOCATE(P(3 + N ** 2))
+      ALLOCATE(P(N ** 2))
 
       initialised = .FALSE.
 
       END SUBROUTINE mbd_initmod
+
+!==========================================================================
+!==========================================================================
+! Initialisation: name of this function as passed by "initfunc" argument
+! Sets the fixed parameter vector, and allocates memory
+!==========================================================================
+!==========================================================================
+
+      SUBROUTINE mbd_initmodpc (steadyparms)
+      USE mbd_dimmod
+
+      IMPLICIT NONE
+      EXTERNAL steadyparms
+
+      INTEGER, PARAMETER :: nparsmall = 1  ! constant-length parameters
+
+      DOUBLE PRECISION parms(nparsmall)
+      COMMON /XCBPar/parms                 ! common block
+
+! Set the fixed parameters obtained from R
+      CALL steadyparms(nparsmall, parms)
+
+! first parameter has the length of the vector
+      N = INT(sqrt(parms(1) + 1e-6))
+
+! Allocate variable size arrays (state variables, derivatives and parameters)
+
+      IF (ALLOCATED(P)) DEALLOCATE(P)
+      ALLOCATE(P(3 + N ** 2))
+
+      initialised = .FALSE.
+
+      END SUBROUTINE mbd_initmodpc
+
+
 
 !==========================================================================
 !==========================================================================
@@ -129,12 +163,12 @@
       IMPLICIT NONE
 
 !......................... declaration section.............................
-      INTEGER           :: neq, ip(*), i, ii
-      DOUBLE PRECISION  :: t, Conc(N), dConc(N), yout(*)
-      DOUBLE PRECISION  :: lambda, mu, nu
-      DOUBLE PRECISION  :: nu_q_mat(N, N), m1_mat(N, N), m2_mat(N, N)
-      DOUBLE PRECISION  :: empty_mat(N + 2, N + 2)
-      REAL(16)          :: V(N)
+      INTEGER           :: neq, ip(*), i, ii, lx, I1, J1, n1
+      DOUBLE PRECISION  :: t, Conc(N ** 2), dConc(N ** 2), yout(*)
+      DOUBLE PRECISION  :: la, mu, nu
+      DOUBLE PRECISION  :: nu_q_mat(N, N), dp1(N, N), dp2(N, N), dp3(N, N)
+      DOUBLE PRECISION  :: Conc2(N + 2, N + 2)
+      REAL(16)          :: aux1(N,N), aux2(N,N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -156,30 +190,139 @@
       ENDIF
 
 ! dynamics
+!  lx2 <- length(pvec)
+!  lx <- sqrt(lx2)
+!  pp <- matrix(pvec, lx, lx)
+!  mm <- 2:(lx + 1)
+!  lambda <- parmsvec[1]
+!  mu <- parmsvec[2]
+!  nu <- parmsvec[3]
+!  nu_q_mat <- parmsvec[(3 + 1):(3 + lx2)]
+!  dim(nu_q_mat) <- c(lx, lx)
+!  pp2 <- matrix(0, lx + 2, lx + 2)
+!  pp2[mm, mm] <- pp
 
-      lambda = P(1)
-      mu = P(2)
-      nu = P(3)
       DO I = 1, N
-        empty_mat(I,1) = 0
-        empty_mat(I,N + 2) = 0
-        empty_mat(1,I) = 0
-        empty_mat(N + 2,I) = 0
+        Conc2(I,1) = 0
+        Conc2(I,N + 2) = 0
+        Conc2(1,I) = 0
+        Conc2(N + 2,I) = 0
         DO II = 1, N
            nu_q_mat(I,II) = P(3 + (II - 1) * N + I)
-           m1_mat(I,II) = II
-           m2_mat(I,II) = I
-           empty_mat(I + 1,II + 1) = 0
+           Conc2(I + 1,II + 1) = Conc((II - 1) * N + I)
         ENDDO
       ENDDO
 
-      DO I = 1, N
-        V(I) = 0
-        DO II = 1, N
-          V(I) = V(I) + P((II - 1) * N + I) * Conc(II)
-        ENDDO
-        dConc(I) = V(I)
-      ENDDO
+!  mvec <- 1:lx - 1
+!  dp_lambda <- matrix(0, lx, lx)
+!  for (mm2 in mvec) {
+!    for (mm1 in mvec) {
+!      i <- mm2 + 1
+!      j <- mm1 + 1
+!      dp_lambda[i, j] <-
+!        (mm1 - 1) * pp2[i + 1, j] +
+!        (mm2 - 1) * pp2[i, j + 1] -
+!        (mm1 + mm2) * pp2[i + 1, j + 1]
+!    }
+!  }
+!  dp_mu <- matrix(0, lx, lx)
+!  for (mm2 in mvec) {
+!    for (mm1 in mvec) {
+!      i <- mm2 + 1
+!      j <- mm1 + 1
+!      dp_mu[i, j] <-
+!        (mm1 + 1) * pp2[i + 1, j + 2] +
+!        (mm2 + 1) * pp2[i + 2, j + 1] -
+!        (mm1 + mm2) * pp2[i + 1, j + 1]
+!    }
+!  }
+!  nu_q_mat2 <- t(nu_q_mat)
+!  dp_nu <- aux1 <- aux2 <-  matrix(0, lx, lx)
+!  for (m1 in 1:lx) {
+!    for (n2 in 1:lx) {
+!      sum1 <- 0
+!      for (n1 in 1:lx) {
+!        sum1 <- sum1 + nu_q_mat[m1, n1] * pp[n1, n2]
+!      }
+!      aux1[m1, n2] <- sum1
+!    }
+!  }
+!  for (m1 in 1:lx) {
+!    for (m2 in 1:lx) {
+!      sum1 <- 0
+!      for (n2 in 1:lx) {
+!        sum1 <- sum1 + aux1[m1, n2] * nu_q_mat2[n2, m2]
+!      }
+!      aux2[m1, m2] <- sum1
+!    }
+!  }
+!  dp_nu <- aux2 - pp
+!  dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
+!  dim(dp) <- c(lx2, 1)
 
-      END SUBROUTINE mbd_runmodpc
+   DO I = 1, N
+     Do II = 1, N
+       IF (I < N .AND. II < N) THEN
+
+!      i <- mm2 + 1
+!      j <- mm1 + 1
+
+         I1 = I + 1
+         J1 = II + 1
+
+!      dp_lambda[i, j] <-
+!        (mm1 - 1) * pp2[i + 1, j] +
+!        (mm2 - 1) * pp2[i, j + 1] -
+!        (mm1 + mm2) * pp2[i + 1, j + 1]
+
+         dp1(I,II) = (II - 1) * Conc2(I1 + 1,J1)
+         dp1(I,II) = dp1(I,II) + (I - 1) * Conc2(I1,J1 + 1)
+         dp1(I,II) = dp1(I,II) - (I + II) * Conc2(I1 + 1,J1 + 1)
+
+!      dp_mu[i, j] <-
+!        (mm1 + 1) * pp2[i + 1, j + 2] +
+!        (mm2 + 1) * pp2[i + 2, j + 1] -
+!        (mm1 + mm2) * pp2[i + 1, j + 1]
+
+         dp2(I,II) = (II + 1) * Conc2(I1 + 1,J1 + 2)
+         dp2(I,II) = dp2(I,II) + (I + 1) * Conc2(I1 + 2,J1 + 1)
+         dp2(I,II) = dp2(I,II) - (I + II) * Conc2(I1 + 1,J1 + 1)
+
+       ENDIF
+
+!      sum1 <- 0
+!      for (n1 in 1:lx) {
+!        sum1 <- sum1 + nu_q_mat[m1, n1] * pp[n1, n2]
+!      }
+!      aux1[m1, n2] <- sum1
+
+       aux1(I,II) = 0
+       DO n1 = 1, N
+         aux1(I,II) = aux1(I,II) + nu_q_mat(I,n1) * Conc2(n1,II)
+       ENDDO
+
+!      sum1 <- 0
+!      for (n2 in 1:lx) {
+!        sum1 <- sum1 + aux1[m1, n2] * nu_q_mat2[n2, m2]
+!      }
+!      aux2[m1, m2] <- sum1
+
+       aux2(I,II) = 0
+       DO n1 = 1, N
+         aux2(I,II) = aux2(I,II) + aux1(I,n1) * nu_q_mat(II,n1)
+       ENDDO
+
+!  dp_nu <- aux2 - pp
+
+       dp3 = aux2(I,II) - Conc2(I,II)
+
+!  dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
+
+       dConc((I - 1)*N + II) = P(1)*dp1(I,II) + P(2)*dp2(I,II) + P(3)*dp3(I,II)
+
+     ENDDO
+   ENDDO
+
+
+   END SUBROUTINE mbd_runmodpc
 
