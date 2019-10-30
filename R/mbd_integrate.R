@@ -51,7 +51,8 @@ mbd_integrate <- function(
   parms,
   atol,
   rtol,
-  tcrit
+  tcrit,
+  methode = 'lsoda'
 ) {
   func_name <- "no_name"
   if (is.character(func)) {
@@ -65,7 +66,8 @@ mbd_integrate <- function(
       parms = parms,
       atol = atol,
       rtol = rtol,
-      tcrit = tcrit
+      tcrit = tcrit,
+      method = methode
     )
   } else {
     out <- mbd_ode_FORTRAN(
@@ -74,7 +76,7 @@ mbd_integrate <- function(
       parsvec = parms,
       atol = atol,
       rtol = rtol,
-      methode = "ode45",
+      methode = methode,
       runmod = func_name
     )
   }
