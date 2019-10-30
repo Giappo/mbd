@@ -4,16 +4,9 @@
 \alias{condprob_parmsvec}
 \title{Creates vector of parameters for the FORTRAN condprob code}
 \usage{
-condprob_parmsvec(m1_mat, m2_mat, empty_mat, log_nu_mat, log_q_mat, pars,
-  lx, eq)
+condprob_parmsvec(log_nu_mat, log_q_mat, pars, lx, eq)
 }
 \arguments{
-\item{m1_mat}{a matrix keeping track of columns}
-
-\item{m2_mat}{a matrix keeping track of rows}
-
-\item{empty_mat}{an empty matrix}
-
 \item{log_nu_mat}{logarithmic nu-matrix, used for condprob}
 
 \item{log_q_mat}{logarithmic q-matrix, used for condprob}

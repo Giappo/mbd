@@ -1,31 +1,3 @@
-#' Creates m1 matrix for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_m1_mat <- function(lx_top) {
-  nu_mat <- matrix(0, nrow = lx_top, ncol = lx_top)
-  m1_mat <- col(nu_mat) - 1
-  m1_mat
-}
-
-#' Creates m2 matrix for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_m2_mat <- function(m1_mat) {
-  m2_mat <- t(m1_mat)
-  m2_mat
-}
-
-#' Creates empty matrix for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_empty_mat <- function(lx_top) {
-  empty_mat <- matrix(0, nrow = (lx_top + 2), ncol = (lx_top + 2))
-  empty_mat
-}
-
 #' Creates log nu matrix for the Q-equation for condprob
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
@@ -143,9 +115,6 @@ condprob_log_q_mat <- function(lx, q, eq) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_parmsvec <- function(
-  m1_mat,
-  m2_mat,
-  empty_mat,
   log_nu_mat,
   log_q_mat,
   pars,
@@ -153,8 +122,6 @@ condprob_parmsvec <- function(
   eq
 ) {
   lx2 <- lx ^ 2
-  lxframe <- lx + 2
-  lxframe2 <- lxframe ^ 2
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
@@ -162,18 +129,162 @@ condprob_parmsvec <- function(
   log_nu_mat <- log_nu_mat[1:lx, 1:lx]
   log_q_mat <- log_q_mat[1:lx, 1:lx]
   nu_q_mat <- exp(log_nu_mat + log_q_mat)
-  m1_mat <- m1_mat[1:lx, 1:lx]
-  m2_mat <- m2_mat[1:lx, 1:lx]
-  empty_mat <- empty_mat[1:lxframe, 1:lxframe]
 
   parmsvec <- c(
     lambda,
     mu,
     nu,
-    matrix(nu_q_mat, nrow = lx2, ncol = 1),
-    matrix(m1_mat, nrow = lx2, ncol = 1),
-    matrix(m2_mat, nrow = lx2, ncol = 1),
-    matrix(empty_mat, nrow = lxframe2, ncol = 1)
+    matrix(nu_q_mat, nrow = lx2, ncol = 1)
   )
   parmsvec
+}
+
+# Differentials ----
+
+#' dp total
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+condprob_dp <- function(
+  pvec,
+  parmsvec
+) {
+  lx2 <- length(pvec)
+  lx <- sqrt(lx2)
+  pp <- matrix(pvec, lx, lx)
+  mm <- 2:(lx + 1)
+
+  lambda <- parmsvec[1]
+  mu <- parmsvec[2]
+  nu <- parmsvec[3]
+  nu_q_mat <- parmsvec[(3 + 1):(3 + lx2)]
+  dim(nu_q_mat) <- c(lx, lx)
+
+  pp2 <- matrix(0, lx + 2, lx + 2)
+  pp2[mm, mm] <- pp
+  mvec <- 1:lx - 1
+
+  dp_lambda <- matrix(0, lx, lx)
+  for (mm2 in mvec) {
+    for (mm1 in mvec) {
+      i <- mm2 + 1
+      j <- mm1 + 1
+      dp_lambda[i, j] <-
+        (mm1 - 1) * pp2[i + 1, j] +
+        (mm2 - 1) * pp2[i, j + 1] -
+        (mm1 + mm2) * pp2[i + 1, j + 1]
+    }
+  }
+
+  dp_mu <- matrix(0, lx, lx)
+  for (mm2 in mvec) {
+    for (mm1 in mvec) {
+      i <- mm2 + 1
+      j <- mm1 + 1
+      dp_mu[i, j] <-
+        (mm1 + 1) * pp2[i + 1, j + 2] +
+        (mm2 + 1) * pp2[i + 2, j + 1] -
+        (mm1 + mm2) * pp2[i + 1, j + 1]
+    }
+  }
+
+  nu_q_mat2 <- t(nu_q_mat)
+  dp_nu <- aux1 <- aux2 <-  matrix(0, lx, lx)
+  for (m1 in 1:lx) {
+    for (n2 in 1:lx) {
+      sum1 <- 0
+      for (n1 in 1:lx) {
+        sum1 <- sum1 + nu_q_mat[m1, n1] * pp[n1, n2]
+      }
+      aux1[m1, n2] <- sum1
+    }
+  }
+  for (m1 in 1:lx) {
+    for (m2 in 1:lx) {
+      sum1 <- 0
+      for (n2 in 1:lx) {
+        sum1 <- sum1 + aux1[m1, n2] * nu_q_mat2[n2, m2]
+      }
+      aux2[m1, m2] <- sum1
+    }
+  }
+  dp_nu <- aux2 - pp
+
+  dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
+  dim(dp) <- c(lx2, 1)
+  return(dp)
+}
+
+#' dq total
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+condprob_dq <- function(
+  qvec,
+  parmsvec
+) {
+  lx2 <- length(qvec)
+  lx <- sqrt(lx2)
+  qq <- matrix(qvec, lx, lx)
+  mm <- 2:(lx + 1)
+
+  lambda <- parmsvec[1]
+  mu <- parmsvec[2]
+  nu <- parmsvec[3]
+  nu_q_mat <- parmsvec[(3 + 1):(3 + lx2)]
+  dim(nu_q_mat) <- c(lx, lx)
+
+  qq2 <- matrix(0, lx + 2, lx + 2)
+  qq2[mm, mm] <- qq
+  mvec <- 1:lx - 1
+
+  dq_lambda <- matrix(0, lx, lx)
+  for (mm2 in mvec) {
+    for (mm1 in mvec) {
+      i <- mm2 + 1
+      j <- mm1 + 1
+      dq_lambda[i, j] <-
+        (2 + mm1 - 1) * qq2[i + 1, j] +
+        (2 + mm2 - 1) * qq2[i, j + 1] -
+        (2 + mm1 + mm2) * qq2[i + 1, j + 1]
+    }
+  }
+
+  dq_mu <- matrix(0, lx, lx)
+  for (mm2 in mvec) {
+    for (mm1 in mvec) {
+      i <- mm2 + 1
+      j <- mm1 + 1
+      dq_mu[i, j] <-
+        (mm1 + 1) * qq2[i + 1, j + 2] +
+        (mm2 + 1) * qq2[i + 2, j + 1] -
+        (2 + mm1 + mm2) * qq2[i + 1, j + 1]
+    }
+  }
+
+  nu_q_mat2 <- t(nu_q_mat)
+  dq_nu <- aux1 <- aux2 <-  matrix(0, lx, lx)
+  for (m1 in 1:lx) {
+    for (n2 in 1:lx) {
+      sum1 <- 0
+      for (n1 in 1:lx) {
+        sum1 <- sum1 + nu_q_mat[m1, n1] * qq[n1, n2]
+      }
+      aux1[m1, n2] <- sum1
+    }
+  }
+  for (m1 in 1:lx) {
+    for (m2 in 1:lx) {
+      sum1 <- 0
+      for (n2 in 1:lx) {
+        sum1 <- sum1 + aux1[m1, n2] * nu_q_mat2[n2, m2]
+      }
+      aux2[m1, m2] <- sum1
+    }
+  }
+  dq_nu <- aux2 - qq
+
+  dq <- lambda * dq_lambda + mu * dq_mu + nu * dq_nu
+  dim(dq) <- c(lx2, 1)
+  return(dq)
 }

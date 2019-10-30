@@ -115,6 +115,7 @@
 #' @param pp the matrix p_{n1, n2}
 #' @param pp2 the matrix p_{n1, n2}, with an empty frame
 #' @param parms some parameters to pass on the ode function
+#' @param parmsvec parameters to pass to the FORTRAN scripts
 #' @param params transition matrix for the rhs of the ode system.
 #' @param pars vector of parameters:
 #' \itemize{
@@ -291,6 +292,7 @@ default_params_doc <- function(
   pp,
   pp2,
   parms,
+  parmsvec,
   params,
   pars,
   pars_transform,

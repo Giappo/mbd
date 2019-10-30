@@ -18,12 +18,12 @@ default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
   models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species, n_sims,
   n_steps, n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids, pp,
-  pp2, parms, params, pars, pars_transform, pars_transformed, parsfix,
-  parsvec, precision, print_errors, printit, project_folder, pvec, q, qq,
-  qq2, q_t, q_vector, q_threshold, quantiles_choice, qvec, recursive, rtol,
-  reltol, res, results, results_folder, rhs_function, runmod, s, saveit,
-  seed, sample_interval, sequence_length, sim, sim_pars, sim_phylo,
-  start_pars, subsamp, t, tcrit, times, tvec, t1, t2, t_0, t_0s,
+  pp2, parms, parmsvec, params, pars, pars_transform, pars_transformed,
+  parsfix, parsvec, precision, print_errors, printit, project_folder, pvec,
+  q, qq, qq2, q_t, q_vector, q_threshold, quantiles_choice, qvec,
+  recursive, rtol, reltol, res, results, results_folder, rhs_function,
+  runmod, s, saveit, seed, sample_interval, sequence_length, sim, sim_pars,
+  sim_phylo, start_pars, subsamp, t, tcrit, times, tvec, t1, t2, t_0, t_0s,
   tips_interval, time_interval, tol, tr, transition_matrix, trparsfix,
   trparsopt, true_pars, values, vector, verbose, x, x_name, x_splits, y,
   y_name, y_splits, z, z_name)
@@ -229,6 +229,8 @@ choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)}
 \item{pp2}{the matrix p_{n1, n2}, with an empty frame}
 
 \item{parms}{some parameters to pass on the ode function}
+
+\item{parmsvec}{parameters to pass to the FORTRAN scripts}
 
 \item{params}{transition matrix for the rhs of the ode system.}
 
