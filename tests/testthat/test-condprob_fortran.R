@@ -88,3 +88,42 @@ test_that("the right parmsvecs and differentials are returned", {
   )
   expect_equal(dp1, dp2)
 })
+
+test_that("pc integrated", {
+
+  skip("Work in progress")
+
+  pars <- c(0.2, 0.1, 1.4, 0.12)
+  lx <- 15
+
+  # R code
+  p_m1_m2 <- prob_cond_get_p_m1_m2(
+    pars = pars,
+    brts = brts,
+    matrices = cond_prob_p_matrices(q = pars[4], lx = lx),
+    rhs_function = cond_prob_p_rhs2
+  )
+
+  # FORTRAN code
+  eq <- "p_eq"
+  log_nu_mat <- condprob_log_nu_mat(lx = lx, eq = eq)
+  log_q_mat <- condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
+  parmsvec <- condprob_parmsvec(
+    pars = pars,
+    log_nu_mat = log_nu_mat,
+    log_q_mat = log_q_mat,
+    lx = lx,
+    eq = eq
+  )
+  pp <- matrix(0, lx, lx); pp[2, 2] <- 1; pvec <- matrix(pp, lx ^ 2, 1)
+  p_fortran <- mbd_solve(
+    vector = pvec,
+    time_interval = age,
+    func = "mbd_runmodpc",
+    parms = parmsvec
+  )
+  dim(p_fortran) <- c(lx, lx)
+
+  expect_equal(p_m1_m2, p_fortran)
+
+})
