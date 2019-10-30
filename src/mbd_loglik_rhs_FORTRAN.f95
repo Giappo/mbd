@@ -59,7 +59,7 @@
 
       IF (ALLOCATED(P)) DEALLOCATE(P)
       !ALLOCATE(P(N ** 2))
-      ALLOCATE(P(3 + 4 * N ** 2))
+      ALLOCATE(P(3 + 3 * N ** 2))
 
       initialised = .FALSE.
 
@@ -132,8 +132,8 @@
       INTEGER           :: neq, ip(*), i, ii
       DOUBLE PRECISION  :: t, Conc(N), dConc(N), yout(*)
       DOUBLE PRECISION  :: lambda, mu, nu
-      DOUBLE PRECISION  :: nu_q_mat(N ** 2), m1_mat(N ** 2), m2_mat(N ** 2)
-      DOUBLE PRECISION  :: empty_mat(N ** 2)
+      DOUBLE PRECISION  :: nu_q_mat(N, N), m1_mat(N, N), m2_mat(N, N)
+      DOUBLE PRECISION  :: empty_mat(N + 2, N + 2)
       REAL(16)          :: V(N)
 
 ! parameters - named here
@@ -151,7 +151,7 @@
 
         ! save parameter values in yout
         ii = ip(1)   ! Start of parameter values
-        CALL mbd_fill1d(P, 3 + 4 * N ** 2, yout, ii)   ! ii is updated in fill1d
+        CALL mbd_fill1d(P, 3 + 3 * N ** 2, yout, ii)   ! ii is updated in fill1d
         Initialised = .TRUE.          ! to prevent from initialising more than once
       ENDIF
 
