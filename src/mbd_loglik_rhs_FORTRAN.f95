@@ -59,7 +59,7 @@
 
       IF (ALLOCATED(P)) DEALLOCATE(P)
       !ALLOCATE(P(N ** 2))
-      ALLOCATE(P(3 + 3 * N ** 2))
+      ALLOCATE(P(3 + N ** 2))
 
       initialised = .FALSE.
 
@@ -151,7 +151,7 @@
 
         ! save parameter values in yout
         ii = ip(1)   ! Start of parameter values
-        CALL mbd_fill1d(P, 3 + 3 * N ** 2, yout, ii)   ! ii is updated in fill1d
+        CALL mbd_fill1d(P, 3 + N ** 2, yout, ii)   ! ii is updated in fill1d
         Initialised = .TRUE.          ! to prevent from initialising more than once
       ENDIF
 
@@ -167,8 +167,8 @@
         empty_mat(N + 2,I) = 0
         DO II = 1, N
            nu_q_mat(I,II) = P(3 + (II - 1) * N + I)
-           m1_mat(I,II) = P(3 + N ** 2 + (II - 1) * N + I)
-           m2_mat(I,II) = P(3 + 2 * N ** 2 + (II - 1) * N + I)
+           m1_mat(I,II) = II
+           m2_mat(I,II) = I
            empty_mat(I + 1,II + 1) = 0
         ENDDO
       ENDDO
