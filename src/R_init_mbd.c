@@ -15,7 +15,7 @@ static const R_FortranMethodDef FortranEntries[] = {
   {"mbd_initmod", (DL_FUNC) &F77_NAME(mbd_initmod),  1},
   {"mbd_initmodpc", (DL_FUNC) &F77_NAME(mbd_initmodpc),  1},
   {"mbd_runmod", (DL_FUNC) &F77_NAME(mbd_runmod),  6},
-  {"mbd_runmodpc", (DL_FUNC) &F77_NAME(mbd_runmod),  6},
+  {"mbd_runmodpc", (DL_FUNC) &F77_NAME(mbd_runmodpc),  6},
   {NULL, NULL, 0}
 };
 
