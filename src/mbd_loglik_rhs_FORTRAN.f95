@@ -202,14 +202,17 @@
 !  pp2 <- matrix(0, lx + 2, lx + 2)
 !  pp2[mm, mm] <- pp
 
-      DO I = 1, N
+      DO I = 1, (N + 1)
         Conc2(I,1) = 0
         Conc2(I,N + 2) = 0
-        Conc2(1,I) = 0
-        Conc2(N + 2,I) = 0
+        Conc2(1,N - I) = 0
+        Conc2(N + 2,N - I) = 0
+      ENDDO
+
+      DO I = 1, N
         DO II = 1, N
            nu_q_mat(I,II) = P(3 + (II - 1) * N + I)
-           Conc2(I + 1,II + 1) = Conc((I - 1) * N + II)
+           Conc2(I + 1,II + 1) = Conc((II - 1) * N + I)
         ENDDO
       ENDDO
 
