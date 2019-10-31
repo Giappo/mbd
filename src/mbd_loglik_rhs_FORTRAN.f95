@@ -264,32 +264,29 @@
 !  dim(dp) <- c(lx2, 1)
 
    DO I = 1, N
-     Do II = 1, N
-       IF (I < N .AND. II < N) THEN
+     Do J = 1, N
+!      IF (I < N .AND. II < N) THEN
 
 !      i <- mm2 + 1
 !      j <- mm1 + 1
-
-         I1 = I + 1
-         J1 = II + 1
 
 !      dp_lambda[i, j] <-
 !        (mm1 - 1) * pp2[i + 1, j] +
 !        (mm2 - 1) * pp2[i, j + 1] -
 !        (mm1 + mm2) * pp2[i + 1, j + 1]
 
-         dp1(I,II) = (II - 1) * Conc2(I1 + 1,J1)
-         dp1(I,II) = dp1(I,II) + (I - 1) * Conc2(I1,J1 + 1)
-         dp1(I,II) = dp1(I,II) - (I + II) * Conc2(I1 + 1,J1 + 1)
+         dp1(I,J) = (J - 2) * Conc2(I + 1,J)
+         dp1(I,J) = dp1(I,J) + (I - 2) * Conc2(I,J + 1)
+         dp1(I,J) = dp1(I,J) - (I + J - 2) * Conc2(I + 1,J + 1)
 
 !      dp_mu[i, j] <-
 !        (mm1 + 1) * pp2[i + 1, j + 2] +
 !        (mm2 + 1) * pp2[i + 2, j + 1] -
 !        (mm1 + mm2) * pp2[i + 1, j + 1]
 
-         dp2(I,II) = (II + 1) * Conc2(I1 + 1,J1 + 2)
-         dp2(I,II) = dp2(I,II) + (I + 1) * Conc2(I1 + 2,J1 + 1)
-         dp2(I,II) = dp2(I,II) - (I + II) * Conc2(I1 + 1,J1 + 1)
+         dp2(I,J) = J * Conc2(I + 1,J + 2)
+         dp2(I,J) = dp2(I,J) + I * Conc2(I + 2,J + 1)
+         dp2(I,J) = dp2(I,J) - (I + J - 2) * Conc2(I + 1,J + 1)
 
        ENDIF
 
