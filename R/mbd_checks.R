@@ -157,6 +157,7 @@ check_q_vector <- function(
       brts2 <- c(brts, 0)
       w <- data.frame(matrix(NA, nrow = length(q_vector), ncol = 0))
       w$values <- q_vector
+      #w$x <- 1:length(q_vector)
       w$x <- seq_along(q_vector)
       w$cols <- ifelse(sign(q_vector) > 0, "blue", "red")
       print(w$values)
