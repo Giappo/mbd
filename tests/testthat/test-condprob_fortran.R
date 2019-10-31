@@ -93,6 +93,7 @@ test_that("pc integrated", {
 
   skip("Work in progress")
 
+  library(testthat)
   pars <- c(0.2, 0.1, 1.4, 0.12)
   lx <- 5
   brts <- c(10); age <- max(brts)

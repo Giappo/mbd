@@ -264,7 +264,7 @@
 !  dim(dp) <- c(lx2, 1)
 
    DO I = 1, N
-     Do J = 1, N
+     DO II = 1, N
 !      IF (I < N .AND. II < N) THEN
 
 !      i <- mm2 + 1
@@ -275,20 +275,18 @@
 !        (mm2 - 1) * pp2[i, j + 1] -
 !        (mm1 + mm2) * pp2[i + 1, j + 1]
 
-         dp1(I,J) = (J - 2) * Conc2(I + 1,J)
-         dp1(I,J) = dp1(I,J) + (I - 2) * Conc2(I,J + 1)
-         dp1(I,J) = dp1(I,J) - (I + J - 2) * Conc2(I + 1,J + 1)
+         dp1(I,II) = (II - 2) * Conc2(I + 1,II)
+         dp1(I,II) = dp1(I,II) + (I - 2) * Conc2(I,II + 1)
+         dp1(I,II) = dp1(I,II) - (I + II - 2) * Conc2(I + 1,II + 1)
 
 !      dp_mu[i, j] <-
 !        (mm1 + 1) * pp2[i + 1, j + 2] +
 !        (mm2 + 1) * pp2[i + 2, j + 1] -
 !        (mm1 + mm2) * pp2[i + 1, j + 1]
 
-         dp2(I,J) = J * Conc2(I + 1,J + 2)
-         dp2(I,J) = dp2(I,J) + I * Conc2(I + 2,J + 1)
-         dp2(I,J) = dp2(I,J) - (I + J - 2) * Conc2(I + 1,J + 1)
-
-       ENDIF
+         dp2(I,II) = II * Conc2(I + 1,II + 2)
+         dp2(I,II) = dp2(I,II) + I * Conc2(I + 2,II + 1)
+         dp2(I,II) = dp2(I,II) - (I + II - 2) * Conc2(I + 1,II + 1)
 
 !      sum1 <- 0
 !      for (n1 in 1:lx) {
@@ -300,6 +298,8 @@
        DO n1 = 1, N
          aux1(I,II) = aux1(I,II) + nu_q_mat(I,n1) * Conc2(n1,II)
        ENDDO
+     ENDDO
+   ENDDO
 
 !      sum1 <- 0
 !      for (n2 in 1:lx) {
@@ -307,6 +307,8 @@
 !      }
 !      aux2[m1, m2] <- sum1
 
+   DO I = 1, N
+     DO II = 1, N
        aux2(I,II) = 0
        DO n1 = 1, N
          aux2(I,II) = aux2(I,II) + aux1(I,n1) * nu_q_mat(II,n1)
@@ -314,11 +316,11 @@
 
 !  dp_nu <- aux2 - pp
 
-       dp3 = aux2(I,II) - Conc2(I,II)
+       dp3(I,II) = aux2(I,II) - Conc2(I + 1,II + 1)
 
 !  dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
 
-       dConc((I - 1)*N + II) = P(1)*dp1(I,II) + P(2)*dp2(I,II) + P(3)*dp3(I,II)
+       dConc((II - 1)*N + I) = P(1)*dp1(I,II) + P(2)*dp2(I,II) + P(3)*dp3(I,II)
 
      ENDDO
    ENDDO
