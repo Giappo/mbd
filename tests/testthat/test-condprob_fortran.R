@@ -95,6 +95,7 @@ test_that("pc integrated", {
 
   pars <- c(0.2, 0.1, 1.4, 0.12)
   lx <- 15
+  age <- 10
 
   # R code
   p_m1_m2 <- prob_cond_get_p_m1_m2(

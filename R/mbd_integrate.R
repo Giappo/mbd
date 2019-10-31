@@ -15,7 +15,6 @@ mbd_ode_FORTRAN <- function(
 ) {
   dimparsvec <- dim(parsvec)
   N <- length(initprobs)
-  testit::assert(prod(dimparsvec) == N ^ 2)
   if (all(dimparsvec) > 1) {
     dim(parsvec) <- c(N ^ 2, 1)
   }

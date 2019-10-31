@@ -4,13 +4,9 @@
 \alias{condprob_parmsvec}
 \title{Creates vector of parameters for the FORTRAN condprob code}
 \usage{
-condprob_parmsvec(log_nu_mat, log_q_mat, pars, lx, eq)
+condprob_parmsvec(pars, log_nu_mat, log_q_mat, lx, eq)
 }
 \arguments{
-\item{log_nu_mat}{logarithmic nu-matrix, used for condprob}
-
-\item{log_q_mat}{logarithmic q-matrix, used for condprob}
-
 \item{pars}{vector of parameters:
 \itemize{
   \item pars[1] is lambda, the sympatric speciation rate;
@@ -18,6 +14,10 @@ condprob_parmsvec(log_nu_mat, log_q_mat, pars, lx, eq)
   \item pars[3] is nu, the multiple allopatric speciation trigger rate;
   \item pars[4] is q, the single-lineage speciation probability;
 }}
+
+\item{log_nu_mat}{logarithmic nu-matrix, used for condprob}
+
+\item{log_q_mat}{logarithmic q-matrix, used for condprob}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
 
