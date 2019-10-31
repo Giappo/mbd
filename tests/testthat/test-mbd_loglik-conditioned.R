@@ -1,5 +1,11 @@
 context("mbd_loglik-conditioned")
 
+is_on_ci <- function() {
+  is_it_on_appveyor <- Sys.getenv("APPVEYOR") != ""
+  is_it_on_travis <- Sys.getenv("TRAVIS") != ""
+  is_it_on_appveyor || is_it_on_travis # nolint internal function
+}
+
 # conditioned likelihood is greater than unconditioned likelihood ----
 test_that("conditioned likelihood is greater than unconditioned likelihood", {
 
@@ -38,7 +44,7 @@ test_that("right conditioning", {
       brts = brts,
       n_0 = n_0,
       cond = cond,
-      lx = 300
+      lx = 100 + is_on_ci() * 200
     ),
     DDD::bd_loglik(
       pars1 = pars[1:3],
@@ -46,7 +52,7 @@ test_that("right conditioning", {
       brts = brts,
       missnumspec = 0
     ),
-    tolerance = 1e-5
+    tolerance = 1e-2 * (!is_on_ci()) + 1e-5 * (is_on_ci())
   )
 })
 

@@ -123,12 +123,12 @@ mbd_main <- function(
     model = model_names
   )
   if (length(t_0s) > 1) {
-    t_0s_label <- paste0("t_0_", 1:length(t_0s))
+    t_0s_label <- paste0("t_0_", seq_along(t_0s))
   } else {
     t_0s_label <- "t_0"
   }
   if (length(tips) > 1) {
-    tips_label <- paste0("tips_", 1:length(tips))
+    tips_label <- paste0("tips_", seq_along(tips))
   } else {
     tips_label <- "tips"
   }
