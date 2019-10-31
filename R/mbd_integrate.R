@@ -18,7 +18,7 @@ mbd_ode_FORTRAN <- function(
   if (all(dimparsvec) > 1) {
     dim(parsvec) <- c(N ^ 2, 1)
   }
-  if (runmod == "mbd_runmd") {
+  if (runmod == "mbd_runmod") {
     initfunc <- "mbd_initmod"
   } else if (runmod == "mbd_runmodpc") {
     initfunc <- "mbd_initmodpc"
