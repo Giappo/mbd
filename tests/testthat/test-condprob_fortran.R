@@ -30,7 +30,8 @@ test_that("the right parmsvecs and differentials are returned", {
   qq <- matrix(0, lx, lx)
   qq[2:(floor(lx / 2)), 2:(floor(lx / 2))] <- 1; qq <- qq / sum(qq)
   qvec <- matrix(qq, lx ^ 2, 1)
-  qvec <- 0:(lx ^ 2 - 1); qvec <- qvec / sum(qvec)
+  qvec <-
+    0:(lx ^ 2 - 1); qvec <- qvec / sum(qvec)
 
   dq1 <- condprob_dq(qvec = qvec, parmsvec = parmsvec)
   dq2 <- cond_prob_q_rhs1(
