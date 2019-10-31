@@ -1,4 +1,4 @@
-brts <- c(10); age <- max(brts)
+brts <- c(8); age <- max(brts)
 n_0 <- 2
 cond <- 1
 # n_sims <- 30
