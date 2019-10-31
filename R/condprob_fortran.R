@@ -115,9 +115,9 @@ condprob_log_q_mat <- function(lx, q, eq) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_parmsvec <- function(
+  pars,
   log_nu_mat,
   log_q_mat,
-  pars,
   lx,
   eq
 ) {

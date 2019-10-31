@@ -15,9 +15,13 @@ mbd_ode_FORTRAN <- function(
 ) {
   dimparsvec <- dim(parsvec)
   N <- length(initprobs)
-  testit::assert(prod(dimparsvec) == N ^ 2)
   if (all(dimparsvec) > 1) {
     dim(parsvec) <- c(N ^ 2, 1)
+  }
+  if (runmod == "mbd_runmd") {
+    initfunc <- "mbd_initmod"
+  } else if (runmod == "mbd_runmodpc") {
+    initfunc <- "mbd_initmodpc"
   }
   probs <- deSolve::ode(
     y = initprobs,
@@ -25,7 +29,7 @@ mbd_ode_FORTRAN <- function(
     rpar = parsvec,
     times = tvec,
     func = runmod,
-    initfunc = "mbd_initmod",
+    initfunc = initfunc,
     ynames = c("SV"),
     dimens = N + 1,
     nout = 1,
@@ -52,7 +56,7 @@ mbd_integrate <- function(
   atol,
   rtol,
   tcrit,
-  methode = 'lsoda'
+  methode = "lsoda"
 ) {
   func_name <- "no_name"
   if (is.character(func)) {
