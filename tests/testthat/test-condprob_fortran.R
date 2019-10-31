@@ -104,6 +104,7 @@ test_that("pc integrated", {
     matrices = cond_prob_p_matrices(q = pars[4], lx = lx),
     rhs_function = cond_prob_p_rhs2
   )
+  expect_equal(p_m1_m2, t(p_m1_m2))
 
   # FORTRAN code
   eq <- "p_eq"
@@ -124,7 +125,7 @@ test_that("pc integrated", {
     parms = parmsvec
   )
   dim(p_fortran) <- c(lx, lx)
-
+  expect_equal(p_fortran, t(p_fortran))
   expect_equal(p_m1_m2, p_fortran)
 
 })
