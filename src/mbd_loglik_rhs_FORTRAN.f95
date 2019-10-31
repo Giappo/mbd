@@ -209,7 +209,7 @@
         Conc2(N + 2,I) = 0
         DO II = 1, N
            nu_q_mat(I,II) = P(3 + (II - 1) * N + I)
-           Conc2(I + 1,II + 1) = Conc((II - 1) * N + I)
+           Conc2(I + 1,II + 1) = Conc((I - 1) * N + II)
         ENDDO
       ENDDO
 
@@ -298,7 +298,7 @@
 
        aux1(I,II) = 0
        DO n1 = 1, N
-         aux1(I,II) = aux1(I,II) + nu_q_mat(I,n1) * Conc2(n1,II)
+         aux1(I,II) = aux1(I,II) + nu_q_mat(I,n1) * Conc((n1 - 1) * N + II)
        ENDDO
 
 !      sum1 <- 0
@@ -314,7 +314,7 @@
 
 !  dp_nu <- aux2 - pp
 
-       dp3 = aux2(I,II) - Conc2(I,II)
+       dp3(I,II) = aux2(I,II) - Conc((II - 1) * N + I)
 
 !  dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
 
