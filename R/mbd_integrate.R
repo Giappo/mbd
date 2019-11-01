@@ -103,6 +103,7 @@ mbd_solve <- function(
   parms
 ) {
 
+  y <- vector
   t1 <- time_interval
 
   g <- 10 # granularity
@@ -113,7 +114,7 @@ mbd_solve <- function(
   while (TRUE) {
     tseq <- seq(t0, t1, length.out = g)
     out <- mbd_integrate(
-      y = vector,
+      y = y,
       times = tseq,
       func = func,
       parms = parms,
@@ -140,8 +141,7 @@ mbd_solve <- function(
       y <- as.numeric(out[lkg, -1])
       # relax tol to default
       rtol <- start_rtol
-    }
-    else {
+    } else {
       # no progress, make tol more strict
       rtol <- rtol / 100
     }
