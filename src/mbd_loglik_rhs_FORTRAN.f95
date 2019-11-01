@@ -308,19 +308,18 @@
 !      }
 !      aux2[m1, m2] <- sum1
 
-       aux2(I,II) = 0
+       aux2(I1,J1) = 0
        DO n1 = 1, N
          aux2(I1,J1) = aux2(I1,J1) + aux1(I1,n1) * nu_q_mat(J1,n1)
        ENDDO
 
 !  dp_nu <- aux2 - pp
 
-!!       dp3(I1,J1) = aux2(I1,J1) - Conc((I1 - 1) * N + J1)
+       dp3(I1,J1) = aux2(I1,J1) - Conc((I1 - 1) * N + J1)
 
 !  dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
 
-!!       dConc((I1 - 1)*N + J1) = P(1)*dp1(I1,J1) + P(2)*dp2(I1,J1) + P(3)*dp3(I1,J1)
-        dConc((I1 - 1)*N + J1) = P(1)*dp1(I1,J1) + P(2)*dp2(I1,J1)
+       dConc((I1 - 1)*N + J1) = P(1)*dp1(I1,J1) + P(2)*dp2(I1,J1) + P(3)*dp3(I1,J1)
      ENDDO
    ENDDO
 
