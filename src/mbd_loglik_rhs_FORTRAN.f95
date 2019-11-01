@@ -450,27 +450,27 @@
        I1 = I + 1
        J1 = II + 1
 
-!      dp_lambda[i, j] <-
-!        (mm1 - 1) * pp2[i + 1, j] +
-!        (mm2 - 1) * pp2[i, j + 1] -
-!        (mm1 + mm2) * pp2[i + 1, j + 1]
+!      dq_lambda[i, j] <-
+!        (2 + mm1 - 1) * qq2[i + 1, j] +
+!        (2 + mm2 - 1) * qq2[i, j + 1] -
+!        (2 + mm1 + mm2) * qq2[i + 1, j + 1]
 
-         dp1(I1,J1) = (II - 1) * Conc2(I1 + 1,J1)
-         dp1(I1,J1) = dp1(I1,J1) + (I - 1) * Conc2(I1,J1 + 1)
-         dp1(I1,J1) = dp1(I1,J1) - (I + II) * Conc2(I1 + 1,J1 + 1)
+         dp1(I1,J1) = (2 + II - 1) * Conc2(I1 + 1,J1)
+         dp1(I1,J1) = dp1(I1,J1) + (2 + I - 1) * Conc2(I1,J1 + 1)
+         dp1(I1,J1) = dp1(I1,J1) - (2 + I + II) * Conc2(I1 + 1,J1 + 1)
 
-!      dp_mu[i, j] <-
-!        (mm1 + 1) * pp2[i + 1, j + 2] +
-!        (mm2 + 1) * pp2[i + 2, j + 1] -
-!        (mm1 + mm2) * pp2[i + 1, j + 1]
+!      dq_mu[i, j] <-
+!        (mm1 + 1) * qq2[i + 1, j + 2] +
+!        (mm2 + 1) * qq2[i + 2, j + 1] -
+!        (2 + mm1 + mm2) * qq2[i + 1, j + 1]
 
          dp2(I1,J1) = (II + 1) * Conc2(I1 + 1,J1 + 2)
          dp2(I1,J1) = dp2(I1,J1) + (I + 1) * Conc2(I1 + 2,J1 + 1)
-         dp2(I1,J1) = dp2(I1,J1) - (I + II) * Conc2(I1 + 1,J1 + 1)
+         dp2(I1,J1) = dp2(I1,J1) - (2 + I + II) * Conc2(I1 + 1,J1 + 1)
 
 !      sum1 <- 0
 !      for (n1 in 1:lx) {
-!        sum1 <- sum1 + nu_q_mat[m1, n1] * pp[n1, n2]
+!        sum1 <- sum1 + nu_q_mat[m1, n1] * qq[n1, n2]
 !      }
 !      aux1[m1, n2] <- sum1
 
@@ -490,11 +490,11 @@
          aux2(I1,J1) = aux2(I1,J1) + aux1(I1,n1) * nu_q_mat(J1,n1)
        ENDDO
 
-!  dp_nu <- aux2 - pp
+!  dq_nu <- aux2 - qq
 
        dp3(I1,J1) = aux2(I1,J1) - Conc((I1 - 1) * N + J1)
 
-!  dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
+!  dq <- lambda * dq_lambda + mu * dq_mu + nu * dq_nu
 
        dConc((I1 - 1)*N + J1) = P(1)*dp1(I1,J1) + P(2)*dp2(I1,J1) + P(3)*dp3(I1,J1)
      ENDDO
