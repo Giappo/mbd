@@ -202,17 +202,18 @@
 !  pp2 <- matrix(0, lx + 2, lx + 2)
 !  pp2[mm, mm] <- pp
 
-      DO I = 1, (N + 1)
+      Conc2(1,N + 1) = 0
+      Conc2(N + 1,1) = 0
+      Conc2(N + 2,N + 1) = 0
+      Conc2(N + 1,N + 2) = 0
+      DO I = 1, N
         Conc2(I,1) = 0
         Conc2(I,N + 2) = 0
-        Conc2(1,N - I) = 0
-        Conc2(N + 2,N - I) = 0
-      ENDDO
-
-      DO I = 1, N
+        Conc2(1,I) = 0
+        Conc2(N + 2,I) = 0
         DO II = 1, N
            nu_q_mat(I,II) = P(3 + (II - 1) * N + I)
-           Conc2(I + 1,II + 1) = Conc((II - 1) * N + I)
+           Conc2(I + 1,II + 1) = Conc((I - 1) * N + II)
         ENDDO
       ENDDO
 
@@ -296,10 +297,10 @@
 !      }
 !      aux1[m1, n2] <- sum1
 
-!!       aux1(I1,J1) = 0
-!!       DO n1 = 1, N
-!!         aux1(I1,J1) = aux1(I1,J1) + nu_q_mat(I1,n1) * Conc((n1 - 1) * N + J1)
-!!       ENDDO
+       aux1(I1,J1) = 0
+       DO n1 = 1, N
+         aux1(I1,J1) = aux1(I1,J1) + nu_q_mat(I1,n1) * Conc((n1 - 1) * N + J1)
+       ENDDO
 
 !      sum1 <- 0
 !      for (n2 in 1:lx) {
@@ -307,10 +308,10 @@
 !      }
 !      aux2[m1, m2] <- sum1
 
-!!       aux2(I,II) = 0
-!!       DO n1 = 1, N
-!!         aux2(I1,J1) = aux2(I1,J1) + aux1(I1,n1) * nu_q_mat(J1,n1)
-!!       ENDDO
+       aux2(I,II) = 0
+       DO n1 = 1, N
+         aux2(I1,J1) = aux2(I1,J1) + aux1(I1,n1) * nu_q_mat(J1,n1)
+       ENDDO
 
 !  dp_nu <- aux2 - pp
 
