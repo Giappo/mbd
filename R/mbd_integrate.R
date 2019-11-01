@@ -20,7 +20,7 @@ mbd_ode_FORTRAN <- function(
   }
   if (runmod == "mbd_runmod") {
     initfunc <- "mbd_initmod"
-  } else if (runmod == "mbd_runmodpc") {
+  } else if (runmod == "mbd_runmodpcp" | runmod == "mbd_runmodpcq") {
     initfunc <- "mbd_initmodpc"
   }
   probs <- deSolve::ode(

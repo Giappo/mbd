@@ -92,8 +92,6 @@ test_that("the right parmsvecs and differentials are returned", {
 
 test_that("pc integrated", {
 
-  skip("Work in progress")
-
   pars <- c(0.2, 0.1, 1.4, 0.12)
   lx <- 5
   brts <- c(10); age <- max(brts)
@@ -122,7 +120,7 @@ test_that("pc integrated", {
   p_fortran <- mbd_solve(
     vector = pvec,
     time_interval = age,
-    func = "mbd_runmodpc",
+    func = "mbd_runmodpcp",
     parms = parmsvec
   )
   dim(p_fortran) <- c(lx, lx)
