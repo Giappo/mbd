@@ -129,7 +129,6 @@ test_that("pc integrated", {
   expect_equal(p_m1_m2, p_fortran)
 
   # Q EQUATION
-  skip(" At the moment, FORTRAN code only returns NaN")
   ## R code
   q_m1_m2 <- prob_cond_get_q_m1_m2(
     pars = pars,
