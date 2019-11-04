@@ -91,12 +91,6 @@ test_that("the right parmsvecs and differentials are returned", {
 
 test_that("pc integrated", {
 
-<<<<<<< HEAD
-  skip("Work in progress")
-
-  library(testthat)
-=======
->>>>>>> 9b24c11d53e4779d8d5a1526f271ff01b46f8780
   pars <- c(0.2, 0.1, 1.4, 0.12)
   lx <- 5
   brts <- c(10); age <- max(brts)
