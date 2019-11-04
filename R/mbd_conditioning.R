@@ -140,6 +140,40 @@ cond_prob_q_rhs2 <- function(t, x, parms) {
   ))
 }
 
+#' Solution of the integration of the ODE for Q_{m1, m2}
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
+#' @export
+prob_cond_get_q_m1_m2 <- function(
+  pars,
+  brts,
+  matrices,
+  rhs_function = cond_prob_q_rhs2
+) {
+  tt <- max(abs(brts)) # time between crown age and present
+  lx <- ncol(matrices$nu_matrix)
+
+  parms <- list()
+  parms$lambda <- pars[1]
+  parms$mu <- pars[2]
+  parms$nu <- pars[3]
+  parms$kk <- 1
+  parms$nu_matrix <- matrices$nu_matrix
+  parms$m1 <- matrices$m1
+  parms$m2 <- matrices$m2
+  parms$empty_qq <- matrices$empty_qq
+  q_0 <- c(y = c(1, rep(0, lx ^ 2 - 1)))
+
+  ode_out <- mbd_solve(
+    vector = q_0,
+    func = rhs_function,
+    time_interval = tt,
+    parms = parms
+  )
+  q_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
+  q_m1_m2
+}
+
 #' Called by \link{mbd_loglik} if there is a conditioning != 0
 #' @inheritParams default_params_doc
 #' @return the conditional probability
@@ -160,34 +194,17 @@ cond_prob_q <- function(
   if (cond == 0) {
     return(1)
   }
-  lambda <- pars[1]
-  mu <- pars[2]
-  nu <- pars[3]
-  q <- pars[4]
-  tt <- max(abs(brts)) # time between crown age and present
 
   # construct auxiliary matrix
-  matrices <- cond_prob_q_matrices(q = q, lx = lx)
+  matrices <- cond_prob_q_matrices(q = pars[4], lx = lx)
 
   # integrate equations
-  parms <- list()
-  parms$lambda <- lambda
-  parms$mu <- mu
-  parms$nu <- nu
-  parms$kk <- 1
-  parms$nu_matrix <- matrices$nu_matrix
-  parms$m1 <- matrices$m1
-  parms$m2 <- matrices$m2
-  parms$empty_qq <- matrices$empty_qq
-  q_0 <- c(y = c(1, rep(0, lx ^ 2 - 1)))
-
-  ode_out <- mbd_solve(
-    vector = q_0,
-    func = cond_prob_q_rhs2,
-    time_interval = tt,
-    parms = parms
+  q_m1_m2 <- prob_cond_get_q_m1_m2(
+    pars = pars,
+    brts = brts,
+    matrices = matrices,
+    rhs_function = cond_prob_q_rhs2
   )
-  q_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
 
   # compute conditioning probability
   m1 <- col(q_m1_m2) - 1
@@ -357,7 +374,7 @@ cond_prob_p_rhs2 <- function(t, x, parms) {
   ))
 }
 
-#' Solutiof the integration of the ODE for p_{n1, n2}
+#' Solution of the integration of the ODE for P_{n1, n2}
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @inheritParams default_params_doc
 #' @export

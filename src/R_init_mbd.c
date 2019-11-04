@@ -8,14 +8,16 @@ extern void F77_NAME(mbd_fill1d)(double *vec, int *DIMP, double *parms, int *II)
 extern void F77_NAME(mbd_initmod)(void (*steadyparms)(int *, double *));
 extern void F77_NAME(mbd_initmodpc)(void (*steadyparms)(int *, double *));
 extern void F77_NAME(mbd_runmod)(int *neq, double *t, double *Conc, double *dConc, double *yout, int *ip);
-extern void F77_NAME(mbd_runmodpc)(int *neq, double *t, double *Conc, double *dConc, double *yout, int *ip);
+extern void F77_NAME(mbd_runmodpcp)(int *neq, double *t, double *Conc, double *dConc, double *yout, int *ip);
+extern void F77_NAME(mbd_runmodpcq)(int *neq, double *t, double *Conc, double *dConc, double *yout, int *ip);
 
 static const R_FortranMethodDef FortranEntries[] = {
   {"mbd_fill1d", (DL_FUNC) &F77_NAME(mbd_fill1d),  4},
   {"mbd_initmod", (DL_FUNC) &F77_NAME(mbd_initmod),  1},
   {"mbd_initmodpc", (DL_FUNC) &F77_NAME(mbd_initmodpc),  1},
   {"mbd_runmod", (DL_FUNC) &F77_NAME(mbd_runmod),  6},
-  {"mbd_runmodpc", (DL_FUNC) &F77_NAME(mbd_runmodpc),  6},
+  {"mbd_runmodpcp", (DL_FUNC) &F77_NAME(mbd_runmodpcp),  6},
+  {"mbd_runmodpcq", (DL_FUNC) &F77_NAME(mbd_runmodpcq),  6},
   {NULL, NULL, 0}
 };
 
