@@ -38,8 +38,8 @@ mbd_ode_FORTRAN <- function(
     atol = atol,
     rtol = rtol,
     method = methode
-  )[, 1:(N + 1)]
-
+  )
+  probs <- probs[, 1:(N + 1)]
   return(probs)
 }
 
@@ -56,7 +56,7 @@ mbd_integrate <- function(
   atol,
   rtol,
   tcrit,
-  methode = "lsoda"
+  methode = "lsodes"
 ) {
   func_name <- "no_name"
   if (is.character(func)) {
