@@ -98,7 +98,7 @@ test_that("the right parmsvecs and differentials are returned", {
 test_that("pc integrated", {
 
   pars <- c(0.2, 0.1, 1.4, 0.12)
-  lx <- 12
+  lx <- 60
   brts <- c(10); age <- max(brts)
 
   # P EQUATION

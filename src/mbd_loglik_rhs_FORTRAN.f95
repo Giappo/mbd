@@ -167,9 +167,9 @@
       DOUBLE PRECISION  :: t, Conc(N ** 2), dConc(N ** 2), yout(*)
       DOUBLE PRECISION  :: la, mu, nu
       DOUBLE PRECISION  :: dp1, dp2, dp3
-      DOUBLE PRECISION  :: Conc2(N + 2, N + 2)
+      DOUBLE PRECISION  :: Conc2(N + 2, N + 2), V(N, N)
       !REAL(16)          :: aux1(N,N)
-      DOUBLE PRECISION  :: aux1(N,N)
+      DOUBLE PRECISION  :: aux1(N,N), nu_q_mat(N,N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -203,27 +203,11 @@
 !  pp2 <- matrix(0, lx + 2, lx + 2)
 !  pp2[mm, mm] <- pp
 
-      Conc2 = 0
-      !!Conc2(1,N + 1) = 0
-      !!Conc2(N + 1,1) = 0
-      !!Conc2(N + 2,N + 1) = 0
-      !!Conc2(N + 1,N + 2) = 0
-      DO I = 1, N
-        !!Conc2(I,1) = 0
-        !!Conc2(I,N + 2) = 0
-        !!Conc2(1,I) = 0
-        !!Conc2(N + 2,I) = 0
-        DO II = 1, N
-           !!nu_q_mat(I,II) = P(3 + (II - 1) * N + I)
-           Conc2(I + 1,II + 1) = Conc((I - 1) * N + II)
-
-           aux1(I,II) = 0
-           DO n1 = 1, N
-             aux1(I,II) = aux1(I,II) + P(3+(n1-1)*N+I) * Conc((n1 - 1) * N + II)
-           ENDDO
-
-        ENDDO
-      ENDDO
+   V = RESHAPE(Conc,(/N,N/), order = (/2,1/))
+   Conc2 = 0
+   Conc2(2:(N+1),2:(N+1)) = V
+   nu_q_mat = RESHAPE(P(4:(4 + N ** 2)),(/N,N/), order = (/1,2/))
+   aux1 = MATMUL(nu_q_mat,V)
 
    DO I = 0, N - 1
      Do II = 0, N - 1
@@ -248,29 +232,9 @@
 
   dp2=(II+1)*Conc2(I1+1,J1+2)+(I+1)*Conc2(I1+2,J1+1)-(I+II)*Conc2(I1+1,J1+1)
 
-!      sum1 <- 0
-!      for (n1 in 1:lx) {
-!        sum1 <- sum1 + nu_q_mat[m1, n1] * pp[n1, n2]
-!      }
-!      aux1[m1, n2] <- sum1
-
-!!       aux1(I1,J1) = 0
-!!       DO n1 = 1, N
-!!         aux1(I1,J1) = aux1(I1,J1) + P(3+(n1-1)*N+I1) * Conc((n1 - 1) * N + J1)
-!!       ENDDO
-
-!      sum1 <- 0
-!      for (n2 in 1:lx) {
-!        sum1 <- sum1 + aux1[m1, n2] * nu_q_mat2[n2, m2]
-!      }
-!      aux2[m1, m2] <- sum1
-
 !  dp_nu <- aux2 - pp
 
-       dp3 = -Conc((I1 - 1) * N + J1)
-       DO n1 = 1, N
-         dp3 = dp3 + aux1(I1,n1) * P(3 + (n1 - 1) * N + J1)
-       ENDDO
+       dp3 = DOT_PRODUCT(aux1(I1,:),nu_q_mat(J1,:)) - V(I1,J1)
 
 !  dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
 
