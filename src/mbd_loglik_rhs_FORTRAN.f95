@@ -163,7 +163,7 @@
       IMPLICIT NONE
 
 !......................... declaration section.............................
-      INTEGER           :: neq, ip(*), i, ii, lx, I1, J1, n1
+      INTEGER           :: neq, ip(*), i, ii, lx
       DOUBLE PRECISION  :: t, Conc(N ** 2), dConc(N ** 2), yout(*)
       DOUBLE PRECISION  :: la, mu, nu
       DOUBLE PRECISION  :: dpl(N,N), dpm(N,N), dpn(N,N)
