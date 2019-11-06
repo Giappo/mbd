@@ -296,9 +296,10 @@
       INTEGER           :: neq, ip(*), i, ii, lx, I1, J1, n1
       DOUBLE PRECISION  :: t, Conc(N ** 2), dConc(N ** 2), yout(*)
       DOUBLE PRECISION  :: la, mu, nu
-      DOUBLE PRECISION  :: nu_q_mat(N, N), dp1(N, N), dp2(N, N), dp3(N, N)
+      DOUBLE PRECISION  :: dp1, dp2, dp3
       DOUBLE PRECISION  :: Conc2(N + 2, N + 2)
-      REAL(16)          :: aux1(N,N), aux2(N,N)
+      !REAL(16)          :: aux1(N,N)
+      DOUBLE PRECISION  :: aux1(N,N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -332,130 +333,28 @@
 !  qq2 <- matrix(0, lx + 2, lx + 2)
 !  qq2[mm, mm] <- qq
 
-      Conc2 = 0
-      !Conc2(1,N + 1) = 0
-      !Conc2(N + 1,1) = 0
-      !Conc2(N + 2,N + 1) = 0
-      !Conc2(N + 1,N + 2) = 0
-      DO I = 1, N
-        !Conc2(I,1) = 0
-        !Conc2(I,N + 2) = 0
-        !Conc2(1,I) = 0
-        !Conc2(N + 2,I) = 0
-        DO II = 1, N
-           !nu_q_mat(I,II) = P(3 + (II - 1) * N + I)
-           Conc2(I + 1,II + 1) = Conc((I - 1) * N + II)
+    Conc2 = 0
+    DO I = 1, N
+      DO II = 1, N
+        Conc2(I + 1,II + 1) = Conc((I - 1) * N + II)
+        aux1(I,II) = 0
+        DO n1 = 1, N
+          aux1(I,II) = aux1(I,II) + P(3+(n1-1)*N+I) * Conc((n1 - 1) * N + II)
         ENDDO
       ENDDO
-
-!  mvec <- 1:lx - 1
-!  dq_lambda <- matrix(0, lx, lx)
-!  for (mm2 in mvec) {
-!    for (mm1 in mvec) {
-!      i <- mm2 + 1
-!      j <- mm1 + 1
-!      dq_lambda[i, j] <-
-!        (2 + mm1 - 1) * qq2[i + 1, j] +
-!        (2 + mm2 - 1) * qq2[i, j + 1] -
-!        (2 + mm1 + mm2) * qq2[i + 1, j + 1]
-!    }
-!  }
-!
-!  dq_mu <- matrix(0, lx, lx)
-!  for (mm2 in mvec) {
-!    for (mm1 in mvec) {
-!      i <- mm2 + 1
-!      j <- mm1 + 1
-!      dq_mu[i, j] <-
-!        (mm1 + 1) * qq2[i + 1, j + 2] +
-!        (mm2 + 1) * qq2[i + 2, j + 1] -
-!        (2 + mm1 + mm2) * qq2[i + 1, j + 1]
-!    }
-!  }
-!
-!  nu_q_mat2 <- t(nu_q_mat)
-!  dq_nu <- aux1 <- aux2 <-  matrix(0, lx, lx)
-!  for (m1 in 1:lx) {
-!    for (n2 in 1:lx) {
-!      sum1 <- 0
-!      for (n1 in 1:lx) {
-!        sum1 <- sum1 + nu_q_mat[m1, n1] * qq[n1, n2]
-!      }
-!      aux1[m1, n2] <- sum1
-!    }
-!  }
-!  for (m1 in 1:lx) {
-!    for (m2 in 1:lx) {
-!      sum1 <- 0
-!      for (n2 in 1:lx) {
-!        sum1 <- sum1 + aux1[m1, n2] * nu_q_mat2[n2, m2]
-!      }
-!      aux2[m1, m2] <- sum1
-!    }
-!  }
-!  dq_nu <- aux2 - qq
-!
-!  dq <- lambda * dq_lambda + mu * dq_mu + nu * dq_nu
-
-   DO I = 0, N - 1
-     Do II = 0, N - 1
-
-!      i <- mm2 + 1
-!      j <- mm1 + 1
-
-       I1 = I + 1
-       J1 = II + 1
-
-!      dq_lambda[i, j] <-
-!        (2 + mm1 - 1) * qq2[i + 1, j] +
-!        (2 + mm2 - 1) * qq2[i, j + 1] -
-!        (2 + mm1 + mm2) * qq2[i + 1, j + 1]
-
-         dp1(I1,J1) = (2 + II - 1) * Conc2(I1 + 1,J1)
-         dp1(I1,J1) = dp1(I1,J1) + (2 + I - 1) * Conc2(I1,J1 + 1)
-         dp1(I1,J1) = dp1(I1,J1) - (2 + I + II) * Conc2(I1 + 1,J1 + 1)
-
-!      dq_mu[i, j] <-
-!        (mm1 + 1) * qq2[i + 1, j + 2] +
-!        (mm2 + 1) * qq2[i + 2, j + 1] -
-!        (2 + mm1 + mm2) * qq2[i + 1, j + 1]
-
-         dp2(I1,J1) = (II + 1) * Conc2(I1 + 1,J1 + 2)
-         dp2(I1,J1) = dp2(I1,J1) + (I + 1) * Conc2(I1 + 2,J1 + 1)
-         dp2(I1,J1) = dp2(I1,J1) - (2 + I + II) * Conc2(I1 + 1,J1 + 1)
-
-!      sum1 <- 0
-!      for (n1 in 1:lx) {
-!        sum1 <- sum1 + nu_q_mat[m1, n1] * qq[n1, n2]
-!      }
-!      aux1[m1, n2] <- sum1
-
-       aux1(I1,J1) = 0
-       DO n1 = 1, N
-         !aux1(I1,J1) = aux1(I1,J1) + nu_q_mat(I1,n1) * Conc((n1 - 1) * N + J1)
-         aux1(I1,J1) = aux1(I1,J1) + P(3+(n1-1)*N+I1) * Conc((n1 - 1) * N + J1)
-       ENDDO
-
-!      sum1 <- 0
-!      for (n2 in 1:lx) {
-!        sum1 <- sum1 + aux1[m1, n2] * nu_q_mat2[n2, m2]
-!      }
-!      aux2[m1, m2] <- sum1
-
-       aux2(I1,J1) = 0
-       DO n1 = 1, N
-         !aux2(I1,J1) = aux2(I1,J1) + aux1(I1,n1) * nu_q_mat(J1,n1)
-         aux2(I1,J1) = aux2(I1,J1) + aux1(I1,n1) * P(3+(n1-1)*N+J1)
-       ENDDO
-
-!  dq_nu <- aux2 - qq
-
-       dp3(I1,J1) = aux2(I1,J1) - Conc((I1 - 1) * N + J1)
-
-!  dq <- lambda * dq_lambda + mu * dq_mu + nu * dq_nu
-
-       dConc((I1 - 1)*N + J1) = P(1)*dp1(I1,J1) + P(2)*dp2(I1,J1) + P(3)*dp3(I1,J1)
-     ENDDO
-   ENDDO
+    ENDDO
+    DO I = 0, N - 1
+      DO II = 0, N - 1
+        I1 = I + 1
+        J1 = II + 1
+        dp1=J1*Conc2(I1+1,J1)+I1*Conc2(I1,J1+1)-(I1+J1)*Conc2(I1+1,J1+1)
+        dp2=J1*Conc2(I1+1,J1+2)+I1*Conc2(I1+2,J1+1)-(I1+J1)*Conc2(I1+1,J1+1)
+        dp3 = -Conc((I1 - 1) * N + J1)
+        DO n1 = 1, N
+          dp3 = dp3 + aux1(I1,n1) * P(3 + (n1 - 1) * N + J1)
+        ENDDO
+        dConc((I1 - 1)*N + J1) = P(1)*dp1 + P(2)*dp2 + P(3)*dp3
+      ENDDO
+    ENDDO
 
    END SUBROUTINE mbd_runmodpcq
