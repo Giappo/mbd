@@ -38,8 +38,8 @@ mbd_ode_FORTRAN <- function(
     atol = atol,
     rtol = rtol,
     method = methode
-  )[, 1:(N + 1)]
-
+  )
+  probs <- probs[, 1:(N + 1)]
   return(probs)
 }
 
@@ -56,7 +56,7 @@ mbd_integrate <- function(
   atol,
   rtol,
   tcrit,
-  methode = "lsoda"
+  methode = "lsodes"
 ) {
   func_name <- "no_name"
   if (is.character(func)) {
@@ -109,7 +109,7 @@ mbd_solve <- function(
   g <- 10 # granularity
   t0 <- 0
   start_rtol <- 1e-8
-  atol <- 1e-100 # realistically zero
+  atol <- 1e-10 # realistically zero
   rtol <- start_rtol # something reasonable, hopefully
   while (TRUE) {
     tseq <- seq(t0, t1, length.out = g)

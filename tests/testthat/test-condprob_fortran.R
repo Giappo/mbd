@@ -185,7 +185,7 @@ test_that("pc integrated - high 'mbness'", {
   }
 
   pars <- c(0.2, 0.1, 2.5, 0.4)
-  lx <- 20
+  lx <- 60
   brts <- c(10); age <- max(brts)
 
   # P EQUATION
