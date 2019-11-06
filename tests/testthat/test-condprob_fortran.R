@@ -173,19 +173,18 @@ test_that("pc integrated", {
   expect_equal(q_fortran, t(q_fortran))
   expect_equal(q_m1_m2, q_fortran)
 
-  skip("Fortran is slower than R!")
   expect_true(t_p_fortran <= t_p_r)
   expect_true(t_q_fortran <= t_q_r)
 })
 
-test_that("pc integrated - high 'mbness'", {
+test_that("pc integrated - high lx", {
 
   if (!is_on_ci()) {
     skip("To be performed on ci.")
   }
 
   pars <- c(0.2, 0.1, 2.5, 0.4)
-  lx <- 60
+  lx <- 70
   brts <- c(10); age <- max(brts)
 
   # P EQUATION
@@ -260,7 +259,7 @@ test_that("pc integrated - high 'mbness'", {
   expect_equal(q_fortran, t(q_fortran))
   expect_equal(q_m1_m2, q_fortran)
 
-  skip("Fortran is slower than R!")
+  skip("FORTRAN is slower than R after lx = 60")
   expect_true(t_p_fortran <= t_p_r)
   expect_true(t_q_fortran <= t_q_r)
 })
