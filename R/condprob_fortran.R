@@ -232,6 +232,10 @@ condprob_dp <- function(
   return(dp)
 }
 
+#' dp to be passed to \code{desolve::ode}
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
 condprob_dp_rhs <- function(t, x, parms) {
   list(condprob_dp(
     pvec = x,
@@ -313,6 +317,10 @@ condprob_dq <- function(
   return(dq)
 }
 
+#' dq to be passed to \code{desolve::ode}
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
 condprob_dq_rhs <- function(t, x, parms) {
   list(condprob_dq(
     qvec = x,
@@ -322,73 +330,69 @@ condprob_dq_rhs <- function(t, x, parms) {
 
 # Compute probability distributions ----
 
+#' Conditional probability P_{n1, n2} for all the states n1 and n2
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
 condprob_p_m1_m2 <- function(
   brts,
   parmsvec,
   rhs_function = condprob_dp_rhs
 ) {
 
-  # Imports parms
-  lambda <- parmsvec[1]
-  mu <- parmsvec[2]
-  nu <- parmsvec[3]
-
-  nu_q_mat <- parmsvec[4:length(parmsvec)]
-  lx2 <- length(nu_q_mat)
+  lx2 <- length(parmsvec[4:length(parmsvec)])
   lx <- sqrt(lx2)
   testit::assert(lx %% 1 == 0)
-  dim(nu_q_mat) <- c(lx, lx)
-  tt <- max(abs(brts)) # time between crown age and present
+  age <- max(abs(brts)) # time between crown age and present
 
   # Define starting vector
   p_0 <- matrix(0, nrow = lx, ncol = lx)
   p_0[2, 2] <- 1
-  p_0 <- matrix(p_0, nrow = lx ^ 2, ncol = 1)
+  p_0 <- matrix(p_0, nrow = lx2, ncol = 1)
 
   # Integrate
-  p_r <- mbd_solve(
+  p_out <- mbd_solve(
     vector = p_0,
     time_interval = age,
     func = rhs_function,
     parms = parmsvec
   )
 
-  p_m1_m2 <- matrix(p_r, nrow = lx, ncol = lx)
+  p_m1_m2 <- matrix(p_out, nrow = lx, ncol = lx)
   p_m1_m2
 }
 
+#' Conditional probability Q_{m1, m2} for all the states n1 and n2
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
 condprob_q_m1_m2 <- function(
   brts,
   parmsvec,
   rhs_function = condprob_dq_rhs
 ) {
 
-  # Imports parms
-  lambda <- parmsvec[1]
-  mu <- parmsvec[2]
-  nu <- parmsvec[3]
-
   nu_q_mat <- parmsvec[4:length(parmsvec)]
   lx2 <- length(nu_q_mat)
   lx <- sqrt(lx2)
   testit::assert(lx %% 1 == 0)
   dim(nu_q_mat) <- c(lx, lx)
-  tt <- max(abs(brts)) # time between crown age and present
+  age <- max(abs(brts)) # time between crown age and present
 
   # Define starting vector
   q_0 <- matrix(0, nrow = lx, ncol = lx)
   q_0[1, 1] <- 1
-  q_0 <- matrix(q_0, nrow = lx ^ 2, ncol = 1)
+  q_0 <- matrix(q_0, nrow = lx2, ncol = 1)
 
   # Integrate
-  q_r <- mbd_solve(
+  q_out <- mbd_solve(
     vector = q_0,
     time_interval = age,
     func = rhs_function,
     parms = parmsvec
   )
 
-  q_m1_m2 <- matrix(q_r, nrow = lx, ncol = lx)
+  q_m1_m2 <- matrix(q_out, nrow = lx, ncol = lx)
   m1 <- col(nu_q_mat) - 1
   m2 <- t(m1)
   p_m1_m2 <- q_m1_m2 / ((m1 + 1) * (m2 + 1)) # nolint lintr has issues with math
@@ -396,15 +400,20 @@ condprob_q_m1_m2 <- function(
 }
 
 # Conditional probability ----
+
+#' Conditional probability calculated with the P-approach
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
 condprob_p <- function(
   brts,
   parmsvec,
   fortran = TRUE
 ) {
   if (fortran == TRUE) {
-    rhs_function = "mbd_runmodpcp"
+    rhs_function <- "mbd_runmodpcp"
   } else {
-    rhs_function = condprob_dp_rhs
+    rhs_function <- condprob_dp_rhs
   }
   p_m1_m2 <- condprob_p_m1_m2(
     brts = brts,
@@ -412,18 +421,23 @@ condprob_p <- function(
     rhs_function = rhs_function
   )
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
+  check_pc(pc = pc)
   pc
 }
 
+#' Conditional probability calculated with the Q-approach
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
 condprob_q <- function(
   brts,
   parmsvec,
   fortran = TRUE
 ) {
   if (fortran == TRUE) {
-    rhs_function = "mbd_runmodpcq"
+    rhs_function <- "mbd_runmodpcq"
   } else {
-    rhs_function = condprob_dq_rhs
+    rhs_function <- condprob_dq_rhs
   }
   q_m1_m2 <- condprob_q_m1_m2(
     brts = brts,
@@ -431,9 +445,14 @@ condprob_q <- function(
     rhs_function = rhs_function
   )
   pc <- sum(q_m1_m2)
+  check_pc(pc = pc)
   pc
 }
 
+#' Conditional probability
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
 condprob <- function(
   brts,
   parmsvec,
@@ -454,5 +473,5 @@ condprob <- function(
       fortran = fortran
     ))
   }
-  stop("eq is not valid")
+  stop("'eq' is not valid")
 }

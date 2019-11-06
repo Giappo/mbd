@@ -178,3 +178,18 @@ check_q_vector <- function(
     }
   }
 }
+
+#' @title Check conditional probability
+#' @description Check conditional probability
+#' @inheritParams default_params_doc
+#' @return Nothing
+#' @author Giovanni Laudanno
+#' @export
+check_pc <- function(pc, debug_mode = FALSE) {
+  if (!(pc >= 0 && pc <= 1)) {
+    if (debug_mode == FALSE) {
+      stop("problems: pc is wrong!")
+    }
+  }
+  return()
+}

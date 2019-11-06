@@ -33,6 +33,7 @@
 #' @param empty_mat an empty matrix
 #' @param eq the equation approach you want to use. It can be "q_eq" for the
 #'  Q-equation of "p_eq" for the P-equation.
+#' @param fortran Set it to TRUE if you want to use FORTRAN routine.
 #' @param func a function
 #' @param function_name function name
 #' @param function_names function names
@@ -129,6 +130,7 @@
 #' according to y = x / (1 + x)
 #' @param parsfix the values of the parameters that should not be optimized.
 #' @param parsvec vector of paramters for the FORTRAN subroutine.
+#' @param pc conditional probability
 #' @param precision something
 #' @param printit something
 #' @param print_errors something
@@ -227,6 +229,7 @@ default_params_doc <- function(
   empty_pp,
   empty_qq,
   eq,
+  fortran,
   func,
   function_name,
   function_names,
@@ -299,6 +302,7 @@ default_params_doc <- function(
   pars_transformed,
   parsfix,
   parsvec,
+  pc,
   precision,
   print_errors,
   printit,

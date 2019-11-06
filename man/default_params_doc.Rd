@@ -8,7 +8,7 @@ documentation.}
 default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   age, alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
   checked_functions, colormap, cond, data_folder, debug_mode, empty_mat,
-  empty_pp, empty_qq, eq, func, function_name, function_names,
+  empty_pp, empty_qq, eq, fortran, func, function_name, function_names,
   functions_names, idparsfix, idparsopt, initparsopt, init_n_lineages,
   initprobs, init_probs, input_trees_path, input_xml, interval_max,
   interval_min, iterations, k, lambda, lambda_limit, loglik_function,
@@ -19,8 +19,8 @@ default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species, n_sims,
   n_steps, n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids, pp,
   pp2, parms, parmsvec, params, pars, pars_transform, pars_transformed,
-  parsfix, parsvec, precision, print_errors, printit, project_folder, pvec,
-  q, qq, qq2, q_t, q_vector, q_threshold, quantiles_choice, qvec,
+  parsfix, parsvec, pc, precision, print_errors, printit, project_folder,
+  pvec, q, qq, qq2, q_t, q_vector, q_threshold, quantiles_choice, qvec,
   recursive, rtol, reltol, res, results, results_folder, rhs_function,
   runmod, s, saveit, seed, sample_interval, sequence_length, sim, sim_pars,
   sim_phylo, start_pars, subsamp, t, tcrit, times, tvec, t1, t2, t_0, t_0s,
@@ -83,6 +83,8 @@ expose them.}
 
 \item{eq}{the equation approach you want to use. It can be "q_eq" for the
 Q-equation of "p_eq" for the P-equation.}
+
+\item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 
 \item{func}{a function}
 
@@ -250,6 +252,8 @@ according to y = x / (1 + x)}
 \item{parsfix}{the values of the parameters that should not be optimized.}
 
 \item{parsvec}{vector of paramters for the FORTRAN subroutine.}
+
+\item{pc}{conditional probability}
 
 \item{precision}{something}
 

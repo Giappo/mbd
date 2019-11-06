@@ -213,24 +213,7 @@ cond_prob_q <- function(
   pc <- sum(p_m1_m2)
 
   pc <- DDD::roundn(pc, digits = 8)
-  if (!(pc >= 0 && pc <= 1)) {
-    if (debug_mode == TRUE) {
-      graphics::plot(
-        p_m1_m2,
-        xlab = "m",
-        ylab = "Q_m^k(t_p - t_c)",
-        main = paste0(
-          "pars = ", pars[1], ", ", pars[2], ", ", pars[3], ", ", pars[4]
-        ),
-        sub = paste0(
-          "Conditional probability = ", pc
-        )
-      )
-      cat("The value of pc is: ", pc, "\n")
-    } else {
-      stop("problems: pc is wrong!")
-    }
-  } # debug
+  check_pc(pc = pc, debug_mode = debug_mode)
 
   pc
 }
@@ -447,11 +430,7 @@ cond_prob_p <- function(
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
 
   pc <- DDD::roundn(pc, digits = 8)
-  if (!(pc >= 0 && pc <= 1)) {
-    if (debug_mode != TRUE) {
-      stop("problems: pc is wrong!")
-    }
-  } # debug
+  check_pc(pc = pc, debug_mode = debug_mode)
 
   pc
 }
@@ -731,11 +710,8 @@ cond_prob_p2 <- function(
   # compute conditioning probability
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
 
-  if (!(pc >= 0 && pc <= 1)) {
-    if (debug_mode != TRUE) {
-      stop("problems: pc is wrong!")
-    }
-  } # debug
+  pc <- DDD::roundn(pc, digits = 8)
+  check_pc(pc = pc, debug_mode = debug_mode)
 
   pc
 }

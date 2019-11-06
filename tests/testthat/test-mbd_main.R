@@ -9,7 +9,7 @@ is_on_ci <- function() {
 test_that("use", {
 
   if (!is_on_ci()) {
-    skip("This is long")
+    skip("To be performed on ci.")
   }
 
   seed <- 8 # seed = 8 is critical
