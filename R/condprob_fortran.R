@@ -131,12 +131,16 @@ condprob_parmsvec <- function(
   log_nu_mat <- log_nu_mat[1:lx, 1:lx]
   log_q_mat <- log_q_mat[1:lx, 1:lx]
   nu_q_mat <- exp(log_nu_mat + log_q_mat)
+  m1 <- col(log_nu_mat) - 1
+  m2 <- t(m1)
 
   parmsvec <- c(
     lambda,
     mu,
     nu,
-    matrix(nu_q_mat, nrow = lx2, ncol = 1)
+    matrix(nu_q_mat, nrow = lx2, ncol = 1),
+    matrix(m1, nrow = lx2, ncol = 1),
+    matrix(m2, nrow = lx2, ncol = 1)
   )
   parmsvec
 }
@@ -169,12 +173,12 @@ condprob_dp <- function(
   lx2 <- length(pvec)
   lx <- sqrt(lx2)
   pp <- matrix(pvec, lx, lx)
-  mm <- 2:(lx + 1)
+  mm <- 1 + 1:lx
 
   lambda <- parmsvec[1]
   mu <- parmsvec[2]
   nu <- parmsvec[3]
-  nu_q_mat <- parmsvec[(3 + 1):(3 + lx2)]
+  nu_q_mat <- parmsvec[3 + 1:lx2]
   dim(nu_q_mat) <- c(lx, lx)
 
   pp2 <- matrix(0, lx + 2, lx + 2)
@@ -254,12 +258,12 @@ condprob_dq <- function(
   lx2 <- length(qvec)
   lx <- sqrt(lx2)
   qq <- matrix(qvec, lx, lx)
-  mm <- 2:(lx + 1)
+  mm <- 1 + 1:lx
 
   lambda <- parmsvec[1]
   mu <- parmsvec[2]
   nu <- parmsvec[3]
-  nu_q_mat <- parmsvec[(3 + 1):(3 + lx2)]
+  nu_q_mat <- parmsvec[3 + 1:lx2]
   dim(nu_q_mat) <- c(lx, lx)
 
   qq2 <- matrix(0, lx + 2, lx + 2)
@@ -337,12 +341,11 @@ condprob_dq_rhs <- function(t, x, parms) {
 condprob_p_m1_m2 <- function(
   brts,
   parmsvec,
+  lx,
   rhs_function = condprob_dp_rhs
 ) {
 
-  lx2 <- length(parmsvec[4:length(parmsvec)])
-  lx <- sqrt(lx2)
-  testit::assert(lx %% 1 == 0)
+  lx2 <- lx ^ 2
   age <- max(abs(brts)) # time between crown age and present
 
   # Define starting vector
@@ -369,13 +372,12 @@ condprob_p_m1_m2 <- function(
 condprob_q_m1_m2 <- function(
   brts,
   parmsvec,
+  lx,
   rhs_function = condprob_dq_rhs
 ) {
 
-  nu_q_mat <- parmsvec[4:length(parmsvec)]
-  lx2 <- length(nu_q_mat)
-  lx <- sqrt(lx2)
-  testit::assert(lx %% 1 == 0)
+  lx2 <- lx ^ 2
+  nu_q_mat <- parmsvec[3 + 1:lx]
   dim(nu_q_mat) <- c(lx, lx)
   age <- max(abs(brts)) # time between crown age and present
 

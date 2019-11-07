@@ -4,12 +4,14 @@
 \alias{condprob_q_m1_m2}
 \title{Conditional probability Q_{m1, m2} for all the states n1 and n2}
 \usage{
-condprob_q_m1_m2(brts, parmsvec, rhs_function = condprob_dq_rhs)
+condprob_q_m1_m2(brts, parmsvec, lx, rhs_function = condprob_dq_rhs)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
 
 \item{parmsvec}{parameters to pass to the FORTRAN scripts}
+
+\item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{rhs_function}{a function for the right hand side of the differential
 equation}
