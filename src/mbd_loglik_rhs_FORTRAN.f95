@@ -91,7 +91,7 @@
 ! Allocate variable size arrays (state variables, derivatives and parameters)
 
       IF (ALLOCATED(P)) DEALLOCATE(P)
-      ALLOCATE(P(3 + N ** 2))
+      ALLOCATE(P(3 + 3 * N ** 2))
 
       initialised = .FALSE.
 
@@ -165,11 +165,9 @@
 !......................... declaration section.............................
       INTEGER           :: neq, ip(*), i, ii, lx
       DOUBLE PRECISION  :: t, Conc(N ** 2), dConc(N ** 2), yout(*)
-      DOUBLE PRECISION  :: la, mu, nu
-      DOUBLE PRECISION  :: dpl(N,N), dpm(N,N), dpn(N,N)
       DOUBLE PRECISION  :: vec(N)
-      DOUBLE PRECISION  :: V(N, N), V2(N + 2, N + 2), m1(N, N), m2(N,N)
-      DOUBLE PRECISION  :: nu_q_mat(N,N)
+      DOUBLE PRECISION  :: dp(N,N), V(N, N), V2(N + 2, N + 2)
+      DOUBLE PRECISION  :: nu_q_mat(N,N), m1(N, N), m2(N,N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -186,7 +184,7 @@
 
         ! save parameter values in yout
         ii = ip(1)   ! Start of parameter values
-        CALL mbd_fill1d(P, 3 + N ** 2, yout, ii)   ! ii is updated in fill1d
+        CALL mbd_fill1d(P, 3 + 3 * N ** 2, yout, ii)   ! ii is updated in fill1d
         Initialised = .TRUE.          ! to prevent from initialising more than once
       ENDIF
 
@@ -196,19 +194,18 @@
    V2 = 0
    V2(2:(N+1),2:(N+1)) = V
    nu_q_mat = RESHAPE(P(4:(4 + N ** 2)),(/N,N/), order = (/1,2/))
-
+   !!m1 = RESHAPE(P((5 + N ** 2):(4 + 2 * N ** 2)),(/N,N/), order = (/1,2/))
    vec = (/(I, I = 0, N - 1, 1)/)
    DO I = 1, N
      m1(I,:) = vec
    ENDDO
    m2 = TRANSPOSE(m1)
 
-   dpl = (m1-1) * V2(2:(N+1),1:N) + (m2-1) * V2(1:N,2:(N+1)) - (m1+m2) * V
-   dpm = (m1+1)*V2(2:(N+1),3:(N+2)) + (m2+1)*V2(3:(N+2),2:(N+1)) - (m1+m2)*V
-   dpn = MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V
+   dp=P(1)*((m1-1)*V2(2:(N+1),1:N)+(m2-1)*V2(1:N,2:(N+1))-(m1+m2)*V)
+   dp=dp+P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))-(m1+m2)*V)
+   dp=dp+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
 
-   V = P(1) * dpl + P(2) * dpm + P(3) * dpn
-   dConc = RESHAPE(V,(/N ** 2/))
+   dConc = RESHAPE(dp,(/N ** 2/))
 
    END SUBROUTINE mbd_runmodpcp
 

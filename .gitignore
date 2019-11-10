@@ -5,7 +5,10 @@
 inst/doc
 vignettes/mbd_demo_files/
 vignettes/mbd_demo.aux
-src/mbd_dimmod.mod
-src/R_init_mbd.o
-src/mbd.dll
-src/mbd_loglik_rhs_FORTRAN.o
+src/*.o
+src/*.mod
+src/*.so
+src/*.dll
+src-i386
+src-x64
+
