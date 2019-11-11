@@ -9,37 +9,37 @@ test_that("get_pkg_name", {
 test_that("get_function_names", {
   # use
   testthat::expect_true(
-    get_function_names(
+    mbd::get_function_names(
       loglik_functions = "mbd_loglik"
     ) == "mbd_loglik"
   )
   testthat::expect_true(
-    get_function_names(
+    mbd::get_function_names(
       loglik_functions = c("mbd_loglik")
     ) == "mbd_loglik"
   )
   testthat::expect_true(
     all(
-      get_function_names(
+      mbd::get_function_names(
         loglik_functions = c("mbd_loglik", "pmb_loglik")
       ) == c("mbd_loglik", "pmb_loglik")
     )
   )
   testthat::expect_true(
     all(
-      get_function_names(
+      mbd::get_function_names(
         loglik_functions = mbd_logliks_function()
       ) == c("mbd_loglik", "pmb_loglik")
     )
   )
   testthat::expect_true(
-    get_function_names(
+    mbd::get_function_names(
       loglik_functions = mbd_loglik
     ) == "mbd_loglik"
   )
   testthat::expect_true(
     all(
-      get_function_names(
+      mbd::get_function_names(
         loglik_functions = c(mbd_loglik, pmb_loglik)
       ) == c("mbd_loglik", "pmb_loglik")
     )
@@ -51,25 +51,25 @@ test_that("get_function_names", {
     "!"
   )
   testthat::expect_error(
-    get_function_names(
+    mbd::get_function_names(
       loglik_functions = "nonsense"
     ),
     error_message
   )
   testthat::expect_error(
-    get_function_names(
+    mbd::get_function_names(
       loglik_functions = c("nonsense1", "nonsense2")
     ),
     error_message
   )
   testthat::expect_error(
-    get_function_names(
+    mbd::get_function_names(
       loglik_functions = grepl
     ),
     error_message
   )
   testthat::expect_error(
-    get_function_names(
+    mbd::get_function_names(
       loglik_functions = c(exp, grepl)
     ),
     error_message
@@ -79,13 +79,13 @@ test_that("get_function_names", {
 test_that("get_model_names", {
   # use
   testthat::expect_silent(
-    get_model_names(
+    mbd::get_model_names(
       function_names = mbd_logliks_function(),
       verbose = FALSE
     )
   )
   testthat::expect_output(
-    get_model_names(
+    mbd::get_model_names(
       function_names = mbd_logliks_function(),
       verbose = TRUE
     ),
@@ -98,7 +98,7 @@ test_that("get_model_names", {
     "!"
   )
   testthat::expect_error(
-    get_model_names(
+    mbd::get_model_names(
       function_names = "nonsense"
     ),
     error_message
@@ -107,7 +107,7 @@ test_that("get_model_names", {
 
 test_that("cat2", {
   testthat::expect_output(
-    cat2(
+    mbd::cat2(
       message = "test",
       verbose = TRUE
     )
@@ -119,7 +119,7 @@ test_that("print_info", {
   n_0 <- 2
   cond <- 1
   testthat::expect_output(
-    print_info(
+    mbd::print_info(
       brts = brts,
       n_0 = n_0,
       cond = cond,
@@ -130,7 +130,7 @@ test_that("print_info", {
   n_0s <- c(2, 1)
   cond <- 1
   testthat::expect_output(
-    print_info(
+    mbd::print_info(
       brts = brts,
       n_0 = n_0,
       cond = cond,
@@ -138,7 +138,7 @@ test_that("print_info", {
     )
   )
   testthat::expect_silent(
-    print_info(
+    mbd::print_info(
       brts = brts,
       n_0 = n_0,
       cond = cond,
@@ -149,7 +149,7 @@ test_that("print_info", {
 
 test_that("mbd_logliks_experiment", {
   loglik_func <- get(
-    mbd_logliks_experiment()
+    mbd::mbd_logliks_experiment()
   )
   testthat::expect_true(
     is.numeric(

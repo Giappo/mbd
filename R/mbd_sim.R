@@ -26,10 +26,10 @@ mbd_sim <- function(
   tips_interval = c(n_0 * (cond > 0), Inf),
   brts_precision = 8
 ) {
-  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
-  check_seed(seed = seed)
+  mbd::check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
+  mbd::check_seed(seed = seed)
   if (
-    check_pars(pars = pars) == "wrong"
+    mbd::check_pars(pars = pars) == "wrong"
   ) {
     stop("These parameters are wrong. Please check.")
   }
@@ -41,7 +41,7 @@ mbd_sim <- function(
   while (keep_the_sim == 0) {
     total_count <- n_0 # all the species that ever appeared
     n_species <- n_0 # all the surviving species
-    l_matrix <- initialize_l_matrix(age = age, n_0 = n_0)
+    l_matrix <- mbd::initialize_l_matrix(age = age, n_0 = n_0)
     pool <- unique(l_matrix[, 3])[unique(l_matrix[, 3]) != 0]
     t <- age
     while (t > 0 && length(pool) > 0) {

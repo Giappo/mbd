@@ -206,7 +206,9 @@ test_that("FORTRAN and R return same result but FORTRAN is faster", {
 
 test_that("FORTRAN and R - hard test", {
 
-  if (!is_on_ci()) {skip("To be performed on ci.")}
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
 
   brts <- c(10)
   pars <- c(0.2, 0.1, 1.5, 0.14)

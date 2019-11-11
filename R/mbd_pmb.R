@@ -10,9 +10,9 @@ pmb_loglik <- function(
   n_0 = 2
 ) {
 # BASIC SETTINGS AND CHECKS
-  check_brts(brts = brts, n_0 = n_0)
+  mbd::check_brts(brts = brts, n_0 = n_0)
   if (
-    check_pars(pars = pars, safety_checks = FALSE) == "wrong"
+    mbd::check_pars(pars = pars, safety_checks = FALSE) == "wrong"
   ) {
     return(-Inf)
   }
@@ -24,7 +24,7 @@ pmb_loglik <- function(
 
   if (mu != 0) stop("This function works only for mu = 0!")
 
-  data <- brts2time_intervals_and_births(brts) # nolint internal function
+  data <- mbd::brts2time_intervals_and_births(brts)
   time_intervals <- data$time_intervals[-1]
   births <- data$births[-which(data$births == 0)]
   k <- n_0 + cumsum(c(0, births))
@@ -34,12 +34,12 @@ pmb_loglik <- function(
   # calculating branches contribution
   i <- 0:1e6
   for (t in seq_along(time_intervals)) {
-    #(nu *(t_k-t_k-1))^i * exp(-nu * (t_k - t_k - 1)) / k!
+    # math: (nu *(t_k-t_k-1))^i * exp(-nu * (t_k - t_k - 1)) / k!
     poisson_term <- stats::dpois(i, nu * time_intervals[t], log = FALSE)[
       stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
     ii <- i[stats::dpois(i, nu * time_intervals[t], log = FALSE) != 0]
-    # (1) nu contribution: (1-q)^(k * i) * (nu *(t_k-t_k-1))^i
-    #                      * exp(-nu *(t_k-t_k-1)) / k!
+    # (1) nu contribution: (1 - q)^(k * i) * (nu *(t_k - t_k-1)) ^ i
+    #                      * exp(-nu *(t_k - t_k-1)) / k!
     # (2) lambda contribution: exp(-k * lambda *(t_k-t_k-1))
     a_term[t] <- sum(
       (1 - q) ^ (ii * k[t]) * poisson_term

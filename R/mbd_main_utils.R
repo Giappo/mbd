@@ -77,7 +77,7 @@ main_save_files <- function(
   if (!dir.exists(data_folder)) {
     dir.create(data_folder, showWarnings = FALSE)
   }
-  data_file_name <- create_data_file_name( # nolint internal function
+  data_file_name <- mbd::create_data_file_name(
     data_folder = data_folder,
     sim_pars = sim_pars,
     optim_ids = optim_ids,
@@ -96,7 +96,7 @@ main_save_files <- function(
   if (!dir.exists(results_folder)) {
     dir.create(results_folder, showWarnings = FALSE)
   }
-  results_file_name <- create_results_file_name( # nolint internal function
+  results_file_name <- mbd::create_results_file_name(
     results_folder = results_folder,
     sim_pars = sim_pars,
     optim_ids = optim_ids,

@@ -354,7 +354,6 @@ condprob_dq <- function(
 ) {
   lx2 <- length(qvec)
   lx <- sqrt(lx2)
-  k <- 1
 
   mm <- 2:(lx + 1)
 
