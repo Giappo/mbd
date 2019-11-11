@@ -113,7 +113,6 @@
 !......................... declaration section.............................
       INTEGER           :: neq, ip(*), i, ii
       DOUBLE PRECISION  :: t, Conc(N), dConc(N), yout(*)
-      DOUBLE PRECISION  :: Conc2(N,N), P2(N,N)
       !REAL(16)          :: V(N)
 
 ! parameters - named here
@@ -149,9 +148,7 @@
       !  dConc(I) = V(I)
       !ENDDO
 
-      P2 = RESHAPE(P,(/N,N/), order = (/1,2/))
-      Conc2 = RESHAPE(Conc,(/N,N/), order = (/1,2/))
-      dConc = RESHAPE(MATMUL(P2,Conc2),(/N ** 2/))
+      dConc = MATMUL(RESHAPE(P,(/N,N/), order = (/1,2/)),Conc)
 
       END SUBROUTINE mbd_runmod
 
@@ -229,11 +226,9 @@
 !......................... declaration section.............................
       INTEGER           :: neq, ip(*), i, ii, lx, I1, J1, n1
       DOUBLE PRECISION  :: t, Conc(N ** 2), dConc(N ** 2), yout(*)
-      DOUBLE PRECISION  :: la, mu, nu
-      DOUBLE PRECISION  :: dp1, dp2, dp3
-      DOUBLE PRECISION  :: Conc2(N + 2, N + 2)
-      !REAL(16)          :: aux1(N,N)
-      DOUBLE PRECISION  :: aux1(N,N)
+      DOUBLE PRECISION  :: vec(N)
+      DOUBLE PRECISION  :: dq(N,N), V(N, N), V2(N + 2, N + 2)
+      DOUBLE PRECISION  :: nu_q_mat(N,N), m1(N, N), m2(N,N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -255,40 +250,37 @@
       ENDIF
 
 ! dynamics
-!  lx2 <- length(qvec)
-!  lx <- sqrt(lx2)
-!  qq <- matrix(qvec, lx, lx)
-!  mm <- 2:(lx + 1)
-!  lambda <- parmsvec[1]
-!  mu <- parmsvec[2]
-!  nu <- parmsvec[3]
-!  nu_q_mat <- parmsvec[(3 + 1):(3 + lx2)]
-!  dim(nu_q_mat) <- c(lx, lx)
-!  qq2 <- matrix(0, lx + 2, lx + 2)
-!  qq2[mm, mm] <- qq
 
-    Conc2 = 0
-    DO I = 1, N
-      DO II = 1, N
-        Conc2(I + 1,II + 1) = Conc((I - 1) * N + II)
-        aux1(I,II) = 0
-        DO n1 = 1, N
-          aux1(I,II) = aux1(I,II) + P(3+(n1-1)*N+I) * Conc((n1 - 1) * N + II)
-        ENDDO
-      ENDDO
-    ENDDO
-    DO I = 0, N - 1
-      DO II = 0, N - 1
-        I1 = I + 1
-        J1 = II + 1
-        dp1=J1*Conc2(I1+1,J1)+I1*Conc2(I1,J1+1)-(I1+J1)*Conc2(I1+1,J1+1)
-        dp2=J1*Conc2(I1+1,J1+2)+I1*Conc2(I1+2,J1+1)-(I1+J1)*Conc2(I1+1,J1+1)
-        dp3 = -Conc((I1 - 1) * N + J1)
-        DO n1 = 1, N
-          dp3 = dp3 + aux1(I1,n1) * P(3 + (n1 - 1) * N + J1)
-        ENDDO
-        dConc((I1 - 1)*N + J1) = P(1)*dp1 + P(2)*dp2 + P(3)*dp3
-      ENDDO
-    ENDDO
+   V = RESHAPE(Conc,(/N,N/), order = (/1,2/))
+   V2 = 0
+   V2(2:(N+1),2:(N+1)) = V
+   nu_q_mat = RESHAPE(P((3 + 1):(3 + N ** 2)),(/N,N/), order = (/1,2/))
+   !m1 = RESHAPE(P((3 + N ** 2 + 1):(3 + 2 * N ** 2)),(/N,N/), order = (/1,2/))
+   vec = (/(I, I = 0, N - 1, 1)/)
+   DO I = 1, N
+     m1(I,:) = vec
+   ENDDO
+   m2 = TRANSPOSE(m1)
+
+   dq=P(1)*((m1+1)*V2(2:(N+1),1:N)+(m2+1)*V2(1:N,2:(N+1))-(m1+m2+2)*V)
+   dq=dq+P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))-(m1+m2+2)*V)
+   dq=dq+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
+
+   dConc = RESHAPE(dq,(/N ** 2/))
+
+
+!    DO I = 0, N - 1
+!      DO II = 0, N - 1
+!        I1 = I + 1
+!        J1 = II + 1
+!        dp1=J1*Conc2(I1+1,J1)+I1*Conc2(I1,J1+1)-(I1+J1)*Conc2(I1+1,J1+1)
+!        dp2=J1*Conc2(I1+1,J1+2)+I1*Conc2(I1+2,J1+1)-(I1+J1)*Conc2(I1+1,J1+1)
+!        dp3 = -Conc((I1 - 1) * N + J1)
+!        DO n1 = 1, N
+!          dp3 = dp3 + aux1(I1,n1) * P(3 + (n1 - 1) * N + J1)
+!        ENDDO
+!        dConc((I1 - 1)*N + J1) = P(1)*dp1 + P(2)*dp2 + P(3)*dp3
+!      ENDDO
+!    ENDDO
 
    END SUBROUTINE mbd_runmodpcq

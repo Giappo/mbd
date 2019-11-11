@@ -11,7 +11,7 @@ test_that("fortran and r return the same result, but fortran is faster", {
   pars <- c(0.2, 0.1, 1.4, 0.12)
   n_0 <- 2
   cond <- 0
-  lx <- 100
+  lx <- 200
   brts <- c(10, 9.4, 8, 7.6, 7.6, 6, 6, 6, 5, 4, 4, 3, 2, 2, 2, 2)
 
   t_r <- system.time(

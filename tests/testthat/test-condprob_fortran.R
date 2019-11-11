@@ -29,7 +29,7 @@ test_that("the right parmsvecs and differentials are returned", {
   )
   testthat::expect_equal(
     length(parmsvec),
-    length(pars) - 1 + (lx ^ 2)
+    length(pars) - 1 + 3 * (lx ^ 2)
   )
 
   # differential
@@ -71,7 +71,7 @@ test_that("the right parmsvecs and differentials are returned", {
   )
   testthat::expect_equal(
     length(parmsvec),
-    length(pars) - 1 + (lx ^ 2)
+    length(pars) - 1 + 3 * (lx ^ 2)
   )
 
   # differential
@@ -98,7 +98,7 @@ test_that("the right parmsvecs and differentials are returned", {
 test_that("pc integrated", {
 
   pars <- c(0.2, 0.1, 1.2, 0.12)
-  lx <- 40
+  lx <- 30
   brts <- c(10); age <- max(brts)
 
   # P EQUATION
