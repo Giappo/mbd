@@ -13,21 +13,21 @@ test_that("the right parmsvecs and differentials are returned", {
 
   # test for Q-equation
   eq <- "q_eq"
-  q_matrices <- cond_prob_q_matrices(q = pars[4], lx = lx)
-  log_nu_mat <- condprob_log_nu_mat(lx = lx, eq = eq)
-  log_q_mat <- condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
-  expect_equal(
+  q_matrices <- mbd::cond_prob_q_matrices(q = pars[4], lx = lx)
+  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
+  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
+  testthat::expect_equal(
     exp(log_nu_mat + log_q_mat),
     q_matrices$nu_matrix
   )
-  parmsvec <- condprob_parmsvec(
+  parmsvec <- mbd::condprob_parmsvec(
     log_nu_mat = log_nu_mat,
     log_q_mat = log_q_mat,
     pars = pars,
     lx = lx,
     eq = eq
   )
-  expect_equal(
+  testthat::expect_equal(
     length(parmsvec),
     length(pars) - 1 + 3 * (lx ^ 2)
   )
@@ -38,8 +38,8 @@ test_that("the right parmsvecs and differentials are returned", {
   qvec <- matrix(qq, lx ^ 2, 1)
   qvec <- 0:(lx ^ 2 - 1); qvec <- qvec / sum(qvec)
 
-  dq1 <- condprob_dq(qvec = qvec, parmsvec = parmsvec)
-  dq2 <- cond_prob_q_rhs1(
+  dq1 <- mbd::condprob_dq(qvec = qvec, parmsvec = parmsvec)
+  dq2 <- mbd::cond_prob_q_rhs1(
     qvec = qvec,
     lambda = pars[1],
     mu = pars[2],
@@ -51,25 +51,25 @@ test_that("the right parmsvecs and differentials are returned", {
     t = 0,
     k = 1
   )
-  expect_equal(dq1, dq2)
+  testthat::expect_equal(dq1, dq2)
 
   # test for P-equation
   eq <- "p_eq"
-  p_matrices <- cond_prob_p_matrices(q = pars[4], lx = lx)
-  log_nu_mat <- condprob_log_nu_mat(lx = lx, eq = eq)
-  log_q_mat <- condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
-  expect_equal(
+  p_matrices <- mbd::cond_prob_p_matrices(q = pars[4], lx = lx)
+  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
+  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
+  testthat::expect_equal(
     exp(log_nu_mat + log_q_mat),
     p_matrices$nu_matrix
   )
-  parmsvec <- condprob_parmsvec(
+  parmsvec <- mbd::condprob_parmsvec(
     log_nu_mat = log_nu_mat,
     log_q_mat = log_q_mat,
     pars = pars,
     lx = lx,
     eq = eq
   )
-  expect_equal(
+  testthat::expect_equal(
     length(parmsvec),
     length(pars) - 1 + 3 * (lx ^ 2)
   )
@@ -80,8 +80,8 @@ test_that("the right parmsvecs and differentials are returned", {
   pvec <- matrix(pp, lx ^ 2, 1)
   pvec <- 0:(lx ^ 2 - 1); pvec <- pvec / sum(pvec)
 
-  dp1 <- condprob_dp(pvec = pvec, parmsvec = parmsvec)
-  dp2 <- cond_prob_p_rhs1(
+  dp1 <- mbd::condprob_dp(pvec = pvec, parmsvec = parmsvec)
+  dp2 <- mbd::cond_prob_p_rhs1(
     pvec = pvec,
     lambda = pars[1],
     mu = pars[2],
@@ -92,7 +92,7 @@ test_that("the right parmsvecs and differentials are returned", {
     empty_pp = p_matrices$empty_pp,
     t = 0
   )
-  expect_equal(dp1, dp2)
+  testthat::expect_equal(dp1, dp2)
 })
 
 test_that("pc integrated", {
@@ -104,20 +104,20 @@ test_that("pc integrated", {
   # P EQUATION
   ## R code
   t_p_r <- system.time(
-    p_m1_m2 <- prob_cond_get_p_m1_m2(
+    p_m1_m2 <- mbd::prob_cond_get_p_m1_m2(
       pars = pars,
       brts = brts,
-      matrices = cond_prob_p_matrices(q = pars[4], lx = lx),
+      matrices = mbd::cond_prob_p_matrices(q = pars[4], lx = lx),
       rhs_function = cond_prob_p_rhs2
     )
   )[[3]]
-  expect_equal(p_m1_m2, t(p_m1_m2))
+  testthat::expect_equal(p_m1_m2, t(p_m1_m2))
 
   ## FORTRAN code
   eq <- "p_eq"
-  log_nu_mat <- condprob_log_nu_mat(lx = lx, eq = eq)
-  log_q_mat <- condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
-  parmsvec <- condprob_parmsvec(
+  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
+  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
+  parmsvec <- mbd::condprob_parmsvec(
     pars = pars,
     log_nu_mat = log_nu_mat,
     log_q_mat = log_q_mat,
@@ -126,7 +126,7 @@ test_that("pc integrated", {
   )
   pp <- matrix(0, lx, lx); pp[2, 2] <- 1; pvec <- matrix(pp, lx ^ 2, 1)
   t_p_fortran <- system.time(
-    p_fortran <- mbd_solve(
+    p_fortran <- mbd::mbd_solve(
       vector = pvec,
       time_interval = age,
       func = "mbd_runmodpcp",
@@ -134,26 +134,27 @@ test_that("pc integrated", {
     )
   )[[3]]
   dim(p_fortran) <- c(lx, lx)
-  expect_equal(p_fortran, t(p_fortran))
-  expect_equal(p_m1_m2, p_fortran)
+  testthat::expect_equal(p_fortran, t(p_fortran))
+  testthat::expect_equal(p_m1_m2, p_fortran)
+  testthat::expect_true(t_p_fortran <= t_p_r)
 
   # Q EQUATION
   ## R code
   t_q_r <- system.time(
-    q_m1_m2 <- prob_cond_get_q_m1_m2(
+    q_m1_m2 <- mbd::prob_cond_get_q_m1_m2(
       pars = pars,
       brts = brts,
-      matrices = cond_prob_q_matrices(q = pars[4], lx = lx),
+      matrices = mbd::cond_prob_q_matrices(q = pars[4], lx = lx),
       rhs_function = cond_prob_q_rhs2
     )
   )[[3]]
-  expect_equal(q_m1_m2, t(q_m1_m2))
+  testthat::expect_equal(q_m1_m2, t(q_m1_m2))
 
   ## FORTRAN code
   eq <- "q_eq"
-  log_nu_mat <- condprob_log_nu_mat(lx = lx, eq = eq)
-  log_q_mat <- condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
-  parmsvec <- condprob_parmsvec(
+  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
+  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
+  parmsvec <- mbd::condprob_parmsvec(
     pars = pars,
     log_nu_mat = log_nu_mat,
     log_q_mat = log_q_mat,
@@ -162,7 +163,7 @@ test_that("pc integrated", {
   )
   qq <- matrix(0, lx, lx); qq[1, 1] <- 1; qvec <- matrix(qq, lx ^ 2, 1)
   t_q_fortran <- system.time(
-    q_fortran <- mbd_solve(
+    q_fortran <- mbd::mbd_solve(
       vector = qvec,
       time_interval = age,
       func = "mbd_runmodpcq",
@@ -170,12 +171,9 @@ test_that("pc integrated", {
     )
   )[[3]]
   dim(q_fortran) <- c(lx, lx)
-  expect_equal(q_fortran, t(q_fortran))
-  expect_equal(q_m1_m2, q_fortran)
-
-  skip("Fortran is slower than R!")
-  expect_true(t_p_fortran <= t_p_r)
-  expect_true(t_q_fortran <= t_q_r)
+  testthat::expect_equal(q_fortran, t(q_fortran))
+  testthat::expect_equal(q_m1_m2, q_fortran)
+  testthat::expect_true(t_q_fortran <= t_q_r)
 })
 
 test_that("pc integrated - high 'mbness'", {
@@ -191,20 +189,20 @@ test_that("pc integrated - high 'mbness'", {
   # P EQUATION
   ## R code
   t_p_r <- system.time(
-    p_m1_m2 <- prob_cond_get_p_m1_m2(
+    p_m1_m2 <- mbd::prob_cond_get_p_m1_m2(
       pars = pars,
       brts = brts,
-      matrices = cond_prob_p_matrices(q = pars[4], lx = lx),
+      matrices = mbd::cond_prob_p_matrices(q = pars[4], lx = lx),
       rhs_function = cond_prob_p_rhs2
     )
   )[[3]]
-  expect_equal(p_m1_m2, t(p_m1_m2))
+  testthat::expect_equal(p_m1_m2, t(p_m1_m2))
 
   ## FORTRAN code
   eq <- "p_eq"
-  log_nu_mat <- condprob_log_nu_mat(lx = lx, eq = eq)
-  log_q_mat <- condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
-  parmsvec <- condprob_parmsvec(
+  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
+  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
+  parmsvec <- mbd::condprob_parmsvec(
     pars = pars,
     log_nu_mat = log_nu_mat,
     log_q_mat = log_q_mat,
@@ -213,7 +211,7 @@ test_that("pc integrated - high 'mbness'", {
   )
   pp <- matrix(0, lx, lx); pp[2, 2] <- 1; pvec <- matrix(pp, lx ^ 2, 1)
   t_p_fortran <- system.time(
-    p_fortran <- mbd_solve(
+    p_fortran <- mbd::mbd_solve(
       vector = pvec,
       time_interval = age,
       func = "mbd_runmodpcp",
@@ -221,26 +219,27 @@ test_that("pc integrated - high 'mbness'", {
     )
   )[[3]]
   dim(p_fortran) <- c(lx, lx)
-  expect_equal(p_fortran, t(p_fortran))
-  expect_equal(p_m1_m2, p_fortran)
+  testthat::expect_equal(p_fortran, t(p_fortran))
+  testthat::expect_equal(p_m1_m2, p_fortran)
+  testthat::expect_true(t_p_fortran <= t_p_r)
 
   # Q EQUATION
   ## R code
   t_q_r <- system.time(
-    q_m1_m2 <- prob_cond_get_q_m1_m2(
+    q_m1_m2 <- mbd::prob_cond_get_q_m1_m2(
       pars = pars,
       brts = brts,
-      matrices = cond_prob_q_matrices(q = pars[4], lx = lx),
+      matrices = mbd::cond_prob_q_matrices(q = pars[4], lx = lx),
       rhs_function = cond_prob_q_rhs2
     )
   )[[3]]
-  expect_equal(q_m1_m2, t(q_m1_m2))
+  testthat::expect_equal(q_m1_m2, t(q_m1_m2))
 
   ## FORTRAN code
   eq <- "q_eq"
-  log_nu_mat <- condprob_log_nu_mat(lx = lx, eq = eq)
-  log_q_mat <- condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
-  parmsvec <- condprob_parmsvec(
+  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
+  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, q = pars[4], eq = eq)
+  parmsvec <- mbd::condprob_parmsvec(
     pars = pars,
     log_nu_mat = log_nu_mat,
     log_q_mat = log_q_mat,
@@ -249,7 +248,7 @@ test_that("pc integrated - high 'mbness'", {
   )
   qq <- matrix(0, lx, lx); qq[1, 1] <- 1; qvec <- matrix(qq, lx ^ 2, 1)
   t_q_fortran <- system.time(
-    q_fortran <- mbd_solve(
+    q_fortran <- mbd::mbd_solve(
       vector = qvec,
       time_interval = age,
       func = "mbd_runmodpcq",
@@ -257,10 +256,7 @@ test_that("pc integrated - high 'mbness'", {
     )
   )[[3]]
   dim(q_fortran) <- c(lx, lx)
-  expect_equal(q_fortran, t(q_fortran))
-  expect_equal(q_m1_m2, q_fortran)
-
-  skip("Fortran is slower than R!")
-  expect_true(t_p_fortran <= t_p_r)
-  expect_true(t_q_fortran <= t_q_r)
+  testthat::expect_equal(q_fortran, t(q_fortran))
+  testthat::expect_equal(q_m1_m2, q_fortran)
+  testthat::expect_true(t_q_fortran <= t_q_r)
 })
