@@ -2,7 +2,7 @@
 % Please edit documentation in R/condprob_fortran.R
 \name{condprob_dp_rhs}
 \alias{condprob_dp_rhs}
-\title{dp to be passed to \code{desolve::ode}}
+\title{Auxilary function for cond_prob_p, computing rhs}
 \usage{
 condprob_dp_rhs(t, x, parms)
 }
@@ -14,8 +14,8 @@ condprob_dp_rhs(t, x, parms)
 \item{parms}{some parameters to pass on the ode function}
 }
 \description{
-dp to be passed to \code{desolve::ode}
+Auxilary function for cond_prob_p, computing rhs
 }
 \author{
-Giovanni Laudanno
+Giovanni Laudanno, Bart Haegeman
 }

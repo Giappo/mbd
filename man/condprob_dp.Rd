@@ -2,18 +2,33 @@
 % Please edit documentation in R/condprob_fortran.R
 \name{condprob_dp}
 \alias{condprob_dp}
-\title{dp total}
+\title{Auxilary function for cond_prob_p, computing rhs}
 \usage{
-condprob_dp(pvec, parmsvec)
+condprob_dp(pvec, lambda, mu, nu, nu_matrix, m1, m2, empty_mat, t)
 }
 \arguments{
 \item{pvec}{a vector of probabilities P}
 
-\item{parmsvec}{parameters to pass to the FORTRAN scripts}
+\item{lambda}{the sympatric speciation rate.}
+
+\item{mu}{the extinction rate.}
+
+\item{nu}{the multiple allopatric speciation trigger rate.}
+
+\item{nu_matrix}{matrix for the nu component. Component {m,n} is equal to
+choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)}
+
+\item{m1}{a matrix keeping track of columns}
+
+\item{m2}{a matrix keeping track of rows}
+
+\item{empty_mat}{an empty matrix}
+
+\item{t}{time}
 }
 \description{
-dp total
+Auxilary function for cond_prob_p, computing rhs
 }
 \author{
-Giovanni Laudanno
+Giovanni Laudanno, Bart Haegeman
 }

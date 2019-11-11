@@ -2,18 +2,33 @@
 % Please edit documentation in R/condprob_fortran.R
 \name{condprob_dq}
 \alias{condprob_dq}
-\title{dq total}
+\title{Auxilary function for cond_prob_q, creating rhs}
 \usage{
-condprob_dq(qvec, parmsvec)
+condprob_dq(qvec, lambda, mu, nu, nu_matrix, m1, m2, empty_mat, t)
 }
 \arguments{
 \item{qvec}{a vector of probabilities Q}
 
-\item{parmsvec}{parameters to pass to the FORTRAN scripts}
+\item{lambda}{the sympatric speciation rate.}
+
+\item{mu}{the extinction rate.}
+
+\item{nu}{the multiple allopatric speciation trigger rate.}
+
+\item{nu_matrix}{matrix for the nu component. Component {m,n} is equal to
+choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)}
+
+\item{m1}{a matrix keeping track of columns}
+
+\item{m2}{a matrix keeping track of rows}
+
+\item{empty_mat}{an empty matrix}
+
+\item{t}{time}
 }
 \description{
-dq total
+Auxilary function for cond_prob_q, creating rhs
 }
 \author{
-Giovanni Laudanno
+Giovanni Laudanno, Bart Haegeman
 }

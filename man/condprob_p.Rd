@@ -4,7 +4,7 @@
 \alias{condprob_p}
 \title{Conditional probability calculated with the P-approach}
 \usage{
-condprob_p(brts, parmsvec, fortran = TRUE)
+condprob_p(brts, parmsvec, fortran = TRUE, lx)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
@@ -12,6 +12,8 @@ condprob_p(brts, parmsvec, fortran = TRUE)
 \item{parmsvec}{parameters to pass to the FORTRAN scripts}
 
 \item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
+
+\item{lx}{it is the number of ODEs considered for the computation.}
 }
 \description{
 Conditional probability calculated with the P-approach
