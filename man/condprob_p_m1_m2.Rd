@@ -2,9 +2,9 @@
 % Please edit documentation in R/condprob_fortran.R
 \name{condprob_p_m1_m2}
 \alias{condprob_p_m1_m2}
-\title{Conditional probability P_{n1, n2} for all the states n1 and n2}
+\title{Conditional probability P(n1, n2) for all the states n1 and n2}
 \usage{
-condprob_p_m1_m2(brts, parmsvec, lx, rhs_function = condprob_dp_rhs)
+condprob_p_m1_m2(brts, parmsvec, lx, rhs_function = mbd::condprob_dp_rhs)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
@@ -17,7 +17,7 @@ condprob_p_m1_m2(brts, parmsvec, lx, rhs_function = condprob_dp_rhs)
 equation}
 }
 \description{
-Conditional probability P_{n1, n2} for all the states n1 and n2
+Conditional probability P(n1, n2) for all the states n1 and n2
 }
 \author{
 Giovanni Laudanno

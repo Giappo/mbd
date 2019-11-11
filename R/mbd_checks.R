@@ -3,7 +3,7 @@
 #' @description Check 'n_0'
 #' @inheritParams default_params_doc
 #' @return nothing
-#' @noRd
+#' @export
 check_n_0 <- function(
   n_0
 ) {
@@ -21,7 +21,7 @@ check_n_0 <- function(
 #' @description Check mbd pars
 #' @inheritParams default_params_doc
 #' @return Returns "wrong" if they are wrong, or "right" otherwise.
-#' @noRd
+#' @export
 check_pars <- function(
   pars,
   safety_checks = TRUE,
@@ -64,7 +64,7 @@ check_pars <- function(
 #' @description Make sure that 'brts' are properly defined.
 #' @inheritParams default_params_doc
 #' @return nothing
-#' @noRd
+#' @export
 check_brts <- function(
   brts,
   n_0
@@ -91,7 +91,7 @@ check_brts <- function(
 #' @description Make sure that 'cond' and 'tips_interval' are coherent
 #' @inheritParams default_params_doc
 #' @return nothing
-#' @noRd
+#' @export
 check_cond <- function(
   cond,
   tips_interval,
@@ -122,7 +122,7 @@ check_cond <- function(
 #' @description Check 'seed'
 #' @inheritParams default_params_doc
 #' @return nothing
-#' @noRd
+#' @export
 check_seed <- function(seed) {
   if (!is.na(seed)) {
     if (!is.numeric(seed)) {

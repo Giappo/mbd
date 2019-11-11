@@ -94,12 +94,12 @@ mbd_integrate <- function(
 # any negative number
 #' @inheritParams default_params_doc
 #' @param func function for the right hand side of the ODE
-#' @export
 #' @author Hanno Hildenbrandt, adapted by Giovanni Laudanno
+#' @export
 mbd_solve <- function(
   vector,
   time_interval,
-  func = mbd_loglik_rhs,
+  func = mbd::mbd_loglik_rhs,
   parms
 ) {
 
@@ -113,7 +113,7 @@ mbd_solve <- function(
   rtol <- start_rtol # something reasonable, hopefully
   while (TRUE) {
     tseq <- seq(t0, t1, length.out = g)
-    out <- mbd_integrate(
+    out <- mbd::mbd_integrate(
       y = y,
       times = tseq,
       func = func,

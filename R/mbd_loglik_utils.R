@@ -1,4 +1,6 @@
-#' @noRd
+#' My version of tryCatch
+#' @inheritParams default_params_doc
+#' @export
 my_try_catch <- function(expr) {
   warn <- err <- NULL
   value <- withCallingHandlers(
@@ -34,8 +36,8 @@ my_try_catch <- function(expr) {
 #'   testthat::expect_equal(m[3, 1], 0.04)
 #'   testthat::expect_equal(m[3, 2], 0.405)
 #'   testthat::expect_equal(m[3, 3], 0.6561)
-#' @noRd
 #' @author Hanno Hildenbrandt, adapted by Richel J.C. Bilderbeek
+#' @export
 hyper_a_hanno <- function(
   n_species,
   k,
@@ -76,7 +78,7 @@ create_n <- function(
   k,
   b,
   lx,
-  matrix_builder = hyper_a_hanno
+  matrix_builder = mbd::hyper_a_hanno
 ) {
   if (b > k) {
     stop("you can't have more births than species present in the phylogeny") # nolint
@@ -102,7 +104,7 @@ create_a <- function(
   pars,
   k,
   lx,
-  matrix_builder = mbd:::hyper_a_hanno,
+  matrix_builder = mbd::hyper_a_hanno,
   no_species_out_of_the_matrix = FALSE
 ) {
   if (k > lx) {
@@ -116,7 +118,7 @@ create_a <- function(
   testit::assert(lx < 2 ^ 31)
   nvec <- 0:lx
 
-  matrix <- nu * create_n(
+  matrix <- nu * mbd::create_n(
     pars = pars,
     k = k,
     b = 0,
@@ -169,7 +171,7 @@ create_b <- function(
   k,
   b,
   lx,
-  matrix_builder = hyper_a_hanno
+  matrix_builder = mbd::hyper_a_hanno
 ) {
   if (b > k) {
     stop("you can't have more births than species present in the phylogeny") # nolint
@@ -178,7 +180,7 @@ create_b <- function(
   lambda <- pars[1]
   nu <- pars[3]
 
-  n_matrix <- create_n(
+  n_matrix <- mbd::create_n(
     pars = pars,
     k = k,
     b = b,
@@ -203,7 +205,7 @@ mbd_loglik_rhs <- function(t, x, params) {
 #' Approximate the branching times to a fixed resolution. Events separated by
 #'  a time smaller than 10^-brts_precision can be considered simultaneous
 #' @inheritParams default_params_doc
-#' @noRd
+#' @export
 approximate_brts <- function(
   brts,
   brts_precision
@@ -216,13 +218,13 @@ approximate_brts <- function(
 #' Converts branching times to 'time intervals between branching times'
 #'   and 'birth at nodes' vectors
 #' @inheritParams default_params_doc
-#' @noRd
+#' @export
 brts2time_intervals_and_births <- function(
   brts,
   brts_precision = 8
 ) {
 
-  brts <- approximate_brts(brts = brts, brts_precision = brts_precision)
+  brts <- mbd::approximate_brts(brts = brts, brts_precision = brts_precision)
 
   branching_times <- unlist(unname(sort(abs(brts), decreasing = TRUE)))
   unique_branching_times <- unique(branching_times)
@@ -269,13 +271,16 @@ brts2time_intervals_and_births <- function(
   )
 }
 
-#' @noRd
+#' Maximum allowed value for lx
+#' @export
 max_lx <- function() {
   maximum_lx <- 1400
   maximum_lx
 }
 
-#' @noRd
+#' Check the vectors of probability sums computed during likelihood integration
+#' @inheritParams default_params_doc
+#' @export
 check_sum_probs <- function(
   sum_probs_1,
   sum_probs_2,
@@ -308,7 +313,9 @@ check_sum_probs <- function(
   }
 }
 
-#' @noRd
+#' Delivers the likelihood at the end of \link{mbd_loglik}
+#' @inheritParams default_params_doc
+#' @export
 deliver_loglik <- function(
   likelihood,
   sum_probs_1,
@@ -322,7 +329,7 @@ deliver_loglik <- function(
   }
 
   # Removing sum_probs_1 and sum_probs_2 effects from the LL
-  check_sum_probs(
+  mbd::check_sum_probs(
     sum_probs_1 = sum_probs_1,
     sum_probs_2 = sum_probs_2,
     debug_mode = debug_mode

@@ -33,6 +33,7 @@
 #' @param empty_mat an empty matrix
 #' @param eq the equation approach you want to use. It can be "q_eq" for the
 #'  Q-equation of "p_eq" for the P-equation.
+#' @param expr and expression
 #' @param fortran Set it to TRUE if you want to use FORTRAN routine.
 #' @param func a function
 #' @param function_name function name
@@ -59,6 +60,8 @@
 #' @param k the number of visible species in the phylogeny at a given time.
 #' @param lambda the sympatric speciation rate.
 #' @param lambda_limit Upper limit to lambda estimations.
+#' @param likelihood the likelihood
+#' @param l_matrix the l-table
 #' @param loglik_function the loglik function
 #' @param loglik_functions the loglik_functions you want to use
 #' @param logs something
@@ -131,6 +134,7 @@
 #' @param parsfix the values of the parameters that should not be optimized.
 #' @param parsvec vector of paramters for the FORTRAN subroutine.
 #' @param pc conditional probability
+#' @param pool the pool of living species at a given time
 #' @param precision something
 #' @param printit something
 #' @param print_errors something
@@ -159,6 +163,8 @@
 #' @param runmod FORTRAN subroutine's option
 #' @param s the seed
 #' @param saveit do you want to save the results?
+#' @param safety_checks TRUE if you want the parameters to be limited to a
+#'  realistic, but not infinite, parameter space
 #' @param sample_interval something
 #' @param seed the seed
 #' @param sequence_length something
@@ -172,6 +178,8 @@
 #' }
 #' @param sim_phylo something
 #' @param subsamp something
+#' @param sum_probs_1 vector of probability sums
+#' @param sum_probs_2 vector of probability sums
 #' @param t time
 #' @param tcrit the time you don't want to exceed in the integration
 #' @param times vector of times
@@ -180,7 +188,7 @@
 #' @param t2 something
 #' @param t_0 starting time
 #' @param t_0s starting time for each clade
-#' @param time_interval something
+#' @param time_interval a time interval
 #' @param tips_interval sets tips boundaries constrain on simulated dataset.
 #'   It works only if cond == 1, otherwise it must be set to c(0, Inf).
 #' @param tol something
@@ -229,6 +237,7 @@ default_params_doc <- function(
   empty_pp,
   empty_qq,
   eq,
+  expr,
   fortran,
   func,
   function_name,
@@ -248,6 +257,8 @@ default_params_doc <- function(
   k,
   lambda,
   lambda_limit,
+  likelihood,
+  l_matrix,
   loglik_function,
   loglik_functions,
   logs,
@@ -303,6 +314,7 @@ default_params_doc <- function(
   parsfix,
   parsvec,
   pc,
+  pool,
   precision,
   print_errors,
   printit,
@@ -325,6 +337,7 @@ default_params_doc <- function(
   rhs_function,
   runmod,
   s,
+  safety_checks,
   saveit,
   seed,
   sample_interval,
@@ -334,6 +347,8 @@ default_params_doc <- function(
   sim_phylo,
   start_pars,
   subsamp,
+  sum_probs_1,
+  sum_probs_2,
   t,
   tcrit,
   times,
