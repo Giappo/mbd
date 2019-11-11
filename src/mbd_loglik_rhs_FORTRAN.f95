@@ -113,7 +113,8 @@
 !......................... declaration section.............................
       INTEGER           :: neq, ip(*), i, ii
       DOUBLE PRECISION  :: t, Conc(N), dConc(N), yout(*)
-      REAL(16)          :: V(N)
+      DOUBLE PRECISION  :: Conc2(N,N), P2(N,N)
+      !REAL(16)          :: V(N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -140,13 +141,17 @@
 !  list(params %*% x)
 !}
 
-      DO I = 1, N
-        V(I) = 0
-        DO II = 1, N
-          V(I) = V(I) + P((II - 1) * N + I) * Conc(II)
-        ENDDO
-        dConc(I) = V(I)
-      ENDDO
+      !DO I = 1, N
+      !  V(I) = 0
+      !  DO II = 1, N
+      !    V(I) = V(I) + P((II - 1) * N + I) * Conc(II)
+      !  ENDDO
+      !  dConc(I) = V(I)
+      !ENDDO
+
+      P2 = RESHAPE(P,(/N,N/), order = (/1,2/))
+      Conc2 = RESHAPE(Conc,(/N,N/), order = (/1,2/))
+      dConc = RESHAPE(MATMUL(P2,Conc2),(/N ** 2/))
 
       END SUBROUTINE mbd_runmod
 
