@@ -84,10 +84,10 @@ condprob_log_nu_mat <- function(lx, eq) {
     stop("It is either Q- or P-equation!")
   }
   if (eq == "p_eq") {
-    log_nu_mat <- condprob_peq_log_nu_mat(lx)
+    log_nu_mat <- mbd::condprob_peq_log_nu_mat(lx)
   }
   if (eq == "q_eq") {
-    log_nu_mat <- condprob_qeq_log_nu_mat(lx)
+    log_nu_mat <- mbd::condprob_qeq_log_nu_mat(lx)
   }
   log_nu_mat
 }
@@ -101,10 +101,10 @@ condprob_log_q_mat <- function(lx, q, eq) {
     stop("It is either Q- or P-equation!")
   }
   if (eq == "p_eq") {
-    log_q_mat <- condprob_peq_log_q_mat(lx = lx, q = q)
+    log_q_mat <- mbd::condprob_peq_log_q_mat(lx = lx, q = q)
   }
   if (eq == "q_eq") {
-    log_q_mat <- condprob_qeq_log_q_mat(lx = lx, q = q)
+    log_q_mat <- mbd::condprob_qeq_log_q_mat(lx = lx, q = q)
   }
   log_q_mat
 }
@@ -131,8 +131,6 @@ condprob_parmsvec <- function(
   log_nu_mat <- log_nu_mat[1:lx, 1:lx]
   log_q_mat <- log_q_mat[1:lx, 1:lx]
   nu_q_mat <- exp(log_nu_mat + log_q_mat)
-  m1 <- col(log_nu_mat) - 1
-  m2 <- t(m1)
 
   parmsvec <- c(
     lambda,
@@ -148,10 +146,10 @@ create_fast_parmsvec <- function(
   lx,
   eq
 ) {
-  parmsvec <- condprob_parmsvec(
+  parmsvec <- mbd::condprob_parmsvec(
       pars = pars,
-      log_nu_mat = condprob_log_nu_mat(lx = lx, eq = eq),
-      log_q_mat = condprob_log_q_mat(lx = lx, q = pars[4], eq = eq),
+      log_nu_mat = mbd::condprob_log_nu_mat(lx = lx, eq = eq),
+      log_q_mat = mbd::condprob_log_q_mat(lx = lx, q = pars[4], eq = eq),
       lx = lx,
       eq = eq
     )
@@ -239,7 +237,7 @@ condprob_dp <- function(
 #' @author Giovanni Laudanno
 #' @export
 condprob_dp_rhs <- function(t, x, parms) {
-  list(condprob_dp(
+  list(mbd::condprob_dp(
     pvec = x,
     parmsvec = parms
   ))
@@ -324,7 +322,7 @@ condprob_dq <- function(
 #' @author Giovanni Laudanno
 #' @export
 condprob_dq_rhs <- function(t, x, parms) {
-  list(condprob_dq(
+  list(mbd::condprob_dq(
     qvec = x,
     parmsvec = parms
   ))
@@ -332,7 +330,7 @@ condprob_dq_rhs <- function(t, x, parms) {
 
 # Compute probability distributions ----
 
-#' Conditional probability P_{n1, n2} for all the states n1 and n2
+#' Conditional probability P(n1, n2) for all the states n1 and n2
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
@@ -340,7 +338,7 @@ condprob_p_m1_m2 <- function(
   brts,
   parmsvec,
   lx,
-  rhs_function = condprob_dp_rhs
+  rhs_function = mbd::condprob_dp_rhs
 ) {
 
   lx2 <- lx ^ 2
@@ -352,7 +350,7 @@ condprob_p_m1_m2 <- function(
   p_0 <- matrix(p_0, nrow = lx2, ncol = 1)
 
   # Integrate
-  p_out <- mbd_solve(
+  p_out <- mbd::mbd_solve(
     vector = p_0,
     time_interval = age,
     func = rhs_function,
@@ -363,7 +361,7 @@ condprob_p_m1_m2 <- function(
   p_m1_m2
 }
 
-#' Conditional probability Q_{m1, m2} for all the states n1 and n2
+#' Conditional probability Q(m1, m2) for all the states m1 and m2
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
@@ -371,7 +369,7 @@ condprob_q_m1_m2 <- function(
   brts,
   parmsvec,
   lx,
-  rhs_function = condprob_dq_rhs
+  rhs_function = mbd::condprob_dq_rhs
 ) {
 
   lx2 <- lx ^ 2
@@ -385,7 +383,7 @@ condprob_q_m1_m2 <- function(
   q_0 <- matrix(q_0, nrow = lx2, ncol = 1)
 
   # Integrate
-  q_out <- mbd_solve(
+  q_out <- mbd::mbd_solve(
     vector = q_0,
     time_interval = age,
     func = rhs_function,
@@ -413,9 +411,9 @@ condprob_p <- function(
   if (fortran == TRUE) {
     rhs_function <- "mbd_runmodpcp"
   } else {
-    rhs_function <- condprob_dp_rhs
+    rhs_function <- mbd::condprob_dp_rhs
   }
-  p_m1_m2 <- condprob_p_m1_m2(
+  p_m1_m2 <- mbd::condprob_p_m1_m2(
     brts = brts,
     parmsvec = parmsvec,
     rhs_function = rhs_function
@@ -437,9 +435,9 @@ condprob_q <- function(
   if (fortran == TRUE) {
     rhs_function <- "mbd_runmodpcq"
   } else {
-    rhs_function <- condprob_dq_rhs
+    rhs_function <- mbd::condprob_dq_rhs
   }
-  q_m1_m2 <- condprob_q_m1_m2(
+  q_m1_m2 <- mbd::condprob_q_m1_m2(
     brts = brts,
     parmsvec = parmsvec,
     rhs_function = rhs_function
@@ -460,14 +458,14 @@ condprob <- function(
   eq
 ) {
   if (eq == "q_eq") {
-    return(condprob_q(
+    return(mbd::condprob_q(
       brts = brts,
       parmsvec = parmsvec,
       fortran = fortran
     ))
   }
   if (eq == "p_eq") {
-    return(condprob_p(
+    return(mbd::condprob_p(
       brts = brts,
       parmsvec = parmsvec,
       fortran = fortran

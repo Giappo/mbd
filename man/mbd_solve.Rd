@@ -4,12 +4,12 @@
 \alias{mbd_solve}
 \title{mbd ODE system integrator}
 \usage{
-mbd_solve(vector, time_interval, func = mbd_loglik_rhs, parms)
+mbd_solve(vector, time_interval, func = mbd::mbd_loglik_rhs, parms)
 }
 \arguments{
 \item{vector}{a vector}
 
-\item{time_interval}{something}
+\item{time_interval}{a time interval}
 
 \item{func}{function for the right hand side of the ODE}
 

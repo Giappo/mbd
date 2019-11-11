@@ -4,7 +4,7 @@
 \alias{create_a}
 \title{The A matrix}
 \usage{
-create_a(pars, k, lx, matrix_builder = mbd:::hyper_a_hanno,
+create_a(pars, k, lx, matrix_builder = mbd::hyper_a_hanno,
   no_species_out_of_the_matrix = FALSE)
 }
 \arguments{

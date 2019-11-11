@@ -5,7 +5,7 @@
 \title{Solution of the integration of the ODE for Q_{m1, m2}}
 \usage{
 prob_cond_get_q_m1_m2(pars, brts, matrices,
-  rhs_function = cond_prob_q_rhs2)
+  rhs_function = mbd::cond_prob_q_rhs2)
 }
 \arguments{
 \item{pars}{vector of parameters:

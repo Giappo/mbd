@@ -277,7 +277,7 @@ read_results <- function(project_folder = NULL) {
 #' @author Giovanni Laudanno
 #' @export
 count_n_mb_events <- function(brts) {
-  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
+  births <- mbd::brts2time_intervals_and_births(brts)$births # nolint internal function
   mb_species <- sum(births[births > 1])
   mb_species
 }
@@ -288,11 +288,11 @@ count_n_mb_events <- function(brts) {
 #' @export
 count_percentage_mb_events <- function(brts) {
 
-  mb_species <- count_n_mb_events(brts)
+  mb_species <- mbd::count_n_mb_events(brts)
   if (mb_species == 0) {
     percentage_mb_species <- 0
   } else {
-    births <- brts2time_intervals_and_births(brts)$births # nolint internal function
+    births <- mbd::brts2time_intervals_and_births(brts)$births # nolint internal function
     n_species <- sum(births)
     percentage_mb_species <- mb_species / n_species
   }

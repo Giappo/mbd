@@ -110,12 +110,15 @@ cond_prob_q_rhs1 <- function(
   qq2 <- empty_qq
   qq2[mm, mm] <- qq
 
-  dq_lambda <-
-    cond_prob_dq_lambda(qq = qq, qq2 = qq2, k = k, m1 = m1, m2 = m2, mm = mm)
-  dq_mu <-
-    cond_prob_dq_mu(qq = qq, qq2 = qq2, k = k, m1 = m1, m2 = m2, mm = mm)
-  dq_nu <-
-    cond_prob_dq_nu(qq = qq, nu_matrix = nu_matrix)
+  dq_lambda <- mbd::cond_prob_dq_lambda(
+      qq = qq, qq2 = qq2, k = k, m1 = m1, m2 = m2, mm = mm
+    )
+  dq_mu <- mbd::cond_prob_dq_mu(
+    qq = qq, qq2 = qq2, k = k, m1 = m1, m2 = m2, mm = mm
+  )
+  dq_nu <- mbd::cond_prob_dq_nu(
+    qq = qq, nu_matrix = nu_matrix
+  )
   dq <- lambda * dq_lambda + mu * dq_mu + nu * dq_nu
   dq <- matrix(dq, nrow = lx2, ncol = 1)
   dq
@@ -126,7 +129,7 @@ cond_prob_q_rhs1 <- function(
 #' @inheritParams default_params_doc
 #' @export
 cond_prob_q_rhs2 <- function(t, x, parms) {
-  list(cond_prob_q_rhs1(
+  list(mbd::cond_prob_q_rhs1(
     qvec = x,
     lambda = parms$lambda,
     mu = parms$mu,
@@ -148,7 +151,7 @@ prob_cond_get_q_m1_m2 <- function(
   pars,
   brts,
   matrices,
-  rhs_function = cond_prob_q_rhs2
+  rhs_function = mbd::cond_prob_q_rhs2
 ) {
   tt <- max(abs(brts)) # time between crown age and present
   lx <- ncol(matrices$nu_matrix)
@@ -164,7 +167,7 @@ prob_cond_get_q_m1_m2 <- function(
   parms$empty_qq <- matrices$empty_qq
   q_0 <- c(y = c(1, rep(0, lx ^ 2 - 1)))
 
-  ode_out <- mbd_solve(
+  ode_out <- mbd::mbd_solve(
     vector = q_0,
     func = rhs_function,
     time_interval = tt,
@@ -196,10 +199,10 @@ cond_prob_q <- function(
   }
 
   # construct auxiliary matrix
-  matrices <- cond_prob_q_matrices(q = pars[4], lx = lx)
+  matrices <- mbd::cond_prob_q_matrices(q = pars[4], lx = lx)
 
   # integrate equations
-  q_m1_m2 <- prob_cond_get_q_m1_m2(
+  q_m1_m2 <- mbd::prob_cond_get_q_m1_m2(
     pars = pars,
     brts = brts,
     matrices = matrices,
@@ -213,7 +216,7 @@ cond_prob_q <- function(
   pc <- sum(p_m1_m2)
 
   pc <- DDD::roundn(pc, digits = 8)
-  check_pc(pc = pc, debug_mode = debug_mode)
+  mbd::check_pc(pc = pc, debug_mode = debug_mode)
 
   pc
 }
@@ -329,11 +332,11 @@ cond_prob_p_rhs1 <- function(
   pp2[mm, mm] <- pp
 
   dp_lambda <-
-    cond_prob_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+    mbd::cond_prob_dp_lambda(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
   dp_mu <-
-    cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
+    mbd::cond_prob_dp_mu(pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm)
   dp_nu <-
-    cond_prob_dp_nu(pp = pp, nu_matrix = nu_matrix)
+    mbd::cond_prob_dp_nu(pp = pp, nu_matrix = nu_matrix)
   dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
   dp <- matrix(dp, nrow = lx2, ncol = 1)
   dp
@@ -344,7 +347,7 @@ cond_prob_p_rhs1 <- function(
 #' @inheritParams default_params_doc
 #' @export
 cond_prob_p_rhs2 <- function(t, x, parms) {
-  list(cond_prob_p_rhs1(
+  list(mbd::cond_prob_p_rhs1(
     pvec = x,
     lambda = parms$lambda,
     mu = parms$mu,
@@ -382,7 +385,7 @@ prob_cond_get_p_m1_m2 <- function(
   p_0[2, 2] <- 1
   p_0 <- matrix(p_0, nrow = lx ^ 2, ncol = 1)
 
-  ode_out <- mbd_solve(
+  ode_out <- mbd::mbd_solve(
     vector = p_0,
     func = rhs_function,
     time_interval = tt,
@@ -416,10 +419,10 @@ cond_prob_p <- function(
   rm(tips_interval)
 
   # construct auxiliary matrix
-  matrices <- cond_prob_p_matrices(q = pars[4], lx = lx)
+  matrices <- mbd::cond_prob_p_matrices(q = pars[4], lx = lx)
 
   # integrate equations
-  p_m1_m2 <- prob_cond_get_p_m1_m2(
+  p_m1_m2 <- mbd::prob_cond_get_p_m1_m2(
     pars = pars,
     brts = brts,
     matrices = matrices,
@@ -430,7 +433,7 @@ cond_prob_p <- function(
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
 
   pc <- DDD::roundn(pc, digits = 8)
-  check_pc(pc = pc, debug_mode = debug_mode)
+  mbd::check_pc(pc = pc, debug_mode = debug_mode)
 
   pc
 }

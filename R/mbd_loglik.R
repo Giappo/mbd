@@ -13,16 +13,17 @@ mbd_loglik <- function(
   n_0 = 2,
   cond = 1,
   missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), mbd::max_lx()),
   tips_interval = c(n_0 * (cond > 0), Inf),
   q_threshold = 1e-3,
-  debug_mode = FALSE
+  debug_mode = FALSE,
+  rhs_function = "mbd_runmod"
 ) {
   # BASIC SETTINGS AND CHECKS
-  check_brts(brts = brts, n_0 = n_0)
-  check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
+  mbd::check_brts(brts = brts, n_0 = n_0)
+  mbd::check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
   if (
-    check_pars(
+    mbd::check_pars(
       pars = pars,
       safety_checks = TRUE,
       q_threshold = q_threshold
@@ -32,7 +33,7 @@ mbd_loglik <- function(
   }
 
   # Calculate conditional probability
-  pc <- cond_prob(
+  pc <- mbd::cond_prob(
     pars = pars,
     brts = brts,
     cond = cond,
@@ -54,7 +55,7 @@ mbd_loglik <- function(
   }
 
   # Adjusting data
-  data <- brts2time_intervals_and_births(brts) # nolint internal function
+  data <- mbd::brts2time_intervals_and_births(brts) # nolint internal function
   time_intervals <- data$time_intervals
   births <- data$births
   lt <- length(time_intervals)
@@ -76,20 +77,20 @@ mbd_loglik <- function(
   while (t <= lt) {
 
     # Creating A matrix
-    matrix_a <- create_a(
+    matrix_a <- mbd::create_a(
       pars = pars,
       lx = lx,
       k = k
     )
 
     # Applying A operator
-    q_t[t, ] <- mbd_solve(
+    q_t[t, ] <- mbd::mbd_solve(
       vector = q_t[(t - 1), ],
       parms = matrix_a,
-      func = "mbd_runmod",
+      func = rhs_function,
       time_interval = time_intervals[t]
     )
-    check_q_vector(
+    mbd::check_q_vector(
       q_t = q_t,
       t = t,
       pars = pars,
@@ -107,7 +108,7 @@ mbd_loglik <- function(
     }
 
     # Creating B matrix
-    matrix_b <- create_b(
+    matrix_b <- mbd::create_b(
       pars = pars,
       lx = lx,
       k = k,
@@ -116,7 +117,7 @@ mbd_loglik <- function(
 
     # Applying B operator
     q_t[t, ] <- (matrix_b %*% q_t[t, ])
-    check_q_vector(
+    mbd::check_q_vector(
       q_t = q_t,
       t = t,
       pars = pars,
@@ -140,7 +141,7 @@ mbd_loglik <- function(
   vm <- 1 / choose(k + missnumspec, k)
   likelihood <- vm * q_t[t, (missnumspec + 1)]
 
-  loglik <- deliver_loglik(
+  loglik <- mbd::deliver_loglik(
     likelihood = likelihood,
     sum_probs_1 = sum_probs_1,
     sum_probs_2 = sum_probs_2,
