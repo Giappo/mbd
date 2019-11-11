@@ -121,7 +121,8 @@ condprob_parmsvec <- function(
   log_nu_mat,
   log_q_mat,
   lx,
-  eq
+  eq,
+  fortran = TRUE
 ) {
   lx2 <- lx ^ 2
   lambda <- pars[1]
@@ -131,13 +132,31 @@ condprob_parmsvec <- function(
   log_nu_mat <- log_nu_mat[1:lx, 1:lx]
   log_q_mat <- log_q_mat[1:lx, 1:lx]
   nu_q_mat <- exp(log_nu_mat + log_q_mat)
-
-  parmsvec <- c(
-    lambda,
-    mu,
-    nu,
-    matrix(nu_q_mat, nrow = lx2, ncol = 1)
-  )
+  dim(nu_q_mat) <- c(lx2, 1)
+  if (fortran == TRUE) {
+    parmsvec <- c(
+      lambda,
+      mu,
+      nu,
+      nu_q_mat
+    )
+  } else {
+    m1 <- col(nu_q_mat) - 1
+    m2 <- t(m1)
+    empty_mat <- matrix(0, lx + 2, lx + 2)
+    dim(m1) <- c(lx2, 1)
+    dim(m2) <- c(lx2, 1)
+    dim(empty_mat) <- c((lx + 2) ^ 2, 1)
+    parmsvec <- c(
+      lambda,
+      mu,
+      nu,
+      nu_q_mat,
+      m1,
+      m2,
+      empty_mat
+    )
+  }
   parmsvec
 }
 
@@ -419,7 +438,7 @@ condprob_p <- function(
     rhs_function = rhs_function
   )
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
-  check_pc(pc = pc)
+  mbd::check_pc(pc = pc)
   pc
 }
 
@@ -443,7 +462,7 @@ condprob_q <- function(
     rhs_function = rhs_function
   )
   pc <- sum(q_m1_m2)
-  check_pc(pc = pc)
+  mbd::check_pc(pc = pc)
   pc
 }
 

@@ -338,7 +338,7 @@ cond_prob_p_rhs1 <- function(
   dp_nu <-
     mbd::cond_prob_dp_nu(pp = pp, nu_matrix = nu_matrix)
   dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
-  dp <- matrix(dp, nrow = lx2, ncol = 1)
+  dim(dp) <- c(lx2, 1)
   dp
 }
 
