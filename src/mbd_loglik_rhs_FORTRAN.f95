@@ -20,7 +20,7 @@
 
       MODULE mbd_dimmod
 
-      ! length of the vector -  decided in R-code
+      ! length of the vector - decided in R-code
       INTEGER  :: N
 
       ! 1 parameter vectors with unknown length
@@ -91,7 +91,7 @@
 ! Allocate variable size arrays (state variables, derivatives and parameters)
 
       IF (ALLOCATED(P)) DEALLOCATE(P)
-      ALLOCATE(P(3 + 3 * N ** 2))
+      ALLOCATE(P(3 * N ** 2))
 
       initialised = .FALSE.
 
@@ -184,7 +184,7 @@
 
         ! save parameter values in yout
         ii = ip(1)   ! Start of parameter values
-        CALL mbd_fill1d(P, 3 + 3 * N ** 2, yout, ii)   ! ii is updated in fill1d
+        CALL mbd_fill1d(P, 3 + N ** 2, yout, ii)   ! ii is updated in fill1d
         Initialised = .TRUE.          ! to prevent from initialising more than once
       ENDIF
 
@@ -193,8 +193,8 @@
    V = RESHAPE(Conc,(/N,N/), order = (/1,2/))
    V2 = 0
    V2(2:(N+1),2:(N+1)) = V
-   nu_q_mat = RESHAPE(P(4:(4 + N ** 2)),(/N,N/), order = (/1,2/))
-   !!m1 = RESHAPE(P((5 + N ** 2):(4 + 2 * N ** 2)),(/N,N/), order = (/1,2/))
+   nu_q_mat = RESHAPE(P((3 + 1):(3 + N ** 2)),(/N,N/), order = (/1,2/))
+   !m1 = RESHAPE(P((3 + N ** 2 + 1):(3 + 2 * N ** 2)),(/N,N/), order = (/1,2/))
    vec = (/(I, I = 0, N - 1, 1)/)
    DO I = 1, N
      m1(I,:) = vec

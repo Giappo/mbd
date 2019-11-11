@@ -188,7 +188,7 @@ test_that("it works also for a subset of parameters", {
   optim_ids <- c(TRUE, FALSE, FALSE, FALSE)
   verbose <- FALSE
   maxit <- 200
-  test <- mbd_main(
+  test <- mbd::mbd_main(
     seed = seed,
     sim_pars = sim_pars,
     cond = cond,

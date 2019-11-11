@@ -138,9 +138,7 @@ condprob_parmsvec <- function(
     lambda,
     mu,
     nu,
-    matrix(nu_q_mat, nrow = lx2, ncol = 1),
-    matrix(m1, nrow = lx2, ncol = 1),
-    matrix(m2, nrow = lx2, ncol = 1)
+    matrix(nu_q_mat, nrow = lx2, ncol = 1)
   )
   parmsvec
 }
