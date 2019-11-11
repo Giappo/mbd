@@ -143,10 +143,11 @@ condprob_parmsvec <- function(
   } else {
     m1 <- col(nu_q_mat) - 1
     m2 <- t(m1)
-    empty_mat <- matrix(0, lx + 2, lx + 2)
+    lxframe <- lx + 2
+    empty_mat <- matrix(0, lxframe, lxframe)
     dim(m1) <- c(lx2, 1)
     dim(m2) <- c(lx2, 1)
-    dim(empty_mat) <- c((lx + 2) ^ 2, 1)
+    dim(empty_mat) <- c(lxframe ^ 2, 1)
     parmsvec <- c(
       lambda,
       mu,

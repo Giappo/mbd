@@ -29,7 +29,7 @@ test_that("the right parmsvecs and differentials are returned", {
   )
   testthat::expect_equal(
     length(parmsvec),
-    length(pars) - 1 + 3 * (lx ^ 2)
+    length(pars) - 1 + (lx ^ 2)
   )
 
   # differential
@@ -71,7 +71,7 @@ test_that("the right parmsvecs and differentials are returned", {
   )
   testthat::expect_equal(
     length(parmsvec),
-    length(pars) - 1 + 3 * (lx ^ 2)
+    length(pars) - 1 + (lx ^ 2)
   )
 
   # differential

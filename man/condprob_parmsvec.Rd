@@ -4,7 +4,7 @@
 \alias{condprob_parmsvec}
 \title{Creates vector of parameters for the FORTRAN condprob code}
 \usage{
-condprob_parmsvec(pars, log_nu_mat, log_q_mat, lx, eq)
+condprob_parmsvec(pars, log_nu_mat, log_q_mat, lx, eq, fortran = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -23,6 +23,8 @@ condprob_parmsvec(pars, log_nu_mat, log_q_mat, lx, eq)
 
 \item{eq}{the equation approach you want to use. It can be "q_eq" for the
 Q-equation of "p_eq" for the P-equation.}
+
+\item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 }
 \value{
 a vector composed of (in order): lambda, mu, nu, components of the
