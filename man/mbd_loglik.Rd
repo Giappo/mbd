@@ -7,7 +7,7 @@
 mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0,
   lx = min(1 + 2 * (length(brts) + max(missnumspec)), mbd::max_lx()),
   tips_interval = c(n_0 * (cond > 0), Inf), q_threshold = 0.001,
-  debug_mode = FALSE, rhs_function = "mbd_runmod")
+  debug_mode = FALSE, fortran = FALSE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -45,8 +45,7 @@ because you never want \code{q} to actually be equal to zero or one.}
 \item{debug_mode}{If TRUE allows to run even when there are errors and
 expose them.}
 
-\item{rhs_function}{a function for the right hand side of the differential
-equation}
+\item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 }
 \value{
 The function returns the natural logarithm

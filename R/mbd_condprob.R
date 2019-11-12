@@ -9,11 +9,10 @@ condprob_qeq_log_nu_mat <- function(lx) {
   log_nu_mat <- matrix(-Inf, nrow = lx, ncol = lx)
   for (m1 in nvec) {
     for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
-      aux <- log(m1 + 1) +
+      log_nu_mat[m1 + 1, m1 - a1 + 1] <- log(m1 + 1) +
         lfactorial(m1 - a1) -
         lfactorial(m1 - 2 * a1 + 1) -
         lfactorial(a1)
-      log_nu_mat[m1 + 1, m1 - a1 + 1] <- aux
     }
   }
   rownames(log_nu_mat) <- paste0("m1=", nvec)
@@ -28,10 +27,12 @@ condprob_qeq_log_nu_mat <- function(lx) {
 condprob_qeq_log_q_mat <- function(lx, q) {
   nvec <- 1:lx - 1
   log_q_mat <- matrix(-Inf, nrow = lx, ncol = lx)
-  for (m1 in nvec) {
-    for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
-      aux <- a1 * log(q) + (m1 + 1 - 2 * a1) * log(1 - q)
-      log_q_mat[m1 + 1, m1 - a1 + 1] <- aux
+  if (q != 0) {
+    for (m1 in nvec) {
+      for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
+        log_q_mat[m1 + 1, m1 - a1 + 1] <-
+          a1 * log(q) + (m1 + 1 - 2 * a1) * log(1 - q)
+      }
     }
   }
   rownames(log_q_mat) <- paste0("m1=", nvec)
@@ -48,8 +49,7 @@ condprob_peq_log_nu_mat <- function(lx) {
   log_nu_mat <- matrix(-Inf, nrow = lx, ncol = lx)
   for (m1 in nvec) {
     for (n1 in 0:m1) {
-      aux <- lchoose(n1, max(0, m1 - n1))
-      log_nu_mat[m1 + 1, n1 + 1] <- aux
+      log_nu_mat[m1 + 1, n1 + 1] <- lchoose(n1, max(0, m1 - n1))
     }
   }
   rownames(log_nu_mat) <- paste0("m1=", nvec)
@@ -64,10 +64,12 @@ condprob_peq_log_nu_mat <- function(lx) {
 condprob_peq_log_q_mat <- function(lx, q) {
   nvec <- 1:lx - 1
   log_q_mat <- matrix(-Inf, nrow = lx, ncol = lx)
-  for (m1 in nvec) {
-    for (n1 in 0:m1) {
-      aux <- (m1 - n1) * log(q) + (2 * n1 - m1) * log(1 - q)
-      log_q_mat[m1 + 1, n1 + 1] <- aux
+  if (q != 0) {
+    for (m1 in nvec) {
+      for (n1 in 0:m1) {
+        log_q_mat[m1 + 1, n1 + 1] <-
+          (m1 - n1) * log(q) + (2 * n1 - m1) * log(1 - q)
+      }
     }
   }
   rownames(log_q_mat) <- paste0("m1=", nvec)
@@ -80,10 +82,8 @@ condprob_peq_log_q_mat <- function(lx, q) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_log_nu_mat <- function(lx, eq) {
-  if (!(eq == "p_eq" || eq == "q_eq")) {
-    stop("It is either Q- or P-equation!")
-  }
-  if (eq == "p_eq") {
+  mbd::check_condprob_eq(eq = eq)
+  if (eq == "p_eq" || eq == "sim") {
     log_nu_mat <- mbd::condprob_peq_log_nu_mat(lx)
   }
   if (eq == "q_eq") {
@@ -97,10 +97,8 @@ condprob_log_nu_mat <- function(lx, eq) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_log_q_mat <- function(lx, q, eq) {
-  if (!(eq == "p_eq" || eq == "q_eq")) {
-    stop("It is either Q- or P-equation!")
-  }
-  if (eq == "p_eq") {
+  mbd::check_condprob_eq(eq = eq)
+  if (eq == "p_eq" || eq == "sim") {
     log_q_mat <- mbd::condprob_peq_log_q_mat(lx = lx, q = q)
   }
   if (eq == "q_eq") {
@@ -121,17 +119,21 @@ condprob_parmsvec <- function(
   log_nu_mat,
   log_q_mat,
   lx,
-  eq,
   fortran = TRUE
 ) {
   lx2 <- lx ^ 2
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
+  q <- pars[4]
 
-  log_nu_mat <- log_nu_mat[1:lx, 1:lx]
-  log_q_mat <- log_q_mat[1:lx, 1:lx]
-  nu_q_mat <- exp(log_nu_mat + log_q_mat)
+  if (nu > 0 && q > 0) {
+    log_nu_mat <- log_nu_mat[1:lx, 1:lx]
+    log_q_mat <- log_q_mat[1:lx, 1:lx]
+    nu_q_mat <- exp(log_nu_mat + log_q_mat)
+  } else {
+    nu_q_mat <- diag(rep(1, lx))
+  }
   if (fortran == TRUE) {
     dim(nu_q_mat) <- c(lx2, 1)
     parmsvec <- c(
@@ -169,12 +171,15 @@ create_fast_parmsvec <- function(
   eq,
   fortran
 ) {
+  if (eq == "sim") {
+    lx <- 10
+    fortran <- FALSE
+  }
   parmsvec <- mbd::condprob_parmsvec(
     pars = pars,
     log_nu_mat = mbd::condprob_log_nu_mat(lx = lx, eq = eq),
     log_q_mat = mbd::condprob_log_q_mat(lx = lx, q = pars[4], eq = eq),
     lx = lx,
-    eq = eq,
     fortran = fortran
   )
   parmsvec
@@ -228,7 +233,6 @@ condprob_dp_nu <- function(
   pp,
   nu_matrix
 ) {
-  #N_{m1, n1} P_{n1, n2} N^T_{n2, m2}
   dp3 <- nu_matrix %*% pp %*% t(nu_matrix) - pp
   dp3
 }
@@ -518,6 +522,102 @@ condprob_q <- function(
   pc
 }
 
+#' Estimates conditional probability using simulations
+#' @author Giovanni Laudanno
+#' @inheritParams default_params_doc
+#' @export
+condprob_sim <- function(
+  brts,
+  parmsvec,
+  lx = 1e4,
+  saveit = TRUE
+) {
+  # pars
+  n_sims <- lx
+  age <- max(brts)
+  n_0 <- 2
+  lambda <- parmsvec$lambda
+  mu <- parmsvec$mu
+  nu <- parmsvec$nu
+  q <- 1 - parmsvec$nu_matrix[2, 2]
+  pars <- c(lambda, mu, nu, q)
+
+  # folder and files structure
+  pars_filename <- mbd::get_pars_filename(
+    pars = pars,
+    age = age
+  )
+  sim_filename <- paste0(pars_filename, "-pc_sim.Rdata")
+  taxa_plot_filename <- paste0(pars_filename, "-taxa_plot.png")
+  delete_file <- FALSE
+  if (file.exists(sim_filename)) {
+    load(sim_filename)
+    if (measure$n_sims >= n_sims) {
+      return(measure$pc_sim)
+    } else {
+      delete_file <- TRUE
+    }
+  }
+
+  # calculate pc_sim
+  score <- 0
+  n_tips <- rep(0, n_sims)
+  for (seed in 1:n_sims) {
+    sim <- mbd::mbd_sim(
+      pars = pars,
+      n_0 = n_0,
+      cond = 0,
+      age = age,
+      seed = seed
+    )
+
+    l_matrix <- sim$l_matrix
+    alive <- l_matrix[l_matrix[, 4] == -1, ]
+    alive <- matrix(alive, ncol = 4)
+    n_tips[seed] <- nrow(alive)
+    crown_species_dead <- (length(unique(sign(alive[, 3]))) != n_0)
+    crown_survival <- !crown_species_dead
+
+    score <- score + 1 * crown_survival
+  }
+  pc_sim <- score / n_sims
+
+  if (saveit == TRUE) {
+    measure <- list(
+      pc_sim = pc_sim,
+      n_sims = n_sims,
+      n_tips = n_tips
+    )
+
+    if (delete_file == TRUE) {
+      file.remove(sim_filename)
+      file.remove(taxa_plot_filename)
+    }
+
+    # save pc_sim
+    save(
+      measure,
+      file = sim_filename
+    )
+
+    # save plot taxa
+    taxa_plot <- ggplot2::ggplot(
+      data = data.frame(measure), ggplot2::aes(x = n_tips)
+    ) +
+      ggplot2::geom_histogram(bins = 30) +
+      ggplot2::theme_bw() +
+      ggplot2::ggtitle(
+        paste0(mbd::get_param_names(), " = ", pars, collapse = ", "),
+        subtitle = paste0("crown_age = ", max(brts), ", n_sims = ", n_sims)
+      )
+    ggplot2::ggsave(filename = taxa_plot_filename, plot = taxa_plot)
+
+  }
+  pc <- DDD::roundn(pc_sim, digits = 8)
+  mbd::check_pc(pc = pc)
+  pc
+}
+
 #' Calculate conditional probability: loglik mode
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
@@ -529,16 +629,23 @@ condprob <- function(
   eq,
   parmsvec
 ) {
-  if (eq == "q_eq") {
-    return(mbd::condprob_q(
+  if (eq == "sim") {
+    return(mbd::condprob_sim(
+      brts = brts,
+      parmsvec = parmsvec,
+      lx = lx
+    ))
+  }
+  if (eq == "p_eq") {
+    return(mbd::condprob_p(
       brts = brts,
       parmsvec = parmsvec,
       fortran = fortran,
       lx = lx
     ))
   }
-  if (eq == "p_eq") {
-    return(mbd::condprob_p(
+  if (eq == "q_eq") {
+    return(mbd::condprob_q(
       brts = brts,
       parmsvec = parmsvec,
       fortran = fortran,
@@ -553,13 +660,13 @@ condprob <- function(
 #' @author Giovanni Laudanno
 #' @export
 calculate_condprob <- function(
- pars,
- brts,
- lx,
- eq,
- fortran
+  pars,
+  brts,
+  lx,
+  eq,
+  fortran = TRUE
 ) {
-  condprob(
+  mbd::condprob(
     brts = brts,
     fortran = fortran,
     lx = lx,
@@ -571,4 +678,51 @@ calculate_condprob <- function(
       fortran = fortran
     )
   )
+}
+
+# Condprob selector ----
+#' Selects the best eq for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+condprob_select_eq <- function(
+  pars,
+  fortran = TRUE
+) {
+  lx_min <- 16
+  lx_max <- 24
+  lx_vec <- seq(from = lx_min, to = lx_max, length.out = 4)
+  lx_vec <- ceiling(lx_vec)
+  derivatives <- res <- list()
+  for (eq in c("p_eq", "q_eq")) {
+    log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx_max, eq = eq)
+    log_q_mat <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = eq)
+    aux <- rep(NA, length(lx_vec))
+    for (l in seq_along(lx_vec)) {
+      lx <- lx_vec[l]
+      parmsvec <- mbd::condprob_parmsvec(
+        pars = pars,
+        log_nu_mat = log_nu_mat,
+        log_q_mat = log_q_mat,
+        lx = lx,
+        fortran = fortran
+      )
+      pc <- mbd::condprob(
+        brts = brts,
+        fortran = fortran,
+        lx = lx,
+        eq = eq,
+        parmsvec = parmsvec
+      )
+      aux[l] <- pc
+    }
+    res[[eq]] <- aux[seq_along(lx_vec)]
+    derivatives[[eq]] <- abs(diff(res[[eq]]))
+  }
+  if (sum(derivatives$p_eq) > sum(derivatives$q_eq)) {
+    eq <- "q_eq"
+  } else {
+    eq <- "p_eq"
+  }
+  eq
 }

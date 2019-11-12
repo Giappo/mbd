@@ -19,7 +19,7 @@ test_that("conditioned likelihood is greater than unconditioned likelihood", {
       brts = brts,
       n_0  = n_0,
       cond = 0
-    ) >
+    ) <
     mbd::mbd_loglik(
       pars = pars,
       brts = brts,

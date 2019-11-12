@@ -17,7 +17,7 @@ mbd_loglik <- function(
   tips_interval = c(n_0 * (cond > 0), Inf),
   q_threshold = 1e-3,
   debug_mode = FALSE,
-  rhs_function = "mbd_runmod"
+  fortran = FALSE
 ) {
   # BASIC SETTINGS AND CHECKS
   mbd::check_brts(brts = brts, n_0 = n_0)
@@ -32,14 +32,25 @@ mbd_loglik <- function(
     return(-Inf)
   }
 
+  # FORTRAN?
+  if (fortran == TRUE) {
+    rhs_function <- "mbd_runmod"
+  } else {
+    rhs_function <- mbd::mbd_loglik_rhs
+  }
+
   # Calculate conditional probability
-  pc <- mbd::calculate_condprob(
-    pars = pars,
-    brts = brts,
-    lx = ceiling(sqrt(lx)),
-    eq = "p_eq",
-    fortran = TRUE
-  )
+  if (cond == 1) {
+    pc <- mbd::calculate_condprob(
+      pars = pars,
+      brts = brts,
+      lx = ceiling(sqrt(lx)),
+      eq = "p_eq",
+      fortran = TRUE
+    )
+  } else {
+    pc <- 1
+  }
 
   # Use Pure Multiple Birth when there is no extinction
   if (
@@ -67,8 +78,7 @@ mbd_loglik <- function(
   q_t[1, ] <- q_i
   dimnames(q_t)[[2]] <- paste0("Q", 0:lx)
   k <- n_0 # n_0 is the number of species at t = 1
-  # t is starting from 2 so all is ok with births[t] and time_intervals[t]
-  t <- 2
+  t <- 2 # t is starts from 2 so all is ok with births[t] and time_intervals[t]
   sum_probs_2 <- sum_probs_1 <- rep(1, lt)
 
   # Evolving the initial state to the present

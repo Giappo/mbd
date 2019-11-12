@@ -6,7 +6,7 @@ is_on_ci <- function() {
   is_it_on_appveyor || is_it_on_travis # nolint internal function
 }
 
-### diagonal in p_nu_matrix is (1 - q) ^ m (+ k) ----
+# diagonal in p_nu_matrix is (1 - q) ^ m (+ k) ----
 test_that("diagonal in p_nu_matrix is (1 - q) ^ m (+ k)", {
   q <- 0.2
   lx <- 8
@@ -26,11 +26,11 @@ test_that("diagonal in p_nu_matrix is (1 - q) ^ m (+ k)", {
   nu_q_mat <- exp(log_nu_mat + log_q_mat)
   testthat::expect_equal(
     diag(nu_q_mat),
-    (1 - q) ^ (0:(lx - 1) + 1) # k = 1
+    (1 - q) ^ (0:(lx - 1) + 1) # k is equal to 1
   )
 })
 
-### right parmsvec in FORTRAN and R ----
+# right parmsvec in FORTRAN and R ----
 test_that("right parmsvec in FORTRAN and R", {
 
   pars <- c(0.3, 0.1, 1.7, 0.13)
@@ -74,13 +74,13 @@ test_that("right parmsvec in FORTRAN and R", {
   testthat::expect_equal(dim(parmsvec$empty_mat), c(lx + 2, lx + 2))
 })
 
-### right differentials in R ----
+# right differentials in R ----
 test_that("right differentials in R", {
 
   pars <- c(0.2, 0.1, 1.4, 0.12)
   lx <- 40
 
-  # test for P-equation
+  # test for the P-equation
   eq <- "p_eq"
   parmsvec <-
     mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = FALSE)
@@ -133,7 +133,7 @@ test_that("right differentials in R", {
 
 })
 
-### full P_{n1, n2} and Q_{m1, m2} distributions ----
+# full P_{n1, n2} and Q_{m1, m2} distributions ----
 test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
   pars <- c(0.3, 0.15, 1.8, 0.11)
@@ -192,12 +192,13 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
 })
 
-### P_{n1, n2} sums up to one ----
+# P_{n1, n2} sums up to one ----
 test_that("P_{n1, n2} sums up to one", {
 
   pars <- c(0.2, 0.1, 2.5, 0.2)
   lx <- 30
   brts <- c(2)
+  eq <- "p_eq"
 
   p_n1_n2 <- mbd::condprob_p_n1_n2(
     rhs_function = "mbd_runmodpcp",
@@ -217,68 +218,62 @@ test_that("P_{n1, n2} sums up to one", {
   )
 })
 
-### FORTRAN vs R: same result but FORTRAN is faster ----
+# FORTRAN vs R: same result but FORTRAN is faster ----
 test_that("FORTRAN vs R: same result but FORTRAN is faster", {
 
   brts <- c(10)
   pars <- c(0.2, 0.1, 1.2, 0.12)
-  lx <- 25
+  lx <- 40
 
-  # P-equation
+  # test for the P-equation
   eq <- "p_eq"
-
-  fortran <- TRUE
-  t_fortran <- system.time(
+  tp_fortran <- system.time(
     pc_fortran <- calculate_condprob(
       pars = pars,
       brts = brts,
       lx = lx,
       eq = eq,
-      fortran = fortran
+      fortran = TRUE
     )
   )[[3]]
-  fortran <- FALSE
-  t_r <- system.time(
+  tp_r <- system.time(
     pc_r <- calculate_condprob(
       pars = pars,
       brts = brts,
       lx = lx,
       eq = eq,
-      fortran = fortran
+      fortran = FALSE
     )
   )[[3]]
   testthat::expect_equal(pc_r, pc_fortran, tolerance = 1e-5)
-  testthat::expect_true(t_fortran <= t_r)
+  testthat::expect_true(tp_fortran <= tp_r)
 
-  # Q-equation
+  # test for the Q-equation
   eq <- "q_eq"
-
-  fortran <- TRUE
-  t_fortran <- system.time(
-    pc_fortran <- calculate_condprob(
+  tq_fortran <- system.time(
+    qc_fortran <- calculate_condprob(
       pars = pars,
       brts = brts,
       lx = lx,
       eq = eq,
-      fortran = fortran
+      fortran = TRUE
     )
   )[[3]]
-  fortran <- FALSE
-  t_r <- system.time(
-    pc_r <- calculate_condprob(
+  tq_r <- system.time(
+    qc_r <- calculate_condprob(
       pars = pars,
       brts = brts,
       lx = lx,
       eq = eq,
-      fortran = fortran
+      fortran = FALSE
     )
   )[[3]]
-  testthat::expect_equal(pc_r, pc_fortran, tolerance = 1e-5)
-  testthat::expect_true(t_fortran <= t_r)
+  testthat::expect_equal(qc_r, qc_fortran, tolerance = 1e-5)
+  testthat::expect_true(tq_fortran <= tq_r)
 })
 
-### FORTRAN vs R - hard test ----
-test_that("FORTRAN vs R - hard test", {
+# FORTRAN vs R: hard test ----
+test_that("FORTRAN vs R: hard test", {
 
   if (!is_on_ci()) {
     skip("To be performed on ci.")
@@ -288,60 +283,54 @@ test_that("FORTRAN vs R - hard test", {
   pars <- c(0.2, 0.1, 1.5, 0.14)
   lx <- 60
 
-  # P-equation
+  # test for the P-equation
   eq <- "p_eq"
-
-  fortran <- TRUE
-  t_fortran <- system.time(
+  tp_fortran <- system.time(
     pc_fortran <- calculate_condprob(
       pars = pars,
       brts = brts,
       lx = lx,
       eq = eq,
-      fortran = fortran
+      fortran = TRUE
     )
   )[[3]]
-  fortran <- FALSE
-  t_r <- system.time(
+  tp_r <- system.time(
     pc_r <- calculate_condprob(
       pars = pars,
       brts = brts,
       lx = lx,
       eq = eq,
-      fortran = fortran
+      fortran = FALSE
     )
   )[[3]]
   testthat::expect_equal(pc_r, pc_fortran, tolerance = 1e-5)
-  testthat::expect_true(t_fortran <= t_r)
+  testthat::expect_true(tp_fortran <= tp_r)
 
-  # Q-equation
+  # test for the Q-equation
   eq <- "q_eq"
-
-  fortran <- TRUE
-  t_fortran <- system.time(
-    pc_fortran <- calculate_condprob(
+  tq_fortran <- system.time(
+    qc_fortran <- calculate_condprob(
       pars = pars,
       brts = brts,
       lx = lx,
       eq = eq,
-      fortran = fortran
+      fortran = TRUE
     )
   )[[3]]
-  fortran <- FALSE
-  t_r <- system.time(
-    pc_r <- calculate_condprob(
+  tq_r <- system.time(
+    qc_r <- calculate_condprob(
       pars = pars,
       brts = brts,
       lx = lx,
       eq = eq,
-      fortran = fortran
+      fortran = FALSE
     )
   )[[3]]
-  testthat::expect_equal(pc_r, pc_fortran, tolerance = 1e-5)
-  testthat::expect_true(t_fortran <= t_r)
+  testthat::expect_equal(qc_r, qc_fortran, tolerance = 1e-5)
+  testthat::expect_true(tq_fortran <= tq_r)
 })
 
-### condprob for mu = 0 ----
+# condprob for mu = 0 ----
 test_that("condprob for mu = 0", {
   pars <- c(0.2, 0, 1, 0.1)
   brts <- c(3)
@@ -372,8 +361,8 @@ test_that("condprob for mu = 0", {
   )
 })
 
-### bd ----
-test_that("bd", {
+# bd: nu = q = 0 ----
+test_that("nu = q = 0", {
   pars <- c(0.2, 0.15, 0, 0)
   brts <- c(1)
   cond <- 1
@@ -396,34 +385,262 @@ test_that("bd", {
           missnumspec = 0
         )
     )
-    test_p <- mbd::calculate_condprob(
-      pars = pars,
-      brts = brts,
-      lx = lx,
-      eq = "p_eq",
-      fortran = TRUE
-    )
-    test_q <- mbd::calculate_condprob(
-      pars = pars,
-      brts = brts,
-      lx = lx,
-      eq = "q_eq",
-      fortran = TRUE
-    )
-    testthat::expect_equal(
-      test0,
-      test_p,
-      tolerance = 1e-3
-    )
-    testthat::expect_equal(
-      test0,
-      test_q,
-      tolerance = 1e-3
-    )
+    for (eq in c("p_eq", "q_eq")) {
+      for (fortran in c(TRUE, FALSE)) {
+        test <- mbd::calculate_condprob(
+          pars = pars,
+          brts = brts,
+          lx = lx,
+          eq = eq,
+          fortran = fortran
+        )
+        testthat::expect_equal(
+          test0,
+          test,
+          tolerance = 1e-3
+        )
+      }
+    }
   }
 })
 
-### probcond_p and probcond_q vs probcond_sim ----
+# bd: nu = 0 ----
+test_that("nu = 0", {
+  pars <- c(0.2, 0.15, 0, 0.5)
+  brts <- c(1)
+  cond <- 1
+  n_0 <- 2
+  lx <- 27
+  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 3)
+  for (m in seq_along(mu_vec)) {
+    pars[2] <- mu_vec[m]
+    test0 <- exp(
+      DDD::bd_loglik(
+        pars1 = c(pars[1], pars[2], 0, 0),
+        pars2 = c(0, 0, 0, 0, n_0),
+        brts = brts,
+        missnumspec = 0
+      ) -
+        DDD::bd_loglik(
+          pars1 = c(pars[1], pars[2], 0, 0),
+          pars2 = c(0, 1, 0, 0, n_0),
+          brts = brts,
+          missnumspec = 0
+        )
+    )
+    for (eq in c("p_eq", "q_eq")) {
+      for (fortran in c(TRUE, FALSE)) {
+        test <- mbd::calculate_condprob(
+          pars = pars,
+          brts = brts,
+          lx = lx,
+          eq = eq,
+          fortran = fortran
+        )
+        testthat::expect_equal(
+          test0,
+          test,
+          tolerance = 1e-3
+        )
+      }
+    }
+  }
+})
+
+# bd: q = 0 ----
+test_that("q = 0", {
+  pars <- c(0.2, 0.15, 3, 0)
+  brts <- c(1)
+  cond <- 1
+  n_0 <- 2
+  lx <- 30
+  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 3)
+  for (m in seq_along(mu_vec)) {
+    pars[2] <- mu_vec[m]
+    test0 <- exp(
+      DDD::bd_loglik(
+        pars1 = c(pars[1], pars[2], 0, 0),
+        pars2 = c(0, 0, 0, 0, n_0),
+        brts = brts,
+        missnumspec = 0
+      ) -
+        DDD::bd_loglik(
+          pars1 = c(pars[1], pars[2], 0, 0),
+          pars2 = c(0, 1, 0, 0, n_0),
+          brts = brts,
+          missnumspec = 0
+        )
+    )
+    for (eq in c("p_eq", "q_eq")) {
+      for (fortran in c(TRUE, FALSE)) {
+        test <- mbd::calculate_condprob(
+          pars = pars,
+          brts = brts,
+          lx = lx,
+          eq = eq,
+          fortran = fortran
+        )
+        testthat::expect_equal(
+          test0,
+          test,
+          tolerance = 1e-3
+        )
+      }
+    }
+  }
+})
+
+# condprob_select_eq ----
+test_that("condprob_select_eq", {
+
+  max_seed <- 20
+  for (seed in 1:max_seed) {
+    set.seed(seed)
+    print(seed)
+    lambda <- runif(n = 1, min = 0.05, max = 0.3)
+    mu <- runif(n = 1, min = 0, max = lambda)
+    nu <- runif(n = 1, min = 0.3, max = 2.3)
+    q <- runif(n = 1, min = 0.05, max = 0.35)
+    pars <- c(lambda, mu, nu, q)
+    brts <- c(8)
+
+    pc_sim <- mbd::calculate_condprob(
+      pars = pars,
+      brts = brts,
+      lx = 1e2,
+      eq = "sim"
+    )
+    if (pc_sim > 0.45 && pc_sim < 0.55) {
+      pc_sim <- mbd::calculate_condprob(
+        pars = pars,
+        brts = brts,
+        lx = 1e3,
+        eq = "sim"
+      )
+    }
+    if (pc_sim >= 0.47 && pc_sim <= 0.53) {
+      pc_sim <- mbd::calculate_condprob(
+        pars = pars,
+        brts = brts,
+        lx = 1e4,
+        eq = "sim"
+      )
+    }
+    if (pc_sim >= 0.49 && pc_sim <= 0.51) {
+      pc_sim <- mbd::calculate_condprob(
+        pars = pars,
+        brts = brts,
+        lx = 1e5,
+        eq = "sim"
+      )
+    }
+    if (pc_sim > 0.5) {
+      right_eq <- "p_eq"
+    } else {
+      right_eq <- "q_eq"
+    }
+
+    eq <- mbd::condprob_select_eq(pars = pars, fortran = TRUE)
+    testthat::expect_equal(eq, right_eq)
+  }
+
+})
+
+# probcond_p and probcond_q vs probcond_sim ----
 test_that("probcond_p and probcond_q vs probcond_sim", {
-  skip("TODO")
+
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
+
+  pars <- c(0.2, 0.1, 1.0, 0.15)
+  age <- 10
+  brts <- mbd::mbd_sim(pars = pars, age = age, n_0 = 2, cond = 1, seed = 2)$brts
+
+  n_sims <- 1e4
+  pc_sim <- mbd::calculate_condprob(
+    pars = pars,
+    brts = brts,
+    lx = n_sims,
+    eq = "sim"
+  )
+
+  lx <- 30
+  # unconditioned likelihood time for the same branching times
+  time_likelihood <- system.time(mbd::mbd_loglik(
+    pars = pars,
+    brts = brts,
+    n_0 = 2,
+    cond = 0,
+    lx = (lx ^ 2) / 2
+  ))[[3]]
+  log_nu_mat <- mbd::condprob_
+  fortran <- TRUE
+  time_pc <- system.time(
+    pc <- mbd::calculate_condprob(
+      pars = pars,
+      brts = brts,
+      lx = 40,
+      eq = mbd::condprob_select_eq(
+        pars = pars,
+        fortran = fortran
+      ),
+      fortran = fortran
+    )
+  )[[3]]
+
+  # conditional likelihood must be "close" to simulations
+  testthat::expect_equal(
+    pc,
+    pc_sim,
+    tolerance = 1e-2
+  )
+
+  # conditioning time must be less than the time for full likelihood
+  testthat::expect_true(time_pc < time_likelihood)
+
+})
+
+test_that("accurate and fast - harder parameters", {
+
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
+
+  pars <- c(0.2, 0.1, 1.5, 0.1)
+  brts <- c(10)
+  n_0 <- 2
+  cond <- 1
+  n_sims <- 1e5
+  prob_cond_sim <- cond_prob_sim(
+    pars = pars,
+    brts = brts,
+    cond = cond,
+    n_0 = n_0,
+    n_sims = n_sims,
+    saveit = FALSE
+  )
+  lx <- 80
+  time_cond_p <- system.time(
+    prob_cond_p <- cond_prob_p(
+      pars = pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      lx = lx
+    )
+  )[[3]]
+  time_cond_q <- system.time(
+    prob_cond_q <- cond_prob_q(
+      pars = pars,
+      brts = brts,
+      cond = cond,
+      n_0 = n_0,
+      lx = lx
+    )
+  )[[3]]
+
+  # conditional likelihood must be "close" to simulations
+  testthat::expect_equal(prob_cond_p, prob_cond_sim, tolerance = 1e-2)
+  testthat::expect_equal(prob_cond_q, prob_cond_sim, tolerance = 1e-2)
 })

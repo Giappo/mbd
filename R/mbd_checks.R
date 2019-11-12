@@ -73,7 +73,7 @@ check_brts <- function(
   if (sum(brts == max(brts)) > 1) {
     stop("Crown/stem age has to be reported only once in the branching times.")
   }
-  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
+  births <- mbd::brts2time_intervals_and_births(brts)$births
   kvec <- n_0 + cumsum(c(0, births))
   kvec1 <- kvec[-c(1, length(kvec))]
   births1 <- births[-1]
@@ -190,6 +190,19 @@ check_pc <- function(pc, debug_mode = FALSE) {
     if (debug_mode == FALSE) {
       stop("problems: pc is wrong!")
     }
+  }
+  return()
+}
+
+#' @title Check "equation" for conditional probability
+#' @description CCheck "equation" for conditional probability
+#' @inheritParams default_params_doc
+#' @return Nothing
+#' @author Giovanni Laudanno
+#' @export
+check_condprob_eq <- function(eq) {
+  if (!(eq %in% mbd_condprob_eqs())) {
+    stop("It is either Q- or P-equation! (or use sims)")
   }
   return()
 }

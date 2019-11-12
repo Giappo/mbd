@@ -10,7 +10,6 @@ Imports:
   DDD,
   deSolve,
   ggplot2,
-  rappdirs,
   subplex,
   testit
 Suggests:
@@ -18,6 +17,7 @@ Suggests:
   cyclocomp,
   knitr,
   lintr,
+  rappdirs,
   rmarkdown, 
   testthat
 Description: 

@@ -47,6 +47,17 @@ mbd_conds <- function() {
   conds
 }
 
+#' @title Eqs for condprob
+#' @description Eqs for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @return the conditionings
+#' @export
+mbd_condprob_eqs <- function() {
+  eqs <- c("p_eq", "q_eq", "sim")
+  eqs
+}
+
 #' @title Logliks for the experiment
 #' @author Giovanni Laudanno
 #' @description Get the loglik functions to use for the experiment
@@ -82,7 +93,9 @@ cat2 <- function(
   }
 }
 
-#' @noRd
+#' Convert to string
+#' @param var a variable
+#' @export
 to_string2 <- function(
   var
 ) {
@@ -348,9 +361,9 @@ get_pars_filename <- function(
   }
 
   parsetting <- paste0(
-    "pars=", to_string2(pars),
+    "pars=", mbd::to_string2(signif(pars, digits = 3)),
     "-",
-    "age=", to_string2(age)
+    "age=", mbd::to_string2(signif(age, digits = 3))
   )
   parsetting <- gsub(parsetting, pattern = " ", replacement = "")
   pars_filename <- file.path(data_folder, parsetting)
