@@ -28,7 +28,7 @@ test_that("get_function_names", {
   testthat::expect_true(
     all(
       mbd::get_function_names(
-        loglik_functions = mbd_logliks_function()
+        loglik_functions = mbd::mbd_logliks_function()
       ) == c("mbd_loglik", "pmb_loglik")
     )
   )
@@ -86,7 +86,7 @@ test_that("get_model_names", {
   )
   testthat::expect_output(
     mbd::get_model_names(
-      function_names = mbd_logliks_function(),
+      function_names = mbd::mbd_logliks_function(),
       verbose = TRUE
     ),
     "You are using the functions: mbd pmb"
