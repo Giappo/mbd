@@ -6,6 +6,31 @@ is_on_ci <- function() {
   is_it_on_appveyor || is_it_on_travis # nolint internal function
 }
 
+### diagonal in p_nu_matrix is (1 - q) ^ m (+ k) ----
+test_that("diagonal in p_nu_matrix is (1 - q) ^ m (+ k)", {
+  q <- 0.2
+  lx <- 8
+
+  eq <- "p_eq"
+  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
+  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, eq = eq, q = q)
+  nu_q_mat <- exp(log_nu_mat + log_q_mat)
+  testthat::expect_equal(
+    diag(nu_q_mat),
+    (1 - q) ^ (0:(lx - 1))
+  )
+
+  eq <- "q_eq"
+  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
+  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, eq = eq, q = q)
+  nu_q_mat <- exp(log_nu_mat + log_q_mat)
+  testthat::expect_equal(
+    diag(nu_q_mat),
+    (1 - q) ^ (0:(lx - 1) + 1) # k = 1
+  )
+})
+
+### right parmsvec in FORTRAN and R ----
 test_that("right parmsvec in FORTRAN and R", {
 
   pars <- c(0.3, 0.1, 1.7, 0.13)
@@ -49,17 +74,34 @@ test_that("right parmsvec in FORTRAN and R", {
   testthat::expect_equal(dim(parmsvec$empty_mat), c(lx + 2, lx + 2))
 })
 
+### right differentials in R ----
 test_that("right differentials in R", {
 
   pars <- c(0.2, 0.1, 1.4, 0.12)
-  lx <- 5
+  lx <- 40
 
   # test for P-equation
   eq <- "p_eq"
   parmsvec <-
     mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = FALSE)
-  pvec <- c(1, rep(0, lx ^ 2 - 1))
-  dp <- condprob_dp(
+  pp <- matrix(0, lx, lx)
+  pp[2, 2] <- 1
+  pvec <- matrix(pp, lx ^ 2, 1)
+  pp2 <- parmsvec$empty_mat
+  mm <- 1 + 1:lx
+  pp2[mm, mm] <- pp
+
+  dp_la <- mbd::condprob_dp_lambda(
+    pp = pp, pp2 = pp2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+  )
+  dp_mu <- mbd::condprob_dp_mu(
+    pp = pp, pp2 = pp2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+  )
+  dp_nu <- mbd::condprob_dp_nu(pp = pp, nu_matrix = parmsvec$nu_matrix)
+  testthat::expect_equal(sum(dp_la), 0, tolerance = 10 * .Machine$double.eps)
+  testthat::expect_equal(sum(dp_mu), 0, tolerance = 10 * .Machine$double.eps)
+  testthat::expect_equal(sum(dp_nu), 0, tolerance = 10 * .Machine$double.eps)
+  dp <- mbd::condprob_dp(
     pvec = pvec,
     lambda = parmsvec$lambda,
     mu = parmsvec$mu,
@@ -91,10 +133,11 @@ test_that("right differentials in R", {
 
 })
 
+### full P_{n1, n2} and Q_{m1, m2} distributions ----
 test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
   pars <- c(0.3, 0.15, 1.8, 0.11)
-  lx <- 10
+  lx <- 30
   brts <- c(10)
 
   # P equation
@@ -126,7 +169,7 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
   ## R
   parmsvec <-
     mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = FALSE)
-  q_r <- mbd::condprob_p_n1_n2(
+  q_r <- mbd::condprob_q_m1_m2(
     brts = brts,
     parmsvec = parmsvec,
     lx = lx,
@@ -136,16 +179,46 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
   ## FORTRAN
   parmsvec <-
     mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = TRUE)
-  q_fortran <- mbd::condprob_p_n1_n2(
+  q_fortran <- mbd::condprob_q_m1_m2(
     brts = brts,
     parmsvec = parmsvec,
     lx = lx,
     rhs_function = "mbd_runmodpcq"
   )
   testthat::expect_equal(q_fortran, t(q_fortran))
+
+  # compare the two
   testthat::expect_equal(q_fortran, q_r)
+
 })
-test_that("FORTRAN and R return same result but FORTRAN is faster", {
+
+### P_{n1, n2} sums up to one ----
+test_that("P_{n1, n2} sums up to one", {
+
+  pars <- c(0.2, 0.1, 2.5, 0.2)
+  lx <- 30
+  brts <- c(2)
+
+  p_n1_n2 <- mbd::condprob_p_n1_n2(
+    rhs_function = "mbd_runmodpcp",
+    brts = brts,
+    lx = lx,
+    parmsvec = mbd::create_fast_parmsvec(
+      pars = pars,
+      lx = lx,
+      eq = eq,
+      fortran = TRUE
+    )
+  )
+
+  testthat::expect_gt(
+    sum(p_n1_n2),
+    0.99
+  )
+})
+
+### FORTRAN vs R: same result but FORTRAN is faster ----
+test_that("FORTRAN vs R: same result but FORTRAN is faster", {
 
   brts <- c(10)
   pars <- c(0.2, 0.1, 1.2, 0.12)
@@ -204,7 +277,8 @@ test_that("FORTRAN and R return same result but FORTRAN is faster", {
   testthat::expect_true(t_fortran <= t_r)
 })
 
-test_that("FORTRAN and R - hard test", {
+### FORTRAN vs R - hard test ----
+test_that("FORTRAN vs R - hard test", {
 
   if (!is_on_ci()) {
     skip("To be performed on ci.")
@@ -265,4 +339,91 @@ test_that("FORTRAN and R - hard test", {
   )[[3]]
   testthat::expect_equal(pc_r, pc_fortran, tolerance = 1e-5)
   testthat::expect_true(t_fortran <= t_r)
+})
+
+### condprob for mu = 0 ----
+test_that("condprob for mu = 0", {
+  pars <- c(0.2, 0, 1, 0.1)
+  brts <- c(3)
+  cond <- 1
+  n_0 <- 2
+  lx <- 30
+  testthat::expect_equal(
+    mbd::calculate_condprob(
+      pars = pars,
+      brts = brts,
+      lx = lx,
+      eq = "p_eq",
+      fortran = TRUE
+    ),
+    1,
+    tolerance = 1e-3
+  )
+  testthat::expect_equal(
+    mbd::calculate_condprob(
+      pars = pars,
+      brts = brts,
+      lx = lx,
+      eq = "q_eq",
+      fortran = TRUE
+    ),
+    1,
+    tolerance = 1e-3
+  )
+})
+
+### bd ----
+test_that("bd", {
+  pars <- c(0.2, 0.15, 0, 0)
+  brts <- c(1)
+  cond <- 1
+  n_0 <- 2
+  lx <- 27
+  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 3)
+  for (m in seq_along(mu_vec)) {
+    pars[2] <- mu_vec[m]
+    test0 <- exp(
+      DDD::bd_loglik(
+        pars1 = c(pars[1], pars[2], 0, 0),
+        pars2 = c(0, 0, 0, 0, n_0),
+        brts = brts,
+        missnumspec = 0
+      ) -
+        DDD::bd_loglik(
+          pars1 = c(pars[1], pars[2], 0, 0),
+          pars2 = c(0, 1, 0, 0, n_0),
+          brts = brts,
+          missnumspec = 0
+        )
+    )
+    test_p <- mbd::calculate_condprob(
+      pars = pars,
+      brts = brts,
+      lx = lx,
+      eq = "p_eq",
+      fortran = TRUE
+    )
+    test_q <- mbd::calculate_condprob(
+      pars = pars,
+      brts = brts,
+      lx = lx,
+      eq = "q_eq",
+      fortran = TRUE
+    )
+    testthat::expect_equal(
+      test0,
+      test_p,
+      tolerance = 1e-3
+    )
+    testthat::expect_equal(
+      test0,
+      test_q,
+      tolerance = 1e-3
+    )
+  }
+})
+
+### probcond_p and probcond_q vs probcond_sim ----
+test_that("probcond_p and probcond_q vs probcond_sim", {
+  skip("TODO")
 })

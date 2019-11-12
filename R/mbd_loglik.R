@@ -33,14 +33,12 @@ mbd_loglik <- function(
   }
 
   # Calculate conditional probability
-  pc <- mbd::cond_prob(
+  pc <- mbd::calculate_condprob(
     pars = pars,
     brts = brts,
-    cond = cond,
-    n_0 = n_0,
-    tips_interval = tips_interval,
     lx = ceiling(sqrt(lx)),
-    debug_mode = debug_mode
+    eq = "p_eq",
+    fortran = TRUE
   )
 
   # Use Pure Multiple Birth when there is no extinction

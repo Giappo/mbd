@@ -14,9 +14,9 @@ mbd_ode_fortran <- function(
   runmod = "mbd_runmod"
 ) {
   dimparsvec <- dim(parsvec)
-  nn <- length(initprobs)
+  N <- length(initprobs)
   if (all(dimparsvec) > 1) {
-    dim(parsvec) <- c(nn ^ 2, 1)
+    dim(parsvec) <- c(N ^ 2, 1)
   }
   if (runmod == "mbd_runmod") {
     initfunc <- "mbd_initmod"
@@ -25,13 +25,13 @@ mbd_ode_fortran <- function(
   }
   probs <- deSolve::ode(
     y = initprobs,
-    parms = c(nn + 0.),
+    parms = c(N + 0.),
     rpar = parsvec,
     times = tvec,
     func = runmod,
     initfunc = initfunc,
     ynames = c("SV"),
-    dimens = nn + 1,
+    dimens = N + 1,
     nout = 1,
     outnames = c("Sum"),
     dllname = "mbd",
@@ -39,7 +39,7 @@ mbd_ode_fortran <- function(
     rtol = rtol,
     method = methode
   )
-  probs <- probs[, 1:(nn + 1)]
+  probs <- probs[, 1:(N + 1)]
   return(probs)
 }
 
@@ -56,7 +56,7 @@ mbd_integrate <- function(
   atol,
   rtol,
   tcrit,
-  methode = "lsodes"
+  methode = "lsoda"
 ) {
   func_name <- "no_name"
   if (is.character(func)) {

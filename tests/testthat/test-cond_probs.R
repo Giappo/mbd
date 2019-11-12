@@ -132,38 +132,6 @@ test_that("cond == 0 yields pc == 1; cond == 1 yields pc <= 1", {
   )
 })
 
-test_that("mu = 0", {
-  pars <- c(0.2, 0, 1, 0.1)
-  brts <- c(3)
-  cond <- 1
-  n_0 <- 2
-  lx <- 30
-  test_p <- cond_prob_p(
-    pars = pars,
-    brts = brts,
-    cond = cond,
-    n_0 = n_0,
-    lx = lx
-  )
-  test_q <- cond_prob_q(
-    pars = pars,
-    brts = brts,
-    cond = cond,
-    n_0 = n_0,
-    lx = lx
-  )
-  testthat::expect_equal(
-    test_p,
-    1,
-    tolerance = 1e-3
-  )
-  testthat::expect_equal(
-    test_q,
-    1,
-    tolerance = 1e-3
-  )
-})
-
 test_that("bd", {
   pars <- c(0.2, 0.15, 0, 0)
   brts <- c(1)
