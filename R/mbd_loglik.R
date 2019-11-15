@@ -44,11 +44,11 @@ mbd_loglik <- function(
     pc <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
-      lx = ceiling(sqrt(lx)),
+      lx = lx,
       eq = "p_eq",
-      fortran = TRUE
+      fortran = fortran
     )
-  } else {
+      } else {
     pc <- 1
   }
 
@@ -59,7 +59,7 @@ mbd_loglik <- function(
     missnumspec == 0
   ) {
     return(
-      mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0) - log(pc)
+      mbd::pmb_loglik(pars = pars, brts = brts, n_0 = n_0)
     )
   }
 

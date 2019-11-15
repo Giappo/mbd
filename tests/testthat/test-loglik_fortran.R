@@ -10,13 +10,13 @@ test_that("fortran and r return the same result, but fortran is faster", {
 
   pars <- c(0.2, 0.1, 1.4, 0.12)
   n_0 <- 2
-  cond <- 0
-  lx <- 200
+  cond <- 1
+  lx <- 30
   brts <- c(10, 9.4, 8, 7.6, 7.6, 6, 6, 6, 5, 4, 4, 3, 2, 2, 2, 2)
 
   t_r <- system.time(
     loglik_r <- mbd::mbd_loglik(
-      rhs_function = mbd::mbd_loglik_rhs,
+      fortran = FALSE,
       pars = pars,
       brts = brts,
       n_0 = n_0,
@@ -27,7 +27,7 @@ test_that("fortran and r return the same result, but fortran is faster", {
   )[[3]]
   t_fortran <- system.time(
     loglik_fortran <- mbd::mbd_loglik(
-      rhs_function = "mbd_runmod",
+      fortran = TRUE,
       pars = pars,
       brts = brts,
       n_0 = n_0,
@@ -37,6 +37,5 @@ test_that("fortran and r return the same result, but fortran is faster", {
     )
   )[[3]]
   testthat::expect_equal(loglik_r, loglik_fortran, tolerance = 1e-5)
-  skip("TODO: FORTRAN is still slower than R")
   testthat::expect_true(t_fortran <= t_r)
 })
