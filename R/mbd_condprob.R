@@ -681,19 +681,17 @@ calculate_condprob <- function(
 }
 
 # Condprob selector ----
-#' Selects the best eq for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
+
 #' @export
-condprob_select_eq <- function(
+selector1 <- function(
   pars,
   fortran = TRUE
 ) {
   lx_min <- 16
   lx_max <- 24
-  lx_vec <- seq(from = lx_min, to = lx_max, length.out = 4)
+  lx_vec <- seq(from = lx_min, to = lx_max, length.out = 2)
   lx_vec <- ceiling(lx_vec)
-  derivatives <- res <- list()
+  res <- list()
   for (eq in c("p_eq", "q_eq")) {
     log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx_max, eq = eq)
     log_q_mat <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = eq)
@@ -717,12 +715,87 @@ condprob_select_eq <- function(
       aux[l] <- pc
     }
     res[[eq]] <- aux[seq_along(lx_vec)]
-    derivatives[[eq]] <- abs(diff(res[[eq]]))
   }
-  if (sum(derivatives$p_eq) > sum(derivatives$q_eq)) {
+  diff_p <- abs(res$p_eq[2] - res$p_eq[1])
+  diff_q <- abs(res$q_eq[2] - res$q_eq[1])
+  if (diff_q < diff_p) {
     eq <- "q_eq"
   } else {
     eq <- "p_eq"
   }
   eq
 }
+
+#' @export
+selector2 <- function(
+  pars,
+  fortran = TRUE
+) {
+  lx_max <- 100
+  threshold <- 0.01
+  delta_lx <- 5
+  lx <- 10
+
+  res <- list()
+  for (eq in c("p_eq", "q_eq")) {
+    log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx_max, eq = eq)
+    log_q_mat <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = eq)
+    coeff <- 10
+    pc1 <- mbd::condprob(
+      brts = brts,
+      fortran = fortran,
+      lx = lx,
+      eq = eq,
+      parmsvec = mbd::condprob_parmsvec(
+        pars = pars,
+        log_nu_mat = log_nu_mat,
+        log_q_mat = log_q_mat,
+        lx = lx,
+        fortran = fortran
+      )
+    )
+    while(coeff > threshold) {
+      lx <- lx + delta_lx
+      pc2 <- mbd::condprob(
+        brts = brts,
+        fortran = fortran,
+        lx = lx,
+        eq = eq,
+        parmsvec = mbd::condprob_parmsvec(
+          pars = pars,
+          log_nu_mat = log_nu_mat,
+          log_q_mat = log_q_mat,
+          lx = lx,
+          fortran = fortran
+        )
+      )
+      coeff <- abs(pc2 - pc1) / delta_lx
+      pc1 <- pc2
+    }
+    if (eq == "p_eq") {
+      coeff <- -coeff
+    }
+    res[[eq]] <- list(
+      coeff = coeff,
+      lx1 = lx - delta_lx,
+      lx2 = lx,
+      y2 = pc2
+    )
+  }
+  p3 <- (res$q_eq$y2 * res$p_eq$coeff - res$p_eq$y2 * res$q_eq$coeff)
+  p3 <- p3 / (res$p_eq$coeff - res$q_eq$coeff)
+  testit::assert(p3 > res$q_eq$y2)
+  testit::assert(p3 < res$p_eq$y2)
+  if (p3 < 0.5) {
+    eq <- "q_eq"
+  } else {
+    eq <- "p_eq"
+  }
+  eq
+}
+
+#' Selects the best eq for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+condprob_select_eq <- selector2

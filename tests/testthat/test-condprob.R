@@ -511,6 +511,7 @@ test_that("condprob_select_eq", {
       eq = "sim"
     )
     if (pc_sim > 0.45 && pc_sim < 0.55) {
+      print(pc)
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
@@ -519,6 +520,7 @@ test_that("condprob_select_eq", {
       )
     }
     if (pc_sim >= 0.47 && pc_sim <= 0.53) {
+      print(pc)
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
@@ -526,7 +528,8 @@ test_that("condprob_select_eq", {
         eq = "sim"
       )
     }
-    if (pc_sim >= 0.49 && pc_sim <= 0.51) {
+    if (pc_sim >= 0.495 && pc_sim <= 0.51) {
+      print(pc)
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
@@ -546,8 +549,8 @@ test_that("condprob_select_eq", {
 
 })
 
-# probcond_p and probcond_q vs probcond_sim ----
-test_that("probcond_p and probcond_q vs probcond_sim", {
+# probcond vs probcond_sim ----
+test_that("probcond vs probcond_sim", {
 
   if (!is_on_ci()) {
     skip("To be performed on ci.")
@@ -557,7 +560,7 @@ test_that("probcond_p and probcond_q vs probcond_sim", {
   age <- 10
   brts <- mbd::mbd_sim(pars = pars, age = age, n_0 = 2, cond = 1, seed = 2)$brts
 
-  n_sims <- 1e4
+  n_sims <- 1e5
   pc_sim <- mbd::calculate_condprob(
     pars = pars,
     brts = brts,
@@ -599,48 +602,4 @@ test_that("probcond_p and probcond_q vs probcond_sim", {
   # conditioning time must be less than the time for full likelihood
   testthat::expect_true(time_pc < time_likelihood)
 
-})
-
-test_that("accurate and fast - harder parameters", {
-
-  if (!is_on_ci()) {
-    skip("To be performed on ci.")
-  }
-
-  pars <- c(0.2, 0.1, 1.5, 0.1)
-  brts <- c(10)
-  n_0 <- 2
-  cond <- 1
-  n_sims <- 1e5
-  prob_cond_sim <- cond_prob_sim(
-    pars = pars,
-    brts = brts,
-    cond = cond,
-    n_0 = n_0,
-    n_sims = n_sims,
-    saveit = FALSE
-  )
-  lx <- 80
-  time_cond_p <- system.time(
-    prob_cond_p <- cond_prob_p(
-      pars = pars,
-      brts = brts,
-      cond = cond,
-      n_0 = n_0,
-      lx = lx
-    )
-  )[[3]]
-  time_cond_q <- system.time(
-    prob_cond_q <- cond_prob_q(
-      pars = pars,
-      brts = brts,
-      cond = cond,
-      n_0 = n_0,
-      lx = lx
-    )
-  )[[3]]
-
-  # conditional likelihood must be "close" to simulations
-  testthat::expect_equal(prob_cond_p, prob_cond_sim, tolerance = 1e-2)
-  testthat::expect_equal(prob_cond_q, prob_cond_sim, tolerance = 1e-2)
 })
