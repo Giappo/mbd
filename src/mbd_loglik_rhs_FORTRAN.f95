@@ -200,12 +200,18 @@
    vec = (/(I, I = 0, N - 1, 1)/)
    DO I = 1, N
      m1(I,:) = vec
+     m2(:,I) = vec
    ENDDO
-   m2 = TRANSPOSE(m1)
+   !m2 = TRANSPOSE(m1)
 
    dp=P(1)*((m1-1)*V2(2:(N+1),1:N)+(m2-1)*V2(1:N,2:(N+1))-(m1+m2)*V)
    dp=dp+P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))-(m1+m2)*V)
-   dp=dp+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
+
+   CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
+   CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
+
+   dp=dp+P(3)*V
+   !dp=dp+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
 
    dConc = RESHAPE(dp,(/N ** 2/))
 
@@ -259,28 +265,19 @@
    vec = (/(I, I = 0, N - 1, 1)/)
    DO I = 1, N
      m1(I,:) = vec
+     m2(:,I) = vec
    ENDDO
-   m2 = TRANSPOSE(m1)
 
    dq=P(1)*((m1+1)*V2(2:(N+1),1:N)+(m2+1)*V2(1:N,2:(N+1))-(m1+m2+2)*V)
    dq=dq+P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))-(m1+m2+2)*V)
-   dq=dq+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
+
+   CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
+   CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
+
+   dq=dq+P(3)*V
+
+   !dq=dq+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
 
    dConc = RESHAPE(dq,(/N ** 2/))
-
-
-!    DO I = 0, N - 1
-!      DO II = 0, N - 1
-!        I1 = I + 1
-!        J1 = II + 1
-!        dp1=J1*Conc2(I1+1,J1)+I1*Conc2(I1,J1+1)-(I1+J1)*Conc2(I1+1,J1+1)
-!        dp2=J1*Conc2(I1+1,J1+2)+I1*Conc2(I1+2,J1+1)-(I1+J1)*Conc2(I1+1,J1+1)
-!        dp3 = -Conc((I1 - 1) * N + J1)
-!        DO n1 = 1, N
-!          dp3 = dp3 + aux1(I1,n1) * P(3 + (n1 - 1) * N + J1)
-!        ENDDO
-!        dConc((I1 - 1)*N + J1) = P(1)*dp1 + P(2)*dp2 + P(3)*dp3
-!      ENDDO
-!    ENDDO
 
    END SUBROUTINE mbd_runmodpcq
