@@ -682,62 +682,21 @@ calculate_condprob <- function(
 
 # Condprob selector ----
 
+#' Selects the best eq for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
 #' @export
-selector1 <- function(
+condprob_select_eq <- function(
   pars,
   fortran = TRUE
 ) {
-  lx_min <- 16
-  lx_max <- 24
-  lx_vec <- seq(from = lx_min, to = lx_max, length.out = 2)
-  lx_vec <- ceiling(lx_vec)
-  res <- list()
-  for (eq in c("p_eq", "q_eq")) {
-    log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx_max, eq = eq)
-    log_q_mat <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = eq)
-    aux <- rep(NA, length(lx_vec))
-    for (l in seq_along(lx_vec)) {
-      lx <- lx_vec[l]
-      parmsvec <- mbd::condprob_parmsvec(
-        pars = pars,
-        log_nu_mat = log_nu_mat,
-        log_q_mat = log_q_mat,
-        lx = lx,
-        fortran = fortran
-      )
-      pc <- mbd::condprob(
-        brts = brts,
-        fortran = fortran,
-        lx = lx,
-        eq = eq,
-        parmsvec = parmsvec
-      )
-      aux[l] <- pc
-    }
-    res[[eq]] <- aux[seq_along(lx_vec)]
-  }
-  diff_p <- abs(res$p_eq[2] - res$p_eq[1])
-  diff_q <- abs(res$q_eq[2] - res$q_eq[1])
-  if (diff_q < diff_p) {
-    eq <- "q_eq"
-  } else {
-    eq <- "p_eq"
-  }
-  eq
-}
-
-#' @export
-selector2 <- function(
-  pars,
-  fortran = TRUE
-) {
-  lx_max <- 100
-  threshold <- 0.01
-  delta_lx <- 5
-  lx <- 10
+  lx_stepsize <- 100
+  lx_max <- 150
+  threshold <- 0.02
 
   res <- list()
   for (eq in c("p_eq", "q_eq")) {
+    lx <- 10
     log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx_max, eq = eq)
     log_q_mat <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = eq)
     coeff <- 10
@@ -754,7 +713,8 @@ selector2 <- function(
         fortran = fortran
       )
     )
-    while(coeff > threshold) {
+    while(abs(coeff) > threshold) {
+      delta_lx <- ceiling(lx_stepsize / lx)
       lx <- lx + delta_lx
       pc2 <- mbd::condprob(
         brts = brts,
@@ -769,11 +729,8 @@ selector2 <- function(
           fortran = fortran
         )
       )
-      coeff <- abs(pc2 - pc1) / delta_lx
+      coeff <- (pc2 - pc1) / delta_lx
       pc1 <- pc2
-    }
-    if (eq == "p_eq") {
-      coeff <- -coeff
     }
     res[[eq]] <- list(
       coeff = coeff,
@@ -782,6 +739,7 @@ selector2 <- function(
       y2 = pc2
     )
   }
+  # calculate the intersection point of linear extrapolations
   p3 <- (res$q_eq$y2 * res$p_eq$coeff - res$p_eq$y2 * res$q_eq$coeff)
   p3 <- p3 / (res$p_eq$coeff - res$q_eq$coeff)
   testit::assert(p3 > res$q_eq$y2)
@@ -793,9 +751,3 @@ selector2 <- function(
   }
   eq
 }
-
-#' Selects the best eq for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_select_eq <- selector2
