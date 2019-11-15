@@ -511,7 +511,7 @@ test_that("condprob_select_eq", {
       eq = "sim"
     )
     if (pc_sim > 0.45 && pc_sim < 0.55) {
-      print(pc)
+      print(pc_sim)
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
@@ -520,7 +520,7 @@ test_that("condprob_select_eq", {
       )
     }
     if (pc_sim >= 0.47 && pc_sim <= 0.53) {
-      print(pc)
+      print(pc_sim)
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
@@ -529,7 +529,7 @@ test_that("condprob_select_eq", {
       )
     }
     if (pc_sim >= 0.495 && pc_sim <= 0.51) {
-      print(pc)
+      print(pc_sim)
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
@@ -542,9 +542,11 @@ test_that("condprob_select_eq", {
     } else {
       right_eq <- "q_eq"
     }
-
-    eq <- mbd::condprob_select_eq(pars = pars, fortran = TRUE)
+    t_select <- system.time(
+      eq <- mbd::condprob_select_eq(pars = pars, fortran = TRUE)
+    )[[3]]
     testthat::expect_equal(eq, right_eq)
+    testthat::expect_lt(t_select, 5) # select in less than 5 secs
   }
 
 })
