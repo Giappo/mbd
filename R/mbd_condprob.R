@@ -5,6 +5,7 @@
 #' @author Giovanni Laudanno
 #' @export
 condprob_qeq_log_nu_mat <- function(lx) {
+  mbd::check_lx(lx)
   nvec <- 1:lx - 1
   log_nu_mat <- matrix(-Inf, nrow = lx, ncol = lx)
   for (m1 in nvec) {
@@ -25,6 +26,7 @@ condprob_qeq_log_nu_mat <- function(lx) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_qeq_log_q_mat <- function(lx, q) {
+  mbd::check_lx(lx)
   nvec <- 1:lx - 1
   log_q_mat <- matrix(-Inf, nrow = lx, ncol = lx)
   if (q != 0) {
@@ -45,6 +47,7 @@ condprob_qeq_log_q_mat <- function(lx, q) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_peq_log_nu_mat <- function(lx) {
+  mbd::check_lx(lx)
   nvec <- 1:lx - 1
   log_nu_mat <- matrix(-Inf, nrow = lx, ncol = lx)
   for (m1 in nvec) {
@@ -62,6 +65,7 @@ condprob_peq_log_nu_mat <- function(lx) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_peq_log_q_mat <- function(lx, q) {
+  mbd::check_lx(lx)
   nvec <- 1:lx - 1
   log_q_mat <- matrix(-Inf, nrow = lx, ncol = lx)
   if (q != 0) {
@@ -82,6 +86,7 @@ condprob_peq_log_q_mat <- function(lx, q) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_log_nu_mat <- function(lx, eq) {
+  mbd::check_lx(lx)
   mbd::check_condprob_eq(eq = eq)
   if (eq == "p_eq" || eq == "sim") {
     log_nu_mat <- mbd::condprob_peq_log_nu_mat(lx)
@@ -97,6 +102,7 @@ condprob_log_nu_mat <- function(lx, eq) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_log_q_mat <- function(lx, q, eq) {
+  mbd::check_lx(lx)
   mbd::check_condprob_eq(eq = eq)
   if (eq == "p_eq" || eq == "sim") {
     log_q_mat <- mbd::condprob_peq_log_q_mat(lx = lx, q = q)
@@ -121,6 +127,8 @@ condprob_parmsvec <- function(
   lx,
   fortran = TRUE
 ) {
+  mbd::check_lx(lx)
+
   lx2 <- lx ^ 2
   lambda <- pars[1]
   mu <- pars[2]
@@ -175,6 +183,8 @@ create_fast_parmsvec <- function(
     lx <- 10
     fortran <- FALSE
   }
+  mbd::check_lx(lx)
+
   parmsvec <- mbd::condprob_parmsvec(
     pars = pars,
     log_nu_mat = mbd::condprob_log_nu_mat(lx = lx, eq = eq),
@@ -409,6 +419,7 @@ condprob_p_n1_n2 <- function(
   lx,
   rhs_function = mbd::condprob_dp_rhs
 ) {
+  mbd::check_lx(lx)
 
   lx2 <- lx ^ 2
   age <- max(abs(brts)) # time between crown age and present
@@ -440,6 +451,7 @@ condprob_q_m1_m2 <- function(
   lx,
   rhs_function = mbd::condprob_dq_rhs
 ) {
+  mbd::check_lx(lx)
 
   lx2 <- lx ^ 2
   nu_q_mat <- parmsvec[3 + 1:lx2]
@@ -478,6 +490,8 @@ condprob_p <- function(
   fortran = TRUE,
   lx
 ) {
+  mbd::check_lx(lx)
+
   if (fortran == TRUE) {
     rhs_function <- "mbd_runmodpcp"
   } else {
@@ -490,7 +504,7 @@ condprob_p <- function(
     lx = lx
   )
   pc <- 1 + p_n1_n2[1, 1] - sum(p_n1_n2[, 1]) - sum(p_n1_n2[1, ])
-  pc <- DDD::roundn(pc, digits = 8)
+  pc <- DDD::roundn(pc, digits = 14)
   mbd::check_pc(pc = pc)
   pc
 }
@@ -505,6 +519,8 @@ condprob_q <- function(
   fortran = TRUE,
   lx
 ) {
+  mbd::check_lx(lx)
+
   if (fortran == TRUE) {
     rhs_function <- "mbd_runmodpcq"
   } else {
@@ -517,7 +533,7 @@ condprob_q <- function(
     lx = lx
   )
   pc <- sum(q_m1_m2)
-  pc <- DDD::roundn(pc, digits = 8)
+  pc <- DDD::roundn(pc, digits = 14)
   mbd::check_pc(pc = pc)
   pc
 }
@@ -530,8 +546,11 @@ condprob_sim <- function(
   brts,
   parmsvec,
   lx = 1e4,
-  saveit = TRUE
+  saveit = TRUE,
+  starting_seed = 1
 ) {
+  mbd::check_lx(lx)
+
   # pars
   n_sims <- lx
   age <- max(brts)
@@ -562,7 +581,8 @@ condprob_sim <- function(
   # calculate pc_sim
   score <- 0
   n_tips <- rep(0, n_sims)
-  for (seed in 1:n_sims) {
+  seed_interval <- starting_seed:(starting_seed + n_sims - 1)
+  for (seed in seed_interval) {
     sim <- mbd::mbd_sim(
       pars = pars,
       n_0 = n_0,
@@ -613,7 +633,7 @@ condprob_sim <- function(
     ggplot2::ggsave(filename = taxa_plot_filename, plot = taxa_plot)
 
   }
-  pc <- DDD::roundn(pc_sim, digits = 8)
+  pc <- DDD::roundn(pc_sim, digits = 14)
   mbd::check_pc(pc = pc)
   pc
 }
@@ -680,43 +700,54 @@ calculate_condprob <- function(
   )
 }
 
+#' Calculate conditional probability: user mode
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+calculate_condprob_nee_approx <- function(
+  pars,
+  brts,
+  lx = 100,
+  eq = "p_eq",
+  fortran = TRUE
+) {
+  rm(eq)
+  rm(fortran)
+  nvec <- 1:lx
+  pc <- mbd::p_t(
+    lambda = pars[1] + pars[3] * sum(pars[4] ^ nvec),
+    mu = pars[2],
+    t = max(abs(brts))
+  ) ^ 2
+  pc
+}
+
 # Condprob selector ----
 
 #' Selects the best eq for condprob
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
-condprob_select_eq <- function(
+selector1 <- function(
   pars,
+  brts,
   fortran = TRUE
 ) {
+  lx_start <- 10
   lx_stepsize <- 100
   lx_max <- 150
-  threshold <- 0.02
-
-  res <- list()
-  for (eq in c("p_eq", "q_eq")) {
-    lx <- 10
-    log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx_max, eq = eq)
-    log_q_mat <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = eq)
-    coeff <- 10
-    pc1 <- mbd::condprob(
-      brts = brts,
-      fortran = fortran,
-      lx = lx,
-      eq = eq,
-      parmsvec = mbd::condprob_parmsvec(
-        pars = pars,
-        log_nu_mat = log_nu_mat,
-        log_q_mat = log_q_mat,
-        lx = lx,
-        fortran = fortran
-      )
-    )
-    while(abs(coeff) > threshold) {
-      delta_lx <- ceiling(lx_stepsize / lx)
-      lx <- lx + delta_lx
-      pc2 <- mbd::condprob(
+  threshold <- 0.01
+  m_error <- 1e-5
+  bad_result <- TRUE
+  while (bad_result && threshold > 1e-4) {
+    res <- list()
+    for (eq in c("p_eq", "q_eq")) {
+      print(eq)
+      lx <- lx_start
+      log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx_max, eq = eq)
+      log_q_mat <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = eq)
+      coeff <- 10
+      pc1 <- mbd::condprob(
         brts = brts,
         fortran = fortran,
         lx = lx,
@@ -729,25 +760,391 @@ condprob_select_eq <- function(
           fortran = fortran
         )
       )
-      coeff <- (pc2 - pc1) / delta_lx
-      pc1 <- pc2
+      print(pc1)
+      while(abs(coeff) > threshold) {
+        delta_lx <- ceiling(lx_stepsize / lx)
+        lx <- lx + delta_lx
+        pc2 <- mbd::condprob(
+          brts = brts,
+          fortran = fortran,
+          lx = lx,
+          eq = eq,
+          parmsvec = mbd::condprob_parmsvec(
+            pars = pars,
+            log_nu_mat = log_nu_mat,
+            log_q_mat = log_q_mat,
+            lx = lx,
+            fortran = fortran
+          )
+        )
+        print(pc2)
+        coeff <- (pc2 - pc1) / delta_lx
+        pc1 <- pc2
+      }
+      res[[eq]] <- list(
+        coeff = coeff,
+        lx1 = lx - delta_lx,
+        lx2 = lx,
+        y2 = pc2
+      )
     }
-    res[[eq]] <- list(
-      coeff = coeff,
-      lx1 = lx - delta_lx,
-      lx2 = lx,
-      y2 = pc2
-    )
+
+    # calculate the intersection point of linear extrapolations
+    mp <- res$p_eq$coeff
+    mq <- res$q_eq$coeff
+    yp2 <- res$p_eq$y2
+    yq2 <- res$q_eq$y2
+    xp2 <- res$p_eq$lx2
+    xq2 <- res$q_eq$lx2
+    x3 <- (mq * xq2 - mp * xp2 + yp2 - yq2) / (mq - mp)
+    y3 <- mp * (x3 - xp2) + yp2
+
+    bad_result <- FALSE
+    if (abs(mq) <= m_error && abs(mp) <= m_error) {
+      print(mq)
+      print(mp)
+      lx_start <- lx_start + 5
+      threshold <- threshold * (3 / 4)
+      bad_result <- TRUE
+    }
   }
-  # calculate the intersection point of linear extrapolations
-  p3 <- (res$q_eq$y2 * res$p_eq$coeff - res$p_eq$y2 * res$q_eq$coeff)
-  p3 <- p3 / (res$p_eq$coeff - res$q_eq$coeff)
-  testit::assert(p3 > res$q_eq$y2)
-  testit::assert(p3 < res$p_eq$y2)
-  if (p3 < 0.5) {
+  testit::assert(y3 > yq2)
+  testit::assert(y3 < yp2)
+  if (y3 < 0.5) {
     eq <- "q_eq"
   } else {
     eq <- "p_eq"
   }
   eq
 }
+
+#' Selects the best eq for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+selector2 <- function(
+  pars,
+  brts,
+  fortran = TRUE
+) {
+  lx_start <- 15
+  lx_stepsize <- 120
+  lx_max <- 150
+  threshold_derivative <- 0.005
+  threshold_distance <- 3e-4
+  m_error <- 1e-5
+
+  bad_result <- TRUE
+  while(bad_result == TRUE && threshold_derivative > 5e-4) {
+    lx <- lx_start
+    log_nu_mat_p <- mbd::condprob_log_nu_mat(lx = lx_max, eq = "p_eq")
+    log_q_mat_p <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "p_eq")
+    log_nu_mat_q <- mbd::condprob_log_nu_mat(lx = lx_max, eq = "q_eq")
+    log_q_mat_q <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "q_eq")
+    pc1_q <- mbd::condprob(
+      brts = brts,
+      fortran = fortran,
+      lx = lx,
+      eq = "q_eq",
+      parmsvec = mbd::condprob_parmsvec(
+        pars = pars,
+        log_nu_mat = log_nu_mat_q,
+        log_q_mat = log_q_mat_q,
+        lx = lx,
+        fortran = fortran
+      )
+    )
+    pc1_p <- mbd::condprob(
+      brts = brts,
+      fortran = fortran,
+      lx = lx,
+      eq = "p_eq",
+      parmsvec = mbd::condprob_parmsvec(
+        pars = pars,
+        log_nu_mat = log_nu_mat_p,
+        log_q_mat = log_q_mat_p,
+        lx = lx,
+        fortran = fortran
+      )
+    )
+    der_p <- der_q <- 10
+    distance_p <- distance_q <- 0
+    while(
+      abs(der_p) > threshold_derivative |
+      abs(der_q) > threshold_derivative |
+      distance_q < threshold_distance |
+      distance_p < threshold_distance
+    ) {
+      delta_lx <- max(ceiling(lx_stepsize / lx), 1)
+      lx <- lx + delta_lx
+      cat("lx =", lx, "\n")
+      pc2_q <- mbd::condprob(
+        brts = brts,
+        fortran = fortran,
+        lx = lx,
+        eq = "q_eq",
+        parmsvec = mbd::condprob_parmsvec(
+          pars = pars,
+          log_nu_mat = log_nu_mat_q,
+          log_q_mat = log_q_mat_q,
+          lx = lx,
+          fortran = fortran
+        )
+      )
+      pc2_p <- mbd::condprob(
+        brts = brts,
+        fortran = fortran,
+        lx = lx,
+        eq = "p_eq",
+        parmsvec = mbd::condprob_parmsvec(
+          pars = pars,
+          log_nu_mat = log_nu_mat_p,
+          log_q_mat = log_q_mat_p,
+          lx = lx,
+          fortran = fortran
+        )
+      )
+      der_p <- (pc2_p - pc1_p) / delta_lx
+      der_q <- (pc2_q - pc1_q) / delta_lx
+      cat("pc_q =", abs(pc2_q), "\n")
+      cat("pc_p =", abs(pc2_p), "\n")
+      cat("der_q =", abs(der_q), "\n")
+      cat("der_p =", abs(der_p), "\n")
+      distance_p <- 1 - pc2_p
+      distance_q <- pc2_q
+      cat("distance_q =", distance_q, "\n")
+      cat("distance_p =", distance_p, "\n")
+      pc1_p_stored <- pc1_p
+      pc1_q_stored <- pc1_q
+      pc1_p <- pc2_p
+      pc1_q <- pc2_q
+    }
+
+    # calculate the intersection point of linear extrapolations
+    mp <- der_p
+    mq <- der_q
+    yp1 <- pc1_p_stored
+    yq1 <- pc1_q_stored
+    yp2 <- pc2_p
+    yq2 <- pc2_q
+    xp2 <- lx
+    xq2 <- lx
+    x3 <- (mq * xq2 - mp * xp2 + yp2 - yq2) / (mq - mp)
+    y3 <- mp * (x3 - xp2) + yp2
+
+    testit::assert(y3 > yq2)
+    testit::assert(y3 < yp2)
+
+    bad_result <- FALSE
+    if (abs(mq) <= m_error && abs(mp) <= m_error) {
+      print(mq)
+      print(mp)
+      lx_start <- lx_start + 5
+      threshold_derivative <- threshold_derivative * (3 / 4)
+      bad_result <- TRUE
+    }
+  }
+
+  if (y3 < 0.5) {
+    eq <- "q_eq"
+  } else {
+    eq <- "p_eq"
+  }
+  eq
+}
+
+#' Selects the best eq for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+selector3 <- function(
+  pars,
+  brts,
+  lx = 100,
+  fortran = TRUE
+) {
+  n_0 <- 2
+  matrix_a <- mbd::create_a(pars = pars, k = n_0, lx = lx - 1)
+  func <- mbd::mbd_loglik_rhs
+
+  q_0 <- c(1, rep(0, lx - 1))
+  q_t <- mbd::mbd_solve(
+    vector = q_0,
+    time_interval = max(abs(brts)),
+    func = func,
+    parms = matrix_a
+  )
+  m <- 1:lx - 1
+  one_over_cm <- (3 * (m + 1)) / (m + 3)
+  one_over_qm_binom <- 1 / choose(m + n_0, n_0)
+  total_product <- q_t * one_over_cm * one_over_qm_binom
+  pc <- sum(total_product)
+
+  if (pc < 0.5) {
+    eq <- "q_eq"
+  } else {
+    eq <- "p_eq"
+  }
+  eq
+}
+
+#' Selects the best eq for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+selector4 <- function(
+  pars,
+  brts,
+  lx = 100,
+  fortran = TRUE
+) {
+
+  pc <- mbd::calculate_condprob_nee_approx(
+    pars = pars,
+    brts = brts,
+    lx = lx
+  )
+  if (pc < 0.5) {
+    eq <- "q_eq"
+  } else {
+    eq <- "p_eq"
+  }
+  eq
+}
+
+#' Selects the best eq for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+selector5 <- function(
+  pars,
+  brts,
+  lx = 34,
+  fortran = TRUE
+) {
+  lx_max <- 150
+  log_nu_mat_p <- mbd::condprob_log_nu_mat(lx = lx_max, eq = "p_eq")
+  log_q_mat_p <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "p_eq")
+  log_nu_mat_q <- mbd::condprob_log_nu_mat(lx = lx_max, eq = "q_eq")
+  log_q_mat_q <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "q_eq")
+
+  lx_start <- 3
+  lx_end <- lx
+  lx_seq <-
+    unique(ceiling(seq(
+      from = lx_start,
+      to = lx_end,
+      length.out = 10
+    )))
+  testit::assert(lx_end <= lx_max)
+  pc_p <- pc_q <- rep(0, length(lx_seq))
+  for (l in seq_along(lx_seq)) {
+    lx <- lx_seq[l]
+    cat("lx =", lx, "\n")
+    pc_q[l] <- mbd::condprob(
+      brts = brts,
+      fortran = fortran,
+      lx = lx,
+      eq = "q_eq",
+      parmsvec = mbd::condprob_parmsvec(
+        pars = pars,
+        log_nu_mat = log_nu_mat_q,
+        log_q_mat = log_q_mat_q,
+        lx = lx,
+        fortran = fortran
+      )
+    )
+    pc_p[l] <- mbd::condprob(
+      brts = brts,
+      fortran = fortran,
+      lx = lx,
+      eq = "p_eq",
+      parmsvec = mbd::condprob_parmsvec(
+        pars = pars,
+        log_nu_mat = log_nu_mat_p,
+        log_q_mat = log_q_mat_p,
+        lx = lx,
+        fortran = fortran
+      )
+    )
+  }
+
+  # spline
+  x_p <- lx_seq
+  y_p <- pc_p
+  x_q <- lx_seq
+  y_q <- pc_q
+  fit_p <- splinefun(x = x_p, y = y_p, method = "monoH.FC")
+  fit_q <- splinefun(x = x_q, y = y_q, method = "monoH.FC")
+  f <- function(x) fit_p(x, deriv = 0L) - fit_q(x, deriv = 0L)
+  lx_meet <- uniroot(f, interval = c(0, 1e5))$root
+  y3 <- fit_p(lx_meet)
+
+  if (1 == 2) {
+    # visualization
+    ## real points
+    plot(y_p ~ x_p, ylim = c(0, 1), col = "red")
+    points(y_q ~ x_q, col = "blue")
+    ## extrapolated points
+    x <- seq(10, lx_meet * 1.2, length.out = 10)
+    plot(fit_p(x) ~ x, ylim = c(0, 1), col = "red")
+    points(fit_q(x) ~ x, col = "blue")
+    ## f = fp - fq
+    x <- seq(5, 120, length.out = 200)
+    min(f(x))
+    plot(f(x) ~ x, col = "red")
+  }
+
+  if (y3 < 0.5) {
+    eq <- "q_eq"
+  } else {
+    eq <- "p_eq"
+  }
+  eq
+}
+
+#' Selects the best eq for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+selector_hybrid <- function(
+  pars,
+  brts,
+  lx,
+  fortran = TRUE
+) {
+
+  rm(lx)
+
+  pc <- mbd::calculate_condprob_nee_approx(
+    pars = pars,
+    brts = brts,
+    lx = 100
+  )
+  pc_tolerance <- 0.1
+  if (pc < (0.5 + pc_tolerance) && pc > (0.5 - pc_tolerance)) {
+    dist <- (1 / pc_tolerance) * abs(pc - 0.5)
+    dist <- dist ^ 2
+    lx_min <- 30
+    lx_max <- 70
+    eq <- mbd::selector5(
+      pars = pars,
+      brts = brts,
+      fortran = fortran,
+      lx = ceiling(lx_max + (lx_min - lx_max) * dist)
+    )
+  } else {
+    if (pc < 0.5) {
+      eq <- "q_eq"
+    } else {
+      eq <- "p_eq"
+    }
+  }
+  eq
+}
+
+#' Selects the best eq for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+condprob_select_eq <- selector_hybrid

@@ -30,10 +30,10 @@ mbd_main <- function(
   t_0s <- age
 
   # generic set up
-  function_names <- get_function_names( # nolint internal function
+  function_names <- mbd::get_function_names( # nolint internal function
     loglik_functions = loglik_functions
   )
-  model_names <- get_model_names( # nolint internal function
+  model_names <- mbd::get_model_names( # nolint internal function
     function_names = function_names,
     verbose = verbose
   )
@@ -69,7 +69,7 @@ mbd_main <- function(
     if (verbose == FALSE) {
       sink(tempfile())
     }
-    mle_out <- mbd_ml(
+    mle_out <- mbd::mbd_ml(
       loglik_function = get(function_names[m]),
       brts = sim$brts,
       cond = cond,
@@ -79,7 +79,7 @@ mbd_main <- function(
       optim_ids = optim_ids,
       true_pars = sim_pars,
       verbose = verbose,
-      lx = min(1 + 3 * (length(brts)), 1200),
+      lx = min(1 + 2 * length(brts), mbd::max_lx()),
       q_threshold = q_threshold,
       maxit = maxit
     )

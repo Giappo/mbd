@@ -17,8 +17,9 @@ mbd_loglik <- function(
   tips_interval = c(n_0 * (cond > 0), Inf),
   q_threshold = 1e-3,
   debug_mode = FALSE,
-  fortran = FALSE
+  fortran = TRUE
 ) {
+  cat(pars, "\n")
   # BASIC SETTINGS AND CHECKS
   mbd::check_brts(brts = brts, n_0 = n_0)
   mbd::check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
@@ -44,11 +45,14 @@ mbd_loglik <- function(
     pc <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
-      lx = lx,
-      eq = "p_eq",
+      lx = ceiling(lx / 2),
+      eq = mbd::condprob_select_eq(
+        pars = pars,
+        fortran = fortran
+      ),
       fortran = fortran
     )
-      } else {
+  } else {
     pc <- 1
   }
 

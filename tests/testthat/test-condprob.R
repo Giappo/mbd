@@ -537,13 +537,104 @@ test_that("condprob_select_eq", {
         eq = "sim"
       )
     }
+    print(pc_sim)
     if (pc_sim > 0.5) {
       right_eq <- "p_eq"
     } else {
       right_eq <- "q_eq"
     }
     t_select <- system.time(
-      eq <- mbd::condprob_select_eq(pars = pars, fortran = TRUE)
+      # eq <- mbd::condprob_select_eq(pars = pars, fortran = TRUE)
+      eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
+    )[[3]]
+    testthat::expect_equal(eq, right_eq)
+    # testthat::expect_lt(t_select, 5) # select in less than 5 secs
+    print(t_select)
+  }
+
+})
+
+# probcond_select_eq: nasty case ----
+test_that("probcond_select_eq: nasty case", {
+
+  pars <- c(1.50, 0.15, 1.35, 0.09)
+  brts <- c(5, 2.53, 0.79)
+  fortran <- TRUE
+  lx <- 25
+
+  pc_sim <- mbd::condprob_sim(
+    brts = brts,
+    parmsvec = mbd::create_fast_parmsvec(
+      pars = pars,
+      lx = lx,
+      eq = "sim",
+      fortran = TRUE
+    ),
+    lx = 50,
+    saveit = TRUE,
+    starting_seed = 1
+  )
+  if (pc_sim > 0.5) {
+    right_eq <- "p_eq"
+  } else {
+    right_eq <- "q_eq"
+  }
+
+  eq <- mbd::condprob_select_eq(
+    pars = pars,
+    brts = brts,
+    fortran = fortran
+  )
+  testthat::expect_equal(eq, right_eq)
+
+})
+
+# probcond_select_eq: more nasty cases ----
+test_that("probcond_select_eq: more nasty cases", {
+
+  max_seed <- 30
+  for (seed in 1:max_seed) {
+    if (seed == 15 || seed == 27) next
+    set.seed(seed)
+    print(seed)
+    lambda <- runif(n = 1, min = 0.05, max = 1.5)
+    mu <- runif(n = 1, min = 0, max = lambda)
+    nu <- runif(n = 1, min = 0.3, max = 2.9)
+    q <- runif(n = 1, min = 0.05, max = 0.4)
+    pars <- c(lambda, mu, nu, q)
+    brts <- c(5)
+
+    pc_sim <- mbd::calculate_condprob(
+      pars = pars,
+      brts = brts,
+      lx = 200,
+      eq = "sim"
+    )
+    if (pc_sim > 0.48 && pc_sim < 0.52) {
+      pc_sim <- mbd::calculate_condprob(
+        pars = pars,
+        brts = brts,
+        lx = 1e3,
+        eq = "sim"
+      )
+    }
+    if (pc_sim > 0.49 && pc_sim < 0.51) {
+      pc_sim <- mbd::calculate_condprob(
+        pars = pars,
+        brts = brts,
+        lx = 1e4,
+        eq = "sim"
+      )
+    }
+    print(pc_sim)
+    if (pc_sim > 0.5) {
+      right_eq <- "p_eq"
+    } else {
+      right_eq <- "q_eq"
+    }
+    t_select <- system.time(
+      # eq <- mbd::condprob_select_eq(pars = pars, fortran = TRUE)
+      eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
     )[[3]]
     testthat::expect_equal(eq, right_eq)
     # testthat::expect_lt(t_select, 5) # select in less than 5 secs
@@ -561,7 +652,7 @@ test_that("probcond vs probcond_sim", {
 
   pars <- c(0.2, 0.1, 1.0, 0.15)
   age <- 10
-  brts <- mbd::mbd_sim(pars = pars, age = age, n_0 = 2, cond = 1, seed = 2)$brts
+  brts <- c(age)
 
   n_sims <- 1e5
   pc_sim <- mbd::calculate_condprob(
@@ -571,22 +662,12 @@ test_that("probcond vs probcond_sim", {
     eq = "sim"
   )
 
-  lx <- 30
-  # unconditioned likelihood time for the same branching times
-  time_likelihood <- system.time(mbd::mbd_loglik(
-    pars = pars,
-    brts = brts,
-    n_0 = 2,
-    cond = 0,
-    lx = (lx ^ 2) / 2
-  ))[[3]]
-  log_nu_mat <- mbd::condprob_
   fortran <- TRUE
   time_pc <- system.time(
     pc <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
-      lx = 40,
+      lx = 60,
       eq = mbd::condprob_select_eq(
         pars = pars,
         fortran = fortran
@@ -603,6 +684,6 @@ test_that("probcond vs probcond_sim", {
   )
 
   # conditioning time must be less than the time for full likelihood
-  testthat::expect_true(time_pc < time_likelihood)
+  testthat::expect_true(time_pc < 300)
 
 })

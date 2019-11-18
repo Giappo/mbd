@@ -206,3 +206,19 @@ check_condprob_eq <- function(eq) {
   }
   return()
 }
+
+#' @title Check lx
+#' @description Check lx
+#' @inheritParams default_params_doc
+#' @return Nothing
+#' @author Giovanni Laudanno
+#' @export
+check_lx <- function(lx) {
+  if (lx %% 1 != 0) {
+    stop("problems: lx must be integer!")
+  }
+  if (lx < 0) {
+    stop("problems: lx must be positive!")
+  }
+  return()
+}
