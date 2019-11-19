@@ -19,7 +19,8 @@ test_that("use", {
   t_0s <- age <- 6
   loglik_functions <- mbd::mbd_loglik
   optim_ids <- c(TRUE, TRUE, TRUE, TRUE)
-  maxit <- 200 # maximum number of subplex iterations
+  maxiter <- 30 # maximum number of subplex iterations
+  verbose <- FALSE
   test <- mbd::mbd_main(
     seed = seed,
     sim_pars = sim_pars,
@@ -29,8 +30,8 @@ test_that("use", {
     start_pars = sim_pars,
     loglik_functions = loglik_functions,
     optim_ids = optim_ids,
-    maxit = maxit,
-    verbose = FALSE
+    maxiter = maxiter,
+    verbose = verbose
   )
   # test output shape
   testthat::expect_true(
@@ -139,7 +140,7 @@ test_that("use", {
     file.exists(results_folder)
   )
   # check data file existence
-  data_file_name <- create_data_file_name( # nolint internal function
+  data_file_name <- mbd::create_data_file_name(
     data_folder = data_folder,
     sim_pars = sim_pars,
     optim_ids = optim_ids,
@@ -151,7 +152,7 @@ test_that("use", {
   testthat::expect_true(file.exists(data_file_name))
 
   # check results file existence
-  results_file_name <- create_results_file_name( # nolint internal function
+  results_file_name <- mbd::create_results_file_name(
     results_folder = results_folder,
     sim_pars = sim_pars,
     optim_ids = optim_ids,
@@ -178,16 +179,17 @@ test_that("use", {
 })
 
 test_that("it works also for a subset of parameters", {
+
   seed <- 2
   t_0s <- age <- 5
   lambda <- 0.2; mu <- 0.15; nu <- 1.5; q <- 0.1
   sim_pars <- c(lambda, mu, nu, q)
   cond <- 1
   n_0 <- 2
-  loglik_functions <- mbd_loglik
+  loglik_functions <- mbd::mbd_loglik
   optim_ids <- c(TRUE, FALSE, FALSE, FALSE)
   verbose <- FALSE
-  maxit <- 200
+  maxiter <- 30 # maximum number of subplex iterations
   test <- mbd::mbd_main(
     seed = seed,
     sim_pars = sim_pars,
@@ -198,7 +200,7 @@ test_that("it works also for a subset of parameters", {
     start_pars = sim_pars,
     loglik_functions = loglik_functions,
     optim_ids = optim_ids,
-    maxit = maxit,
+    maxiter = maxiter,
     verbose = verbose
   )
 
@@ -232,7 +234,7 @@ test_that("it works also for a subset of parameters", {
     file.exists(results_folder)
   )
   # check data file existence
-  data_file_name <- create_data_file_name( # nolint internal function
+  data_file_name <- mbd::create_data_file_name(
     data_folder = data_folder,
     sim_pars = sim_pars,
     optim_ids = optim_ids,
@@ -244,7 +246,7 @@ test_that("it works also for a subset of parameters", {
   testthat::expect_true(file.exists(data_file_name))
 
   # check results file existence
-  results_file_name <- create_results_file_name( # nolint internal function
+  results_file_name <- mbd::create_results_file_name(
     results_folder = results_folder,
     sim_pars = sim_pars,
     optim_ids = optim_ids,
@@ -266,6 +268,7 @@ test_that("it works also for a subset of parameters", {
 })
 
 test_that("abuse", {
+
   seed <- 1
   sim_pars <- c(0.3, 0.2, 2, 0.1)
   cond <- 1
@@ -273,7 +276,7 @@ test_that("abuse", {
   n_0 <- 2
   age <- 10
   testthat::expect_error(
-    test <- mbd_main(
+    test <- mbd::mbd_main(
       seed = seed,
       sim_pars = sim_pars,
       cond = cond,

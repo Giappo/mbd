@@ -184,7 +184,7 @@ Default option is \code{hyper_a_hanno}}
 
 \item{maxit}{maximum number of subplex iterations}
 
-\item{maxiter}{something}
+\item{maxiter}{maximum number of subplex iterations}
 
 \item{mbd_lambda}{something}
 

@@ -17,7 +17,7 @@ mbd_main <- function(
   project_folder = NULL,
   verbose = FALSE,
   q_threshold = 1e-4,
-  maxit = 10000
+  maxiter = 10000
 ) {
   # check formats
   sim_pars <- as.numeric(sim_pars)
@@ -81,7 +81,7 @@ mbd_main <- function(
       verbose = verbose,
       lx = min(1 + 2 * length(brts), mbd::max_lx()),
       q_threshold = q_threshold,
-      maxit = maxit
+      maxiter = maxiter
     )
     mle[m, ] <- mle_out
     colnames(mle) <- names(mle_out)
@@ -147,7 +147,7 @@ mbd_main <- function(
   results <- data.frame(results)
 
   # save data
-  main_save_files( # nolint internal function
+  mbd::main_save_files( # nolint internal function
     project_folder = project_folder,
     sim_pars = sim_pars,
     optim_ids = optim_ids,

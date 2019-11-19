@@ -44,7 +44,7 @@ test_that("right conditioning", {
       brts = brts,
       n_0 = n_0,
       cond = cond,
-      lx = 100 + is_on_ci() * 200
+      lx = 100 + is_on_ci() * 20
     ),
     DDD::bd_loglik(
       pars1 = pars[1:3],
@@ -52,6 +52,6 @@ test_that("right conditioning", {
       brts = brts,
       missnumspec = 0
     ),
-    tolerance = 1e-2 * (!is_on_ci()) + 1e-5 * (is_on_ci())
+    tolerance = 1e-2 * (!is_on_ci()) + 1e-4 * (is_on_ci())
   )
 })

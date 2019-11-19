@@ -85,8 +85,8 @@
 #' @param max_number_of_species something
 #' @param max_repetitions something
 #' @param max_sims something
-#' @param maxiter something
 #' @param maxit maximum number of subplex iterations
+#' @param maxiter maximum number of subplex iterations
 #' @param mbd_lambda something
 #' @param message a message
 #' @param methode

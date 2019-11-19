@@ -199,7 +199,7 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 test_that("P_{n1, n2} sums up to one", {
 
   pars <- c(0.2, 0.1, 2.5, 0.2)
-  lx <- 25
+  lx <- 24
   brts <- c(2)
   eq <- "p_eq"
 
@@ -227,7 +227,7 @@ test_that("FORTRAN vs R: same result but FORTRAN is faster", {
 
   brts <- c(8)
   pars <- c(0.2, 0.1, 1.2, 0.12)
-  lx <- 25
+  lx <- 20
 
   # test for the P-equation
   eq <- "p_eq"
@@ -375,7 +375,7 @@ test_that("nu = q = 0", {
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 20
+  lx <- 17
   mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2 + is_on_ci())
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
@@ -410,6 +410,7 @@ test_that("nu = q = 0", {
       }
     }
   }
+
 })
 
 # bd: nu = 0 ----
@@ -419,7 +420,7 @@ test_that("nu = 0", {
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 20
+  lx <- 17
   mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2 + is_on_ci())
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
@@ -464,7 +465,7 @@ test_that("q = 0", {
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 20
+  lx <- 17
   mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2 + is_on_ci())
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]

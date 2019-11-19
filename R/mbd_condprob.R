@@ -1131,8 +1131,8 @@ selector_hybrid <- function(
     dist <- (1 / pc_tolerance) * abs(pc - 0.5)
     dist <- dist ^ 2
     t_crown <- max(abs(brts))
-    lx_min <- min(8 + 2 * t_crown, 19)
-    lx_max <- min(26 + 2 * t_crown, 38)
+    lx_min <- min(8 + 2 * t_crown, 18)
+    lx_max <- min(23 + 2 * t_crown, 34)
     eq <- mbd::selector5(
       pars = pars,
       brts = brts,

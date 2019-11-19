@@ -9,8 +9,8 @@ mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
   0.5, 0.3), n_0 = 2, cond = 1, optim_ids = rep(TRUE,
   length(start_pars)), true_pars = start_pars, tips_interval = c(0,
   Inf), q_threshold = 0.001, verbose = TRUE, missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
-  maxit = 10000)
+  lx = min(1 + 2 * (length(brts) + max(missnumspec)), mbd::max_lx()),
+  maxiter = 10000)
 }
 \arguments{
 \item{loglik_function}{the loglik function}
@@ -47,7 +47,7 @@ but missing in the phylogeny.}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
 
-\item{maxit}{maximum number of subplex iterations}
+\item{maxiter}{maximum number of subplex iterations}
 }
 \value{
 The output is a dataframe containing
