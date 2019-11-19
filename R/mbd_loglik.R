@@ -19,7 +19,7 @@ mbd_loglik <- function(
   debug_mode = FALSE,
   fortran = TRUE
 ) {
-  cat(pars, "\n")
+
   # BASIC SETTINGS AND CHECKS
   mbd::check_brts(brts = brts, n_0 = n_0)
   mbd::check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
@@ -42,12 +42,15 @@ mbd_loglik <- function(
 
   # Calculate conditional probability
   if (cond == 1) {
+    lx_condprob <- min(ceiling(lx / 2), mbd::max_lx_condprob())
     pc <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
-      lx = ceiling(lx / 2),
+      lx = lx_condprob,
       eq = mbd::condprob_select_eq(
         pars = pars,
+        brts = brts,
+        lx = lx_condprob,
         fortran = fortran
       ),
       fortran = fortran

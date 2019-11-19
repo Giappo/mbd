@@ -1044,7 +1044,7 @@ selector5 <- function(
     unique(ceiling(seq(
       from = lx_start,
       to = lx_end,
-      length.out = 10
+      length.out = 6
     )))
   testit::assert(lx_end <= lx_max)
   pc_p <- pc_q <- rep(0, length(lx_seq))
@@ -1136,8 +1136,8 @@ selector_hybrid <- function(
     dist <- (1 / pc_tolerance) * abs(pc - 0.5)
     dist <- dist ^ 2
     t_crown <- max(abs(brts))
-    lx_min <- min(13 + 2 * t_crown, 24)
-    lx_max <- min(31 + 2 * t_crown, 45)
+    lx_min <- min(8 + 2 * t_crown, 19)
+    lx_max <- min(26 + 2 * t_crown, 38)
     eq <- mbd::selector5(
       pars = pars,
       brts = brts,

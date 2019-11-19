@@ -278,6 +278,13 @@ max_lx <- function() {
   maximum_lx
 }
 
+#' Maximum allowed value for lx
+#' @export
+max_lx_condprob <- function() {
+  maximum_lx <- 200
+  maximum_lx
+}
+
 #' Check the vectors of probability sums computed during likelihood integration
 #' @inheritParams default_params_doc
 #' @export
