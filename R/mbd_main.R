@@ -13,7 +13,7 @@ mbd_main <- function(
   seed,
   start_pars = c(0.3, 0.1, 1.5, 0.15),
   optim_ids = rep(TRUE, length(start_pars)),
-  loglik_functions = mbd_loglik,
+  loglik_functions = mbd::mbd_loglik,
   project_folder = NULL,
   verbose = FALSE,
   q_threshold = 1e-4,

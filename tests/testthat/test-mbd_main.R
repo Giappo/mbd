@@ -77,9 +77,7 @@ test_that("use", {
     length(test$cond) == length(loglik_functions)
   )
   testthat::expect_true(
-    all(
-      is.numeric(test$cond)
-    )
+    all(is.numeric(test$cond))
   )
   testthat::expect_true(
     length(test$seed) == length(loglik_functions)
@@ -88,14 +86,10 @@ test_that("use", {
     length(unique(test$seed)) == 1
   )
   testthat::expect_true(
-    all(
-      test$n_0 == n_0
-    )
+    all(test$n_0 == n_0)
   )
   testthat::expect_true(
-    all(
-      test$t_0 == age
-    )
+    all(test$t_0 == age)
   )
   testthat::expect_true(
     length(test$optim_lambda) == length(loglik_functions)
@@ -225,14 +219,12 @@ test_that("it works also for a subset of parameters", {
   }
   # check data folder existence
   data_folder <- file.path(project_folder, "data")
-  testthat::expect_true(
-    file.exists(data_folder)
-  )
+  testthat::expect_true(file.exists(data_folder))
+
   # check results folder existence
   results_folder <- file.path(project_folder, "results")
-  testthat::expect_true(
-    file.exists(results_folder)
-  )
+  testthat::expect_true(file.exists(results_folder))
+
   # check data file existence
   data_file_name <- mbd::create_data_file_name(
     data_folder = data_folder,
