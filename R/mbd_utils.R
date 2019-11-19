@@ -221,7 +221,7 @@ get_model_names <- function(
 ) {
   model_names <- function_names
   for (m in seq_along(function_names)) {
-    model_names[m] <- cut_loglik_from_name(function_names[m]) # nolint internal function
+    model_names[m] <- mbd::cut_loglik_from_name(function_names[m])
     if (is.null(model_names[m]) | is.na(model_names[m])) {
       stop(paste0(
         "This is not a likelihood function provided by ",
