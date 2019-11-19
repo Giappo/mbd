@@ -766,7 +766,7 @@ selector1 <- function(
         )
       )
       print(pc1)
-      while(abs(coeff) > threshold) {
+      while (abs(coeff) > threshold) {
         delta_lx <- ceiling(lx_stepsize / lx)
         lx <- lx + delta_lx
         pc2 <- mbd::condprob(
@@ -840,12 +840,16 @@ selector2 <- function(
   m_error <- 1e-5
 
   bad_result <- TRUE
-  while(bad_result == TRUE && threshold_derivative > 5e-4) {
+  while (bad_result == TRUE && threshold_derivative > 5e-4) {
     lx <- lx_start
-    log_nu_mat_p <- mbd::condprob_log_nu_mat(lx = lx_max, eq = "p_eq")
-    log_q_mat_p <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "p_eq")
-    log_nu_mat_q <- mbd::condprob_log_nu_mat(lx = lx_max, eq = "q_eq")
-    log_q_mat_q <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "q_eq")
+    log_nu_mat_p <-
+      mbd::condprob_log_nu_mat(lx = lx_max, eq = "p_eq")
+    log_q_mat_p <-
+      mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "p_eq")
+    log_nu_mat_q <-
+      mbd::condprob_log_nu_mat(lx = lx_max, eq = "q_eq")
+    log_q_mat_q <-
+      mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "q_eq")
     pc1_q <- mbd::condprob(
       brts = brts,
       fortran = fortran,
@@ -874,7 +878,7 @@ selector2 <- function(
     )
     der_p <- der_q <- 10
     distance_p <- distance_q <- 0
-    while(
+    while (
       abs(der_p) > threshold_derivative |
       abs(der_q) > threshold_derivative |
       distance_q < threshold_distance |
@@ -882,7 +886,6 @@ selector2 <- function(
     ) {
       delta_lx <- max(ceiling(lx_stepsize / lx), 1)
       lx <- lx + delta_lx
-      # cat("lx =", lx, "\n")
       pc2_q <- mbd::condprob(
         brts = brts,
         fortran = fortran,
@@ -911,16 +914,8 @@ selector2 <- function(
       )
       der_p <- (pc2_p - pc1_p) / delta_lx
       der_q <- (pc2_q - pc1_q) / delta_lx
-      # cat("pc_q =", abs(pc2_q), "\n")
-      # cat("pc_p =", abs(pc2_p), "\n")
-      # cat("der_q =", abs(der_q), "\n")
-      # cat("der_p =", abs(der_p), "\n")
       distance_p <- 1 - pc2_p
       distance_q <- pc2_q
-      # cat("distance_q =", distance_q, "\n")
-      # cat("distance_p =", distance_p, "\n")
-      pc1_p_stored <- pc1_p
-      pc1_q_stored <- pc1_q
       pc1_p <- pc2_p
       pc1_q <- pc2_q
     }
@@ -928,8 +923,6 @@ selector2 <- function(
     # calculate the intersection point of linear extrapolations
     mp <- der_p
     mq <- der_q
-    yp1 <- pc1_p_stored
-    yq1 <- pc1_q_stored
     yp2 <- pc2_p
     yq2 <- pc2_q
     xp2 <- lx
@@ -1045,7 +1038,6 @@ selector5 <- function(
   pc_p <- pc_q <- rep(0, length(lx_seq))
   for (l in seq_along(lx_seq)) {
     lx <- lx_seq[l]
-    # cat("lx =", lx, "\n")
     pc_q[l] <- mbd::condprob(
       brts = brts,
       fortran = fortran,
@@ -1094,7 +1086,7 @@ selector5 <- function(
     x <- seq(10, lx_meet * 1.2, length.out = 10)
     graphics::plot(fit_p(x) ~ x, ylim = c(0, 1), col = "red")
     graphics::points(fit_q(x) ~ x, col = "blue")
-    ## f = fp - fq
+    ## difference function between fp and fq
     x <- seq(5, 120, length.out = 200)
     min(f(x))
     graphics::plot(f(x) ~ x, col = "red")
