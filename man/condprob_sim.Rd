@@ -15,6 +15,8 @@ condprob_sim(brts, parmsvec, lx = 10000, saveit = TRUE,
 \item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{saveit}{do you want to save the results?}
+
+\item{starting_seed}{the seed to start from}
 }
 \description{
 Estimates conditional probability using simulations

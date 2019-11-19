@@ -508,7 +508,6 @@ test_that("condprob_select_eq", {
   max_seed <- 5 + is_on_ci() * 20
   for (seed in 1:max_seed) {
     set.seed(seed)
-    print(seed)
     lambda <- runif(n = 1, min = 0.05, max = 0.3)
     mu <- runif(n = 1, min = 0, max = lambda)
     nu <- runif(n = 1, min = 0.3, max = 2.3)
@@ -604,7 +603,6 @@ test_that("probcond_select_eq: more nasty cases", {
   for (seed in 1:max_seed) {
     if (seed == 15 || seed == 27) next # too slow for simulations
     set.seed(seed)
-    print(seed)
     lambda <- runif(n = 1, min = 0.05, max = 1.5)
     mu <- runif(n = 1, min = 0, max = lambda)
     nu <- runif(n = 1, min = 0.3, max = 2.9)

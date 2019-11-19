@@ -646,12 +646,7 @@ condprob <- function(
   brts,
   fortran = TRUE,
   lx,
-  eq = mbd::condprob_select_eq(
-    pars = pars,
-    brts = brts,
-    lx = lx,
-    fortran = fortran
-  ),
+  eq,
   parmsvec
 ) {
   if (eq == "sim") {
@@ -1084,25 +1079,25 @@ selector5 <- function(
   y_p <- pc_p
   x_q <- lx_seq
   y_q <- pc_q
-  fit_p <- splinefun(x = x_p, y = y_p, method = "monoH.FC")
-  fit_q <- splinefun(x = x_q, y = y_q, method = "monoH.FC")
+  fit_p <- stats::splinefun(x = x_p, y = y_p, method = "monoH.FC")
+  fit_q <- stats::splinefun(x = x_q, y = y_q, method = "monoH.FC")
   f <- function(x) fit_p(x, deriv = 0L) - fit_q(x, deriv = 0L)
-  lx_meet <- uniroot(f, interval = c(0, 1e5))$root
+  lx_meet <- stats::uniroot(f, interval = c(0, 1e5))$root
   y3 <- fit_p(lx_meet)
 
   if (1 == 2) {
     # visualization
     ## real points
-    plot(y_p ~ x_p, ylim = c(0, 1), col = "red")
-    points(y_q ~ x_q, col = "blue")
+    graphics::plot(y_p ~ x_p, ylim = c(0, 1), col = "red")
+    graphics::points(y_q ~ x_q, col = "blue")
     ## extrapolated points
     x <- seq(10, lx_meet * 1.2, length.out = 10)
-    plot(fit_p(x) ~ x, ylim = c(0, 1), col = "red")
-    points(fit_q(x) ~ x, col = "blue")
+    graphics::plot(fit_p(x) ~ x, ylim = c(0, 1), col = "red")
+    graphics::points(fit_q(x) ~ x, col = "blue")
     ## f = fp - fq
     x <- seq(5, 120, length.out = 200)
     min(f(x))
-    plot(f(x) ~ x, col = "red")
+    graphics::plot(f(x) ~ x, col = "red")
   }
 
   if (y3 < 0.5) {

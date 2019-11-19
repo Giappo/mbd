@@ -78,6 +78,7 @@ one_minus_ut  <- function(lambda, mu, t) {
 #' @author Giovanni Laudanno
 #' @description Nee's function: pn
 #' @inheritParams default_params_doc
+#' @param n number of species
 #' @return pn
 #' @export
 pn <- function(lambda, mu, t, n) {
@@ -85,22 +86,5 @@ pn <- function(lambda, mu, t, n) {
     mbd::one_minus_ut(t = t, lambda = lambda, mu = mu) *
     mbd::ut(t = t, lambda = lambda, mu = mu) ^ (n - 1 + 2 * (n == 0)) +
     (n == 0) * (mbd::one_minus_pt(t = t, lambda = lambda, mu = mu))
-  out
-}
-
-#' @title Pn accounting for extinctions after the shifts
-#' @author Giovanni Laudanno
-#' @description Combine pn from Nee et al. and imposes the extinction
-#'  before the present of all species not visible in the phylogeny
-#' @inheritParams default_params_doc
-#' @return pn times probability of extinction for n-1 species after the shift
-#' @export
-pn_bar <- function(lambda, mu, t, n, tbar = 0) {
-  out <- (n > 0) * mbd::p_t(t = t, lambda = lambda, mu = mu) *
-    (mbd::one_minus_ut(t = t, lambda = lambda, mu = mu)) *
-    n *
-    mbd::ut(t = t, lambda = lambda, mu = mu) ^ (n - 1) *
-    mbd::one_minus_pt(t = tbar, lambda = lambda, mu = mu) ^ (n - 1 + (n == 0)) +
-    (n == 0) * (mbd::one_minus_pt(t = t, lambda = lambda, mu = mu)) * n
   out
 }

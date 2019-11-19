@@ -12,6 +12,8 @@ pn(lambda, mu, t, n)
 \item{mu}{the extinction rate.}
 
 \item{t}{time}
+
+\item{n}{number of species}
 }
 \value{
 pn

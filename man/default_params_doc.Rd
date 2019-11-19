@@ -25,10 +25,10 @@ default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   quantiles_choice, qvec, recursive, rtol, reltol, res, results,
   results_folder, rhs_function, runmod, s, safety_checks, saveit, seed,
   sample_interval, sequence_length, sim, sim_pars, sim_phylo, start_pars,
-  subsamp, sum_probs_1, sum_probs_2, t, tcrit, times, tvec, t1, t2, t_0,
-  t_0s, tips_interval, time_interval, tol, tr, transition_matrix,
-  trparsfix, trparsopt, true_pars, values, vector, verbose, x, x_name,
-  x_splits, y, y_name, y_splits, z, z_name)
+  starting_seed, subsamp, sum_probs_1, sum_probs_2, t, tcrit, times, tvec,
+  t1, t2, t_0, t_0s, tips_interval, time_interval, tol, tr,
+  transition_matrix, trparsfix, trparsopt, true_pars, values, vector,
+  verbose, x, x_name, x_splits, y, y_name, y_splits, z, z_name)
 }
 \arguments{
 \item{a_abstol}{something}
@@ -338,6 +338,8 @@ realistic, but not infinite, parameter space}
 \item{sim_phylo}{something}
 
 \item{start_pars}{starting parameter values for the ml process.}
+
+\item{starting_seed}{the seed to start from}
 
 \item{subsamp}{something}
 
