@@ -147,7 +147,7 @@ test_that("abuse", {
     "The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values." # nolint
   )
   testthat::expect_error(
-    test <- mbd_ml(
+    test <- mbd::mbd_ml(
       loglik_function = mbd_loglik,
       brts = brts,
       start_pars = c(-1, 0.1, 2, 0.1),
