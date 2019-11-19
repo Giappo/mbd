@@ -4,7 +4,7 @@
 \alias{create_n}
 \title{N matrix}
 \usage{
-create_n(pars, k, b, lx, matrix_builder = hyper_a_hanno)
+create_n(pars, k, b, lx, matrix_builder = mbd::hyper_a_hanno)
 }
 \arguments{
 \item{pars}{vector of parameters:

@@ -9,7 +9,7 @@ is_on_ci <- function() {
 # big but not too big ----
 test_that("big but not too big", {
 
-  m <- hyper_a_hanno(n_species = 2, k = 2, q = 0.1)
+  m <- mbd::hyper_a_hanno(n_species = 2, k = 2, q = 0.1)
   testthat::expect_equal(m[1, 1], 0.81)
   testthat::expect_equal(m[1, 2], 0.00)
   testthat::expect_equal(m[1, 3], 0.00)
@@ -28,7 +28,7 @@ test_that("is silent", {
     testthat::expect_true(TRUE)
   } else {
     testthat::expect_silent(
-      hyper_a_hanno(n_species = 10000, k = 2, q = 0.1) # nolint internal function
+      mbd::hyper_a_hanno(n_species = 10000, k = 2, q = 0.1)
     )
     gc()
   }
@@ -41,7 +41,7 @@ test_that("abuse", {
     testthat::expect_true(TRUE)
   } else {
     testthat::expect_error(
-      hyper_a_hanno(n_species = 100000, k = 2, q = 0.1), # nolint internal function
+      mbd::hyper_a_hanno(n_species = 100000, k = 2, q = 0.1),
       "'n_species' must be below 46340"
     )
     gc()

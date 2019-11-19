@@ -9,6 +9,7 @@ Depends:
 Imports: 
   DDD,
   deSolve,
+  ggplot2,
   subplex,
   testit
 Suggests:
@@ -16,6 +17,7 @@ Suggests:
   cyclocomp,
   knitr,
   lintr,
+  rappdirs,
   rmarkdown, 
   testthat
 Description: 

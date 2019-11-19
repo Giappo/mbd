@@ -43,5 +43,5 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 Estimates conditional probability using simulations
 }
 \author{
-Giovanni Laudanno, Bart Haegeman
+Giovanni Laudanno
 }

@@ -5,24 +5,28 @@
 \title{This function does nothing. It is intended to inherit is parameters'
 documentation.}
 \usage{
-default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
-  alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
-  checked_functions, colormap, cond, data_folder, debug_mode, empty_pp,
-  empty_qq, function_name, function_names, functions_names, idparsfix,
-  idparsopt, initparsopt, input_trees_path, input_xml, interval_max,
-  interval_min, iterations, k, lambda, lambda_limit, loglik_function,
-  loglik_functions, logs, lx, lx0, m1, m2, mm, matrices, matrix, matrix_a,
-  matrix_builder, max_iter, max_k, max_number_of_species, max_repetitions,
-  max_sims, maxit, maxiter, mbd_lambda, message, methode,
-  minimum_multiple_births, missnumspec, models, mu, mu_limit,
-  mutation_rate, n_0, n_0s, n_species, init_n_lineages, n_sims, n_steps,
-  n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids, pp, pp2, parms,
-  params, pars, pars_transform, pars_transformed, parsfix, precision,
-  print_errors, printit, project_folder, pvec, q, qq, qq2, q_t, q_vector,
-  q_threshold, quantiles_choice, qvec, recursive, reltol, res, results,
-  results_folder, rhs_function, s, saveit, seed, sample_interval,
-  sequence_length, sim, sim_pars, sim_phylo, start_pars, subsamp, t, t1,
-  t2, t_0, t_0s, tips_interval, time_interval, tol, tr, transition_matrix,
+default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
+  age, alpha, alpha0, b, brts, brts_precision, changeloglikifnoconv,
+  checked_functions, colormap, cond, data_folder, debug_mode, empty_mat,
+  empty_pp, empty_qq, eq, expr, fortran, func, function_name,
+  function_names, functions_names, idparsfix, idparsopt, initparsopt,
+  init_n_lineages, initprobs, init_probs, input_trees_path, input_xml,
+  interval_max, interval_min, iterations, k, lambda, lambda_limit,
+  likelihood, l_matrix, loglik_function, loglik_functions, logs,
+  log_nu_mat, log_q_mat, lx, lx0, lx_top, m1, m2, m1_mat, m2_mat, mm,
+  matrices, matrix, matrix_a, matrix_builder, max_iter, max_k,
+  max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
+  mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
+  models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species, n_sims,
+  n_steps, n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids, pp,
+  pp2, parms, parmsvec, params, pars, pars_transform, pars_transformed,
+  parsfix, parsvec, pc, pool, precision, print_errors, printit,
+  project_folder, pvec, q, qq, qq2, q_t, q_vector, q_threshold,
+  quantiles_choice, qvec, recursive, rtol, reltol, res, results,
+  results_folder, rhs_function, runmod, s, safety_checks, saveit, seed,
+  sample_interval, sequence_length, sim, sim_pars, sim_phylo, start_pars,
+  subsamp, sum_probs_1, sum_probs_2, t, tcrit, times, tvec, t1, t2, t_0,
+  t_0s, tips_interval, time_interval, tol, tr, transition_matrix,
   trparsfix, trparsopt, true_pars, values, vector, verbose, x, x_name,
   x_splits, y, y_name, y_splits, z, z_name)
 }
@@ -30,6 +34,9 @@ default_params_doc(a_abstol, a_reltol, abstol, account_name, after, age,
 \item{a_abstol}{something}
 
 \item{a_reltol}{something}
+
+\item{atol}{absolute error tolerance for
+the numerical integration using deSolve.}
 
 \item{abstol}{absolute error tolerance for
 the numerical integration using deSolve.}
@@ -70,9 +77,20 @@ the numerical integration using deSolve.}
 \item{debug_mode}{If TRUE allows to run even when there are errors and
 expose them.}
 
+\item{empty_mat}{an empty matrix}
+
 \item{empty_pp}{empty pp matrix. See \code{pp}.}
 
 \item{empty_qq}{empty qq matrix. See \code{qq}.}
+
+\item{eq}{the equation approach you want to use. It can be "q_eq" for the
+Q-equation of "p_eq" for the P-equation.}
+
+\item{expr}{and expression}
+
+\item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
+
+\item{func}{a function}
 
 \item{function_name}{function name}
 
@@ -93,6 +111,12 @@ The ids are defined as follows:
 
 \item{initparsopt}{something}
 
+\item{init_n_lineages}{the number of lineages at time equals zero.}
+
+\item{initprobs}{initial probabilities}
+
+\item{init_probs}{initial probabilities}
+
 \item{input_trees_path}{Path to \code{.trees} file.}
 
 \item{input_xml}{something}
@@ -109,19 +133,33 @@ The ids are defined as follows:
 
 \item{lambda_limit}{Upper limit to lambda estimations.}
 
+\item{likelihood}{the likelihood}
+
+\item{l_matrix}{the l-table}
+
 \item{loglik_function}{the loglik function}
 
 \item{loglik_functions}{the loglik_functions you want to use}
 
 \item{logs}{something}
 
+\item{log_nu_mat}{logarithmic nu-matrix, used for condprob}
+
+\item{log_q_mat}{logarithmic q-matrix, used for condprob}
+
 \item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{lx0}{something}
 
+\item{lx_top}{maximum lx to produce pre-calculated matrices for condprob}
+
 \item{m1}{a matrix keeping track of columns}
 
 \item{m2}{a matrix keeping track of rows}
+
+\item{m1_mat}{a matrix keeping track of columns}
+
+\item{m2_mat}{a matrix keeping track of rows}
 
 \item{mm}{indexes of missing species}
 
@@ -179,8 +217,6 @@ but missing in the phylogeny.}
 
 \item{n_species}{number of species.}
 
-\item{init_n_lineages}{the number of lineages at time equals zero.}
-
 \item{n_sims}{number of simulations}
 
 \item{n_steps}{something}
@@ -204,6 +240,8 @@ choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)}
 
 \item{parms}{some parameters to pass on the ode function}
 
+\item{parmsvec}{parameters to pass to the FORTRAN scripts}
+
 \item{params}{transition matrix for the rhs of the ode system.}
 
 \item{pars}{vector of parameters:
@@ -220,6 +258,12 @@ choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)}
 according to y = x / (1 + x)}
 
 \item{parsfix}{the values of the parameters that should not be optimized.}
+
+\item{parsvec}{vector of paramters for the FORTRAN subroutine.}
+
+\item{pc}{conditional probability}
+
+\item{pool}{the pool of living species at a given time}
 
 \item{precision}{something}
 
@@ -251,6 +295,9 @@ because you never want \code{q} to actually be equal to zero or one.}
 
 \item{recursive}{something}
 
+\item{rtol}{relative error tolerance for
+the numerical integration using deSolve.}
+
 \item{reltol}{relative error tolerance for
 the numerical integration using deSolve.}
 
@@ -263,7 +310,12 @@ the numerical integration using deSolve.}
 \item{rhs_function}{a function for the right hand side of the differential
 equation}
 
+\item{runmod}{FORTRAN subroutine's option}
+
 \item{s}{the seed}
+
+\item{safety_checks}{TRUE if you want the parameters to be limited to a
+realistic, but not infinite, parameter space}
 
 \item{saveit}{do you want to save the results?}
 
@@ -289,7 +341,17 @@ equation}
 
 \item{subsamp}{something}
 
+\item{sum_probs_1}{vector of probability sums}
+
+\item{sum_probs_2}{vector of probability sums}
+
 \item{t}{time}
+
+\item{tcrit}{the time you don't want to exceed in the integration}
+
+\item{times}{vector of times}
+
+\item{tvec}{vector of times}
 
 \item{t1}{something}
 
@@ -302,7 +364,7 @@ equation}
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
-\item{time_interval}{something}
+\item{time_interval}{a time interval}
 
 \item{tol}{something}
 

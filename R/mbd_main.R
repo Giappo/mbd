@@ -30,10 +30,10 @@ mbd_main <- function(
   t_0s <- age
 
   # generic set up
-  function_names <- get_function_names( # nolint internal function
+  function_names <- mbd::get_function_names( # nolint internal function
     loglik_functions = loglik_functions
   )
-  model_names <- get_model_names( # nolint internal function
+  model_names <- mbd::get_model_names( # nolint internal function
     function_names = function_names,
     verbose = verbose
   )
@@ -48,7 +48,7 @@ mbd_main <- function(
     seed = seed
   )
   brts <- sim$brts
-  print_info(brts = brts, n_0 = n_0, cond = cond, verbose = verbose) # nolint internal function
+  mbd::print_info(brts = brts, n_0 = n_0, cond = cond, verbose = verbose)
   if (!is.list(brts)) {
     tips <- (n_0s[1] - 1) + length(brts)
   } else {
@@ -69,7 +69,7 @@ mbd_main <- function(
     if (verbose == FALSE) {
       sink(tempfile())
     }
-    mle_out <- mbd_ml(
+    mle_out <- mbd::mbd_ml(
       loglik_function = get(function_names[m]),
       brts = sim$brts,
       cond = cond,
@@ -79,7 +79,7 @@ mbd_main <- function(
       optim_ids = optim_ids,
       true_pars = sim_pars,
       verbose = verbose,
-      lx = min(1 + 3 * (length(brts)), 1200),
+      lx = min(1 + 2 * length(brts), mbd::max_lx()),
       q_threshold = q_threshold,
       maxit = maxit
     )
@@ -123,24 +123,24 @@ mbd_main <- function(
     model = model_names
   )
   if (length(t_0s) > 1) {
-    t_0s_label <- paste0("t_0_", 1:length(t_0s))
+    t_0s_label <- paste0("t_0_", seq_along(t_0s))
   } else {
     t_0s_label <- "t_0"
   }
   if (length(tips) > 1) {
-    tips_label <- paste0("tips_", 1:length(tips))
+    tips_label <- paste0("tips_", seq_along(tips))
   } else {
     tips_label <- "tips"
   }
   colnames(results) <- c(
-    paste0("sim_", colnames(mle[1:length(start_pars)])),
+    paste0("sim_", colnames(mle[seq_along(start_pars)])),
     colnames(mle),
     "seed",
     "cond",
     "n_0",
     t_0s_label,
     tips_label,
-    paste0("optim_", colnames(mle[1:length(start_pars)])),
+    paste0("optim_", colnames(mle[seq_along(start_pars)])),
     "model"
   )
   rownames(results) <- NULL
@@ -158,6 +158,6 @@ mbd_main <- function(
     sim = sim,
     results = results
   )
-  print_info(brts = brts, n_0 = n_0, cond = cond, verbose = verbose) # nolint internal function
+  mbd::print_info(brts = brts, n_0 = n_0, cond = cond, verbose = verbose)
   results
 }

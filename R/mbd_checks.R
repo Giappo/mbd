@@ -3,7 +3,7 @@
 #' @description Check 'n_0'
 #' @inheritParams default_params_doc
 #' @return nothing
-#' @noRd
+#' @export
 check_n_0 <- function(
   n_0
 ) {
@@ -21,7 +21,7 @@ check_n_0 <- function(
 #' @description Check mbd pars
 #' @inheritParams default_params_doc
 #' @return Returns "wrong" if they are wrong, or "right" otherwise.
-#' @noRd
+#' @export
 check_pars <- function(
   pars,
   safety_checks = TRUE,
@@ -64,7 +64,7 @@ check_pars <- function(
 #' @description Make sure that 'brts' are properly defined.
 #' @inheritParams default_params_doc
 #' @return nothing
-#' @noRd
+#' @export
 check_brts <- function(
   brts,
   n_0
@@ -73,7 +73,7 @@ check_brts <- function(
   if (sum(brts == max(brts)) > 1) {
     stop("Crown/stem age has to be reported only once in the branching times.")
   }
-  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
+  births <- mbd::brts2time_intervals_and_births(brts)$births
   kvec <- n_0 + cumsum(c(0, births))
   kvec1 <- kvec[-c(1, length(kvec))]
   births1 <- births[-1]
@@ -91,7 +91,7 @@ check_brts <- function(
 #' @description Make sure that 'cond' and 'tips_interval' are coherent
 #' @inheritParams default_params_doc
 #' @return nothing
-#' @noRd
+#' @export
 check_cond <- function(
   cond,
   tips_interval,
@@ -122,7 +122,7 @@ check_cond <- function(
 #' @description Check 'seed'
 #' @inheritParams default_params_doc
 #' @return nothing
-#' @noRd
+#' @export
 check_seed <- function(seed) {
   if (!is.na(seed)) {
     if (!is.numeric(seed)) {
@@ -157,7 +157,7 @@ check_q_vector <- function(
       brts2 <- c(brts, 0)
       w <- data.frame(matrix(NA, nrow = length(q_vector), ncol = 0))
       w$values <- q_vector
-      w$x <- 1:length(q_vector)
+      w$x <- seq_along(q_vector)
       w$cols <- ifelse(sign(q_vector) > 0, "blue", "red")
       print(w$values)
       graphics::plot(
@@ -177,4 +177,48 @@ check_q_vector <- function(
       stop("problems: q_t is negative!")
     }
   }
+}
+
+#' @title Check conditional probability
+#' @description Check conditional probability
+#' @inheritParams default_params_doc
+#' @return Nothing
+#' @author Giovanni Laudanno
+#' @export
+check_pc <- function(pc, debug_mode = FALSE) {
+  if (!(pc >= 0 && pc <= 1)) {
+    if (debug_mode == FALSE) {
+      stop("problems: pc is wrong!")
+    }
+  }
+  return()
+}
+
+#' @title Check "equation" for conditional probability
+#' @description CCheck "equation" for conditional probability
+#' @inheritParams default_params_doc
+#' @return Nothing
+#' @author Giovanni Laudanno
+#' @export
+check_condprob_eq <- function(eq) {
+  if (!(eq %in% mbd_condprob_eqs())) {
+    stop("It is either Q- or P-equation! (or use sims)")
+  }
+  return()
+}
+
+#' @title Check lx
+#' @description Check lx
+#' @inheritParams default_params_doc
+#' @return Nothing
+#' @author Giovanni Laudanno
+#' @export
+check_lx <- function(lx) {
+  if (lx %% 1 != 0) {
+    stop("problems: lx must be integer!")
+  }
+  if (lx < 0) {
+    stop("problems: lx must be positive!")
+  }
+  return()
 }

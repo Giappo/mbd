@@ -9,7 +9,7 @@ is_on_ci <- function() {
 test_that("use", {
 
   if (!is_on_ci()) {
-    skip("This is long")
+    skip("To be performed on ci.")
   }
 
   seed <- 8 # seed = 8 is critical
@@ -17,10 +17,10 @@ test_that("use", {
   cond <- 1
   n_0 <- 2
   t_0s <- age <- 6
-  loglik_functions <- mbd_loglik
+  loglik_functions <- mbd::mbd_loglik
   optim_ids <- c(TRUE, TRUE, TRUE, TRUE)
   maxit <- 200 # maximum number of subplex iterations
-  test <- mbd_main(
+  test <- mbd::mbd_main(
     seed = seed,
     sim_pars = sim_pars,
     cond = cond,
@@ -188,7 +188,7 @@ test_that("it works also for a subset of parameters", {
   optim_ids <- c(TRUE, FALSE, FALSE, FALSE)
   verbose <- FALSE
   maxit <- 200
-  test <- mbd_main(
+  test <- mbd::mbd_main(
     seed = seed,
     sim_pars = sim_pars,
     cond = cond,

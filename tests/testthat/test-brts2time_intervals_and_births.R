@@ -9,17 +9,17 @@ is_on_ci <- function() {
 test_that("approximate_brts", {
   brts <- c(6, 5, 4, 3, 1e-14)
   brts_precision <- 6
-  approx_brts <- approximate_brts(
+  approx_brts <- mbd::approximate_brts(
     brts = brts,
     brts_precision = brts_precision
   )
-  expect_true(all(approx_brts > 0))
+  testthat::expect_true(all(approx_brts > 0))
 })
 
 test_that("basic use", {
 
   brts <- c(10, 9, 8, 7, 7, 6, 6, 6, 5, 5, 5, 5)
-  out <- brts2time_intervals_and_births(brts) # nolint internal function
+  out <- mbd::brts2time_intervals_and_births(brts)
   time_intervals <- out$time_intervals
   births <- out$births
 
@@ -27,7 +27,8 @@ test_that("basic use", {
     time_intervals,
     c(0, abs(diff(unique(c(brts, 0)))))
   )
-  for (i in 1:length(unique(brts[duplicated(brts)]))) {
+  n_mbd_events <- length(unique(brts[duplicated(brts)]))
+  for (i in 1:n_mbd_events) {
     testthat::expect_equal(
       births[births != 1][i + 1],
       sum(unique(brts[duplicated(brts)])[i] == brts)
@@ -44,14 +45,14 @@ test_that("advanced check", {
   max_sims <- 5 + (is_on_ci() * 15)
 
   for (seed in 1:max_sims) {
-    brts <- mbd_sim(
+    brts <- mbd::mbd_sim(
       pars = pars,
       n_0 = n_0,
       age = age,
       cond = cond,
       seed = seed
     )$brts
-    out <- brts2time_intervals_and_births(brts) # nolint internal function
+    out <- mbd::brts2time_intervals_and_births(brts)
     time_intervals <- out$time_intervals
     births <- out$births
 
@@ -59,7 +60,8 @@ test_that("advanced check", {
       time_intervals,
       c(0, abs(diff(unique(c(brts, 0)))))
     )
-    for (i in 1:length(unique(brts[duplicated(brts)]))) {
+    n_mbd_events <- length(unique(brts[duplicated(brts)]))
+    for (i in 1:n_mbd_events) {
       testthat::expect_equal(
         births[births != 1][i + 1],
         sum(unique(brts[duplicated(brts)])[i] == brts)

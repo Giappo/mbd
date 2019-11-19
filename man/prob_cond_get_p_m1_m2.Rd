@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_conditioning.R
 \name{prob_cond_get_p_m1_m2}
 \alias{prob_cond_get_p_m1_m2}
-\title{Solutiof the integration of the ODE for p_{n1, n2}}
+\title{Solution of the integration of the ODE for P_{n1, n2}}
 \usage{
 prob_cond_get_p_m1_m2(pars, brts, matrices,
   rhs_function = cond_prob_p_rhs2)
@@ -24,7 +24,7 @@ prob_cond_get_p_m1_m2(pars, brts, matrices,
 equation}
 }
 \description{
-Solutiof the integration of the ODE for p_{n1, n2}
+Solution of the integration of the ODE for P_{n1, n2}
 }
 \author{
 Giovanni Laudanno, Bart Haegeman

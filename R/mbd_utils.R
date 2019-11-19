@@ -47,6 +47,17 @@ mbd_conds <- function() {
   conds
 }
 
+#' @title Eqs for condprob
+#' @description Eqs for condprob
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @return the conditionings
+#' @export
+mbd_condprob_eqs <- function() {
+  eqs <- c("p_eq", "q_eq", "sim")
+  eqs
+}
+
 #' @title Logliks for the experiment
 #' @author Giovanni Laudanno
 #' @description Get the loglik functions to use for the experiment
@@ -82,7 +93,9 @@ cat2 <- function(
   }
 }
 
-#' @noRd
+#' Convert to string
+#' @param var a variable
+#' @export
 to_string2 <- function(
   var
 ) {
@@ -148,7 +161,7 @@ cut_loglik_from_name <- function(
 get_function_names <- function(
   loglik_functions
 ) {
-  pkg_name <- get_pkg_name() # nolint internal function
+  pkg_name <- mbd::get_pkg_name() # nolint internal function
   fun_list <- ls(paste0("package:", pkg_name))
   error_message <- paste0(
     "This is not a likelihood function provided by ",
@@ -208,7 +221,7 @@ get_model_names <- function(
 ) {
   model_names <- function_names
   for (m in seq_along(function_names)) {
-    model_names[m] <- cut_loglik_from_name(function_names[m]) # nolint internal function
+    model_names[m] <- mbd::cut_loglik_from_name(function_names[m])
     if (is.null(model_names[m]) | is.na(model_names[m])) {
       stop(paste0(
         "This is not a likelihood function provided by ",
@@ -277,7 +290,7 @@ read_results <- function(project_folder = NULL) {
 #' @author Giovanni Laudanno
 #' @export
 count_n_mb_events <- function(brts) {
-  births <- brts2time_intervals_and_births(brts)$births # nolint internal function
+  births <- mbd::brts2time_intervals_and_births(brts)$births # nolint internal function
   mb_species <- sum(births[births > 1])
   mb_species
 }
@@ -288,11 +301,11 @@ count_n_mb_events <- function(brts) {
 #' @export
 count_percentage_mb_events <- function(brts) {
 
-  mb_species <- count_n_mb_events(brts)
+  mb_species <- mbd::count_n_mb_events(brts)
   if (mb_species == 0) {
     percentage_mb_species <- 0
   } else {
-    births <- brts2time_intervals_and_births(brts)$births # nolint internal function
+    births <- mbd::brts2time_intervals_and_births(brts)$births # nolint internal function
     n_species <- sum(births)
     percentage_mb_species <- mb_species / n_species
   }
@@ -321,11 +334,19 @@ create_singleton_phylo <- function(age) {
   tr
 }
 
+#' Like file.path, but cooler
+#' @param fsep path separator for the OS
+#' @param ... additional arguments
+#' @export
+file_path <- function(..., fsep = .Platform$file.sep) {
+  gsub("//", "/", file.path(..., fsep = fsep))
+}
+
 #' Create an empty phylogeny
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
-get_full_filename <- function(
+get_pars_filename <- function(
   pars,
   age
 ) {
@@ -340,24 +361,12 @@ get_full_filename <- function(
   }
 
   parsetting <- paste0(
-    "pars=", to_string2(pars),
+    "pars=", mbd::to_string2(signif(pars, digits = 3)),
     "-",
-    "age=", to_string2(age)
+    "age=", mbd::to_string2(signif(age, digits = 3))
   )
   parsetting <- gsub(parsetting, pattern = " ", replacement = "")
-  parsetting_folder <- file.path(data_folder, parsetting)
-  if (!dir.exists(parsetting_folder)) {
-    dir.create(parsetting_folder)
-  }
-  filename <- paste0(
-    "pc_sim",
-    ".Rdata"
-  )
-  full_filename <- file.path(parsetting_folder, filename)
-  full_filename
-}
+  pars_filename <- file.path(data_folder, parsetting)
 
-#' @noRd
-file_path <- function(..., fsep = .Platform$file.sep){
-  gsub("//", "/", file.path(..., fsep = fsep))
+  pars_filename
 }

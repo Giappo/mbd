@@ -2,6 +2,13 @@
 .Rhistory
 .RData
 .Ruserdata
-vignettes/mbd_demo_files/
 inst/doc
+vignettes/mbd_demo_files/
 vignettes/mbd_demo.aux
+src/*.o
+src/*.mod
+src/*.so
+src/*.dll
+src-i386
+src-x64
+

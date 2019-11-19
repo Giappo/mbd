@@ -57,7 +57,7 @@ cond_prob_q_matrices <- function(
   q,
   lx
 ) {
-
+  nvec <- 1:lx - 1
   nu_matrix <- matrix(0, nrow = lx, ncol = lx)
   if (q != 0) {
     for (m1 in 0:(lx - 1)) {
@@ -71,6 +71,8 @@ cond_prob_q_matrices <- function(
       }
     }
   }
+  rownames(nu_matrix) <- paste0("m1=", nvec)
+  colnames(nu_matrix) <- paste0("n1=", nvec)
 
   empty_qq <- matrix(0, nrow = (lx + 2), ncol = (lx + 2))
   m1 <- col(nu_matrix) - 1
@@ -138,6 +140,40 @@ cond_prob_q_rhs2 <- function(t, x, parms) {
   ))
 }
 
+#' Solution of the integration of the ODE for Q_{m1, m2}
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
+#' @export
+prob_cond_get_q_m1_m2 <- function(
+  pars,
+  brts,
+  matrices,
+  rhs_function = cond_prob_q_rhs2
+) {
+  tt <- max(abs(brts)) # time between crown age and present
+  lx <- ncol(matrices$nu_matrix)
+
+  parms <- list()
+  parms$lambda <- pars[1]
+  parms$mu <- pars[2]
+  parms$nu <- pars[3]
+  parms$kk <- 1
+  parms$nu_matrix <- matrices$nu_matrix
+  parms$m1 <- matrices$m1
+  parms$m2 <- matrices$m2
+  parms$empty_qq <- matrices$empty_qq
+  q_0 <- c(y = c(1, rep(0, lx ^ 2 - 1)))
+
+  ode_out <- mbd_solve(
+    vector = q_0,
+    func = rhs_function,
+    time_interval = tt,
+    parms = parms
+  )
+  q_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
+  q_m1_m2
+}
+
 #' Called by \link{mbd_loglik} if there is a conditioning != 0
 #' @inheritParams default_params_doc
 #' @return the conditional probability
@@ -158,34 +194,17 @@ cond_prob_q <- function(
   if (cond == 0) {
     return(1)
   }
-  lambda <- pars[1]
-  mu <- pars[2]
-  nu <- pars[3]
-  q <- pars[4]
-  tt <- max(abs(brts)) # time between crown age and present
 
   # construct auxiliary matrix
-  matrices <- cond_prob_q_matrices(q = q, lx = lx)
+  matrices <- cond_prob_q_matrices(q = pars[4], lx = lx)
 
   # integrate equations
-  parms <- list()
-  parms$lambda <- lambda
-  parms$mu <- mu
-  parms$nu <- nu
-  parms$kk <- 1
-  parms$nu_matrix <- matrices$nu_matrix
-  parms$m1 <- matrices$m1
-  parms$m2 <- matrices$m2
-  parms$empty_qq <- matrices$empty_qq
-  q_0 <- c(y = c(1, rep(0, lx ^ 2 - 1)))
-
-  ode_out <- mbd_solve(
-    vector = q_0,
-    func = cond_prob_q_rhs2,
-    time_interval = tt,
-    parms = parms
+  q_m1_m2 <- prob_cond_get_q_m1_m2(
+    pars = pars,
+    brts = brts,
+    matrices = matrices,
+    rhs_function = cond_prob_q_rhs2
   )
-  q_m1_m2 <- matrix(ode_out, nrow = lx, ncol = lx)
 
   # compute conditioning probability
   m1 <- col(q_m1_m2) - 1
@@ -194,24 +213,7 @@ cond_prob_q <- function(
   pc <- sum(p_m1_m2)
 
   pc <- DDD::roundn(pc, digits = 8)
-  if (!(pc >= 0 && pc <= 1)) {
-    if (debug_mode == TRUE) {
-      graphics::plot(
-        p_m1_m2,
-        xlab = "m",
-        ylab = "Q_m^k(t_p - t_c)",
-        main = paste0(
-          "pars = ", pars[1], ", ", pars[2], ", ", pars[3], ", ", pars[4]
-        ),
-        sub = paste0(
-          "Conditional probability = ", pc
-        )
-      )
-      cat("The value of pc is: ", pc, "\n")
-    } else {
-      stop("problems: pc is wrong!")
-    }
-  } # debug
+  check_pc(pc = pc, debug_mode = debug_mode)
 
   pc
 }
@@ -275,12 +277,12 @@ cond_prob_p_matrices <- function(
   q,
   lx
 ) {
-
+  nvec <- 1:lx - 1
   nu_matrix <- matrix(0, nrow = lx, ncol = lx)
   if (q != 0) {
     # alt: for (m1 in 0:(lx - 1)) {
     # alt: for (n1 in 0:m1) {
-    for (n1 in 0:(lx - 1)) {
+    for (n1 in nvec) {
       for (m1 in n1:(lx - 1)) {
         aux <- lchoose(n1, max(0, m1 - n1))
         aux <- aux + (m1 - n1) * log(q) + (2 * n1 - m1) * log(1 - q)
@@ -288,8 +290,8 @@ cond_prob_p_matrices <- function(
       }
     }
   }
-  rownames(nu_matrix) <- paste0("m1=", 0:(lx - 1))
-  colnames(nu_matrix) <- paste0("n1=", 0:(lx - 1))
+  rownames(nu_matrix) <- paste0("m1=", nvec)
+  colnames(nu_matrix) <- paste0("n1=", nvec)
 
   empty_pp <- matrix(0, nrow = (lx + 2), ncol = (lx + 2))
   m1 <- col(nu_matrix) - 1
@@ -355,7 +357,7 @@ cond_prob_p_rhs2 <- function(t, x, parms) {
   ))
 }
 
-#' Solutiof the integration of the ODE for p_{n1, n2}
+#' Solution of the integration of the ODE for P_{n1, n2}
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @inheritParams default_params_doc
 #' @export
@@ -428,11 +430,7 @@ cond_prob_p <- function(
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
 
   pc <- DDD::roundn(pc, digits = 8)
-  if (!(pc >= 0 && pc <= 1)) {
-    if (debug_mode != TRUE) {
-      stop("problems: pc is wrong!")
-    }
-  } # debug
+  check_pc(pc = pc, debug_mode = debug_mode)
 
   pc
 }
@@ -440,7 +438,7 @@ cond_prob_p <- function(
 # cond_prob_sim -----
 
 #' Estimates conditional probability using simulations
-#' @author Giovanni Laudanno, Bart Haegeman
+#' @author Giovanni Laudanno
 #' @inheritParams default_params_doc
 #' @export
 cond_prob_sim <- function(
@@ -457,13 +455,17 @@ cond_prob_sim <- function(
   n_0 <- 2
   testit::assert(cond == 1)
   rm(tips_interval)
-  full_filename <- get_full_filename(
+
+  # folder and files structure
+  pars_filename <- get_pars_filename(
     pars = pars,
     age = age
   )
+  sim_filename <- paste0(pars_filename, "-pc_sim.Rdata")
+  taxa_plot_filename <- paste0(pars_filename, "-taxa_plot.png")
   delete_file <- FALSE
-  if (file.exists(full_filename)) {
-    load(full_filename)
+  if (file.exists(sim_filename)) {
+    load(sim_filename)
     if (measure$n_sims >= n_sims) {
       return(measure$pc_sim)
     } else {
@@ -471,6 +473,7 @@ cond_prob_sim <- function(
     }
   }
 
+  # calculate pc_sim
   score <- 0
   n_tips <- rep(0, n_sims)
   for (seed in 1:n_sims) {
@@ -492,19 +495,37 @@ cond_prob_sim <- function(
     score <- score + 1 * crown_survival
   }
   pc_sim <- score / n_sims
+
   if (saveit == TRUE) {
     measure <- list(
       pc_sim = pc_sim,
       n_sims = n_sims,
       n_tips = n_tips
     )
+
     if (delete_file == TRUE) {
-      file.remove(full_filename)
+      file.remove(sim_filename)
+      file.remove(taxa_plot_filename)
     }
+
+    # save pc_sim
     save(
       measure,
-      file = full_filename
+      file = sim_filename
     )
+
+    # save plot taxa
+    taxa_plot <- ggplot2::ggplot(
+      data = data.frame(measure), ggplot2::aes(x = n_tips)
+    ) +
+      ggplot2::geom_histogram(bins = 30) +
+      ggplot2::theme_bw() +
+      ggplot2::ggtitle(
+        paste0(get_param_names(), " = ", pars, collapse = ", "),
+        subtitle = paste0("crown_age = ", max(brts), ", n_sims = ", n_sims)
+      )
+    ggplot2::ggsave(filename = taxa_plot_filename, plot = taxa_plot)
+
   }
   pc_sim
 }
@@ -689,11 +710,8 @@ cond_prob_p2 <- function(
   # compute conditioning probability
   pc <- 1 + p_m1_m2[1, 1] - sum(p_m1_m2[, 1]) - sum(p_m1_m2[1, ])
 
-  if (!(pc >= 0 && pc <= 1)) {
-    if (debug_mode != TRUE) {
-      stop("problems: pc is wrong!")
-    }
-  } # debug
+  pc <- DDD::roundn(pc, digits = 8)
+  check_pc(pc = pc, debug_mode = debug_mode)
 
   pc
 }
