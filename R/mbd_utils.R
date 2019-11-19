@@ -161,7 +161,7 @@ cut_loglik_from_name <- function(
 get_function_names <- function(
   loglik_functions
 ) {
-  pkg_name <- get_pkg_name() # nolint internal function
+  pkg_name <- mbd::get_pkg_name() # nolint internal function
   fun_list <- ls(paste0("package:", pkg_name))
   error_message <- paste0(
     "This is not a likelihood function provided by ",

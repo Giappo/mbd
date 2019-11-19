@@ -17,10 +17,10 @@ test_that("use", {
   cond <- 1
   n_0 <- 2
   t_0s <- age <- 6
-  loglik_functions <- mbd_loglik
+  loglik_functions <- mbd::mbd_loglik
   optim_ids <- c(TRUE, TRUE, TRUE, TRUE)
   maxit <- 200 # maximum number of subplex iterations
-  test <- mbd_main(
+  test <- mbd::mbd_main(
     seed = seed,
     sim_pars = sim_pars,
     cond = cond,
