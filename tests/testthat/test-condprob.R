@@ -546,7 +546,6 @@ test_that("condprob_select_eq", {
         eq = "sim"
       )
     }
-    # cat("pc_sim is", pc_sim, "\n")
     if (pc_sim > 0.5) {
       right_eq <- "p_eq"
     } else {
@@ -557,7 +556,6 @@ test_that("condprob_select_eq", {
     )[[3]]
     testthat::expect_equal(eq, right_eq)
     testthat::expect_lt(t_select, 300) # select in less than 5 mins
-    # cat("selection time is ", t_select, "\n")
   }
 
 })

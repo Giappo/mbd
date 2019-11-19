@@ -18,7 +18,7 @@ test_that("compare results from bd and mbd in case of nu = q = 0", {
   cond <- 1
   optim_ids <- c(TRUE, TRUE, FALSE, FALSE)
   verbose <- FALSE
-  maxiter <- 100
+  maxiter <- 300
 
   mbd_out <- mbd::mbd_ml(
     start_pars = start_pars,
@@ -26,11 +26,12 @@ test_that("compare results from bd and mbd in case of nu = q = 0", {
     cond = cond,
     n_0 = n_0,
     optim_ids = optim_ids,
+    true_pars = start_pars,
     verbose = verbose,
     maxiter = maxiter
   )
 
-  for (var_name in get_param_names()) { # nolint internal function
+  for (var_name in mbd::get_param_names()) { # nolint internal function
     testthat::expect_true(mbd_out[var_name] >= 0)
   }
   testthat::expect_true(mbd_out$q <= 1)
@@ -66,14 +67,16 @@ test_that("mbd_ml can be silent", {
 
   brts <- c(10, 6, 3)
   optim_ids <- c(FALSE, TRUE, FALSE, FALSE)
+  start_pars <- c(0.2, 0.15, 1, 0.1)
   n_0 <- 2
   cond <- 1
   verbose <- FALSE
   maxiter <- 10
   testthat::expect_silent(
     mbd::mbd_ml(
-      start_pars = c(0.2, 0.15, 1, 0.1),
+      start_pars = start_pars,
       optim_ids = optim_ids,
+      true_pars = start_pars,
       brts = brts,
       cond = cond,
       n_0 = n_0,
@@ -91,13 +94,15 @@ test_that("mbd_ml can produce output", {
 
   brts <- c(10, 5, 2)
   optim_ids <- c(FALSE, TRUE, FALSE, FALSE)
+  start_pars <- c(0.2, 0.15, 1, 0.1)
   n_0 <- 2
   cond <- 1
   verbose <- TRUE
   maxiter <- 10
   output <- utils::capture.output(
     mbd::mbd_ml(
-      start_pars = c(0.2, 0.15, 1, 0.1),
+      start_pars = start_pars,
+      true_pars = start_pars,
       optim_ids = optim_ids,
       brts = brts,
       cond = cond,

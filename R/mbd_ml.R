@@ -57,7 +57,7 @@ mbd_ml <- function(
   q_threshold = 1e-3,
   verbose = TRUE,
   missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + max(missnumspec)), mbd::max_lx()),
+  lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
   maxiter = 10000
 ) {
   # setup and checks

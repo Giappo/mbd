@@ -13,7 +13,7 @@ mbd_loglik <- function(
   n_0 = 2,
   cond = 1,
   missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + max(missnumspec)), mbd::max_lx()),
+  lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
   tips_interval = c(n_0 * (cond > 0), Inf),
   q_threshold = 1e-3,
   debug_mode = FALSE,
@@ -42,7 +42,10 @@ mbd_loglik <- function(
 
   # Calculate conditional probability
   if (cond == 1) {
-    lx_condprob <- min(ceiling(lx / 2), mbd::max_lx_condprob())
+    lx_condprob <- max(
+      20,
+      min(ceiling(lx / 2), mbd::max_lx_condprob())
+    )
     pc <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
