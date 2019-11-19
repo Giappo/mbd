@@ -43,8 +43,11 @@ mbd_loglik <- function(
   # Calculate conditional probability
   if (cond == 1) {
     lx_condprob <- max(
-      20,
-      min(ceiling(lx / 2), mbd::max_lx_condprob())
+      mbd::min_lx_condprob(),
+      min(
+        mbd::max_lx_condprob(),
+        ceiling(lx / 2)
+      )
     )
     pc <- mbd::calculate_condprob(
       pars = pars,

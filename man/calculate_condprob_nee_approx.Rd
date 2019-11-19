@@ -4,8 +4,7 @@
 \alias{calculate_condprob_nee_approx}
 \title{Calculate conditional probability: user mode}
 \usage{
-calculate_condprob_nee_approx(pars, brts, lx = 100, eq = "p_eq",
-  fortran = TRUE)
+calculate_condprob_nee_approx(pars, brts, n = 100)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -17,13 +16,6 @@ calculate_condprob_nee_approx(pars, brts, lx = 100, eq = "p_eq",
 }}
 
 \item{brts}{A set of branching times of a phylogeny.}
-
-\item{lx}{it is the number of ODEs considered for the computation.}
-
-\item{eq}{the equation approach you want to use. It can be "q_eq" for the
-Q-equation of "p_eq" for the P-equation.}
-
-\item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 }
 \description{
 Calculate conditional probability: user mode

@@ -649,6 +649,7 @@ condprob <- function(
   eq,
   parmsvec
 ) {
+
   if (eq == "sim") {
     return(mbd::condprob_sim(
       brts = brts,
@@ -690,6 +691,7 @@ calculate_condprob <- function(
   ),
   fortran = TRUE
 ) {
+
   mbd::condprob(
     brts = brts,
     fortran = fortran,
@@ -711,18 +713,16 @@ calculate_condprob <- function(
 calculate_condprob_nee_approx <- function(
   pars,
   brts,
-  lx = 100,
-  eq = "p_eq",
-  fortran = TRUE
+  n = 100
 ) {
-  rm(eq)
-  rm(fortran)
-  nvec <- 1:lx
+
+  nvec <- 1:n
   pc <- mbd::p_t(
     lambda = pars[1] + pars[3] * sum(pars[4] ^ nvec),
     mu = pars[2],
     t = max(abs(brts))
   ) ^ 2
+
   pc
 }
 
@@ -819,6 +819,7 @@ condprob_selector_middle <- function(
 
 #' Selects the best eq for condprob
 #' @inheritParams default_params_doc
+#' @param n maximum number of simultaneous speciations to consider
 #' @author Giovanni Laudanno
 #' @export
 condprob_select_eq <- function(
@@ -830,7 +831,7 @@ condprob_select_eq <- function(
   pc <- mbd::calculate_condprob_nee_approx(
     pars = pars,
     brts = brts,
-    lx = 100
+    n = 100
   )
   pc_tolerance <- 0.1
   if (pc < (0.5 + pc_tolerance) && pc > (0.5 - pc_tolerance)) {

@@ -2,10 +2,10 @@
 % Please edit documentation in R/mbd_loglik_utils.R
 \name{max_lx_condprob}
 \alias{max_lx_condprob}
-\title{Maximum allowed value for lx}
+\title{Maximum allowed value for lx in condprob}
 \usage{
 max_lx_condprob()
 }
 \description{
-Maximum allowed value for lx
+Maximum allowed value for lx in condprob
 }
