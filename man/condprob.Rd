@@ -4,7 +4,8 @@
 \alias{condprob}
 \title{Calculate conditional probability: loglik mode}
 \usage{
-condprob(brts, fortran = TRUE, lx, eq, parmsvec)
+condprob(brts, fortran = TRUE, lx, eq = mbd::condprob_select_eq(pars =
+  pars, brts = brts, lx = lx, fortran = fortran), parmsvec)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}

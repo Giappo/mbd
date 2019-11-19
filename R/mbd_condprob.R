@@ -646,7 +646,12 @@ condprob <- function(
   brts,
   fortran = TRUE,
   lx,
-  eq,
+  eq = mbd::condprob_select_eq(
+    pars = pars,
+    brts = brts,
+    lx = lx,
+    fortran = fortran
+  ),
   parmsvec
 ) {
   if (eq == "sim") {
@@ -683,7 +688,12 @@ calculate_condprob <- function(
   pars,
   brts,
   lx,
-  eq,
+  eq = mbd::condprob_select_eq(
+    pars = pars,
+    brts = brts,
+    lx = lx,
+    fortran = fortran
+  ),
   fortran = TRUE
 ) {
   mbd::condprob(
@@ -877,7 +887,7 @@ selector2 <- function(
     ) {
       delta_lx <- max(ceiling(lx_stepsize / lx), 1)
       lx <- lx + delta_lx
-      cat("lx =", lx, "\n")
+      # cat("lx =", lx, "\n")
       pc2_q <- mbd::condprob(
         brts = brts,
         fortran = fortran,
@@ -906,14 +916,14 @@ selector2 <- function(
       )
       der_p <- (pc2_p - pc1_p) / delta_lx
       der_q <- (pc2_q - pc1_q) / delta_lx
-      cat("pc_q =", abs(pc2_q), "\n")
-      cat("pc_p =", abs(pc2_p), "\n")
-      cat("der_q =", abs(der_q), "\n")
-      cat("der_p =", abs(der_p), "\n")
+      # cat("pc_q =", abs(pc2_q), "\n")
+      # cat("pc_p =", abs(pc2_p), "\n")
+      # cat("der_q =", abs(der_q), "\n")
+      # cat("der_p =", abs(der_p), "\n")
       distance_p <- 1 - pc2_p
       distance_q <- pc2_q
-      cat("distance_q =", distance_q, "\n")
-      cat("distance_p =", distance_p, "\n")
+      # cat("distance_q =", distance_q, "\n")
+      # cat("distance_p =", distance_p, "\n")
       pc1_p_stored <- pc1_p
       pc1_q_stored <- pc1_q
       pc1_p <- pc2_p
@@ -1040,7 +1050,7 @@ selector5 <- function(
   pc_p <- pc_q <- rep(0, length(lx_seq))
   for (l in seq_along(lx_seq)) {
     lx <- lx_seq[l]
-    cat("lx =", lx, "\n")
+    # cat("lx =", lx, "\n")
     pc_q[l] <- mbd::condprob(
       brts = brts,
       fortran = fortran,
@@ -1125,8 +1135,9 @@ selector_hybrid <- function(
   if (pc < (0.5 + pc_tolerance) && pc > (0.5 - pc_tolerance)) {
     dist <- (1 / pc_tolerance) * abs(pc - 0.5)
     dist <- dist ^ 2
-    lx_min <- 30
-    lx_max <- 70
+    t_crown <- max(abs(brts))
+    lx_min <- min(13 + 2 * t_crown, 24)
+    lx_max <- min(31 + 2 * t_crown, 45)
     eq <- mbd::selector5(
       pars = pars,
       brts = brts,
