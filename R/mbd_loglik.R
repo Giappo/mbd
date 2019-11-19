@@ -53,7 +53,6 @@ mbd_loglik <- function(
       eq = mbd::condprob_select_eq(
         pars = pars,
         brts = brts,
-        lx = lx_condprob,
         fortran = fortran
       ),
       fortran = fortran

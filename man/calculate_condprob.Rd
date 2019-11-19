@@ -5,7 +5,7 @@
 \title{Calculate conditional probability: user mode}
 \usage{
 calculate_condprob(pars, brts, lx, eq = mbd::condprob_select_eq(pars =
-  pars, brts = brts, lx = lx, fortran = fortran), fortran = TRUE)
+  pars, brts = brts, fortran = fortran), fortran = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:

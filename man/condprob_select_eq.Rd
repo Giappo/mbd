@@ -4,7 +4,7 @@
 \alias{condprob_select_eq}
 \title{Selects the best eq for condprob}
 \usage{
-condprob_select_eq(pars, brts, lx, fortran = TRUE)
+condprob_select_eq(pars, brts, fortran = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -16,8 +16,6 @@ condprob_select_eq(pars, brts, lx, fortran = TRUE)
 }}
 
 \item{brts}{A set of branching times of a phylogeny.}
-
-\item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 }
