@@ -1,11 +1,13 @@
 context("mbd_utils")
 
+# get_pkg_name -----
 test_that("get_pkg_name", {
   testthat::expect_true(
     get_pkg_name() == "mbd"
   )
 })
 
+# get_function_names -----
 test_that("get_function_names", {
   # use
   testthat::expect_true(
@@ -76,6 +78,7 @@ test_that("get_function_names", {
   )
 })
 
+# get_model_names -----
 test_that("get_model_names", {
   # use
   testthat::expect_silent(
@@ -105,6 +108,7 @@ test_that("get_model_names", {
   )
 })
 
+# cat2 -----
 test_that("cat2", {
   testthat::expect_output(
     mbd::cat2(
@@ -112,8 +116,15 @@ test_that("cat2", {
       verbose = TRUE
     )
   )
+  testthat::expect_silent(
+    mbd::cat2(
+      message = "test",
+      verbose = FALSE
+    )
+  )
 })
 
+# print_info -----
 test_that("print_info", {
   brts <- c(3, 2, 1)
   n_0 <- 2
@@ -147,6 +158,7 @@ test_that("print_info", {
   )
 })
 
+# mbd_logliks_experiment -----
 test_that("mbd_logliks_experiment", {
   loglik_func <- get(
     mbd::mbd_logliks_experiment()
@@ -159,4 +171,34 @@ test_that("mbd_logliks_experiment", {
       )
     )
   )
+})
+
+# count_percentage_mb_events -----
+test_that("count_percentage_mb_events", {
+
+  brts <- c(10, 8, 7, 7, 7, 5, 3, 3, 3, 3)
+  percentage <- mbd::count_percentage_mb_events(brts = brts)
+  testthat::expect_true(
+    percentage >= 0 && percentage <= 1
+  )
+
+})
+
+# count_n_mb_events -----
+test_that("count_n_mb_events", {
+
+  brts <- c(10, 8, 7, 7, 7, 5, 3, 3, 3, 3)
+  number_of_events <- mbd::count_n_mb_events(brts = brts)
+  testthat::expect_true(number_of_events >= 0)
+
+})
+
+# file_path -----
+test_that("file_path", {
+
+  testthat::expect_equal(
+    mbd::file_path("pippo", "/baudo"), # nolint indeed the test I need
+    "pippo/baudo"
+  )
+
 })
