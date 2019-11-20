@@ -18,8 +18,6 @@ condprob_select_eq(pars, brts, fortran = TRUE)
 \item{brts}{A set of branching times of a phylogeny.}
 
 \item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
-
-\item{n}{maximum number of simultaneous speciations to consider}
 }
 \description{
 Selects the best eq for condprob

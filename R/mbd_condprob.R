@@ -856,3 +856,33 @@ condprob_select_eq <- function(
   }
   eq
 }
+
+# Condprob utils ----
+
+#' Maximum allowed value for lx in condprob
+#' @export
+max_lx_condprob <- function() {
+  max_lx <- 200
+  max_lx
+}
+
+#' Minimum allowed value for lx in condprob
+#' @export
+min_lx_condprob <- function() {
+  min_lx <- 20
+  min_lx
+}
+
+#' Fix the value for lx for condprob in \link{mbd_loglik}
+#' @inheritParams default_params_doc
+#' @export
+get_lx_condprob <- function(lx) {
+  lx_condprob <- max(
+    mbd::min_lx_condprob(),
+    min(
+      mbd::max_lx_condprob(),
+      ceiling(lx / 2)
+    )
+  )
+  lx_condprob
+}

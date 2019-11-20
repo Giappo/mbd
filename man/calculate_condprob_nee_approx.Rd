@@ -17,7 +17,7 @@ calculate_condprob_nee_approx(pars, brts, n = 100)
 
 \item{brts}{A set of branching times of a phylogeny.}
 
-\item{n}{maximum number of species that can speciate at the same time}
+\item{n}{maximum number of simultaneous speciations to consider}
 }
 \description{
 Calculate conditional probability using an approximation based on Nee et al.

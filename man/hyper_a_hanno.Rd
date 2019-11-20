@@ -23,7 +23,7 @@ It produces the structure
  sum_j 2 ^ j choose(k, j) * choose(n, m - n - j)
 }
 \examples{
-  m <- hyper_a_hanno(n_species = 2, k = 2, q = 0.1)
+  m <- mbd::hyper_a_hanno(n_species = 2, k = 2, q = 0.1)
   testthat::expect_equal(m[1, 1], 0.81)
   testthat::expect_equal(m[1, 2], 0.00)
   testthat::expect_equal(m[1, 3], 0.00)
