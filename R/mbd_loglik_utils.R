@@ -360,3 +360,49 @@ deliver_loglik <- function(
   }
   loglik
 }
+
+#' Initialize the vector q_t for \link{mbd_loglik}
+#' @inheritParams default_params_doc
+#' @param lt length of time intervals vector
+#' @export
+initialize_q_t <- function(
+  lx,
+  lt
+) {
+  q_i <- c(1, rep(0, lx))
+  q_t <- matrix(0, ncol = (lx + 1), nrow = lt)
+  q_t[1, ] <- q_i
+  dimnames(q_t)[[2]] <- paste0("Q", 0:lx)
+  q_t
+}
+
+#' Test for pure birth in \link{mbd_loglik}
+#' @inheritParams default_params_doc
+#' @export
+is_pbd <- function(
+  pars,
+  tips_interval,
+  cond,
+  missnumspec,
+  n_0
+) {
+  is_it_pure_birth <-
+    pars[2] == 0 &&
+    all(tips_interval == c(n_0 * (cond > 0), Inf)) &&
+    missnumspec == 0
+  is_it_pure_birth
+}
+
+#' Fix the value for lx for condprob in \link{mbd_loglik}
+#' @inheritParams default_params_doc
+#' @export
+get_lx_condprob <- function(lx) {
+  lx_condprob <- max(
+    mbd::min_lx_condprob(),
+    min(
+      mbd::max_lx_condprob(),
+      ceiling(lx / 2)
+    )
+  )
+  lx_condprob
+}

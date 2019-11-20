@@ -706,8 +706,9 @@ calculate_condprob <- function(
   )
 }
 
-#' Calculate conditional probability: user mode
+#' Calculate conditional probability using an approximation based on Nee et al.
 #' @inheritParams default_params_doc
+#' @param n maximum number of simultaneous speciations to consider
 #' @author Giovanni Laudanno
 #' @export
 calculate_condprob_nee_approx <- function(
@@ -819,7 +820,6 @@ condprob_selector_middle <- function(
 
 #' Selects the best eq for condprob
 #' @inheritParams default_params_doc
-#' @param n maximum number of simultaneous speciations to consider
 #' @author Giovanni Laudanno
 #' @export
 condprob_select_eq <- function(
@@ -833,6 +833,7 @@ condprob_select_eq <- function(
     brts = brts,
     n = 100
   )
+
   pc_tolerance <- 0.1
   if (pc < (0.5 + pc_tolerance) && pc > (0.5 - pc_tolerance)) {
     dist <- (1 / pc_tolerance) * abs(pc - 0.5)

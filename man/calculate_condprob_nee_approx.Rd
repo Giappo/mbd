@@ -2,7 +2,7 @@
 % Please edit documentation in R/mbd_condprob.R
 \name{calculate_condprob_nee_approx}
 \alias{calculate_condprob_nee_approx}
-\title{Calculate conditional probability: user mode}
+\title{Calculate conditional probability using an approximation based on Nee et al.}
 \usage{
 calculate_condprob_nee_approx(pars, brts, n = 100)
 }
@@ -16,9 +16,11 @@ calculate_condprob_nee_approx(pars, brts, n = 100)
 }}
 
 \item{brts}{A set of branching times of a phylogeny.}
+
+\item{n}{maximum number of species that can speciate at the same time}
 }
 \description{
-Calculate conditional probability: user mode
+Calculate conditional probability using an approximation based on Nee et al.
 }
 \author{
 Giovanni Laudanno
