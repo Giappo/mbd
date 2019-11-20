@@ -57,14 +57,14 @@ mbd_ml <- function(
   q_threshold = 1e-3,
   verbose = TRUE,
   missnumspec = 0,
-  lx = min(1 + 2 * (length(brts) + max(missnumspec)), max_lx()),
-  maxit = 10000
+  lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
+  maxiter = 10000
 ) {
   # setup and checks
   if (true_pars[3] == 0 | true_pars[4] == 0) {
     q_threshold <- 0
   }
-  par_names <- get_param_names() # nolint internal function
+  par_names <- mbd::get_param_names()
   testit::assert(length(optim_ids) == length(start_pars))
   testit::assert(length(true_pars) == length(start_pars))
   start_pars[!optim_ids] <- true_pars[!optim_ids]
@@ -121,7 +121,7 @@ mbd_ml <- function(
   out <- subplex::subplex(
     par = tr_start_pars,
     fn = function(x) optim_fun(x),
-    control = list(maxit = maxit)
+    control = list(maxit = maxiter)
   )
 
   # report missed convergence

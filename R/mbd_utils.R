@@ -197,11 +197,11 @@ get_function_names <- function(
       stop(error_message)
     }
     function_names[m] <- toString(fun_list[which_function[m]])
-    model_names[m] <- cut_loglik_from_name(function_names[m]) # nolint internal function
+    model_names[m] <- mbd::cut_loglik_from_name(function_names[m])
   }
   function_names <- fun_list[which_function]
   model_names <- unname(
-    sapply(function_names, FUN = cut_loglik_from_name) # nolint internal function
+    sapply(function_names, FUN = mbd::cut_loglik_from_name) # nolint internal function
   )
   if (any(is.na(model_names))) {
     stop(error_message)

@@ -35,7 +35,7 @@ check_pars <- function(
   }
 
   # standard checks
-  if (length(pars) != length(get_param_names())) {
+  if (length(pars) != length(mbd::get_param_names())) {
     stop("'pars' must have a length of four.")
   }
   if (any(is.nan(pars))) {
@@ -69,7 +69,7 @@ check_brts <- function(
   brts,
   n_0
 ) {
-  check_n_0(n_0 = n_0)
+  mbd::check_n_0(n_0 = n_0)
   if (sum(brts == max(brts)) > 1) {
     stop("Crown/stem age has to be reported only once in the branching times.")
   }
@@ -97,8 +97,8 @@ check_cond <- function(
   tips_interval,
   n_0
 ) {
-  check_n_0(n_0 = n_0)
-  if (!(cond %in% mbd_conds())) {
+  mbd::check_n_0(n_0 = n_0)
+  if (!(cond %in% mbd::mbd_conds())) {
     stop("This conditioning is not implemented.")
   }
   if (tips_interval[2] < tips_interval[1]) {
@@ -201,7 +201,7 @@ check_pc <- function(pc, debug_mode = FALSE) {
 #' @author Giovanni Laudanno
 #' @export
 check_condprob_eq <- function(eq) {
-  if (!(eq %in% mbd_condprob_eqs())) {
+  if (!(eq %in% mbd::mbd_condprob_eqs())) {
     stop("It is either Q- or P-equation! (or use sims)")
   }
   return()

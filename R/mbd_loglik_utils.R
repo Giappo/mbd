@@ -1,24 +1,4 @@
-#' My version of tryCatch
-#' @inheritParams default_params_doc
-#' @export
-my_try_catch <- function(expr) {
-  warn <- err <- NULL
-  value <- withCallingHandlers(
-    tryCatch(
-      expr, error = function(e) {
-      err <<- e
-      NULL
-    }
-    ), warning = function(w) {
-      warn <<- w
-      invokeRestart("muffleWarning")
-    })
-  list(
-    value = value,
-    warning = warn,
-    error = err
-  )
-}
+# Tools to calculate the likelihood -----
 
 #' Function to build a matrix, used in creating the A and B operators.
 #' It produces the structure
@@ -26,7 +6,7 @@ my_try_catch <- function(expr) {
 #'  sum_j 2 ^ j choose(k, j) * choose(n, m - n - j)
 #' @inheritParams default_params_doc
 #' @examples
-#'   m <- hyper_a_hanno(n_species = 2, k = 2, q = 0.1)
+#'   m <- mbd::hyper_a_hanno(n_species = 2, k = 2, q = 0.1)
 #'   testthat::expect_equal(m[1, 1], 0.81)
 #'   testthat::expect_equal(m[1, 2], 0.00)
 #'   testthat::expect_equal(m[1, 3], 0.00)
@@ -202,13 +182,39 @@ mbd_loglik_rhs <- function(t, x, params) {
   list(params %*% x)
 }
 
+# Utility tools -----
+
+#' Maximum allowed value for lx
+#' @export
+max_lx <- function() {
+  maximum_lx <- 1400
+  maximum_lx
+}
+
+#' Test for pure birth in \link{mbd_loglik}
+#' @inheritParams default_params_doc
+#' @export
+is_pbd <- function(
+  pars,
+  tips_interval,
+  cond,
+  missnumspec,
+  n_0
+) {
+  is_it_pure_birth <-
+    pars[2] == 0 &&
+    all(tips_interval == c(n_0 * (cond > 0), Inf)) &&
+    missnumspec == 0
+  is_it_pure_birth
+}
+
 #' Approximate the branching times to a fixed resolution. Events separated by
 #'  a time smaller than 10^-brts_precision can be considered simultaneous
 #' @inheritParams default_params_doc
 #' @export
 approximate_brts <- function(
   brts,
-  brts_precision
+  brts_precision = 8
 ) {
   brts <- DDD::roundn(brts, digits = brts_precision)
   brts[brts <= 10 ^ (-brts_precision)] <- 10 ^ (-brts_precision)
@@ -271,11 +277,19 @@ brts2time_intervals_and_births <- function(
   )
 }
 
-#' Maximum allowed value for lx
+#' Initialize the vector q_t for \link{mbd_loglik}
+#' @inheritParams default_params_doc
+#' @param lt length of time intervals vector
 #' @export
-max_lx <- function() {
-  maximum_lx <- 1400
-  maximum_lx
+initialize_q_t <- function(
+  lx,
+  lt
+) {
+  q_i <- c(1, rep(0, lx))
+  q_t <- matrix(0, ncol = (lx + 1), nrow = lt)
+  q_t[1, ] <- q_i
+  dimnames(q_t)[[2]] <- paste0("Q", 0:lx)
+  q_t
 }
 
 #' Check the vectors of probability sums computed during likelihood integration

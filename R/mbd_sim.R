@@ -92,12 +92,12 @@ mbd_sim <- function(
     }
     l_matrix <- l_matrix[1:total_count, ]
     dim(l_matrix) <- c(total_count, 4)
-    l_matrix[, 1] <- approximate_brts(
+    l_matrix[, 1] <- mbd::approximate_brts(
       brts = l_matrix[, 1],
       brts_precision = brts_precision
     )
 
-    keep_the_sim <- evaluate_sim(
+    keep_the_sim <- mbd::evaluate_sim(
       l_matrix = l_matrix,
       cond = cond,
       n_0 = n_0,
@@ -105,7 +105,7 @@ mbd_sim <- function(
       pool = pool
     )
   }
-  info <- get_info_l_matrix(
+  info <- mbd::get_info_l_matrix(
     l_matrix = l_matrix,
     brts_precision = brts_precision
   )

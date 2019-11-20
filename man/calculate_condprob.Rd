@@ -4,7 +4,8 @@
 \alias{calculate_condprob}
 \title{Calculate conditional probability: user mode}
 \usage{
-calculate_condprob(pars, brts, lx, eq, fortran = TRUE)
+calculate_condprob(pars, brts, lx, eq = mbd::condprob_select_eq(pars =
+  pars, brts = brts, fortran = fortran), fortran = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:

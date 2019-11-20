@@ -133,12 +133,12 @@ test_that("pmb_loglik is called correctly by mbd_loglik", {
   n_0 <- 2
 
   testthat::expect_equal(
-    pmb <- mbd::pmb_loglik(
+    mbd::pmb_loglik(
       pars = pars,
       brts = brts,
       n_0 = n_0
     ),
-    mbd <- mbd::mbd_loglik(
+    mbd::mbd_loglik(
       pars = pars,
       brts = brts,
       n_0 = n_0,

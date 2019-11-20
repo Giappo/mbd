@@ -11,6 +11,7 @@ Imports:
   deSolve,
   ggplot2,
   subplex,
+  stats,
   testit
 Suggests:
   ape,
@@ -21,7 +22,7 @@ Suggests:
   rmarkdown, 
   testthat
 Description: 
-    Multiple Birth Death Diversification.
+  Multiple Birth Death Diversification.
 License: GPL-3 | file LICENSE
 Encoding: UTF-8
 LazyData: true

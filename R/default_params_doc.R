@@ -85,8 +85,8 @@
 #' @param max_number_of_species something
 #' @param max_repetitions something
 #' @param max_sims something
-#' @param maxiter something
 #' @param maxit maximum number of subplex iterations
+#' @param maxiter maximum number of subplex iterations
 #' @param mbd_lambda something
 #' @param message a message
 #' @param methode
@@ -177,6 +177,7 @@
 #'   \item id == 4 corresponds to q (single-lineage speciation probability)
 #' }
 #' @param sim_phylo something
+#' @param starting_seed the seed to start from
 #' @param subsamp something
 #' @param sum_probs_1 vector of probability sums
 #' @param sum_probs_2 vector of probability sums
@@ -346,6 +347,7 @@ default_params_doc <- function(
   sim_pars,
   sim_phylo,
   start_pars,
+  starting_seed,
   subsamp,
   sum_probs_1,
   sum_probs_2,

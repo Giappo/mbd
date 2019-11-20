@@ -5,7 +5,7 @@
 \title{Approximate the branching times to a fixed resolution. Events separated by
  a time smaller than 10^-brts_precision can be considered simultaneous}
 \usage{
-approximate_brts(brts, brts_precision)
+approximate_brts(brts, brts_precision = 8)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}

@@ -7,8 +7,8 @@
 mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
   tips_interval = c(n_0 * (cond > 0), Inf), seed, start_pars = c(0.3,
   0.1, 1.5, 0.15), optim_ids = rep(TRUE, length(start_pars)),
-  loglik_functions = mbd_loglik, project_folder = NULL,
-  verbose = FALSE, q_threshold = 1e-04, maxit = 10000)
+  loglik_functions = mbd::mbd_loglik, project_folder = NULL,
+  verbose = FALSE, q_threshold = 1e-04, maxiter = 10000)
 }
 \arguments{
 \item{sim_pars}{vector of parameters:
@@ -50,7 +50,7 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 \item{q_threshold}{adds a threshold for the evaluation of q. This is due
 because you never want \code{q} to actually be equal to zero or one.}
 
-\item{maxit}{maximum number of subplex iterations}
+\item{maxiter}{maximum number of subplex iterations}
 }
 \description{
 Simulate an mbd process and infer parameters maximizing the

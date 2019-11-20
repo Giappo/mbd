@@ -44,7 +44,7 @@ test_that("right conditioning", {
       brts = brts,
       n_0 = n_0,
       cond = cond,
-      lx = 100 + is_on_ci() * 200
+      lx = 100 + is_on_ci() * 20
     ),
     DDD::bd_loglik(
       pars1 = pars[1:3],
@@ -52,84 +52,6 @@ test_that("right conditioning", {
       brts = brts,
       missnumspec = 0
     ),
-    tolerance = 1e-2 * (!is_on_ci()) + 1e-5 * (is_on_ci())
-  )
-})
-
-# abuse ----
-test_that("abuse", {
-
-  testthat::expect_error(
-    mbd::mbd_loglik(
-      pars = c(0.1), # Too few
-      brts = c(1, 2, 3),
-      n_0 = 2, # Crown age
-      cond = 1  # Non extinction of the phylogeny
-    ),
-    "'pars' must have a length of four"
-  )
-
-  testthat::expect_error(
-    mbd::mbd_loglik(
-      pars = c(NaN, 0.15, 2.0, 0.1),
-      brts = c(1, 2, 3),
-      n_0 = 2, # Crown age
-      cond = 1  # Non extinction of the phylogeny
-    ),
-    "'pars' cannot contain NaNs"
-  )
-  testthat::expect_equal(
-    mbd::mbd_loglik(
-      pars = c(Inf, 0.15, 2.0, 0.1),
-      brts = c(1, 2, 3),
-      n_0 = 2,
-      cond = 1
-    ),
-    -Inf
-  )
-  testthat::expect_equal(
-    mbd::mbd_loglik(
-      pars = c(-12.34, 0.15, 2.0, 0.1),
-      brts = c(1, 2, 3),
-      n_0 = 2,
-      cond = 1
-    ),
-    -Inf
-  )
-  testthat::expect_equal(
-    mbd::mbd_loglik(
-      pars = c(0.2, -12.34, 2.0, 0.1),
-      brts = c(1, 2, 3),
-      n_0 = 2,
-      cond = 1
-    ),
-    -Inf
-  )
-  testthat::expect_equal(
-    mbd::mbd_loglik(
-      pars = c(0.2, 0.15, -12.34, 0.1),
-      brts = c(1, 2, 3),
-      n_0 = 2,
-      cond = 1
-    ),
-    -Inf
-  )
-  testthat::expect_equal(
-    mbd::mbd_loglik(
-      pars = c(0.2, 0.15, 2.0, -12.34),
-      brts = c(1, 2, 3),
-      n_0 = 2,
-      cond = 1
-    ),
-    -Inf
-  )
-  testthat::expect_equal(
-    mbd::mbd_loglik(
-      pars = c(0.2, 0.15, 2.0, 12.34),
-      brts = c(1, 2, 3),
-      n_0 = 2,
-      cond = 1
-    ),
-    -Inf
+    tolerance = 1e-2 * (!is_on_ci()) + 1e-4 * (is_on_ci())
   )
 })
