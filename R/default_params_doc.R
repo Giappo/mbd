@@ -68,6 +68,7 @@
 #' @param log_nu_mat logarithmic nu-matrix, used for condprob
 #' @param log_q_mat logarithmic q-matrix, used for condprob
 #' @param lx it is the number of ODEs considered for the computation.
+#' @param lx_condprob_fun function to determine the right lx for condprob
 #' @param lx0 something
 #' @param lx_top maximum lx to produce pre-calculated matrices for condprob
 #' @param m1 a matrix keeping track of columns
@@ -169,6 +170,9 @@
 #' @param sample_interval something
 #' @param seed the seed
 #' @param sequence_length something
+#' @param ml_sequence defines the sequence of the (increasing) accuracy
+#'  steps of the ml algorithm. Set it to c(1) (or just 1) if you just want to
+#'  use the fast algorithm.
 #' @param sim the results of a sim run
 #' @param sim_pars vector of starting parameters:
 #' \itemize{
@@ -274,6 +278,7 @@ default_params_doc <- function(
   lx,
   lx0,
   lx_top,
+  lx_condprob_fun,
   m1,
   m2,
   m1_mat,
@@ -350,6 +355,7 @@ default_params_doc <- function(
   seed,
   sample_interval,
   sequence_length,
+  ml_sequence,
   sim,
   sim_pars,
   sim_phylo,

@@ -370,3 +370,17 @@ get_pars_filename <- function(
 
   pars_filename
 }
+
+#' Estimate approximately the expected number of taxa
+#' @inheritParams default_params_doc
+#' @return a list with mean and standard deviation
+#' @export
+estimate_n_taxa <- function(pars, n_0, age) {
+  nee_pars <- mbd::get_nee_pars(pars = pars)
+  nee_mean <- mbd::nee_mean_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
+  nee_stdev <- mbd::nee_stdev_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
+  list(
+    mean = nee_mean,
+    stdev = nee_stdev
+  )
+}

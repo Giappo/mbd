@@ -26,7 +26,7 @@
 #' crown_age <- 1
 #' cond <- 1
 #' n_0 <- 2
-#' sim <- mbd_sim(
+#' sim <- mbd::mbd_sim(
 #'  pars = sim_pars,
 #'  n_0 = n_0, # Use a crown age
 #'  age = crown_age,
@@ -46,18 +46,19 @@
 #' )
 #' @export
 mbd_ml <- function(
-  loglik_function = mbd_loglik,
+  loglik_function = mbd::mbd_loglik,
   brts,
   start_pars = c(0.5, 0.3, 0.5, 0.3),
   n_0 = 2,
   cond = 1,
-  optim_ids = rep(TRUE, length(start_pars)),
-  true_pars = start_pars,
-  tips_interval = c(0, Inf),
-  q_threshold = 1e-3,
-  verbose = TRUE,
   missnumspec = 0,
   lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
+  ml_sequence = c(1),
+  optim_ids = rep(TRUE, length(start_pars)),
+  true_pars = start_pars,
+  tips_interval = c(n_0 * (cond > 0), Inf),
+  q_threshold = 1e-3,
+  verbose = TRUE,
   maxiter = 10000
 ) {
   # setup and checks
@@ -76,69 +77,112 @@ mbd_ml <- function(
   failout  <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
   colnames(failout) <- out_names
 
-  # define function to optimize
-  optim_fun <- function(tr_optim_pars) {
-    pars2 <- rep(0, length(start_pars))
-    optim_pars <- mbd::pars_transform_back(tr_optim_pars) # nolint internal function
-    pars2[optim_ids] <- optim_pars
-    pars2[!optim_ids] <- true_pars[!optim_ids]
-
-    out <- -loglik_function(
-      pars = pars2,
-      brts = brts,
-      cond = cond,
-      n_0 = n_0,
-      q_threshold = q_threshold,
-      lx = lx,
-      missnumspec = missnumspec
-    )
-    if (verbose == TRUE) {
-      printed_values <- paste0(
-        c(par_names, "loglik"),
-        " = ",
-        signif(c(pars2, -out), digits = 5)
-      )
-      print_this <- paste(printed_values, sep = ",")
-      cat(print_this, "\n")
-    }
-    out
-  }
-
-  # initial likelihood
-  tr_start_pars <- rep(0, length(start_pars))
-  tr_start_pars <- mbd::pars_transform_forward(start_pars[optim_ids]) # nolint internal function
-  initloglik <- -optim_fun(tr_start_pars)
-  utils::flush.console()
-  if (initloglik == -Inf) {
-    cat(
-      message = "The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n" # nolint
-    )
-    out2 <- failout
-    return(invisible(out2))
-  }
-
-  # maximum likelihood
-  out <- subplex::subplex(
-    par = tr_start_pars,
-    fn = function(x) optim_fun(x),
-    control = list(maxit = maxiter)
+  # split maxiter
+  ml_sequence <- ml_sequence / sum(ml_sequence)
+  lx_vec <- sort(ceiling(lx * (2 / 3) ^ (seq_along(ml_sequence) - 1)))
+  first_half_runs <- min(ceiling(length(ml_sequence) / 2), 1)
+  second_half_runs <- length(ml_sequence) - first_half_runs
+  speed_vec <- c(
+    rep("fast", first_half_runs),
+    rep("slow", second_half_runs)
   )
+  out_list <- vector("list", length(ml_sequence))
 
-  # report missed convergence
-  if (out$conv > 0) {
-    cat2(
-      "Optimization has not converged. Try again with different initial values.\n", # nolint
-      verbose = verbose
+  for (nn in seq_along(ml_sequence)) {
+
+    ml_step <- ml_sequence[nn]
+    speed <- speed_vec[nn]
+
+    # define function to optimize for the n-th run
+    if (speed == "fast") {
+      lx_condprob_fun_nn <- mbd::get_lx_condprob_fast
+    } else {
+      lx_condprob_fun_nn <- mbd::get_lx_condprob_slow
+    }
+    lx_nn <- lx_vec[nn]
+    maxiter_nn <- ceiling(maxiter * ml_step)
+
+    optim_fun_nn <- function(tr_optim_pars) {
+      pars2 <- rep(0, length(start_pars))
+      optim_pars <- mbd::pars_transform_back(tr_optim_pars)
+      pars2[optim_ids] <- optim_pars
+      pars2[!optim_ids] <- true_pars[!optim_ids]
+
+      out <- -loglik_function(
+        pars = pars2,
+        brts = brts,
+        cond = cond,
+        n_0 = n_0,
+        q_threshold = q_threshold,
+        lx = lx_nn,
+        lx_condprob_fun = lx_condprob_fun_nn,
+        missnumspec = missnumspec
+      )
+      if (verbose == TRUE) {
+        printed_values <- paste0(
+          c(par_names, "loglik"),
+          " = ",
+          signif(c(pars2, -out), digits = 5)
+        )
+        print_this <- paste(printed_values, sep = ",")
+        cat(print_this, "\n")
+      }
+      out
+    }
+
+    if (nn == 1) {
+      # initial likelihood
+      tr_start_pars <- rep(0, length(start_pars))
+      tr_start_pars <- mbd::pars_transform_forward(start_pars[optim_ids]) # nolint internal function
+      initloglik <- -optim_fun_nn(tr_start_pars)
+      utils::flush.console()
+      if (initloglik == -Inf) {
+        cat(
+          message = "The initial parameter values have a likelihood that is equal to 0 or below machine precision. Try again with different initial values.\n" # nolint
+        )
+        out_final <- failout
+        return(invisible(out_final))
+      }
+      tr_start_pars_nn <- tr_start_pars
+    }
+
+    # maximum likelihood n-th
+    out_nn <- subplex::subplex(
+      par = tr_start_pars_nn,
+      fn = optim_fun_nn,
+      control = list(maxit = maxiter_nn)
     )
-    out2 <- data.frame(
-      t(failpars),
-      loglik = -1,
-      df = -1,
-      conv = unlist(out$conv)
-    )
-    names(out2) <- out_names
-    return(invisible(out2))
+    out_list[[nn]] <- out_nn
+
+    # report missed convergence
+    if (out_nn$conv > 0) {
+      cat2(
+        "Optimization has not converged. Try again with different initial values.\n", # nolint
+        verbose = verbose
+      )
+      out_final <- data.frame(
+        t(failpars),
+        loglik = -1,
+        df = -1,
+        conv = unlist(out_nn$conv)
+      )
+      names(out_final) <- out_names
+      return(invisible(out_final))
+    }
+
+    # update starting parameters
+    tr_start_pars_nn <- out_nn$par
   }
+
+  # store output
+  likelihoods <- rep(NA, length(ml_sequence))
+  for (nn in seq_along(ml_sequence)) {
+    temp <- capture.output(likelihoods[nn] <- -optim_fun_nn(out_list[[nn]]$par))
+  }
+  rm(temp)
+  the_max <- max(which(likelihoods == max(likelihoods)))
+  out <- out_list[[the_max]]
+  out$value <- -likelihoods[the_max]
 
   # return mle results
   outpars <- rep(0, length(start_pars))
@@ -148,7 +192,7 @@ mbd_ml <- function(
   outpars[!optim_ids] <- true_pars[!optim_ids]
   names(outpars) <- par_names
 
-  out2 <- data.frame(
+  out_final <- data.frame(
     row.names = NULL,
     outpars[1],
     outpars[2],
@@ -158,6 +202,6 @@ mbd_ml <- function(
     sum(optim_ids),
     unlist(out$conv)
   )
-  names(out2) <- out_names
-  return(out2)
+  names(out_final) <- out_names
+  out_final
 }

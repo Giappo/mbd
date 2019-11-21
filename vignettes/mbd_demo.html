@@ -12,7 +12,7 @@
 
 <meta name="author" content="Giovanni Laudanno and Richel J.C. Bilderbeek" />
 
-<meta name="date" content="2019-09-04" />
+<meta name="date" content="2019-11-21" />
 
 <title>Using mbd</title>
 
@@ -20,9 +20,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -32,16 +32,14 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -50,9 +48,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -305,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Using mbd</h1>
 <h4 class="author">Giovanni Laudanno and Richel J.C. Bilderbeek</h4>
-<h4 class="date">2019-09-04</h4>
+<h4 class="date">2019-11-21</h4>
 
 
 
@@ -324,72 +322,52 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="setup" class="section level2">
 <h2>2. Setup</h2>
 <p>We will need to load the package:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># devtools::install_github(&quot;Giappo/mbd&quot;, quiet = TRUE)</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">library</span>(mbd)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># devtools::install_github(&quot;Giappo/mbd&quot;, quiet = TRUE)</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(mbd)</a></code></pre></div>
 <p>Also, we will set the random number generator seed to a value, so that this vignette always produces the same results:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">set.seed</span>(<span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">set.seed</span>(<span class="dv">2</span>)</a></code></pre></div>
 </div>
 <div id="simulating-an-mbd-tree" class="section level2">
 <h2>3. Simulating an MBD tree</h2>
 <p>First we set the parameters of the MBD speciation model:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>lambda &lt;-<span class="st"> </span><span class="fl">0.2</span> <span class="co"># sympatric speciation rate</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>mu &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># extinction rate;</span></span>
-<span id="cb3-3"><a href="#cb3-3"></a>nu &lt;-<span class="st"> </span><span class="fl">2.0</span> <span class="co"># multiple allopatric speciation trigger rate</span></span>
-<span id="cb3-4"><a href="#cb3-4"></a>q &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># single-lineage speciation probability</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">lambda &lt;-<span class="st"> </span><span class="fl">0.2</span> <span class="co"># sympatric speciation rate</span></a>
+<a class="sourceLine" id="cb3-2" title="2">mu &lt;-<span class="st"> </span><span class="fl">0.15</span> <span class="co"># extinction rate;</span></a>
+<a class="sourceLine" id="cb3-3" title="3">nu &lt;-<span class="st"> </span><span class="fl">2.0</span> <span class="co"># multiple allopatric speciation trigger rate</span></a>
+<a class="sourceLine" id="cb3-4" title="4">q &lt;-<span class="st"> </span><span class="fl">0.1</span> <span class="co"># single-lineage speciation probability</span></a></code></pre></div>
 <p>Then we set some basic parameters to create a simulated tree:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>crown_age &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb4-2"><a href="#cb4-2"></a>sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu, q)</span>
-<span id="cb4-3"><a href="#cb4-3"></a>sim &lt;-<span class="st"> </span><span class="kw">mbd_sim</span>(</span>
-<span id="cb4-4"><a href="#cb4-4"></a>  <span class="dt">pars =</span> sim_pars, </span>
-<span id="cb4-5"><a href="#cb4-5"></a>  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Use a crown age </span></span>
-<span id="cb4-6"><a href="#cb4-6"></a>  <span class="dt">age =</span> crown_age,</span>
-<span id="cb4-7"><a href="#cb4-7"></a>  <span class="dt">cond =</span> <span class="dv">1</span> <span class="co"># Condition on non-extinction</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">crown_age &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb4-2" title="2">sim_pars &lt;-<span class="st"> </span><span class="kw">c</span>(lambda, mu, nu, q)</a>
+<a class="sourceLine" id="cb4-3" title="3">sim &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">mbd_sim</span>(</a>
+<a class="sourceLine" id="cb4-4" title="4">  <span class="dt">pars =</span> sim_pars, </a>
+<a class="sourceLine" id="cb4-5" title="5">  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Use a crown age </span></a>
+<a class="sourceLine" id="cb4-6" title="6">  <span class="dt">age =</span> crown_age,</a>
+<a class="sourceLine" id="cb4-7" title="7">  <span class="dt">cond =</span> <span class="dv">1</span> <span class="co"># Condition on non-extinction</span></a>
+<a class="sourceLine" id="cb4-8" title="8">)</a></code></pre></div>
 <p>These are additional auxilary parameters such as <code>n_0</code> (equal to 1 if we want a stem, or 2 if we want a crown), <code>cond</code> (let us condition the tree on the survival of crown species) and <code>crown_age</code> (being the total age of the tree).</p>
 </div>
 <div id="showing-the-results" class="section level2">
 <h2>4. Showing the results</h2>
 <p>The <code>sim</code> list contain different objects. You can visualize the full tree and keep track of species that die before present time (missing species):</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>full_tree)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>full_tree)</a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAKgCAMAAABz4j/3AAAAbFBMVEUAAAAAADoAAGYAOpAAZrY6AAA6ADo6OgA6OmY6kNtmAABmOgBmkNtmtttmtv+QOgCQ2/+2ZgC2Zjq2Zma2kGa2kJC229u22/+2///bkDrbkGbbtmbb/9vb////tmb/25D/27b//7b//9v////okis0AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAID0lEQVR4nO3Yy3JbRRRA0euHQmzAsknAEWAJSf//j0hWzJCBmw67KmsNrDs60mDXafddjhC2/N8/AP6NQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCZY7Dp+fj8Y/VcvXT0BiBMsfm5uW4XX4+/nV/NzJGoMzxdHs8rG9PD5vrLwNjBMoM+/tlufnz18fT41ag9Ow+PF4eDuvTWf9+3yLQhe/PP3tzc/U4FM9/UWDgO4jZXPbm4Zerh6E5AmWKp/P96HS+j+1PgTLH/vXl0v7H0T4FyhS71cO50uvn0UECZYbteXU+De9PgTLHfr3cnd+Fngy9BhUobQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppAmePw6fn1c3vzMjJGoMyxuYS5W90NjREoczzdnv/uVsvD0BiBMsP+flluXg6fVz9cPQ4N+iaB8v3ZfTiF+fvH3zZj/4Labsyxvf7y+nk56d9PoEzxdXMe1mN3JIEyx9fNuVuN3ZEEyhT7+8vmfDvp302gzPC2OUfvSAJliu3l7dJhPXhHEihT7NfL+Yx/O+nfT6CkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIEStrfr2dleuqtduwAAAAASUVORK5CYII=" /><!-- --></p>
 <p>If you want you can also show the reconstructed tree, obtained cutting the kinks from the previous tree:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>reconstructed_tree)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">graphics<span class="op">::</span><span class="kw">plot</span>(sim<span class="op">$</span>reconstructed_tree)</a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAqAAAAKgCAMAAABz4j/3AAAAbFBMVEUAAAAAADoAAGYAOpAAZrY6AAA6ADo6OgA6OmY6kNtmAABmOgBmkNtmtttmtv+QOgCQ2/+2ZgC2Zjq2Zma2kGa2kJC229u22/+2///bkDrbkGbbtmbb/9vb////tmb/25D/27b//7b//9v////okis0AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAID0lEQVR4nO3Yy3JbRRRA0euHQmzAsknAEWAJSf//j0hWzJCBmw67KmsNrDs60mDXafddjhC2/N8/AP6NQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCJU2gpAmUNIGSJlDSBEqaQEkTKGkCZY7Dp+fj8Y/VcvXT0BiBMsfm5uW4XX4+/nV/NzJGoMzxdHs8rG9PD5vrLwNjBMoM+/tlufnz18fT41ag9Ow+PF4eDuvTWf9+3yLQhe/PP3tzc/U4FM9/UWDgO4jZXPbm4Zerh6E5AmWKp/P96HS+j+1PgTLH/vXl0v7H0T4FyhS71cO50uvn0UECZYbteXU+De9PgTLHfr3cnd+Fngy9BhUobQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppAmePw6fn1c3vzMjJGoMyxuYS5W90NjREoczzdnv/uVsvD0BiBMsP+flluXg6fVz9cPQ4N+iaB8v3ZfTiF+fvH3zZj/4Labsyxvf7y+nk56d9PoEzxdXMe1mN3JIEyx9fNuVuN3ZEEyhT7+8vmfDvp302gzPC2OUfvSAJliu3l7dJhPXhHEihT7NfL+Yx/O+nfT6CkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIESppASRMoaQIlTaCkCZQ0gZImUNIEStrfr2dleuqtduwAAAAASUVORK5CYII=" /><!-- --></p>
 <p>The dataframe containing all the information related to this tree is labeled as L (or L-table). You can access it by typing:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>l_matrix))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>l_matrix))</a></code></pre></div>
 <table>
-<thead>
-<tr class="header">
-<th align="right">birth_time</th>
-<th align="right">parent</th>
-<th align="right">id</th>
-<th align="right">death_time</th>
-</tr>
-</thead>
 <tbody>
 <tr class="odd">
-<td align="right">1.0000000</td>
+<td align="right">1</td>
 <td align="right">0</td>
 <td align="right">-1</td>
-<td align="right">-1.0000000</td>
+<td align="right">-1</td>
 </tr>
 <tr class="even">
-<td align="right">1.0000000</td>
+<td align="right">1</td>
 <td align="right">-1</td>
 <td align="right">2</td>
-<td align="right">-1.0000000</td>
-</tr>
-<tr class="odd">
-<td align="right">0.4742348</td>
-<td align="right">2</td>
-<td align="right">3</td>
-<td align="right">-1.0000000</td>
-</tr>
-<tr class="even">
-<td align="right">0.4396944</td>
-<td align="right">3</td>
-<td align="right">4</td>
-<td align="right">0.0531426</td>
+<td align="right">-1</td>
 </tr>
 </tbody>
 </table>
@@ -401,7 +379,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li><p>the fourth contains the extinction times of the species. If this is equal to -1, then the species is still extant.</p></li>
 </ul>
 <p>To recover the vector of branching times use:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>brts))</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(sim<span class="op">$</span>brts))</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -410,10 +388,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">1.0000000</td>
-</tr>
-<tr class="even">
-<td align="right">0.4742348</td>
+<td align="right">1</td>
 </tr>
 </tbody>
 </table>
@@ -432,188 +407,220 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li>the branching times of the tree we generated</li>
 </ul>
 <p>The function <code>mbd_loglik</code> shows the likelihood of the parameters having generated the branching times:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>mbd<span class="op">::</span><span class="kw">mbd_loglik</span>(</span>
-<span id="cb9-2"><a href="#cb9-2"></a>  <span class="dt">pars =</span> <span class="kw">c</span>(lambda, mu, nu, q), </span>
-<span id="cb9-3"><a href="#cb9-3"></a>  <span class="dt">brts =</span> sim<span class="op">$</span>brts, </span>
-<span id="cb9-4"><a href="#cb9-4"></a>  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Crown age </span></span>
-<span id="cb9-5"><a href="#cb9-5"></a>  <span class="dt">cond =</span> <span class="dv">1</span>  <span class="co"># Non-extinction </span></span>
-<span id="cb9-6"><a href="#cb9-6"></a>)</span></code></pre></div>
-<pre><code>## [1] -1.227304</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">mbd<span class="op">::</span><span class="kw">mbd_loglik</span>(</a>
+<a class="sourceLine" id="cb9-2" title="2">  <span class="dt">pars =</span> <span class="kw">c</span>(lambda, mu, nu, q), </a>
+<a class="sourceLine" id="cb9-3" title="3">  <span class="dt">brts =</span> sim<span class="op">$</span>brts, </a>
+<a class="sourceLine" id="cb9-4" title="4">  <span class="dt">n_0 =</span> <span class="dv">2</span>, <span class="co"># Crown age </span></a>
+<a class="sourceLine" id="cb9-5" title="5">  <span class="dt">cond =</span> <span class="dv">1</span>  <span class="co"># Non-extinction </span></a>
+<a class="sourceLine" id="cb9-6" title="6">)</a></code></pre></div>
+<pre><code>## [1] -0.7330246</code></pre>
 </div>
 <div id="maximum-likelihood-estimation" class="section level2">
 <h2>6. Maximum likelihood estimation</h2>
 <p>You can also ask for an optimization of the likelihood function using the function mbd_ml either considering a variation of all the parameters (<span class="math inline">\(\lambda, \mu, \nu, q\)</span>) or any their subset of your choice.</p>
 <p>Because this is a heavy calculation, we will use a simpler tree:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>phylogeny &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">read.tree</span>(<span class="dt">text =</span> <span class="st">&quot;((A:1, B:1):2, C:3);&quot;</span>)  </span>
-<span id="cb11-2"><a href="#cb11-2"></a>ape<span class="op">::</span><span class="kw">plot.phylo</span>(phylogeny)</span></code></pre></div>
-<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAQlBMVEUAAAAAADoAAGYAOpAAZmYAZrY6AAA6kNtmAABmtv+QOgCQ27aQ2/+2ZgC2///bkDrb////tmb/25D//7b//9v////tkscoAAAACXBIWXMAAA7DAAAOwwHHb6hkAAADoUlEQVR4nO3d0VLbVhRAUactDqF1KQb+/1cLRnnqNHssIcm5WfshvJBzzRpbygw59uFVP+yw9wO49QBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaBofKDT4XD47e/Zf310oPPx7u3P05e/5g4YHOj5/uv7l5eHu7kTBgc6/f7P5evj7BfZKkCHW+n5/tvin+UzQDYZOqen+dee7w0OtOD2NQUoGhxoeoktuBaNDTTd5V8fp5vZjMYGen06vAudbu1f0rcD9PYcervbf10wYHSgxQGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQNDjQy8NlLWrBf5QeHOhjF+F8nL82NjjQ0+Gd5uVh/lNocKDHy7rP952WOQ0O9LGz+ists1y3szpdo+cvQ/2EQFd99/l4eW39Us+gq7572jhcsvw8NtC0Lg/o/5reV2DJbu/QQNPtfboSbXDgrkNnjD4fP25mS95+YWigmz0Q0B5DVx+94YGA9hi6+ugNDwS0x9DVR294IKA9hq4+esMDAe0xdPXRGx4IaI+hq4/e8EBAewxdffSGBwLaY+jqozc8ENAeQ1cfveGBn/h+vv9pjcf7w59l6wMXBigCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEXXP97zcdHH1I0PdPpj0QcdDg/09OXPBQuZ4wO9PNwt+JDVGQfu3bW/ZXxfqTvd3Erm7XR59sz/FNrX4YEuO5mLPm11bKCPy8+SN14YHOhxuhbd2sbhrfR8f7l/LbqNDQ30GQGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFP0LBoxnoJbq110AAAAASUVORK5CYII=" /><!-- --></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>brts &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">branching.times</span>(phylogeny)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">phylogeny &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">read.tree</span>(<span class="dt">text =</span> <span class="st">&quot;((A:1, B:1):2, C:3);&quot;</span>)  </a>
+<a class="sourceLine" id="cb11-2" title="2">ape<span class="op">::</span><span class="kw">plot.phylo</span>(phylogeny)</a></code></pre></div>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAAb1BMVEUAAAAAADoAAGYAOjoAOmYAOpAAZmYAZrY6AAA6OmY6ZrY6kLY6kNtmAABmOjpmkLZmkNtmtttmtv+QOgCQZjqQ27aQ2/+2ZgC2Zjq22/+2///bkDrbtmbbtpDb////tmb/25D/29v//7b//9v///99dr1vAAAACXBIWXMAAA7DAAAOwwHHb6hkAAADvUlEQVR4nO3dy3IbVRRAUTk8IiAmgAEHDLGw9P/fSFlWqGJAdqnb6rYva088cc6VV0ndg9RRbw76bJu1X8BLD1AEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYqGB9p/2G423/w2+d+PDrTbfvvxsL+9+nXqgMGBHq7fPf7Y37ydOmFwoNuvPh5/3r35feKEiwBtXkoP1z/N/lueA2SRoVO6n37t+dTgQJM/Wf8EKBoc6PQRm3EtGhvodJc/3J1uZhMaG+hwv/nu4+Gvn7+c/kkbHOiw+36zuXo/+f0zPtDsAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgCFAGKAEWAIkARoAhQBCgaHGh/87gVdfXD9AmDAz3tIvy5nb42NjjQ/eaRZn/zbvKEwYHujus+n3ZapjQ40HFndf9hxtrYawM6b2f16Rq9eTNjMfPVAZ3127vt42fr//UOOuu3TxuHc5afxwY6rcsD+q9O3yswZ7d3aKDT7f2P7fS7/NhAu+3xJvbFj0sduOrQi49e8EBAawy9+OgFDwS0xtCLj17wQEBrDL346AUPBLTG0IuPXvBAQGsMvfjoBQ8EtMbQi49e8EBAawy9+OgFDwS0xtCLj17wQEBrDL346AUPfN6v9P13l3i9n/1blj5wZoAiQBGgCFAEKAIUAYoARYAiQBGgCFAEKAIUAYoARYAiQBGgCFB0/uvdbWc9pm58oNuvZz3ocHig+6tfZixkjg+0v3k74yGrEw5cu3P/l/Fxpe52+vPpXh/QmR3fPdOfQnsYHui4kznraatjAz1dfnYzvnhhcKC707XopW0cvpQero/3r1m3saGBniNAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgCJAEaAIUAQoAhQBigBFgKK/ASUFREWkWanSAAAAAElFTkSuQmCC" /><!-- --></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">brts &lt;-<span class="st"> </span>ape<span class="op">::</span><span class="kw">branching.times</span>(phylogeny)</a></code></pre></div>
 <p>If you want for example to maximize the likelihood only for the parameter <span class="math inline">\(q\)</span>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>brts &lt;-<span class="st"> </span>sim<span class="op">$</span>brts</span>
-<span id="cb13-2"><a href="#cb13-2"></a>start_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="dv">1</span>, <span class="fl">0.15</span>)</span>
-<span id="cb13-3"><a href="#cb13-3"></a>n_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">2</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a>cond &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a>out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">mbd_ml</span>(</span>
-<span id="cb13-6"><a href="#cb13-6"></a>  <span class="dt">start_pars =</span> start_pars,</span>
-<span id="cb13-7"><a href="#cb13-7"></a>  <span class="dt">brts =</span> brts,</span>
-<span id="cb13-8"><a href="#cb13-8"></a>  <span class="dt">cond =</span> cond,</span>
-<span id="cb13-9"><a href="#cb13-9"></a>  <span class="dt">n_0 =</span> n_<span class="dv">0</span>,</span>
-<span id="cb13-10"><a href="#cb13-10"></a>  <span class="dt">optim_ids =</span> <span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>),</span>
-<span id="cb13-11"><a href="#cb13-11"></a>  <span class="dt">verbose =</span> <span class="ot">TRUE</span></span>
-<span id="cb13-12"><a href="#cb13-12"></a>)</span></code></pre></div>
-<pre><code>## lambda = 0.2 mu = 0.15 nu = 1 q = 0.15 loglik = -1.2571 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.15 loglik = -1.2571 
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">brts &lt;-<span class="st"> </span>sim<span class="op">$</span>brts</a>
+<a class="sourceLine" id="cb13-2" title="2">start_pars &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.15</span>, <span class="dv">1</span>, <span class="fl">0.15</span>)</a>
+<a class="sourceLine" id="cb13-3" title="3">n_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb13-4" title="4">cond &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb13-5" title="5">out &lt;-<span class="st"> </span>mbd<span class="op">::</span><span class="kw">mbd_ml</span>(</a>
+<a class="sourceLine" id="cb13-6" title="6">  <span class="dt">start_pars =</span> start_pars,</a>
+<a class="sourceLine" id="cb13-7" title="7">  <span class="dt">brts =</span> brts,</a>
+<a class="sourceLine" id="cb13-8" title="8">  <span class="dt">cond =</span> cond,</a>
+<a class="sourceLine" id="cb13-9" title="9">  <span class="dt">n_0 =</span> n_<span class="dv">0</span>,</a>
+<a class="sourceLine" id="cb13-10" title="10">  <span class="dt">optim_ids =</span> <span class="kw">c</span>(<span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">FALSE</span>, <span class="ot">TRUE</span>),</a>
+<a class="sourceLine" id="cb13-11" title="11">  <span class="dt">verbose =</span> <span class="ot">TRUE</span></a>
+<a class="sourceLine" id="cb13-12" title="12">)</a></code></pre></div>
+<pre><code>## lambda = 0.2 mu = 0.15 nu = 1 q = 0.15 loglik = -0.63692 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.15 loglik = -0.63692 
 ## lambda = 0.2 mu = 0.15 nu = 1 q = -8.6667 loglik = -Inf 
 ## lambda = 0.2 mu = 0.15 nu = 1 q = -0.46512 loglik = -Inf 
 ## lambda = 0.2 mu = 0.15 nu = 1 q = -0.26984 loglik = -Inf 
 ## lambda = 0.2 mu = 0.15 nu = 1 q = 1.7059 loglik = -Inf 
 ## lambda = 0.2 mu = 0.15 nu = 1 q = -0.26984 loglik = -Inf 
 ## lambda = 0.2 mu = 0.15 nu = 1 q = -0.1068 loglik = -Inf 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.61404 loglik = -1.3866 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.61404 loglik = -1.2224 
 ## lambda = 0.2 mu = 0.15 nu = 1 q = -0.1068 loglik = -Inf 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.61404 loglik = -1.3866 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.34307 loglik = -1.2598 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0054645 loglik = -1.4344 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23906 loglik = -1.2422 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.34307 loglik = -1.2598 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.19287 loglik = -1.2451 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.34307 loglik = -1.2598 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.15 loglik = -1.2571 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.19287 loglik = -1.2451 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.28897 loglik = -1.2474 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.21552 loglik = -1.2426 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.21552 loglik = -1.2426 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.26352 loglik = -1.2438 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.22718 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.21552 loglik = -1.2426 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23309 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.22718 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23906 loglik = -1.2422 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23013 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.22718 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23161 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23013 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23309 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23087 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23235 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23124 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23087 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23161 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23142 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23161 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23133 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23142 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23124 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23142 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23135 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23133 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23137 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421 
-## lambda = 0.2 mu = 0.15 nu = 1 q = 0.23136 loglik = -1.2421</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>knitr<span class="op">::</span><span class="kw">kable</span>(out)</span></code></pre></div>
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.61404 loglik = -1.2224 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.34307 loglik = -0.92345 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0054645 loglik = -0.38331 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.1068 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.1068 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.072886 loglik = -0.50565 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.053985 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.038082 loglik = -0.44336 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.053985 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.072886 loglik = -0.50565 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.038082 loglik = -0.44336 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.025166 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.021513 loglik = -0.41306 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.021513 loglik = -0.41306 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.010087 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.013425 loglik = -0.39812 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.0023721 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0094291 loglik = -0.3907 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0015309 loglik = -0.37597 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.0023721 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0034938 loglik = -0.37964 
+## lambda = 0.2 mu = 0.15 nu = 1 q = -0.00042441 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0025114 loglik = -0.3778 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00055227 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0025114 loglik = -0.3778 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0020209 loglik = -0.37688 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010413 loglik = -0.37505 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00055227 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00055227 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001286 loglik = -0.37551 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00079675 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001286 loglik = -0.37551 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0011637 loglik = -0.37528 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00091902 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0011025 loglik = -0.37516 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0011025 loglik = -0.37516 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00098018 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010719 loglik = -0.37511 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010108 loglik = -0.37499 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00098018 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00098018 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001026 loglik = -0.37502 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099546 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001026 loglik = -0.37502 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010184 loglik = -0.37501 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010031 loglik = -0.37498 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099546 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099546 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010069 loglik = -0.37498 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099929 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010069 loglik = -0.37498 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001005 loglik = -0.37498 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010012 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099929 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099929 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010022 loglik = -0.37498 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010002 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099929 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010007 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099977 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010005 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099977 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099988 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099994 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.0010001 loglik = -0.37497 
+## DLSODA-  Warning..Internal T (=R1) and H (=R2) are
+##       such that in the machine, T + H = T on the next step  
+##      (H = step size). Solver will continue anyway.
+## In above message, R1 = 9.54375e-10, R2 = 8.80434e-26
+##  
+## DLSODA-  Warning..Internal T (=R1) and H (=R2) are
+##       such that in the machine, T + H = T on the next step  
+##      (H = step size). Solver will continue anyway.
+## In above message, R1 = 9.54375e-10, R2 = 8.80434e-26
+##  
+## DLSODA-  Warning..Internal T (=R1) and H (=R2) are
+##       such that in the machine, T + H = T on the next step  
+##      (H = step size). Solver will continue anyway.
+## In above message, R1 = 9.54375e-10, R2 = 8.80434e-26
+##  
+## DLSODA-  Warning..Internal T (=R1) and H (=R2) are
+##       such that in the machine, T + H = T on the next step  
+##      (H = step size). Solver will continue anyway.
+## In above message, R1 = 9.54375e-10, R2 = 8.80434e-26
+##  
+## DLSODA-  Warning..Internal T (=R1) and H (=R2) are
+##       such that in the machine, T + H = T on the next step  
+##      (H = step size). Solver will continue anyway.
+## In above message, R1 = 9.54375e-10, R2 = 8.80434e-26
+##  
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099997 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.00099999 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -Inf 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497 
+## lambda = 0.2 mu = 0.15 nu = 1 q = 0.001 loglik = -0.37497</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">knitr<span class="op">::</span><span class="kw">kable</span>(out)</a></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -631,8 +638,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <td align="right">0.2</td>
 <td align="right">0.15</td>
 <td align="right">1</td>
-<td align="right">0.2313623</td>
-<td align="right">-1.242101</td>
+<td align="right">0.001</td>
+<td align="right">-0.3749719</td>
 <td align="right">1</td>
 <td align="right">0</td>
 </tr>
@@ -642,7 +649,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p> Etienne, R.S., Haegeman, B., Stadler, T., Aze, T., Pearson, P.N., Purvis, A., Phillimore, A.B.: Diversity-dependence brings molecular phylogenies closer to agreement with the fossil record. Proceedings of the Royal Society of London B: Biological Sciences 279(1732), 1300–1309 (2012)<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p> Etienne, R.S., Haegeman, B., Stadler, T., Aze, T., Pearson, P.N., Purvis, A., Phillimore, A.B.: Diversity-dependence brings molecular phylogenies closer to agreement with the fossil record. Proceedings of the Royal Society of London B: Biological Sciences 279(1732), 1300–1309 (2012)<a href="#fnref1" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 

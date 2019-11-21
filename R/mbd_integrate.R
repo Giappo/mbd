@@ -1,4 +1,4 @@
-# mbd_ode_FORTRAN -----
+# mbd_ode_fortran -----
 #' Performs the integration of the ode using FORTRAN code
 #' @inheritParams default_params_doc
 #' @author Rampal S. Etienne

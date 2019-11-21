@@ -71,7 +71,8 @@ test_that("mbd_ml can be silent", {
   n_0 <- 2
   cond <- 1
   verbose <- FALSE
-  maxiter <- 10
+  ml_sequence <- 1
+  maxiter <- 5
   testthat::expect_silent(
     mbd::mbd_ml(
       start_pars = start_pars,
@@ -81,7 +82,8 @@ test_that("mbd_ml can be silent", {
       cond = cond,
       n_0 = n_0,
       verbose = verbose,
-      maxiter = maxiter
+      maxiter = maxiter,
+      ml_sequence = ml_sequence
     )
   )
 })
@@ -98,7 +100,8 @@ test_that("mbd_ml can produce output", {
   n_0 <- 2
   cond <- 1
   verbose <- TRUE
-  maxiter <- 10
+  maxiter <- 5
+  ml_sequence <- 1
   output <- utils::capture.output(
     mbd::mbd_ml(
       start_pars = start_pars,
@@ -108,7 +111,8 @@ test_that("mbd_ml can produce output", {
       cond = cond,
       n_0 = n_0,
       verbose = verbose,
-      maxiter = maxiter
+      maxiter = maxiter,
+      ml_sequence = ml_sequence
     )
   )
   testthat::expect_true(
@@ -157,4 +161,5 @@ test_that("abuse", {
     ),
     "You cannot start from negative parameters!"
   )
+
 })

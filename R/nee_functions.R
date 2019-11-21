@@ -89,7 +89,9 @@ pn <- function(lambda, mu, t, n) {
   out
 }
 
-#' Calculate the approximate Nee et al's equivalent parameters
+#' Calculate the approximate Nee et al's equivalent parameters, starting from
+#'  the mbd parameters
+#' @inheritParams default_params_doc
 #' @export
 get_nee_pars <- function(
   pars

@@ -13,8 +13,8 @@ default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   init_n_lineages, initprobs, init_probs, input_trees_path, input_xml,
   interval_max, interval_min, iterations, k, lambda, lambda_limit,
   likelihood, l_matrix, loglik_function, loglik_functions, logs,
-  log_nu_mat, log_q_mat, lx, lx0, lx_top, m1, m2, m1_mat, m2_mat, mm,
-  matrices, matrix, matrix_a, matrix_builder, max_iter, max_k,
+  log_nu_mat, log_q_mat, lx, lx0, lx_top, lx_condprob_fun, m1, m2, m1_mat,
+  m2_mat, mm, matrices, matrix, matrix_a, matrix_builder, max_iter, max_k,
   max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
   mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
   models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species, n_sims,
@@ -24,9 +24,9 @@ default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   printit, project_folder, pvec, q, qq, qq2, q_t, q_vector, q_threshold,
   quantiles_choice, qvec, recursive, rtol, reltol, res, results,
   results_folder, rhs_function, runmod, s, safety_checks, saveit, seed,
-  sample_interval, sequence_length, sim, sim_pars, sim_phylo, start_pars,
-  starting_seed, subsamp, sum_probs_1, sum_probs_2, t, tcrit, times, tvec,
-  t1, t2, t_0, t_0s, tips_interval, time_interval, tol, tr,
+  sample_interval, sequence_length, ml_sequence, sim, sim_pars, sim_phylo,
+  start_pars, starting_seed, subsamp, sum_probs_1, sum_probs_2, t, tcrit,
+  times, tvec, t1, t2, t_0, t_0s, tips_interval, time_interval, tol, tr,
   transition_matrix, trparsfix, trparsopt, true_pars, values, vector,
   verbose, x, x_name, x_splits, y, y_name, y_splits, z, z_name)
 }
@@ -152,6 +152,8 @@ The ids are defined as follows:
 \item{lx0}{something}
 
 \item{lx_top}{maximum lx to produce pre-calculated matrices for condprob}
+
+\item{lx_condprob_fun}{function to determine the right lx for condprob}
 
 \item{m1}{a matrix keeping track of columns}
 
@@ -326,6 +328,10 @@ realistic, but not infinite, parameter space}
 \item{sample_interval}{something}
 
 \item{sequence_length}{something}
+
+\item{ml_sequence}{defines the sequence of the (increasing) accuracy
+steps of the ml algorithm. Set it to c(1) (or just 1) if you just want to
+use the fast algorithm.}
 
 \item{sim}{the results of a sim run}
 

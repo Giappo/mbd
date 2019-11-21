@@ -2,10 +2,21 @@
 % Please edit documentation in R/nee_functions.R
 \name{get_nee_pars}
 \alias{get_nee_pars}
-\title{Calculate the approximate Nee et al's equivalent parameters}
+\title{Calculate the approximate Nee et al's equivalent parameters, starting from
+ the mbd parameters}
 \usage{
 get_nee_pars(pars)
 }
+\arguments{
+\item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability;
+}}
+}
 \description{
-Calculate the approximate Nee et al's equivalent parameters
+Calculate the approximate Nee et al's equivalent parameters, starting from
+ the mbd parameters
 }

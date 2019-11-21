@@ -504,7 +504,6 @@ condprob_p <- function(
     lx = lx
   )
   pc <- 1 + p_n1_n2[1, 1] - sum(p_n1_n2[, 1]) - sum(p_n1_n2[1, ])
-  pc <- DDD::roundn(pc, digits = 14)
   mbd::check_pc(pc = pc)
   pc
 }
@@ -533,7 +532,6 @@ condprob_q <- function(
     lx = lx
   )
   pc <- sum(q_m1_m2)
-  pc <- DDD::roundn(pc, digits = 14)
   mbd::check_pc(pc = pc)
   pc
 }
@@ -633,9 +631,8 @@ condprob_sim <- function(
     ggplot2::ggsave(filename = taxa_plot_filename, plot = taxa_plot)
 
   }
-  pc <- DDD::roundn(pc_sim, digits = 14)
-  mbd::check_pc(pc = pc)
-  pc
+  mbd::check_pc(pc = pc_sim)
+  pc_sim
 }
 
 #' Calculate conditional probability: loglik mode
@@ -708,7 +705,6 @@ calculate_condprob <- function(
 
 #' Calculate conditional probability using an approximation based on Nee et al.
 #' @inheritParams default_params_doc
-#' @param n maximum number of simultaneous speciations to consider
 #' @author Giovanni Laudanno
 #' @export
 calculate_condprob_nee_approx <- function(
@@ -856,7 +852,7 @@ condprob_select_eq <- function(
 #' Maximum allowed value for lx in condprob
 #' @export
 max_lx_condprob <- function() {
-  max_lx <- 100
+  max_lx <- 70
   max_lx
 }
 
@@ -870,16 +866,41 @@ min_lx_condprob <- function() {
 #' Fix the value for lx for condprob in \link{mbd_loglik}
 #' @inheritParams default_params_doc
 #' @export
-get_lx_condprob <- function(pars, n_0, age) {
-  nee_pars <- mbd::get_nee_pars(pars = pars)
-  nee_mean <- mbd::nee_mean_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
-  nee_stdev <- mbd::nee_stdev_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
+get_lx_condprob_fast <- function(pars, n_0, age, lx) {
+  rm(pars)
+  rm(n_0)
+  rm(age)
+
   lx_condprob <- max(
     mbd::min_lx_condprob(),
     min(
       mbd::max_lx_condprob(),
-      (nee_mean + 2 * nee_stdev) / 2
+      ceiling(lx / 2)
     )
+  )
+  lx_condprob
+}
+
+#' Fix the value for lx for condprob in \link{mbd_loglik}
+#' @inheritParams default_params_doc
+#' @export
+get_lx_condprob_slow <- function(pars, n_0, age, lx) {
+
+  nee_pars <- mbd::get_nee_pars(pars = pars)
+  nee_mean <- mbd::nee_mean_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
+  nee_stdev <- mbd::nee_stdev_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
+  lx_condprob_slow <- max(
+    mbd::min_lx_condprob(),
+    min(
+      mbd::max_lx_condprob(),
+      ceiling(
+        (nee_mean + 2 * nee_stdev) / 2
+      )
+    )
+  )
+  lx_condprob <- max(
+    lx_condprob_slow,
+    mbd::get_lx_condprob_fast(pars = pars, n_0 = n_0, age = age, lx = lx)
   )
   lx_condprob
 }
