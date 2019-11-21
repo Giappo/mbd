@@ -177,7 +177,9 @@ mbd_ml <- function(
   # store output
   likelihoods <- rep(NA, length(ml_sequence))
   for (nn in seq_along(ml_sequence)) {
-    temp <- capture.output(likelihoods[nn] <- -optim_fun_nn(out_list[[nn]]$par))
+    temp <- utils::capture.output(
+      likelihoods[nn] <- -optim_fun_nn(out_list[[nn]]$par)
+    )
   }
   rm(temp)
   the_max <- max(which(likelihoods == max(likelihoods)))
