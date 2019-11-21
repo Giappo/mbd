@@ -14,6 +14,7 @@ mbd_loglik <- function(
   cond = 1,
   missnumspec = 0,
   lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
+  lx_condprob_fun = mbd::get_lx_condprob_fast,
   tips_interval = c(n_0 * (cond > 0), Inf),
   q_threshold = 1e-3,
   debug_mode = FALSE,
@@ -42,10 +43,16 @@ mbd_loglik <- function(
 
   # Calculate conditional probability
   if (cond == 1) {
+    lx_condprob <- lx_condprob_fun(
+      lx = lx,
+      pars = pars,
+      n_0 = n_0,
+      age = max(abs(brts))
+    )
     pc <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
-      lx = mbd::get_lx_condprob(lx = lx),
+      lx = lx_condprob,
       eq = mbd::condprob_select_eq(
         pars = pars,
         brts = brts,

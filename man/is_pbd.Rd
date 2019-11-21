@@ -23,8 +23,6 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
 
 \item{missnumspec}{The number of species that are in the clade,

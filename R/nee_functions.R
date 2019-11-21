@@ -88,3 +88,49 @@ pn <- function(lambda, mu, t, n) {
     (n == 0) * (mbd::one_minus_pt(t = t, lambda = lambda, mu = mu))
   out
 }
+
+#' Calculate the approximate Nee et al's equivalent parameters, starting from
+#'  the mbd parameters
+#' @inheritParams default_params_doc
+#' @export
+get_nee_pars <- function(
+  pars
+) {
+  nvec <- 1:100
+  nee_lambda <- pars[1] + pars[3] * sum(pars[4] ^ nvec)
+  nee_mu <- pars[2]
+  c(nee_lambda, nee_mu)
+}
+
+#' Average number of species for b-d process.
+#' See Kendall 1948a, pag. 12
+#' @inheritParams default_params_doc
+#' @export
+nee_mean_nt <- function(
+  nee_pars,
+  n_0,
+  age
+) {
+  lambda <- nee_pars[1]
+  mu <- nee_pars[2]
+  ll <- exp(age * (lambda - mu))
+  average_n_t <- n_0 * ll
+  average_n_t
+}
+
+#' Average number of species for b-d process.
+#' See Kendall 1948a, pag. 12
+#' @inheritParams default_params_doc
+#' @export
+nee_stdev_nt <- function(
+  nee_pars,
+  n_0,
+  age
+) {
+  lambda <- nee_pars[1]
+  mu <- nee_pars[2]
+  ll <- exp(age * (lambda - mu))
+  variance <- n_0 * ll * (ll - 1) * (lambda + mu) / (lambda - mu)
+  stdev <- sqrt(variance)
+  stdev
+}

@@ -5,12 +5,12 @@
 \title{Maximization of the loglikelihood
   under a multiple birth-death diversification model}
 \usage{
-mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
-  0.5, 0.3), n_0 = 2, cond = 1, optim_ids = rep(TRUE,
-  length(start_pars)), true_pars = start_pars, tips_interval = c(0,
-  Inf), q_threshold = 0.001, verbose = TRUE, missnumspec = 0,
-  lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
-  maxiter = 10000)
+mbd_ml(loglik_function = mbd::mbd_loglik, brts, start_pars = c(0.5,
+  0.3, 0.5, 0.3), n_0 = 2, cond = 1, missnumspec = 0, lx = min(1 +
+  3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
+  ml_sequence = c(1), optim_ids = rep(TRUE, length(start_pars)),
+  true_pars = start_pars, tips_interval = c(n_0 * (cond > 0), Inf),
+  q_threshold = 0.001, verbose = TRUE, maxiter = 10000)
 }
 \arguments{
 \item{loglik_function}{the loglik function}
@@ -26,13 +26,23 @@ mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
+
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny.}
+
+\item{lx}{it is the number of ODEs considered for the computation.}
+
+\item{ml_sequence}{defines the sequence of the (increasing) accuracy
+steps of the ml algorithm. Set it to c(1) (or just 1) if you just want to
+use the fast algorithm.}
 
 \item{optim_ids}{ids of the parameters you want to optimize.}
 
-\item{true_pars}{true parameter values when running the ml process.}
+\item{true_pars}{true parameter values when running the ml process.
+The parameters that are not meant to be optimized specified as
+FALSE in \code{optim_ids} will be fixed by the homologous from
+this vector.}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 It works only if cond == 1, otherwise it must be set to c(0, Inf).}
@@ -41,11 +51,6 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 because you never want \code{q} to actually be equal to zero or one.}
 
 \item{verbose}{choose if you want to print the output or not}
-
-\item{missnumspec}{The number of species that are in the clade,
-but missing in the phylogeny.}
-
-\item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{maxiter}{maximum number of subplex iterations}
 }
@@ -77,7 +82,7 @@ sim_pars <- c(lambda, mu, nu, q)
 crown_age <- 1
 cond <- 1
 n_0 <- 2
-sim <- mbd_sim(
+sim <- mbd::mbd_sim(
  pars = sim_pars,
  n_0 = n_0, # Use a crown age
  age = crown_age,

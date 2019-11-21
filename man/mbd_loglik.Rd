@@ -6,8 +6,9 @@
 \usage{
 mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0,
   lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
-  tips_interval = c(n_0 * (cond > 0), Inf), q_threshold = 0.001,
-  debug_mode = FALSE, fortran = TRUE)
+  lx_condprob_fun = mbd::get_lx_condprob_fast, tips_interval = c(n_0 *
+  (cond > 0), Inf), q_threshold = 0.001, debug_mode = FALSE,
+  fortran = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -27,14 +28,14 @@ mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0,
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
 
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny.}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
+
+\item{lx_condprob_fun}{function to determine the right lx for condprob}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 It works only if cond == 1, otherwise it must be set to c(0, Inf).}

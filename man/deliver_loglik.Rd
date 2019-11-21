@@ -9,17 +9,17 @@ deliver_loglik(likelihood, sum_probs_1, sum_probs_2, cond, pc, debug_mode)
 \arguments{
 \item{likelihood}{the likelihood}
 
-\item{sum_probs_1}{vector of probability sums}
+\item{sum_probs_1}{vector of probability sums, used during the
+integration of \link{mbd_loglik}}
 
-\item{sum_probs_2}{vector of probability sums}
+\item{sum_probs_2}{vector of probability sums, used during the
+integration of \link{mbd_loglik}}
 
 \item{cond}{sets the conditioning
 \itemize{
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
 
 \item{pc}{conditional probability}

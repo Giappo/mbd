@@ -7,9 +7,11 @@
 check_sum_probs(sum_probs_1, sum_probs_2, debug_mode)
 }
 \arguments{
-\item{sum_probs_1}{vector of probability sums}
+\item{sum_probs_1}{vector of probability sums, used during the
+integration of \link{mbd_loglik}}
 
-\item{sum_probs_2}{vector of probability sums}
+\item{sum_probs_2}{vector of probability sums, used during the
+integration of \link{mbd_loglik}}
 
 \item{debug_mode}{If TRUE allows to run even when there are errors and
 expose them.}

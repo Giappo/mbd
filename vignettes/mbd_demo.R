@@ -14,7 +14,7 @@ q <- 0.1 # single-lineage speciation probability
 ## ------------------------------------------------------------------------
 crown_age <- 1
 sim_pars <- c(lambda, mu, nu, q)
-sim <- mbd_sim(
+sim <- mbd::mbd_sim(
   pars = sim_pars, 
   n_0 = 2, # Use a crown age 
   age = crown_age,

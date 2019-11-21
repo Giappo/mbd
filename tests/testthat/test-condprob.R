@@ -140,8 +140,8 @@ test_that("right differentials in R", {
 test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
   pars <- c(0.3, 0.15, 1.8, 0.11)
-  lx <- 20
-  brts <- c(10)
+  lx <- 18
+  brts <- c(8)
 
   # P equation
   eq <- "p_eq"
@@ -199,7 +199,7 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 test_that("P_{n1, n2} sums up to one", {
 
   pars <- c(0.2, 0.1, 2.5, 0.2)
-  lx <- 24
+  lx <- 22
   brts <- c(2)
   eq <- "p_eq"
 
@@ -343,7 +343,7 @@ test_that("condprob for mu = 0", {
   brts <- c(3)
   cond <- 1
   n_0 <- 2
-  lx <- 30
+  lx <- 25
   testthat::expect_equal(
     mbd::calculate_condprob(
       pars = pars,
@@ -375,7 +375,7 @@ test_that("nu = q = 0", {
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 17
+  lx <- 15
   mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2 + is_on_ci())
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
@@ -420,7 +420,7 @@ test_that("nu = 0", {
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 17
+  lx <- 15
   mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2 + is_on_ci())
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
@@ -465,7 +465,7 @@ test_that("q = 0", {
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 17
+  lx <- 15
   mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2 + is_on_ci())
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
@@ -506,7 +506,7 @@ test_that("q = 0", {
 # condprob_select_eq ----
 test_that("condprob_select_eq", {
 
-  max_seed <- 5 + is_on_ci() * 20
+  max_seed <- 2 + is_on_ci() * 23
   for (seed in 1:max_seed) {
     set.seed(seed)
     lambda <- runif(n = 1, min = 0.05, max = 0.3)
@@ -566,7 +566,7 @@ test_that("probcond_select_eq: nasty case", {
   pars <- c(1.50, 0.15, 1.35, 0.09)
   brts <- c(5, 2.53, 0.79)
   fortran <- TRUE
-  lx <- 25
+  lx <- 23
 
   pc_sim <- mbd::condprob_sim(
     brts = brts,
@@ -598,7 +598,7 @@ test_that("probcond_select_eq: nasty case", {
 # probcond_select_eq: more nasty cases ----
 test_that("probcond_select_eq: more nasty cases", {
 
-  max_seed <- 5 + is_on_ci() * 20
+  max_seed <- 2 + is_on_ci() * 23
   for (seed in 1:max_seed) {
     if (seed == 15 || seed == 27) next # too slow for simulations
     set.seed(seed)
