@@ -12,8 +12,6 @@ check_cond(cond, tips_interval, n_0)
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.

@@ -1,7 +1,9 @@
 #' This function does nothing. It is intended to inherit is parameters'
 #' documentation.
-#' @param a_abstol something
-#' @param a_reltol something
+#' @param a_abstol absolute error tolerance for
+#' the numerical integration using deSolve.
+#' @param a_reltol relative error tolerance for
+#' the numerical integration using deSolve.
 #' @param abstol absolute error tolerance for
 #' the numerical integration using deSolve.
 #' @param atol absolute error tolerance for
@@ -22,8 +24,6 @@
 #'  \item cond = 0: no conditioning;
 #'  \item cond = 1: conditioning on stem or crown age
 #'   and non-extinction of the phylogeny;
-#'  \item cond = 2: like cond = 1 but forces at least one visible multiple
-#'  event in the phylogeny
 #' }
 #' @param data_folder The data folder insider the project folder.
 #' @param debug_mode If TRUE allows to run even when there are errors and
@@ -110,6 +110,7 @@
 #' @param n_sims number of simulations
 #' @param n_steps something
 #' @param n_subs something
+#' @param nee_pars the equivalent parameters in Nee et al.'s approach
 #' @param nu the multiple allopatric speciation trigger rate.
 #' @param nu_limit Upper limit to nu estimations.
 #' @param nu_matrix matrix for the nu component. Component {m,n} is equal to
@@ -132,7 +133,7 @@
 #' @param pars_transformed parameters of the likelihood functions, transformed
 #' according to y = x / (1 + x)
 #' @param parsfix the values of the parameters that should not be optimized.
-#' @param parsvec vector of paramters for the FORTRAN subroutine.
+#' @param parsvec vector of parameters for the FORTRAN subroutine.
 #' @param pc conditional probability
 #' @param pool the pool of living species at a given time
 #' @param precision something
@@ -169,18 +170,20 @@
 #' @param seed the seed
 #' @param sequence_length something
 #' @param sim the results of a sim run
-#' @param sim_pars vector of parameters:
+#' @param sim_pars vector of starting parameters:
 #' \itemize{
-#'   \item id == 1 corresponds to lambda (speciation rate)
-#'   \item id == 2 corresponds to mu (extinction rate)
-#'   \item id == 3 corresponds to nu (multiple speciation trigger rate)
-#'   \item id == 4 corresponds to q (single-lineage speciation probability)
+#'   \item sim_pars[1] is lambda, the sympatric speciation rate;
+#'   \item sim_pars[2] is mu, the extinction rate;
+#'   \item sim_pars[3] is nu, the multiple allopatric speciation trigger rate;
+#'   \item sim_pars[4] is q, the single-lineage speciation probability;
 #' }
 #' @param sim_phylo something
 #' @param starting_seed the seed to start from
 #' @param subsamp something
-#' @param sum_probs_1 vector of probability sums
-#' @param sum_probs_2 vector of probability sums
+#' @param sum_probs_1 vector of probability sums, used during the
+#'  integration of \link{mbd_loglik}
+#' @param sum_probs_2 vector of probability sums, used during the
+#'  integration of \link{mbd_loglik}
 #' @param t time
 #' @param tcrit the time you don't want to exceed in the integration
 #' @param times vector of times
@@ -198,6 +201,9 @@
 #' @param trparsfix something
 #' @param trparsopt something
 #' @param true_pars true parameter values when running the ml process.
+#'  The parameters that are not meant to be optimized specified as
+#'  FALSE in \code{optim_ids} will be fixed by the homologous from
+#'  this vector.
 #' @param values something
 #' @param vector a vector
 #' @param verbose choose if you want to print the output or not
@@ -299,6 +305,7 @@ default_params_doc <- function(
   n_sims,
   n_steps,
   n_subs,
+  nee_pars,
   nu,
   nu_limit,
   nu_matrix,

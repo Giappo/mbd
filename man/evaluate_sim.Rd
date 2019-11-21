@@ -15,8 +15,6 @@ evaluate_sim(l_matrix, cond, n_0, tips_interval, pool)
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
 
 \item{n_0}{the number of lineages at time equals zero.}

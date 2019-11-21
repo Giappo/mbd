@@ -713,17 +713,12 @@ calculate_condprob <- function(
 #' @export
 calculate_condprob_nee_approx <- function(
   pars,
-  brts,
-  n = 100
+  brts
 ) {
+  nee_pars <- mbd::get_nee_pars(pars = pars)
+  age <- max(abs(brts))
 
-  nvec <- 1:n
-  pc <- mbd::p_t(
-    lambda = pars[1] + pars[3] * sum(pars[4] ^ nvec),
-    mu = pars[2],
-    t = max(abs(brts))
-  ) ^ 2
-
+  pc <- mbd::p_t(lambda = nee_pars[1], mu = nee_pars[2], t = age) ^ 2
   pc
 }
 
@@ -830,8 +825,7 @@ condprob_select_eq <- function(
 
   pc <- mbd::calculate_condprob_nee_approx(
     pars = pars,
-    brts = brts,
-    n = 100
+    brts = brts
   )
 
   pc_tolerance <- 0.1
@@ -862,7 +856,7 @@ condprob_select_eq <- function(
 #' Maximum allowed value for lx in condprob
 #' @export
 max_lx_condprob <- function() {
-  max_lx <- 200
+  max_lx <- 100
   max_lx
 }
 
@@ -876,12 +870,15 @@ min_lx_condprob <- function() {
 #' Fix the value for lx for condprob in \link{mbd_loglik}
 #' @inheritParams default_params_doc
 #' @export
-get_lx_condprob <- function(lx) {
+get_lx_condprob <- function(pars, n_0, age) {
+  nee_pars <- mbd::get_nee_pars(pars = pars)
+  nee_mean <- mbd::nee_mean_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
+  nee_stdev <- mbd::nee_stdev_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
   lx_condprob <- max(
     mbd::min_lx_condprob(),
     min(
       mbd::max_lx_condprob(),
-      ceiling(lx / 2)
+      (nee_mean + 2 * nee_stdev) / 2
     )
   )
   lx_condprob

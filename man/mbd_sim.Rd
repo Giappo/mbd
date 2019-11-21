@@ -26,8 +26,6 @@ mbd_sim(pars, n_0 = 2, age = 10, cond = 1, seed = NA,
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
 
 \item{seed}{the seed}

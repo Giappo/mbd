@@ -45,7 +45,7 @@ mbd_loglik <- function(
     pc <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
-      lx = mbd::get_lx_condprob(lx = lx),
+      lx = mbd::get_lx_condprob(pars = pars, n_0 = n_0, age = max(abs(brts))),
       eq = mbd::condprob_select_eq(
         pars = pars,
         brts = brts,

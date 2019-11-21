@@ -4,10 +4,20 @@
 \alias{get_lx_condprob}
 \title{Fix the value for lx for condprob in \link{mbd_loglik}}
 \usage{
-get_lx_condprob(lx)
+get_lx_condprob(pars, n_0, age)
 }
 \arguments{
-\item{lx}{it is the number of ODEs considered for the computation.}
+\item{pars}{vector of parameters:
+\itemize{
+  \item pars[1] is lambda, the sympatric speciation rate;
+  \item pars[2] is mu, the extinction rate;
+  \item pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item pars[4] is q, the single-lineage speciation probability;
+}}
+
+\item{n_0}{the number of lineages at time equals zero.}
+
+\item{age}{the age of the tree.}
 }
 \description{
 Fix the value for lx for condprob in \link{mbd_loglik}

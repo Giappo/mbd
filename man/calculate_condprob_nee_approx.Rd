@@ -4,7 +4,7 @@
 \alias{calculate_condprob_nee_approx}
 \title{Calculate conditional probability using an approximation based on Nee et al.}
 \usage{
-calculate_condprob_nee_approx(pars, brts, n = 100)
+calculate_condprob_nee_approx(pars, brts)
 }
 \arguments{
 \item{pars}{vector of parameters:

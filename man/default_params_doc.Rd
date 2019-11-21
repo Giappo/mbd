@@ -18,10 +18,10 @@ default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
   mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
   models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species, n_sims,
-  n_steps, n_subs, nu, nu_limit, nu_matrix, optimmethod, optim_ids, pp,
-  pp2, parms, parmsvec, params, pars, pars_transform, pars_transformed,
-  parsfix, parsvec, pc, pool, precision, print_errors, printit,
-  project_folder, pvec, q, qq, qq2, q_t, q_vector, q_threshold,
+  n_steps, n_subs, nee_pars, nu, nu_limit, nu_matrix, optimmethod,
+  optim_ids, pp, pp2, parms, parmsvec, params, pars, pars_transform,
+  pars_transformed, parsfix, parsvec, pc, pool, precision, print_errors,
+  printit, project_folder, pvec, q, qq, qq2, q_t, q_vector, q_threshold,
   quantiles_choice, qvec, recursive, rtol, reltol, res, results,
   results_folder, rhs_function, runmod, s, safety_checks, saveit, seed,
   sample_interval, sequence_length, sim, sim_pars, sim_phylo, start_pars,
@@ -31,9 +31,11 @@ default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   verbose, x, x_name, x_splits, y, y_name, y_splits, z, z_name)
 }
 \arguments{
-\item{a_abstol}{something}
+\item{a_abstol}{absolute error tolerance for
+the numerical integration using deSolve.}
 
-\item{a_reltol}{something}
+\item{a_reltol}{relative error tolerance for
+the numerical integration using deSolve.}
 
 \item{atol}{absolute error tolerance for
 the numerical integration using deSolve.}
@@ -68,8 +70,6 @@ the numerical integration using deSolve.}
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
 
 \item{data_folder}{The data folder insider the project folder.}
@@ -223,6 +223,8 @@ but missing in the phylogeny.}
 
 \item{n_subs}{something}
 
+\item{nee_pars}{the equivalent parameters in Nee et al.'s approach}
+
 \item{nu}{the multiple allopatric speciation trigger rate.}
 
 \item{nu_limit}{Upper limit to nu estimations.}
@@ -259,7 +261,7 @@ according to y = x / (1 + x)}
 
 \item{parsfix}{the values of the parameters that should not be optimized.}
 
-\item{parsvec}{vector of paramters for the FORTRAN subroutine.}
+\item{parsvec}{vector of parameters for the FORTRAN subroutine.}
 
 \item{pc}{conditional probability}
 
@@ -327,12 +329,12 @@ realistic, but not infinite, parameter space}
 
 \item{sim}{the results of a sim run}
 
-\item{sim_pars}{vector of parameters:
+\item{sim_pars}{vector of starting parameters:
 \itemize{
-  \item id == 1 corresponds to lambda (speciation rate)
-  \item id == 2 corresponds to mu (extinction rate)
-  \item id == 3 corresponds to nu (multiple speciation trigger rate)
-  \item id == 4 corresponds to q (single-lineage speciation probability)
+  \item sim_pars[1] is lambda, the sympatric speciation rate;
+  \item sim_pars[2] is mu, the extinction rate;
+  \item sim_pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item sim_pars[4] is q, the single-lineage speciation probability;
 }}
 
 \item{sim_phylo}{something}
@@ -343,9 +345,11 @@ realistic, but not infinite, parameter space}
 
 \item{subsamp}{something}
 
-\item{sum_probs_1}{vector of probability sums}
+\item{sum_probs_1}{vector of probability sums, used during the
+integration of \link{mbd_loglik}}
 
-\item{sum_probs_2}{vector of probability sums}
+\item{sum_probs_2}{vector of probability sums, used during the
+integration of \link{mbd_loglik}}
 
 \item{t}{time}
 
@@ -378,7 +382,10 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 
 \item{trparsopt}{something}
 
-\item{true_pars}{true parameter values when running the ml process.}
+\item{true_pars}{true parameter values when running the ml process.
+The parameters that are not meant to be optimized specified as
+FALSE in \code{optim_ids} will be fixed by the homologous from
+this vector.}
 
 \item{values}{something}
 

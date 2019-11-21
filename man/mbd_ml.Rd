@@ -26,13 +26,14 @@ mbd_ml(loglik_function = mbd_loglik, brts, start_pars = c(0.5, 0.3,
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
 
 \item{optim_ids}{ids of the parameters you want to optimize.}
 
-\item{true_pars}{true parameter values when running the ml process.}
+\item{true_pars}{true parameter values when running the ml process.
+The parameters that are not meant to be optimized specified as
+FALSE in \code{optim_ids} will be fixed by the homologous from
+this vector.}
 
 \item{tips_interval}{sets tips boundaries constrain on simulated dataset.
 It works only if cond == 1, otherwise it must be set to c(0, Inf).}

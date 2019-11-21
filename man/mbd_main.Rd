@@ -11,12 +11,12 @@ mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
   verbose = FALSE, q_threshold = 1e-04, maxiter = 10000)
 }
 \arguments{
-\item{sim_pars}{vector of parameters:
+\item{sim_pars}{vector of starting parameters:
 \itemize{
-  \item id == 1 corresponds to lambda (speciation rate)
-  \item id == 2 corresponds to mu (extinction rate)
-  \item id == 3 corresponds to nu (multiple speciation trigger rate)
-  \item id == 4 corresponds to q (single-lineage speciation probability)
+  \item sim_pars[1] is lambda, the sympatric speciation rate;
+  \item sim_pars[2] is mu, the extinction rate;
+  \item sim_pars[3] is nu, the multiple allopatric speciation trigger rate;
+  \item sim_pars[4] is q, the single-lineage speciation probability;
 }}
 
 \item{cond}{sets the conditioning
@@ -24,8 +24,6 @@ mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
  \item cond = 0: no conditioning;
  \item cond = 1: conditioning on stem or crown age
   and non-extinction of the phylogeny;
- \item cond = 2: like cond = 1 but forces at least one visible multiple
- event in the phylogeny
 }}
 
 \item{n_0}{the number of lineages at time equals zero.}

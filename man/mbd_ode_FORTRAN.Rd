@@ -12,7 +12,7 @@ mbd_ode_fortran(initprobs, tvec, parsvec, atol, rtol, methode,
 
 \item{tvec}{vector of times}
 
-\item{parsvec}{vector of paramters for the FORTRAN subroutine.}
+\item{parsvec}{vector of parameters for the FORTRAN subroutine.}
 
 \item{atol}{absolute error tolerance for
 the numerical integration using deSolve.}
