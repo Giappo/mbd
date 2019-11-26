@@ -384,3 +384,25 @@ estimate_n_taxa <- function(pars, n_0, age) {
     stdev = nee_stdev
   )
 }
+
+#' My version of tryCatch
+#' @inheritParams default_params_doc
+#' @export
+my_try_catch <- function(expr) {
+  warn <- err <- NULL
+  value <- withCallingHandlers(
+    tryCatch(
+      expr, error = function(e) {
+        err <<- e
+        NULL
+      }
+    ), warning = function(w) {
+      warn <<- w
+      invokeRestart("muffleWarning")
+    })
+  list(
+    value = value,
+    warning = warn,
+    error = err
+  )
+}

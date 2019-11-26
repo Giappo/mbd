@@ -509,7 +509,9 @@ test_that("condprob_select_eq", {
   max_seed <- 2 + 33 * is_on_ci()
   for (seed in 1:max_seed) {
     set.seed(seed)
-    print(seed)
+    if (identical(pryr::where("seed"), globalenv())) {
+      print(seed)
+    }
     lambda <- runif(n = 1, min = 0.05, max = 0.3)
     mu <- runif(n = 1, min = 0, max = lambda)
     nu <- runif(n = 1, min = 0.3, max = 2.3)
@@ -547,9 +549,11 @@ test_that("condprob_select_eq", {
     } else {
       right_eq <- "q_eq"
     }
-    print(n_sims)
-    print(pc_sim)
-    print(mbd::calculate_condprob_nee_approx(pars = pars, brts = brts))
+    if (identical(pryr::where("seed"), globalenv())) {
+      print(n_sims)
+      print(pc_sim)
+      print(mbd::calculate_condprob_nee_approx(pars = pars, brts = brts))
+    }
     t_select <- system.time(
       eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
     )[[3]]
@@ -601,7 +605,9 @@ test_that("probcond_select_eq: more nasty cases", {
   for (seed in 1:max_seed) {
     if (seed == 15 || seed == 27 || seed == 35) next # too slow for simulations
     set.seed(seed)
-    print(seed)
+    if (identical(pryr::where("seed"), globalenv())) {
+      print(seed)
+    }
     lambda <- runif(n = 1, min = 0.05, max = 1.5)
     mu <- runif(n = 1, min = 0, max = lambda)
     nu <- runif(n = 1, min = 0.3, max = 2.9)
@@ -639,9 +645,11 @@ test_that("probcond_select_eq: more nasty cases", {
     } else {
       right_eq <- "q_eq"
     }
-    print(n_sims)
-    print(pc_sim)
-    print(mbd::calculate_condprob_nee_approx(pars = pars, brts = brts))
+    if (identical(pryr::where("seed"), globalenv())) {
+      print(n_sims)
+      print(pc_sim)
+      print(mbd::calculate_condprob_nee_approx(pars = pars, brts = brts))
+    }
     t_select <- system.time(
       eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
     )[[3]]
