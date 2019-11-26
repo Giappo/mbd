@@ -834,7 +834,7 @@ condprob_select_eq <- function(
     brts = brts
   )
 
-  pc_tolerance <- 0.1
+  pc_tolerance <- 0.05
   if (pc < (0.5 + pc_tolerance) && pc > (0.5 - pc_tolerance)) {
     dist <- (1 / pc_tolerance) * abs(pc - 0.5)
     dist <- dist ^ 2
