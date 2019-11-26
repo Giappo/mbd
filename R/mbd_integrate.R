@@ -88,9 +88,10 @@ mbd_integrate <- function(
 }
 
 #  mbd_solve -----
+
 #' @title mbd ODE system integrator
 #' @description Integrates "func" in the time interval
-# *if* this function returns, the result doesn't contains
+# *if* this function returns, the result doesn't contain
 # any negative number
 #' @inheritParams default_params_doc
 #' @param func function for the right hand side of the ODE
@@ -101,6 +102,41 @@ mbd_solve <- function(
   time_interval,
   func = mbd::mbd_loglik_rhs,
   parms
+) {
+  methodes <- c("lsoda", "ode45", "lsodes")
+  i <- 1
+  out <- NULL
+  while (is.null(out) && i <= length(methodes)) {
+    methode <- methodes[i]
+    temp <- my_try_catch(
+      mbd::mbd_solve2(
+        vector = vector,
+        time_interval = time_interval,
+        func = func,
+        parms = parms,
+        methode = methode
+      )
+    )
+    out <- temp$value
+    i <- i + 1
+  }
+  out
+}
+
+#' @title mbd ODE system integrator
+#' @description Integrates "func" in the time interval
+# *if* this function returns, the result doesn't contain
+# any negative number
+#' @inheritParams default_params_doc
+#' @param func function for the right hand side of the ODE
+#' @author Hanno Hildenbrandt, adapted by Giovanni Laudanno
+#' @export
+mbd_solve2 <- function(
+  vector,
+  time_interval,
+  func = mbd::mbd_loglik_rhs,
+  parms,
+  methode = "lsoda"
 ) {
 
   y <- vector
@@ -120,7 +156,8 @@ mbd_solve <- function(
       parms = parms,
       atol = atol,
       rtol = rtol,
-      tcrit = t1
+      tcrit = t1,
+      methode = methode
     )
     # it might be useful for debug istate = attributes(out)$istate
     # it might be useful for debug rstate = attributes(out)$rstate

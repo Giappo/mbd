@@ -506,9 +506,10 @@ test_that("q = 0", {
 # condprob_select_eq ----
 test_that("condprob_select_eq", {
 
-  max_seed <- 2 + 23 * is_on_ci()
+  max_seed <- 2 + 33 * is_on_ci()
   for (seed in 1:max_seed) {
     set.seed(seed)
+    print(seed)
     lambda <- runif(n = 1, min = 0.05, max = 0.3)
     mu <- runif(n = 1, min = 0, max = lambda)
     nu <- runif(n = 1, min = 0.3, max = 2.3)
@@ -516,33 +517,28 @@ test_that("condprob_select_eq", {
     pars <- c(lambda, mu, nu, q)
     brts <- c(8)
 
+    n_sims <- 200
     pc_sim <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
-      lx = 1e2,
+      lx = n_sims,
       eq = "sim"
     )
-    if (pc_sim > 0.45 && pc_sim < 0.55) {
+    if (pc_sim > 0.48 && pc_sim < 0.52) {
+      n_sims <- 1e3
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
-        lx = 1e3,
+        lx = n_sims,
         eq = "sim"
       )
     }
-    if (pc_sim >= 0.47 && pc_sim <= 0.53) {
+    if (pc_sim > 0.49 && pc_sim < 0.51) {
+      n_sims <- 1e4
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
-        lx = 1e4,
-        eq = "sim"
-      )
-    }
-    if (pc_sim >= 0.495 && pc_sim <= 0.51) {
-      pc_sim <- mbd::calculate_condprob(
-        pars = pars,
-        brts = brts,
-        lx = 1e5,
+        lx = n_sims,
         eq = "sim"
       )
     }
@@ -551,6 +547,9 @@ test_that("condprob_select_eq", {
     } else {
       right_eq <- "q_eq"
     }
+    print(n_sims)
+    print(pc_sim)
+    print(mbd::calculate_condprob_nee_approx(pars = pars, brts = brts))
     t_select <- system.time(
       eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
     )[[3]]
@@ -598,7 +597,7 @@ test_that("probcond_select_eq: nasty case", {
 # probcond_select_eq: more nasty cases ----
 test_that("probcond_select_eq: more nasty cases", {
 
-  max_seed <- 2 + 32 * is_on_ci()
+  max_seed <- 2 + 33 * is_on_ci()
   for (seed in 1:max_seed) {
     if (seed == 15 || seed == 27 || seed == 35) next # too slow for simulations
     set.seed(seed)
@@ -610,25 +609,28 @@ test_that("probcond_select_eq: more nasty cases", {
     pars <- c(lambda, mu, nu, q)
     brts <- c(5)
 
+    n_sims <- 200
     pc_sim <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
-      lx = 200,
+      lx = n_sims,
       eq = "sim"
     )
     if (pc_sim > 0.48 && pc_sim < 0.52) {
+      n_sims <- 1e3
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
-        lx = 1e3,
+        lx = n_sims,
         eq = "sim"
       )
     }
     if (pc_sim > 0.49 && pc_sim < 0.51) {
+      n_sims <- 1e4
       pc_sim <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
-        lx = 1e4,
+        lx = n_sims,
         eq = "sim"
       )
     }
@@ -637,6 +639,7 @@ test_that("probcond_select_eq: more nasty cases", {
     } else {
       right_eq <- "q_eq"
     }
+    print(n_sims)
     print(pc_sim)
     print(mbd::calculate_condprob_nee_approx(pars = pars, brts = brts))
     t_select <- system.time(
