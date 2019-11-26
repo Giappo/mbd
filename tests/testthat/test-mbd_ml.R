@@ -123,6 +123,47 @@ test_that("mbd_ml can produce output", {
   )
 })
 
+test_that("nasty case with no speciations and short crown age", {
+  # thx @richelbilderbeek for suggesting this
+  lambda <- 0.3
+  mu <- 0.1
+  nu <- 0.0
+  q <- 0.0
+  n_0 <- 2
+  cond <- 1
+  age <- 2
+  seed <- 12
+  sim_pars <- c(lambda, mu, nu, q)
+  sim <- mbd::mbd_sim(
+    pars = sim_pars,
+    n_0 = n_0,
+    cond = cond,
+    age = age,
+    seed = seed
+  )
+
+  sim_pars <- c(lambda, mu, nu, q)
+  true_pars <- start_pars <- sim_pars
+  optim_ids <- c(TRUE, TRUE, FALSE, FALSE)
+  verbose <- FALSE
+  maxiter <- 80
+  mle_out <- mbd::mbd_ml(
+    brts = sim$brts,
+    start_pars = start_pars,
+    n_0 = n_0,
+    cond = cond,
+    true_pars = true_pars,
+    optim_ids = optim_ids,
+    verbose = verbose,
+    maxiter = maxiter
+  )
+  testthat::expect_true(mle_out$lambda >= 0)
+  testthat::expect_true(mle_out$mu >= 0)
+  testthat::expect_true(mle_out$nu == nu)
+  testthat::expect_true(mle_out$q == q)
+  testthat::expect_true(mle_out$loglik <= 0)
+})
+
 test_that("abuse", {
 
   brts <- c(10, 9, 7, 6, 5)

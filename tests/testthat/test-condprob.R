@@ -6,6 +6,12 @@ is_on_ci <- function() {
   is_it_on_appveyor || is_it_on_travis # nolint internal function
 }
 
+print_from_global <- function(var = "seed") {
+  if (var %in% ls(.GlobalEnv)) {
+    cat(var, "is", get(var), "\n")
+  }
+}
+
 # diagonal in p_nu_matrix is (1 - q) ^ m (+ k) ----
 test_that("diagonal in p_nu_matrix is (1 - q) ^ m (+ k)", {
 
@@ -504,14 +510,12 @@ test_that("q = 0", {
 })
 
 # condprob_select_eq ----
-test_that("condprob_select_eq", {
+test_that("condprob_select_eq: standard cases", {
 
   max_seed <- 2 + 33 * is_on_ci()
   for (seed in 1:max_seed) {
     set.seed(seed)
-    if (identical(pryr::where("seed"), globalenv())) {
-      print(seed)
-    }
+    print_from_global("seed")
     lambda <- runif(n = 1, min = 0.05, max = 0.3)
     mu <- runif(n = 1, min = 0, max = lambda)
     nu <- runif(n = 1, min = 0.3, max = 2.3)
@@ -519,41 +523,28 @@ test_that("condprob_select_eq", {
     pars <- c(lambda, mu, nu, q)
     brts <- c(8)
 
-    n_sims <- 200
+    pc <- mbd::calculate_condprob_nee_approx(pars = pars, brts = brts)
+    n_sims <- ceiling(
+      max(
+        min(1 / abs(pc - 0.5) ^ 2, 1e4),
+        200
+      )
+    )
+    print_from_global("n_sims")
     pc_sim <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
       lx = n_sims,
       eq = "sim"
     )
-    if (pc_sim > 0.48 && pc_sim < 0.52) {
-      n_sims <- 1e3
-      pc_sim <- mbd::calculate_condprob(
-        pars = pars,
-        brts = brts,
-        lx = n_sims,
-        eq = "sim"
-      )
-    }
-    if (pc_sim > 0.49 && pc_sim < 0.51) {
-      n_sims <- 1e4
-      pc_sim <- mbd::calculate_condprob(
-        pars = pars,
-        brts = brts,
-        lx = n_sims,
-        eq = "sim"
-      )
-    }
+
     if (pc_sim > 0.5) {
       right_eq <- "p_eq"
     } else {
       right_eq <- "q_eq"
     }
-    if (identical(pryr::where("seed"), globalenv())) {
-      print(n_sims)
-      print(pc_sim)
-      print(mbd::calculate_condprob_nee_approx(pars = pars, brts = brts))
-    }
+    print_from_global("pc_sim")
+    print_from_global("pc")
     t_select <- system.time(
       eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
     )[[3]]
@@ -605,9 +596,7 @@ test_that("probcond_select_eq: more nasty cases", {
   for (seed in 1:max_seed) {
     if (seed == 15 || seed == 27 || seed == 35) next # too slow for simulations
     set.seed(seed)
-    if (identical(pryr::where("seed"), globalenv())) {
-      print(seed)
-    }
+    print_from_global("seed")
     lambda <- runif(n = 1, min = 0.05, max = 1.5)
     mu <- runif(n = 1, min = 0, max = lambda)
     nu <- runif(n = 1, min = 0.3, max = 2.9)
@@ -615,41 +604,27 @@ test_that("probcond_select_eq: more nasty cases", {
     pars <- c(lambda, mu, nu, q)
     brts <- c(5)
 
-    n_sims <- 200
+    pc <- mbd::calculate_condprob_nee_approx(pars = pars, brts = brts)
+    n_sims <- ceiling(
+      max(
+        min(1 / abs(pc - 0.5) ^ 2, 1e4),
+        200
+      )
+    )
+    print_from_global("n_sims")
     pc_sim <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
       lx = n_sims,
       eq = "sim"
     )
-    if (pc_sim > 0.48 && pc_sim < 0.52) {
-      n_sims <- 1e3
-      pc_sim <- mbd::calculate_condprob(
-        pars = pars,
-        brts = brts,
-        lx = n_sims,
-        eq = "sim"
-      )
-    }
-    if (pc_sim > 0.49 && pc_sim < 0.51) {
-      n_sims <- 1e4
-      pc_sim <- mbd::calculate_condprob(
-        pars = pars,
-        brts = brts,
-        lx = n_sims,
-        eq = "sim"
-      )
-    }
     if (pc_sim > 0.5) {
       right_eq <- "p_eq"
     } else {
       right_eq <- "q_eq"
     }
-    if (identical(pryr::where("seed"), globalenv())) {
-      print(n_sims)
-      print(pc_sim)
-      print(mbd::calculate_condprob_nee_approx(pars = pars, brts = brts))
-    }
+    print_from_global("pc_sim")
+    print_from_global("pc")
     t_select <- system.time(
       eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
     )[[3]]
