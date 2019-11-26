@@ -18,6 +18,7 @@ Suggests:
   cyclocomp,
   knitr,
   lintr,
+  pryr,
   rappdirs,
   rmarkdown, 
   testthat

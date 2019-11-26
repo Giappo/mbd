@@ -720,7 +720,6 @@ calculate_condprob_nee_approx <- function(
   age <- max(abs(brts))
 
   pc <- mbd::p_t(
-    # lambda = pars[1] + pars[3] * sum(pars[4] ^ 1:100),
     lambda = nee_pars[1],
     mu = nee_pars[2],
     t = age
