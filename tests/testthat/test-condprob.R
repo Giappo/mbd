@@ -506,7 +506,7 @@ test_that("q = 0", {
 # condprob_select_eq ----
 test_that("condprob_select_eq", {
 
-  max_seed <- 30
+  max_seed <- 2 + 23 * is_on_ci()
   for (seed in 1:max_seed) {
     set.seed(seed)
     lambda <- runif(n = 1, min = 0.05, max = 0.3)
@@ -598,7 +598,7 @@ test_that("probcond_select_eq: nasty case", {
 # probcond_select_eq: more nasty cases ----
 test_that("probcond_select_eq: more nasty cases", {
 
-  max_seed <- 60
+  max_seed <- 2 + 32 * is_on_ci()
   for (seed in 1:max_seed) {
     if (seed == 15 || seed == 27 || seed == 35) next # too slow for simulations
     set.seed(seed)
@@ -642,8 +642,8 @@ test_that("probcond_select_eq: more nasty cases", {
     t_select <- system.time(
       eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
     )[[3]]
-    # testthat::expect_equal(eq, right_eq)
-    # testthat::expect_lt(t_select, 300) # select in less than 5 mins
+    testthat::expect_equal(eq, right_eq)
+    testthat::expect_lt(t_select, 300) # select in less than 5 mins
   }
 
 })
