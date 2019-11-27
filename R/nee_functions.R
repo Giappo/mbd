@@ -96,8 +96,8 @@ pn <- function(lambda, mu, t, n) {
 get_nee_pars <- function(
   pars
 ) {
-  nvec <- 1:100
-  nee_lambda <- pars[1] + pars[3] * sum(pars[4] ^ nvec)
+
+  nee_lambda <- pars[1] + pars[3] * pars[4]
   nee_mu <- pars[2]
   c(nee_lambda, nee_mu)
 }

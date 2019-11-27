@@ -625,7 +625,12 @@ condprob_sim <- function(
       ggplot2::geom_histogram(bins = 30) +
       ggplot2::theme_bw() +
       ggplot2::ggtitle(
-        paste0(mbd::get_param_names(), " = ", pars, collapse = ", "),
+        paste0(
+          mbd::get_param_names(),
+          " = ",
+          mbd::to_string2(signif(pars, digits = 3)),
+          collapse = ", "
+        ),
         subtitle = paste0("crown_age = ", max(brts), ", n_sims = ", n_sims)
       )
     ggplot2::ggsave(filename = taxa_plot_filename, plot = taxa_plot)
@@ -714,7 +719,11 @@ calculate_condprob_nee_approx <- function(
   nee_pars <- mbd::get_nee_pars(pars = pars)
   age <- max(abs(brts))
 
-  pc <- mbd::p_t(lambda = nee_pars[1], mu = nee_pars[2], t = age) ^ 2
+  pc <- mbd::p_t(
+    lambda = nee_pars[1],
+    mu = nee_pars[2],
+    t = age
+  ) ^ 2
   pc
 }
 
@@ -824,7 +833,7 @@ condprob_select_eq <- function(
     brts = brts
   )
 
-  pc_tolerance <- 0.1
+  pc_tolerance <- 0.03
   if (pc < (0.5 + pc_tolerance) && pc > (0.5 - pc_tolerance)) {
     dist <- (1 / pc_tolerance) * abs(pc - 0.5)
     dist <- dist ^ 2
