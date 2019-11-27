@@ -95,7 +95,7 @@ mbd_integrate <- function(
 # any negative number
 #' @inheritParams default_params_doc
 #' @param func function for the right hand side of the ODE
-#' @author Hanno Hildenbrandt, adapted by Giovanni Laudanno
+#' @author Giovanni Laudanno, Hanno Hildenbrandt
 #' @export
 mbd_solve <- function(
   vector,
@@ -109,7 +109,7 @@ mbd_solve <- function(
   while (is.null(out) && i <= length(methodes)) {
     methode <- methodes[i]
     temp <- my_try_catch(
-      mbd::mbd_solve2(
+      mbd::mbd_solve_methode(
         vector = vector,
         time_interval = time_interval,
         func = func,
@@ -123,15 +123,15 @@ mbd_solve <- function(
   out
 }
 
-#' @title mbd ODE system integrator
+#' @title mbd ODE system integrator for a specific ode method
 #' @description Integrates "func" in the time interval
 # *if* this function returns, the result doesn't contain
-# any negative number
+# any negative number. It does the job applying a specific ode method (methode)
 #' @inheritParams default_params_doc
 #' @param func function for the right hand side of the ODE
 #' @author Hanno Hildenbrandt, adapted by Giovanni Laudanno
 #' @export
-mbd_solve2 <- function(
+mbd_solve_methode <- function(
   vector,
   time_interval,
   func = mbd::mbd_loglik_rhs,

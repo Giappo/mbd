@@ -71,7 +71,7 @@ test_that("mbd_ml can be silent", {
   n_0 <- 2
   cond <- 1
   verbose <- FALSE
-  ml_sequence <- 1
+  ml_steps <- 1
   maxiter <- 5
   testthat::expect_silent(
     mbd::mbd_ml(
@@ -83,7 +83,7 @@ test_that("mbd_ml can be silent", {
       n_0 = n_0,
       verbose = verbose,
       maxiter = maxiter,
-      ml_sequence = ml_sequence
+      ml_steps = ml_steps
     )
   )
 })
@@ -101,7 +101,7 @@ test_that("mbd_ml can produce output", {
   cond <- 1
   verbose <- TRUE
   maxiter <- 5
-  ml_sequence <- 1
+  ml_steps <- 1
   output <- utils::capture.output(
     mbd::mbd_ml(
       start_pars = start_pars,
@@ -112,7 +112,7 @@ test_that("mbd_ml can produce output", {
       n_0 = n_0,
       verbose = verbose,
       maxiter = maxiter,
-      ml_sequence = ml_sequence
+      ml_steps = ml_steps
     )
   )
   testthat::expect_true(

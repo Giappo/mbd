@@ -19,5 +19,5 @@ mbd_solve(vector, time_interval, func = mbd::mbd_loglik_rhs, parms)
 Integrates "func" in the time interval
 }
 \author{
-Hanno Hildenbrandt, adapted by Giovanni Laudanno
+Giovanni Laudanno, Hanno Hildenbrandt
 }

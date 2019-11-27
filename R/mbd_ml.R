@@ -53,7 +53,7 @@ mbd_ml <- function(
   cond = 1,
   missnumspec = 0,
   lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
-  ml_sequence = c(1),
+  ml_steps = 2,
   optim_ids = rep(TRUE, length(start_pars)),
   true_pars = start_pars,
   tips_interval = c(n_0 * (cond > 0), Inf),
@@ -61,6 +61,7 @@ mbd_ml <- function(
   verbose = TRUE,
   maxiter = 10000
 ) {
+
   # setup and checks
   if (true_pars[3] == 0 | true_pars[4] == 0) {
     q_threshold <- 0
@@ -77,31 +78,24 @@ mbd_ml <- function(
   failout  <- data.frame(t(failpars), loglik = -1, df = -1, conv = -1)
   colnames(failout) <- out_names
 
-  # split maxiter
-  ml_sequence <- ml_sequence / sum(ml_sequence)
-  lx_vec <- sort(ceiling(lx * (2 / 3) ^ (seq_along(ml_sequence) - 1)))
-  first_half_runs <- min(ceiling(length(ml_sequence) / 2), 1)
-  second_half_runs <- length(ml_sequence) - first_half_runs
-  speed_vec <- c(
-    rep("fast", first_half_runs),
-    rep("slow", second_half_runs)
-  )
-  out_list <- vector("list", length(ml_sequence))
+  # set up each ml_step
+  abstol_base <- 1e-6
+  reltol_base <- 1e-5
+  lx_steps <- sort(ceiling(lx * (3 / 2) ^ (1:ml_steps - 1)))
+  abstol_steps <- abstol_base * 10 ^ - (1:ml_steps - 1)
+  reltol_steps <- reltol_base * 10 ^ - (1:ml_steps - 1)
+  maxiter_steps <- rep(maxiter, ml_steps)
+  out_list <- vector("list", ml_steps)
 
-  for (nn in seq_along(ml_sequence)) {
+  # run maximum likelihood for each ml_step
+  for (nn in 1:ml_steps) {
 
-    ml_step <- ml_sequence[nn]
-    speed <- speed_vec[nn]
+    abstol_nn <- abstol_steps[nn]
+    reltol_nn <- reltol_steps[nn]
+    maxiter_nn <- maxiter_steps[nn]
+    lx_nn <- lx_steps[nn]
 
-    # define function to optimize for the n-th run
-    if (speed == "fast") {
-      lx_condprob_fun_nn <- mbd::get_lx_condprob_fast
-    } else {
-      lx_condprob_fun_nn <- mbd::get_lx_condprob_slow
-    }
-    lx_nn <- lx_vec[nn]
-    maxiter_nn <- ceiling(maxiter * ml_step)
-
+    # define function to optimize
     optim_fun_nn <- function(tr_optim_pars) {
       pars2 <- rep(0, length(start_pars))
       optim_pars <- mbd::pars_transform_back(tr_optim_pars)
@@ -115,7 +109,6 @@ mbd_ml <- function(
         n_0 = n_0,
         q_threshold = q_threshold,
         lx = lx_nn,
-        lx_condprob_fun = lx_condprob_fun_nn,
         missnumspec = missnumspec
       )
       if (verbose == TRUE) {
@@ -130,8 +123,8 @@ mbd_ml <- function(
       out
     }
 
+    # initial likelihood
     if (nn == 1) {
-      # initial likelihood
       tr_start_pars <- rep(0, length(start_pars))
       tr_start_pars <- mbd::pars_transform_forward(start_pars[optim_ids]) # nolint internal function
       initloglik <- -optim_fun_nn(tr_start_pars)
@@ -150,7 +143,11 @@ mbd_ml <- function(
     out_nn <- subplex::subplex(
       par = tr_start_pars_nn,
       fn = optim_fun_nn,
-      control = list(maxit = maxiter_nn)
+      control = list(
+        abstol = abstol_nn,
+        reltol = reltol_nn,
+        maxit = maxiter_nn
+      )
     )
     out_list[[nn]] <- out_nn
 
@@ -175,8 +172,8 @@ mbd_ml <- function(
   }
 
   # store output
-  likelihoods <- rep(NA, length(ml_sequence))
-  for (nn in seq_along(ml_sequence)) {
+  likelihoods <- rep(NA, ml_steps)
+  for (nn in 1:ml_steps) {
     temp <- utils::capture.output(
       likelihoods[nn] <- -optim_fun_nn(out_list[[nn]]$par)
     )
@@ -184,7 +181,6 @@ mbd_ml <- function(
   rm(temp)
   the_max <- max(which(likelihoods == max(likelihoods)))
   out <- out_list[[the_max]]
-  out$value <- -likelihoods[the_max]
 
   # return mle results
   outpars <- rep(0, length(start_pars))
