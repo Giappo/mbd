@@ -150,7 +150,7 @@ mbd_main <- function(
   results <- data.frame(results)
 
   # save data
-  mbd::main_save_files( # nolint internal function
+  mbd::main_save_files(
     project_folder = project_folder,
     sim_pars = sim_pars,
     optim_ids = optim_ids,
