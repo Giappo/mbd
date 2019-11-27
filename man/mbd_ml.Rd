@@ -7,10 +7,10 @@
 \usage{
 mbd_ml(loglik_function = mbd::mbd_loglik, brts, start_pars = c(0.5,
   0.3, 0.5, 0.3), n_0 = 2, cond = 1, missnumspec = 0, lx = min(1 +
-  3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
-  ml_sequence = c(1), optim_ids = rep(TRUE, length(start_pars)),
-  true_pars = start_pars, tips_interval = c(n_0 * (cond > 0), Inf),
-  q_threshold = 0.001, verbose = TRUE, maxiter = 10000)
+  3 * (length(brts) + max(missnumspec)), mbd::max_lx()), ml_steps = 2,
+  optim_ids = rep(TRUE, length(start_pars)), true_pars = start_pars,
+  tips_interval = c(n_0 * (cond > 0), Inf), q_threshold = 0.001,
+  verbose = TRUE, maxiter = 10000)
 }
 \arguments{
 \item{loglik_function}{the loglik function}
@@ -33,9 +33,10 @@ but missing in the phylogeny.}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
 
-\item{ml_sequence}{defines the sequence of the (increasing) accuracy
-steps of the ml algorithm. Set it to c(1) (or just 1) if you just want to
-use the fast algorithm.}
+\item{ml_steps}{number of increasing precision steps to adopt in the ml
+routine. Each step will increment the absolute and relative tolerances
+of the optimizer as well as the number of equations used by
+the likelihood function.}
 
 \item{optim_ids}{ids of the parameters you want to optimize.}
 

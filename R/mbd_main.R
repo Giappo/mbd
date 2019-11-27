@@ -13,13 +13,14 @@ mbd_main <- function(
   seed,
   start_pars = c(0.3, 0.1, 1.5, 0.15),
   optim_ids = rep(TRUE, length(start_pars)),
-  ml_sequence = c(0.8, 0.2),
+  ml_steps = 2,
   loglik_functions = mbd::mbd_loglik,
   project_folder = NULL,
   verbose = FALSE,
   q_threshold = 1e-4,
   maxiter = 10000
 ) {
+
   # check formats
   sim_pars <- as.numeric(sim_pars)
   start_pars <- as.numeric(start_pars)
@@ -78,7 +79,7 @@ mbd_main <- function(
       tips_interval = tips_interval,
       start_pars = start_pars,
       optim_ids = optim_ids,
-      ml_sequence = ml_sequence,
+      ml_steps = ml_steps,
       true_pars = sim_pars,
       verbose = verbose,
       lx = min(1 + 3 * length(brts), mbd::max_lx()),

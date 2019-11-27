@@ -20,7 +20,7 @@ test_that("use", {
   loglik_functions <- mbd::mbd_loglik
   optim_ids <- c(TRUE, TRUE, TRUE, TRUE)
   maxiter <- 20 # maximum number of subplex iterations
-  ml_sequence <- 1
+  ml_steps <- 2
   verbose <- FALSE
   test <- mbd::mbd_main(
     seed = seed,
@@ -30,7 +30,7 @@ test_that("use", {
     age = age,
     start_pars = sim_pars,
     loglik_functions = loglik_functions,
-    ml_sequence = ml_sequence,
+    ml_steps = ml_steps,
     optim_ids = optim_ids,
     maxiter = maxiter,
     verbose = verbose
@@ -184,7 +184,7 @@ test_that("it works also for a subset of parameters", {
   n_0 <- 2
   loglik_functions <- mbd::mbd_loglik
   optim_ids <- c(TRUE, FALSE, FALSE, FALSE)
-  ml_sequence <- 1
+  ml_steps <- 1
   verbose <- FALSE
   maxiter <- 20 # maximum number of subplex iterations
   test <- mbd::mbd_main(
@@ -195,7 +195,7 @@ test_that("it works also for a subset of parameters", {
     age = age,
     tips_interval = c(n_0, Inf),
     start_pars = sim_pars,
-    ml_sequence = ml_sequence,
+    ml_steps = ml_steps,
     loglik_functions = loglik_functions,
     optim_ids = optim_ids,
     maxiter = maxiter,

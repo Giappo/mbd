@@ -17,8 +17,8 @@ default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   m2_mat, mm, matrices, matrix, matrix_a, matrix_builder, max_iter, max_k,
   max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
   mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
-  models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species, n_sims,
-  n_steps, n_subs, nee_pars, nu, nu_limit, nu_matrix, optimmethod,
+  ml_steps, models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species,
+  n_sims, n_steps, n_subs, nee_pars, nu, nu_limit, nu_matrix, optimmethod,
   optim_ids, pp, pp2, parms, parmsvec, params, pars, pars_transform,
   pars_transformed, parsfix, parsvec, pc, pool, precision, print_errors,
   printit, project_folder, pvec, q, qq, qq2, q_t, q_vector, q_threshold,
@@ -204,6 +204,11 @@ that have to be present in the simulated phylogeny.}
 
 \item{missnumspec}{The number of species that are in the clade,
 but missing in the phylogeny.}
+
+\item{ml_steps}{number of increasing precision steps to adopt in the ml
+routine. Each step will increment the absolute and relative tolerances
+of the optimizer as well as the number of equations used by
+the likelihood function.}
 
 \item{models}{the models you want to use to define the likelihood}
 

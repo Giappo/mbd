@@ -22,6 +22,7 @@ mbd_loglik <- function(
 ) {
 
   # BASIC SETTINGS AND CHECKS
+  lx <- min(lx, mbd::max_lx())
   mbd::check_brts(brts = brts, n_0 = n_0)
   mbd::check_cond(cond = cond, tips_interval = tips_interval, n_0 = n_0)
   if (

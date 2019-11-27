@@ -101,6 +101,10 @@
 #' that have to be present in the simulated phylogeny.
 #' @param missnumspec The number of species that are in the clade,
 #'   but missing in the phylogeny.
+#' @param ml_steps number of increasing precision steps to adopt in the ml
+#'  routine. Each step will increment the absolute and relative tolerances
+#'  of the optimizer as well as the number of equations used by
+#'  the likelihood function.
 #' @param models the models you want to use to define the likelihood
 #' @param mu the extinction rate.
 #' @param mu_limit Upper limit to mu estimations.
@@ -300,6 +304,7 @@ default_params_doc <- function(
   methode,
   minimum_multiple_births,
   missnumspec,
+  ml_steps,
   models,
   mu,
   mu_limit,
