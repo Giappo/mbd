@@ -27,7 +27,7 @@ check_pars <- function(
   safety_checks = TRUE,
   lambda_limit = 10,
   mu_limit = 10,
-  nu_limit = Inf,
+  nu_limit = 100,
   q_threshold = 1e-3
 ) {
   if (missing(q_threshold)) {

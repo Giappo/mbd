@@ -5,7 +5,7 @@
 \title{Check mbd pars}
 \usage{
 check_pars(pars, safety_checks = TRUE, lambda_limit = 10,
-  mu_limit = 10, nu_limit = Inf, q_threshold = 0.001)
+  mu_limit = 10, nu_limit = 100, q_threshold = 0.001)
 }
 \arguments{
 \item{pars}{vector of parameters:

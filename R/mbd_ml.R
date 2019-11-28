@@ -111,6 +111,7 @@ mbd_ml <- function(
         lx = lx_nn,
         missnumspec = missnumspec
       )
+
       if (verbose == TRUE) {
         printed_values <- paste0(
           c(par_names, "loglik"),

@@ -11,24 +11,25 @@ default_params_doc(a_abstol, a_reltol, atol, abstol, account_name, after,
   empty_pp, empty_qq, eq, expr, fortran, func, function_name,
   function_names, functions_names, idparsfix, idparsopt, initparsopt,
   init_n_lineages, initprobs, init_probs, input_trees_path, input_xml,
-  interval_max, interval_min, iterations, k, lambda, lambda_limit,
+  interval_max, interval_min, iterations, k, lambda, lambdas, lambda_limit,
   likelihood, l_matrix, loglik_function, loglik_functions, logs,
   log_nu_mat, log_q_mat, lx, lx0, lx_top, lx_condprob_fun, m1, m2, m1_mat,
   m2_mat, mm, matrices, matrix, matrix_a, matrix_builder, max_iter, max_k,
   max_number_of_species, max_repetitions, max_sims, maxit, maxiter,
   mbd_lambda, message, methode, minimum_multiple_births, missnumspec,
-  ml_steps, models, mu, mu_limit, mutation_rate, n_0, n_0s, n_species,
-  n_sims, n_steps, n_subs, nee_pars, nu, nu_limit, nu_matrix, optimmethod,
-  optim_ids, pp, pp2, parms, parmsvec, params, pars, pars_transform,
-  pars_transformed, parsfix, parsvec, pc, pool, precision, print_errors,
-  printit, project_folder, pvec, q, qq, qq2, q_t, q_vector, q_threshold,
-  quantiles_choice, qvec, recursive, rtol, reltol, res, results,
-  results_folder, rhs_function, runmod, s, safety_checks, saveit, seed,
-  sample_interval, sequence_length, ml_sequence, sim, sim_pars, sim_phylo,
-  start_pars, starting_seed, subsamp, sum_probs_1, sum_probs_2, t, tcrit,
-  times, tvec, t1, t2, t_0, t_0s, tips_interval, time_interval, tol, tr,
-  transition_matrix, trparsfix, trparsopt, true_pars, values, vector,
-  verbose, x, x_name, x_splits, y, y_name, y_splits, z, z_name)
+  ml_steps, models, mu, mus, mu_limit, mutation_rate, n_0, n_0s, n_species,
+  n_sims, n_steps, n_subs, nee_pars, nu, nus, nu_limit, nu_matrix,
+  optimmethod, optim_ids, pp, pp2, parms, parmsvec, params, pars,
+  pars_transform, pars_transformed, parsfix, parsvec, pc, pool, precision,
+  print_errors, printit, project_folder, pvec, q, qs, qq, qq2, q_t,
+  q_vector, q_threshold, quantiles_choice, qvec, recursive, rtol, reltol,
+  res, results, results_folder, rhs_function, runmod, s, safety_checks,
+  saveit, seed, sample_interval, sequence_length, ml_sequence, sim,
+  sim_pars, sim_phylo, start_pars, starting_seed, subsamp, sum_probs_1,
+  sum_probs_2, t, tcrit, times, tvec, t1, t2, t_0, t_0s, tips_interval,
+  time_interval, tol, tr, transition_matrix, trparsfix, trparsopt,
+  true_pars, values, vector, verbose, x, x_name, x_splits, y, y_name,
+  y_splits, z, z_name)
 }
 \arguments{
 \item{a_abstol}{absolute error tolerance for
@@ -131,6 +132,8 @@ The ids are defined as follows:
 
 \item{lambda}{the sympatric speciation rate.}
 
+\item{lambdas}{the sympatric speciation rates.}
+
 \item{lambda_limit}{Upper limit to lambda estimations.}
 
 \item{likelihood}{the likelihood}
@@ -214,6 +217,8 @@ the likelihood function.}
 
 \item{mu}{the extinction rate.}
 
+\item{mus}{the extinction rates.}
+
 \item{mu_limit}{Upper limit to mu estimations.}
 
 \item{mutation_rate}{something}
@@ -233,6 +238,8 @@ the likelihood function.}
 \item{nee_pars}{the equivalent parameters in Nee et al.'s approach}
 
 \item{nu}{the multiple allopatric speciation trigger rate.}
+
+\item{nus}{the multiple allopatric speciation trigger rates.}
 
 \item{nu_limit}{Upper limit to nu estimations.}
 
@@ -285,6 +292,8 @@ according to y = x / (1 + x)}
 \item{pvec}{a vector of probabilities P}
 
 \item{q}{the single-lineage speciation probability at a triggered event.}
+
+\item{qs}{the single-lineage speciation probabilities at a triggered event.}
 
 \item{qq}{the matrix q_{m1, m2}}
 
