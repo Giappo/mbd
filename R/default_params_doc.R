@@ -59,6 +59,7 @@
 #' @param iterations something
 #' @param k the number of visible species in the phylogeny at a given time.
 #' @param lambda the sympatric speciation rate.
+#' @param lambdas the sympatric speciation rates.
 #' @param lambda_limit Upper limit to lambda estimations.
 #' @param likelihood the likelihood
 #' @param l_matrix the l-table
@@ -107,6 +108,7 @@
 #'  the likelihood function.
 #' @param models the models you want to use to define the likelihood
 #' @param mu the extinction rate.
+#' @param mus the extinction rates.
 #' @param mu_limit Upper limit to mu estimations.
 #' @param mutation_rate something
 #' @param n_0 the number of lineages at time equals zero.
@@ -117,6 +119,7 @@
 #' @param n_subs something
 #' @param nee_pars the equivalent parameters in Nee et al.'s approach
 #' @param nu the multiple allopatric speciation trigger rate.
+#' @param nus the multiple allopatric speciation trigger rates.
 #' @param nu_limit Upper limit to nu estimations.
 #' @param nu_matrix matrix for the nu component. Component {m,n} is equal to
 #'  choose(n, m - n) x q ^ (m - n) x (1 - q) ^ (2 * n - m)
@@ -150,6 +153,7 @@
 #' @param q_vector the \code{Q} vector from
 #' 'Etienne et al. 2012 - Proc. R. Soc. B'.
 #' @param q the single-lineage speciation probability at a triggered event.
+#' @param qs the single-lineage speciation probabilities at a triggered event.
 #' @param qq the matrix q_{m1, m2}
 #' @param qq2 the matrix q_{m1, m2}, with an empty frame
 #' @param quantiles_choice something
@@ -271,6 +275,7 @@ default_params_doc <- function(
   iterations,
   k,
   lambda,
+  lambdas,
   lambda_limit,
   likelihood,
   l_matrix,
@@ -307,6 +312,7 @@ default_params_doc <- function(
   ml_steps,
   models,
   mu,
+  mus,
   mu_limit,
   mutation_rate,
   n_0,
@@ -317,6 +323,7 @@ default_params_doc <- function(
   n_subs,
   nee_pars,
   nu,
+  nus,
   nu_limit,
   nu_matrix,
   optimmethod,
@@ -339,6 +346,7 @@ default_params_doc <- function(
   project_folder,
   pvec,
   q,
+  qs,
   qq,
   qq2,
   q_t,

@@ -50,6 +50,8 @@ mbd_main <- function(
     seed = seed
   )
   brts <- sim$brts
+  n_mb_events <- mbd::count_n_mb_events(brts = brts)
+  percentage_mb_events <- mbd::count_percentage_mb_events(brts = brts)
   mbd::print_info(brts = brts, n_0 = n_0, cond = cond, verbose = verbose)
   if (!is.list(brts)) {
     tips <- (n_0s[1] - 1) + length(brts)
@@ -73,7 +75,7 @@ mbd_main <- function(
     }
     mle_out <- mbd::mbd_ml(
       loglik_function = get(function_names[m]),
-      brts = sim$brts,
+      brts = brts,
       cond = cond,
       n_0 = n_0,
       tips_interval = tips_interval,
@@ -117,6 +119,8 @@ mbd_main <- function(
       ncol = length(tips),
       byrow = TRUE
     ),
+    n_mb_events,
+    percentage_mb_events,
     matrix(
       optim_ids,
       nrow = length(loglik_functions),
@@ -143,6 +147,8 @@ mbd_main <- function(
     "n_0",
     t_0s_label,
     tips_label,
+    "n_mb_events",
+    "percentage_mb_events",
     paste0("optim_", colnames(mle[seq_along(start_pars)])),
     "model"
   )

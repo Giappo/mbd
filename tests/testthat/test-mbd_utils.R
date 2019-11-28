@@ -158,10 +158,10 @@ test_that("print_info", {
   )
 })
 
-# mbd_logliks_experiment -----
-test_that("mbd_logliks_experiment", {
+# mbd_experiment_logliks -----
+test_that("mbd_experiment_logliks", {
   loglik_func <- get(
-    mbd::mbd_logliks_experiment()
+    mbd::mbd_experiment_logliks()
   )
   testthat::expect_true(
     is.numeric(

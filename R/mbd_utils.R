@@ -64,7 +64,7 @@ mbd_condprob_eqs <- function() {
 #' @inheritParams default_params_doc
 #' @return loglik functions to use for the experiment
 #' @export
-mbd_logliks_experiment <- function() {
+mbd_experiment_logliks <- function() {
   fun_list <- ls(paste0("package:", get_pkg_name())) # nolint internal function
   mbd_funs <- fun_list[sapply(
     fun_list, function(x)
@@ -73,6 +73,32 @@ mbd_logliks_experiment <- function() {
       !any(grepl("logliks", x))
   )]
   mbd_funs
+}
+
+#' Generates parameters for the mbd experiment
+#' @inheritParams default_params_doc
+#' @return the parameter table for the experiment
+#' @author Giovanni Laudanno
+#' @export
+mbd_experiment_pars <- function(
+  lambdas = c(0.2),
+  mus = c(0, 0.1),
+  nus = c(0, 0.5, 1.0, 1.5),
+  qs = c(0.1, 0.15, 0.2),
+  cond = 1,
+  age = 8
+) {
+
+  x <- expand.grid(lambda = lambdas, mu = mus, nu = nus, q = qs)
+  no_mbd_lines <-
+    apply(X = x, MARGIN = 1, FUN = function(y) y[3] == 0 | y[4] == 0)
+  no_mbd_x <- expand.grid(lambda = lambdas, mu = mus, nu = 0, q = 0)
+  x[no_mbd_lines, ] <- no_mbd_x
+  x <- dplyr::distinct(x)
+  x$age <- age
+  x$cond <- cond
+  rownames(x) <- NULL
+  x
 }
 
 #---- general functions
@@ -300,7 +326,6 @@ count_n_mb_events <- function(brts) {
 #' @author Giovanni Laudanno
 #' @export
 count_percentage_mb_events <- function(brts) {
-
   mb_species <- mbd::count_n_mb_events(brts)
   if (mb_species == 0) {
     percentage_mb_species <- 0
