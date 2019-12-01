@@ -136,38 +136,3 @@ for (i in seq_along(lx_seq)) {
     res3 -> res
   }
 }
-#
-# # plot
-# df <- res
-# first_col_index <- which(names(df) == "lx=5")
-# df2 <- tidyr::gather(
-#   df, "lx", "value", first_col_index:ncol(df)
-# )
-# df2[, "lx"] <- as.numeric(gsub(x = df2[, "lx"], pattern = "lx=", replacement = ""))
-# df2$parsetting <- interaction(df2$lambda, df2$mu, df2$nu, df2$q, sep = "-")
-# df2 <- df2
-#
-# # plot i-th
-# pc_plot <- ggplot2::ggplot(
-#   data = df2,
-#   ggplot2::aes(
-#     x = lx,
-#     y = value,
-#     colour = eq
-#   )
-# ) +
-#   ggplot2::geom_line() +
-#   ggplot2::theme_bw() +
-#   ggplot2::facet_wrap(
-#     parsetting ~ .
-#   ) +
-#   ggplot2::ggtitle("Conditional probabilities vs lx - pars = c(lambda, mu, nu, q) - age = 8")
-# pc_plot
-#
-# # save
-# dpi <- min(2000, 25 * lx)
-# scale <- 1.5
-# ggplot2::ggsave(filename = filename_png, plot = pc_plot, dpi = dpi, scale = scale)
-# save(res, file = filename_rdata)
-# ggplot2::ggsave(filename = filename2_png, plot = pc_plot, dpi = dpi, scale = scale)
-# save(res, file = filename2_rdata)
