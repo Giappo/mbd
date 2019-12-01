@@ -297,33 +297,24 @@ initialize_q_t <- function(
 #' @export
 check_sum_probs <- function(
   sum_probs_1,
-  sum_probs_2,
-  debug_mode
+  sum_probs_2
 ) {
   # Removing sum_probs_1 and sum_probs_2 effects from the LL
   if (!(all(sum_probs_1 > 0))) {
     cat("The value of sum_probs_1 is: ", sum_probs_1, "\n")
-    if (debug_mode == FALSE) {
-      stop("problems: sum_probs_1 is non positive!")
-    }
+    stop("problems: sum_probs_1 is non positive!")
   }
   if (!(all(sum_probs_2 > 0))) {
     cat("The value of sum_probs_2 is: ", sum_probs_2, "\n")
-    if (debug_mode == FALSE) {
-      stop("problems: sum_probs_2 is non positive!")
-    }
+    stop("problems: sum_probs_2 is non positive!")
   }
   if (any(is.na(sum_probs_1) | is.nan(sum_probs_1))) {
     cat("The value of sum_probs_1 is: ", sum_probs_1, "\n")
-    if (debug_mode == FALSE) {
-      stop("problems: sum_probs_1 is Na or NaN!")
-    }
+    stop("problems: sum_probs_1 is Na or NaN!")
   }
   if (any(is.na(sum_probs_2) | is.nan(sum_probs_2))) {
     cat("The value of sum_probs_2 is: ", sum_probs_2, "\n")
-    if (debug_mode == FALSE) {
-      stop("problems: sum_probs_2 is Na or NaN!")
-    }
+    stop("problems: sum_probs_2 is Na or NaN!")
   }
 }
 
@@ -335,18 +326,13 @@ deliver_loglik <- function(
   sum_probs_1,
   sum_probs_2,
   cond,
-  pc,
-  debug_mode
+  pc
 ) {
-  if (debug_mode == TRUE) {
-    cat("The value of the likelihood is: ", likelihood, "\n")
-  }
 
   # Removing sum_probs_1 and sum_probs_2 effects from the LL
   mbd::check_sum_probs(
     sum_probs_1 = sum_probs_1,
-    sum_probs_2 = sum_probs_2,
-    debug_mode = debug_mode
+    sum_probs_2 = sum_probs_2
   )
   loglik <- log(likelihood) + sum(log(sum_probs_1)) + sum(log(sum_probs_2))
 

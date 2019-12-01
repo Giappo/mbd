@@ -4,13 +4,10 @@
 \alias{check_pc}
 \title{Check conditional probability}
 \usage{
-check_pc(pc, debug_mode = FALSE)
+check_pc(pc)
 }
 \arguments{
 \item{pc}{conditional probability}
-
-\item{debug_mode}{If TRUE allows to run even when there are errors and
-expose them.}
 }
 \value{
 Nothing

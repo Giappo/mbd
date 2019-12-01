@@ -4,7 +4,7 @@
 \alias{check_sum_probs}
 \title{Check the vectors of probability sums computed during likelihood integration}
 \usage{
-check_sum_probs(sum_probs_1, sum_probs_2, debug_mode)
+check_sum_probs(sum_probs_1, sum_probs_2)
 }
 \arguments{
 \item{sum_probs_1}{vector of probability sums, used during the
@@ -12,9 +12,6 @@ integration of \link{mbd_loglik}}
 
 \item{sum_probs_2}{vector of probability sums, used during the
 integration of \link{mbd_loglik}}
-
-\item{debug_mode}{If TRUE allows to run even when there are errors and
-expose them.}
 }
 \description{
 Check the vectors of probability sums computed during likelihood integration

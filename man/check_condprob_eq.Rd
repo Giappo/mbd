@@ -14,7 +14,7 @@ Q-equation of "p_eq" for the P-equation.}
 Nothing
 }
 \description{
-CCheck "equation" for conditional probability
+Check "equation" for conditional probability
 }
 \author{
 Giovanni Laudanno

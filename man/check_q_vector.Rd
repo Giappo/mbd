@@ -4,7 +4,7 @@
 \alias{check_q_vector}
 \title{Check q_t}
 \usage{
-check_q_vector(q_t, t, pars, brts, debug_mode = FALSE)
+check_q_vector(q_t, t, pars, brts)
 }
 \arguments{
 \item{q_t}{the q_vector in time}
@@ -20,9 +20,6 @@ check_q_vector(q_t, t, pars, brts, debug_mode = FALSE)
 }}
 
 \item{brts}{A set of branching times of a phylogeny.}
-
-\item{debug_mode}{If TRUE allows to run even when there are errors and
-expose them.}
 }
 \value{
 Nothing

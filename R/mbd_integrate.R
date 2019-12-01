@@ -108,7 +108,7 @@ mbd_solve <- function(
   out <- NULL
   while (is.null(out) && i <= length(methodes)) {
     methode <- methodes[i]
-    temp <- my_try_catch(
+    temp <- mbd::my_try_catch(
       mbd::mbd_solve_methode(
         vector = vector,
         time_interval = time_interval,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/nee_functions.R
 \name{get_nee_pars}
 \alias{get_nee_pars}
-\title{Calculate the approximate Nee et al's equivalent parameters, starting from
+\title{Calculate the Nee et al's equivalent parameters, starting from
  the mbd parameters}
 \usage{
 get_nee_pars(pars)
@@ -17,6 +17,6 @@ get_nee_pars(pars)
 }}
 }
 \description{
-Calculate the approximate Nee et al's equivalent parameters, starting from
+Calculate the Nee et al's equivalent parameters, starting from
  the mbd parameters
 }

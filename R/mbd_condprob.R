@@ -88,11 +88,10 @@ condprob_peq_log_q_mat <- function(lx, q) {
 condprob_log_nu_mat <- function(lx, eq) {
   mbd::check_lx(lx)
   mbd::check_condprob_eq(eq = eq)
-  if (eq == "p_eq" || eq == "sim") {
-    log_nu_mat <- mbd::condprob_peq_log_nu_mat(lx)
-  }
   if (eq == "q_eq") {
     log_nu_mat <- mbd::condprob_qeq_log_nu_mat(lx)
+  } else {
+    log_nu_mat <- mbd::condprob_peq_log_nu_mat(lx)
   }
   log_nu_mat
 }
@@ -102,13 +101,13 @@ condprob_log_nu_mat <- function(lx, eq) {
 #' @author Giovanni Laudanno
 #' @export
 condprob_log_q_mat <- function(lx, q, eq) {
+  q <- unlist(unname(q))
   mbd::check_lx(lx)
   mbd::check_condprob_eq(eq = eq)
-  if (eq == "p_eq" || eq == "sim") {
-    log_q_mat <- mbd::condprob_peq_log_q_mat(lx = lx, q = q)
-  }
   if (eq == "q_eq") {
     log_q_mat <- mbd::condprob_qeq_log_q_mat(lx = lx, q = q)
+  } else {
+    log_q_mat <- mbd::condprob_peq_log_q_mat(lx = lx, q = q)
   }
   log_q_mat
 }
@@ -179,7 +178,8 @@ create_fast_parmsvec <- function(
   eq,
   fortran
 ) {
-  if (eq == "sim") {
+  pars <- unlist(unname(pars))
+  if (eq == "sim" || eq == "nee") {
     lx <- 10
     fortran <- FALSE
   }
@@ -640,6 +640,30 @@ condprob_sim <- function(
   pc_sim
 }
 
+#' Conditional probability using Nee et al's approach
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+condprob_nee <- function(
+  brts,
+  parmsvec
+) {
+
+  n_0 <- 2
+  lambda <- parmsvec$lambda
+  mu <- parmsvec$mu
+  nu <- parmsvec$nu
+  q <- 1 - parmsvec$nu_matrix[2, 2]
+  pars <- c(lambda, mu, nu, q)
+
+  pc <- mbd::calculate_condprob_nee(
+    pars,
+    brts,
+    n_0 = n_0
+  )
+  pc
+}
+
 #' Calculate conditional probability: loglik mode
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
@@ -675,6 +699,12 @@ condprob <- function(
       lx = lx
     ))
   }
+  if (eq == "nee") {
+    return(mbd::condprob_nee(
+      brts = brts,
+      parmsvec = parmsvec
+    ))
+  }
   stop("'eq' is not valid")
 }
 
@@ -686,11 +716,7 @@ calculate_condprob <- function(
   pars,
   brts,
   lx,
-  eq = mbd::condprob_select_eq(
-    pars = pars,
-    brts = brts,
-    fortran = fortran
-  ),
+  eq = "nee",
   fortran = TRUE
 ) {
 
@@ -712,9 +738,10 @@ calculate_condprob <- function(
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
-calculate_condprob_nee_approx <- function(
+calculate_condprob_nee <- function(
   pars,
-  brts
+  brts,
+  n_0 = 2
 ) {
   nee_pars <- mbd::get_nee_pars(pars = pars)
   age <- max(abs(brts))
@@ -723,7 +750,7 @@ calculate_condprob_nee_approx <- function(
     lambda = nee_pars[1],
     mu = nee_pars[2],
     t = age
-  ) ^ 2
+  ) ^ n_0
   pc
 }
 
@@ -792,7 +819,7 @@ condprob_selector_middle <- function(
   fit_p <- stats::splinefun(x = x_p, y = y_p, method = "monoH.FC")
   fit_q <- stats::splinefun(x = x_q, y = y_q, method = "monoH.FC")
   f <- function(x) fit_p(x, deriv = 0L) - fit_q(x, deriv = 0L)
-  lx_meet <- stats::uniroot(f, interval = c(0, 1e5))$root
+  lx_meet <- stats::uniroot(f, interval = c(0, 1e36))$root
   y3 <- fit_p(lx_meet)
 
   if (1 == 2) {
@@ -828,7 +855,7 @@ condprob_select_eq <- function(
   fortran = TRUE
 ) {
 
-  pc <- mbd::calculate_condprob_nee_approx(
+  pc <- mbd::calculate_condprob_nee(
     pars = pars,
     brts = brts
   )
@@ -875,7 +902,7 @@ min_lx_condprob <- function() {
 #' Fix the value for lx for condprob in \link{mbd_loglik}
 #' @inheritParams default_params_doc
 #' @export
-get_lx_condprob_fast <- function(pars, n_0, age, lx) {
+get_lx_condprob <- function(pars, n_0, age, lx) {
   rm(pars)
   rm(n_0)
   rm(age)
@@ -886,30 +913,6 @@ get_lx_condprob_fast <- function(pars, n_0, age, lx) {
       mbd::max_lx_condprob(),
       ceiling(lx / 2)
     )
-  )
-  lx_condprob
-}
-
-#' Fix the value for lx for condprob in \link{mbd_loglik}
-#' @inheritParams default_params_doc
-#' @export
-get_lx_condprob_slow <- function(pars, n_0, age, lx) {
-
-  nee_pars <- mbd::get_nee_pars(pars = pars)
-  nee_mean <- mbd::nee_mean_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
-  nee_stdev <- mbd::nee_stdev_nt(nee_pars = nee_pars, n_0 = n_0, age = age)
-  lx_condprob_slow <- max(
-    mbd::min_lx_condprob(),
-    min(
-      mbd::max_lx_condprob(),
-      ceiling(
-        (nee_mean + 2 * nee_stdev) / 2
-      )
-    )
-  )
-  lx_condprob <- max(
-    lx_condprob_slow,
-    mbd::get_lx_condprob_fast(pars = pars, n_0 = n_0, age = age, lx = lx)
   )
   lx_condprob
 }

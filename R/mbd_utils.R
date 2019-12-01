@@ -54,7 +54,7 @@ mbd_conds <- function() {
 #' @return the conditionings
 #' @export
 mbd_condprob_eqs <- function() {
-  eqs <- c("p_eq", "q_eq", "sim")
+  eqs <- c("p_eq", "q_eq", "sim", "nee")
   eqs
 }
 

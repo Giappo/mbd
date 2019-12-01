@@ -15,6 +15,8 @@ print_from_global <- function(var = "seed") {
 # diagonal in p_nu_matrix is (1 - q) ^ m (+ k) ----
 test_that("diagonal in p_nu_matrix is (1 - q) ^ m (+ k)", {
 
+  skip("Use Nee instead")
+
   q <- 0.2
   lx <- 8
 
@@ -40,6 +42,8 @@ test_that("diagonal in p_nu_matrix is (1 - q) ^ m (+ k)", {
 
 # right parmsvec in FORTRAN and R ----
 test_that("right parmsvec in FORTRAN and R", {
+
+  skip("Use Nee instead")
 
   pars <- c(0.3, 0.1, 1.7, 0.13)
   lx <- 6
@@ -85,6 +89,8 @@ test_that("right parmsvec in FORTRAN and R", {
 
 # right differentials in R ----
 test_that("right differentials in R", {
+
+  skip("Use Nee instead")
 
   pars <- c(0.2, 0.1, 1.4, 0.12)
   lx <- 40
@@ -145,6 +151,8 @@ test_that("right differentials in R", {
 # full P_{n1, n2} and Q_{m1, m2} distributions ----
 test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
+  skip("Use Nee instead")
+
   pars <- c(0.3, 0.15, 1.8, 0.11)
   lx <- 18
   brts <- c(8)
@@ -204,6 +212,8 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 # P_{n1, n2} sums up to one ----
 test_that("P_{n1, n2} sums up to one", {
 
+  skip("Use Nee instead")
+
   pars <- c(0.2, 0.1, 2.5, 0.2)
   lx <- 22
   brts <- c(2)
@@ -230,6 +240,8 @@ test_that("P_{n1, n2} sums up to one", {
 
 # FORTRAN vs R: same result but FORTRAN is faster ----
 test_that("FORTRAN vs R: same result but FORTRAN is faster", {
+
+  skip("Use Nee instead")
 
   brts <- c(8)
   pars <- c(0.2, 0.1, 1.2, 0.12)
@@ -285,6 +297,8 @@ test_that("FORTRAN vs R: same result but FORTRAN is faster", {
 
 # FORTRAN vs R: hard test ----
 test_that("FORTRAN vs R: hard test", {
+
+  skip("Use Nee instead")
 
   if (!is_on_ci()) {
     skip("To be performed on ci.")
@@ -345,6 +359,8 @@ test_that("FORTRAN vs R: hard test", {
 # condprob for mu = 0 ----
 test_that("condprob for mu = 0", {
 
+  skip("Use Nee instead")
+
   pars <- c(0.2, 0, 1, 0.1)
   brts <- c(3)
   cond <- 1
@@ -376,6 +392,8 @@ test_that("condprob for mu = 0", {
 
 # bd: nu = q = 0 ----
 test_that("nu = q = 0", {
+
+  skip("Use Nee instead")
 
   pars <- c(0.2, 0.15, 0, 0)
   brts <- c(1)
@@ -422,6 +440,8 @@ test_that("nu = q = 0", {
 # bd: nu = 0 ----
 test_that("nu = 0", {
 
+  skip("Use Nee instead")
+
   pars <- c(0.2, 0.15, 0, 0.5)
   brts <- c(1)
   cond <- 1
@@ -466,6 +486,8 @@ test_that("nu = 0", {
 
 # bd: q = 0 ----
 test_that("q = 0", {
+
+  skip("Use Nee instead")
 
   pars <- c(0.2, 0.15, 3, 0)
   brts <- c(1)
@@ -512,6 +534,8 @@ test_that("q = 0", {
 # condprob_select_eq ----
 test_that("condprob_select_eq: standard cases", {
 
+  skip("Use Nee instead")
+
   max_seed <- 2 + 33 * is_on_ci()
   for (seed in 1:max_seed) {
     set.seed(seed)
@@ -523,7 +547,7 @@ test_that("condprob_select_eq: standard cases", {
     pars <- c(lambda, mu, nu, q)
     brts <- c(8)
 
-    pc <- mbd::calculate_condprob_nee_approx(pars = pars, brts = brts)
+    pc <- mbd::calculate_condprob_nee(pars = pars, brts = brts)
     n_sims <- ceiling(
       max(
         min(1 / abs(pc - 0.5) ^ 2, 1e4),
@@ -557,10 +581,16 @@ test_that("condprob_select_eq: standard cases", {
 # probcond_select_eq: nasty case ----
 test_that("probcond_select_eq: nasty case", {
 
+  skip("Use Nee instead")
+
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
+
   pars <- c(1.50, 0.15, 1.35, 0.09)
   brts <- c(5, 2.53, 0.79)
   fortran <- TRUE
-  lx <- 23
+  lx <- 20
 
   pc_sim <- mbd::condprob_sim(
     brts = brts,
@@ -592,6 +622,8 @@ test_that("probcond_select_eq: nasty case", {
 # probcond_select_eq: more nasty cases ----
 test_that("probcond_select_eq: more nasty cases", {
 
+  skip("Use Nee instead")
+
   max_seed <- 2 + 33 * is_on_ci()
   for (seed in 1:max_seed) {
     if (seed == 15 || seed == 27 || seed == 35) next # too slow for simulations
@@ -604,7 +636,7 @@ test_that("probcond_select_eq: more nasty cases", {
     pars <- c(lambda, mu, nu, q)
     brts <- c(5)
 
-    pc <- mbd::calculate_condprob_nee_approx(pars = pars, brts = brts)
+    pc <- mbd::calculate_condprob_nee(pars = pars, brts = brts)
     n_sims <- ceiling(
       max(
         min(1 / abs(pc - 0.5) ^ 2, 1e4),
@@ -636,6 +668,8 @@ test_that("probcond_select_eq: more nasty cases", {
 
 # probcond vs probcond_sim ----
 test_that("probcond vs probcond_sim", {
+
+  skip("Use Nee instead")
 
   if (!is_on_ci()) {
     skip("To be performed on ci.")
