@@ -4,7 +4,7 @@
 \alias{deliver_loglik}
 \title{Delivers the likelihood at the end of \link{mbd_loglik}}
 \usage{
-deliver_loglik(likelihood, sum_probs_1, sum_probs_2, cond, pc, debug_mode)
+deliver_loglik(likelihood, sum_probs_1, sum_probs_2, cond, pc)
 }
 \arguments{
 \item{likelihood}{the likelihood}
@@ -23,9 +23,6 @@ integration of \link{mbd_loglik}}
 }}
 
 \item{pc}{conditional probability}
-
-\item{debug_mode}{If TRUE allows to run even when there are errors and
-expose them.}
 }
 \description{
 Delivers the likelihood at the end of \link{mbd_loglik}

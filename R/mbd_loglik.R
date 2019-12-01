@@ -14,10 +14,8 @@ mbd_loglik <- function(
   cond = 1,
   missnumspec = 0,
   lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
-  lx_condprob_fun = mbd::get_lx_condprob_fast,
   tips_interval = c(n_0 * (cond > 0), Inf),
   q_threshold = 1e-3,
-  debug_mode = FALSE,
   fortran = TRUE
 ) {
 
@@ -44,21 +42,12 @@ mbd_loglik <- function(
 
   # Calculate conditional probability
   if (cond == 1) {
-    lx_condprob <- lx_condprob_fun(
-      lx = lx,
-      pars = pars,
-      n_0 = n_0,
-      age = max(abs(brts))
-    )
+    lx_condprob <- 20
     pc <- mbd::calculate_condprob(
       pars = pars,
       brts = brts,
+      eq = "nee",
       lx = lx_condprob,
-      eq = mbd::condprob_select_eq(
-        pars = pars,
-        brts = brts,
-        fortran = fortran
-      ),
       fortran = fortran
     )
   } else {
@@ -77,7 +66,7 @@ mbd_loglik <- function(
   }
 
   # Adjusting data
-  data <- mbd::brts2time_intervals_and_births(brts) # nolint internal function
+  data <- mbd::brts2time_intervals_and_births(brts)
   time_intervals <- data$time_intervals
   births <- data$births
   lt <- length(time_intervals)
@@ -110,8 +99,7 @@ mbd_loglik <- function(
       q_t = q_t,
       t = t,
       pars = pars,
-      brts = brts,
-      debug_mode = debug_mode
+      brts = brts
     )
 
     # Normalizing the q_vector
@@ -137,8 +125,7 @@ mbd_loglik <- function(
       q_t = q_t,
       t = t,
       pars = pars,
-      brts = brts,
-      debug_mode = debug_mode
+      brts = brts
     )
 
     # Normalizing the q_vector
@@ -162,8 +149,7 @@ mbd_loglik <- function(
     sum_probs_1 = sum_probs_1,
     sum_probs_2 = sum_probs_2,
     cond = cond,
-    pc = pc,
-    debug_mode = debug_mode
+    pc = pc
   )
   loglik
 }

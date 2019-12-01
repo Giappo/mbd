@@ -99,7 +99,7 @@ test_that("mbd_ml can produce output", {
   start_pars <- c(0.2, 0.15, 1, 0.1)
   n_0 <- 2
   cond <- 1
-  verbose <- TRUE
+  verbose <- FALSE
   maxiter <- 5
   ml_steps <- 1
   output <- utils::capture.output(

@@ -148,34 +148,11 @@ check_q_vector <- function(
   q_t,
   t,
   pars,
-  brts,
-  debug_mode = FALSE
+  brts
 ) {
   q_vector <- q_t[t, ]
   if (any(q_vector < 0)) {
-    if (debug_mode == TRUE) {
-      brts2 <- c(brts, 0)
-      w <- data.frame(matrix(NA, nrow = length(q_vector), ncol = 0))
-      w$values <- q_vector
-      w$x <- seq_along(q_vector)
-      w$cols <- ifelse(sign(q_vector) > 0, "blue", "red")
-      print(w$values)
-      graphics::plot(
-        values ~ x,
-        w,
-        pch = 15,
-        xlab = "m",
-        ylab = "Q_m^k(t)",
-        main = paste0(
-          "pars = ", pars[1], ", ", pars[2], ", ", pars[3], ", ", pars[4]
-        ),
-        sub = paste0(
-          "Problems in time interval: (", brts2[t - 1], ", ", brts2[t], ")"
-        )
-      )
-    } else {
-      stop("problems: q_t is negative!")
-    }
+    stop("problems: q_t is negative!")
   }
 }
 
@@ -185,24 +162,25 @@ check_q_vector <- function(
 #' @return Nothing
 #' @author Giovanni Laudanno
 #' @export
-check_pc <- function(pc, debug_mode = FALSE) {
-  if (!(pc >= 0 && pc <= 1)) {
-    if (debug_mode == FALSE) {
-      stop("problems: pc is wrong!")
-    }
+check_pc <- function(pc) {
+  if (pc < 0) {
+    stop("pc < 0")
+  }
+  if (pc > 1) {
+    stop("pc > 1")
   }
   return()
 }
 
 #' @title Check "equation" for conditional probability
-#' @description CCheck "equation" for conditional probability
+#' @description Check "equation" for conditional probability
 #' @inheritParams default_params_doc
 #' @return Nothing
 #' @author Giovanni Laudanno
 #' @export
 check_condprob_eq <- function(eq) {
   if (!(eq %in% mbd::mbd_condprob_eqs())) {
-    stop("It is either Q- or P-equation! (or use sims)")
+    stop("This is not a valid method to compute the conditional probability")
   }
   return()
 }
