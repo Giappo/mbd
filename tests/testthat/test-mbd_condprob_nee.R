@@ -126,12 +126,14 @@ test_that("q = 0", {
 
 })
 
-# nee vs sims: standard cases ----
-test_that("nee vs sims: standard cases", {
+# nee vs sims ----
+test_that("nee vs sims", {
 
-  skip("Simulation results not stored yet")
+  skip("Need to simulate first on local")
 
-  max_seed <- 35
+  max_seed <- 50
+  min_n_sims <- 2e3
+  max_n_sims <- 2e4
   for (seed in 1:max_seed) {
     set.seed(seed)
     print_from_global("seed")
@@ -149,8 +151,8 @@ test_that("nee vs sims: standard cases", {
     )
     n_sims <- ceiling(
       max(
-        min(1 / abs(pc - 0.5) ^ 2, 1e4),
-        1000
+        min(1 / abs(pc - 0.5) ^ 2, max_n_sims),
+        min_n_sims
       )
     )
     print_from_global("n_sims")
@@ -165,14 +167,6 @@ test_that("nee vs sims: standard cases", {
     testthat::expect_equal(pc, pc_sim, tolerance = 1e-2)
   }
 
-})
-
-# nee vs sims: nasty cases ----
-test_that("nee vs sims: nasty cases", {
-
-  skip("Simulation results not stored yet")
-
-  max_seed <- 35
   for (seed in 1:max_seed) {
     if (seed == 15 || seed == 27 || seed == 35) next # too slow for simulations
     set.seed(seed)
@@ -191,8 +185,8 @@ test_that("nee vs sims: nasty cases", {
     )
     n_sims <- ceiling(
       max(
-        min(1 / abs(pc - 0.5) ^ 2, 1e4),
-        1000
+        min(1 / abs(pc - 0.5) ^ 2, max_n_sims),
+        min_n_sims
       )
     )
     print_from_global("n_sims")
