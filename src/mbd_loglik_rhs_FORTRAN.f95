@@ -169,7 +169,7 @@
       DOUBLE PRECISION  :: t, Conc(N ** 2), dConc(N ** 2), yout(*)
       DOUBLE PRECISION  :: vec(N)
       DOUBLE PRECISION  :: dp(N,N), V(N, N), V2(N + 2, N + 2)
-      DOUBLE PRECISION  :: nu_q_mat(N,N), m1(N, N), m2(N,N)
+      DOUBLE PRECISION  :: nu_q_mat(N,N), m1(N, N), m2(N,N), m1m2V(N, N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -204,8 +204,9 @@
    ENDDO
    !m2 = TRANSPOSE(m1)
 
-   dp=P(1)*((m1-1)*V2(2:(N+1),1:N)+(m2-1)*V2(1:N,2:(N+1))-(m1+m2)*V)
-   dp=dp+P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))-(m1+m2)*V)
+   m1m2V = (m1+m2)*V
+   dp=P(1)*((m1-1)*V2(2:(N+1),1:N)+(m2-1)*V2(1:N,2:(N+1))-m1m2V)
+   dp=dp+P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))-m1m2V)
 
    CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
    CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
