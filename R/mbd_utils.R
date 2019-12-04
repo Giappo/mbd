@@ -81,7 +81,7 @@ mbd_experiment_logliks <- function() {
 #' @author Giovanni Laudanno
 #' @export
 mbd_experiment_pars <- function(
-  lambdas = c(0.2),
+  lambdas = c(0.3),
   mus = c(0, 0.1),
   nus = c(0, 0.5, 1.0, 1.5),
   qs = c(0.1, 0.15, 0.2),
