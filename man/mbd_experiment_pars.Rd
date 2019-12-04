@@ -4,7 +4,7 @@
 \alias{mbd_experiment_pars}
 \title{Generates parameters for the mbd experiment}
 \usage{
-mbd_experiment_pars(lambdas = c(0.2), mus = c(0, 0.1), nus = c(0,
+mbd_experiment_pars(lambdas = c(0.3), mus = c(0, 0.1), nus = c(0,
   0.5, 1, 1.5), qs = c(0.1, 0.15, 0.2), cond = 1, age = 8)
 }
 \arguments{

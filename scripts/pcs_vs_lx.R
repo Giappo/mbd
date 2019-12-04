@@ -1,3 +1,4 @@
+library(mbd)
 # path setting
 get_dropbox_folder <- function() {
 
@@ -38,39 +39,47 @@ data_folder <- system.file("extdata", package = get_pkg_name())
 if (!dir.exists(data_folder)) {
   dir.create(data_folder)
 }
-filename <- file.path(data_folder, "pc_vs_lx-razzo_params")
+name <- "pc_vs_lx-hi_params"
+# name <- "pc_vs_lx-razzo_params"
+filename <- file.path(data_folder, name)
 filename_png <- paste0(filename, ".png")
 filename_rdata <- paste0(filename, ".RData")
 # filename2 <- filename
-filename2 <- file.path(pkg_folder, "pc_vs_lx-razzo_params")
+filename2 <- file.path(pkg_folder, name)
 filename2_png <- paste0(filename2, ".png")
 filename2_rdata <- paste0(filename2, ".RData")
 
-load(filename2_rdata)
-lx_loaded <- 0
-lx_loaded <- suppressWarnings(max(
-  as.numeric(gsub(x = colnames(res), pattern = "lx=", replacement = "")), na.rm = T
-))
-res2 <- res
+if (file.exists(filename2_rdata)) {
+  load(filename2_rdata)
+  lx_loaded <- 0
+  lx_loaded <- suppressWarnings(max(
+    as.numeric(gsub(x = colnames(res), pattern = "lx=", replacement = "")), na.rm = T
+  ))
+  res2 <- res
+}
 
 # pars setting
 fortran <- TRUE
 eqs <- c("p_eq", "q_eq", "nee")
 mbd_params <- mbd::mbd_experiment_pars()
+mbd_params <- rbind(mbd_params[c(14, 16), ], mbd_params[c(14, 16), ], mbd_params[c(14, 16), ])
+mbd_params$q <- c(0.9, 0.9, 0.95, 0.95, 0.98, 0.98)
 lx_min <- 5
-lx_max <- 130
+lx_max <- 120
 lx_seq <- seq(from = lx_min, to = lx_max, by = 5)
-lx_seq2 <- seq(from = max(lx_min, lx_loaded + 5), to = lx_max, by = 5)
+# lx_seq2 <- seq(from = max(lx_min, lx_loaded + 5), to = lx_max, by = 5)
 res <- data.frame(matrix(
   NA,
   nrow = length(eqs) * nrow(mbd_params),
   ncol = ncol(mbd_params) + 1 + length(lx_seq)
 ))
-res[1:nrow(res2), 1:ncol(res2)] <- res2
+if (file.exists(filename2_rdata)) {
+  res[1:nrow(res2), 1:ncol(res2)] <- res2
+}
 colnames(res) <- c(colnames(mbd_params), "eq", paste0("lx=", lx_seq))
 for (i in seq_along(lx_seq)) {
   lx <- lx_seq[i]
-  if (lx %in% lx_seq2) {
+  # if (lx %in% lx_seq2) {
     cat("lx =", lx, "\n")
     for (j in 1:nrow(mbd_params)) {
       pars <- unlist(unname(mbd_params[j, mbd::get_param_names()]))
@@ -135,4 +144,4 @@ for (i in seq_along(lx_seq)) {
 
     res3 -> res
   }
-}
+# }
