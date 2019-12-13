@@ -151,6 +151,11 @@ check_q_vector <- function(
   brts
 ) {
   q_vector <- q_t[t, ]
+  if (!is.numeric(q_vector) | any(is.nan(q_vector))) {
+    cat("q_vector=", q_vector, "\n")
+    cat("pars=", pars, "\n")
+    cat("pars=", q_vector, "\n")
+  }
   if (any(q_vector < 0)) {
     stop("problems: q_t is negative!")
   }

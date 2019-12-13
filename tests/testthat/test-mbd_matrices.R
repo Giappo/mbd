@@ -6,6 +6,12 @@ is_on_ci <- function() {
   is_it_on_appveyor || is_it_on_travis # nolint internal function
 }
 
+print_from_global <- function(var = "seed") {
+  if (var %in% ls(.GlobalEnv)) {
+    cat(var, "is", get(var), "\n")
+  }
+}
+
 # a_matrix ----
 test_that("a_matrix: mbd vs ddd", {
 
@@ -226,4 +232,83 @@ test_that("b_matrix: # entries are in accordance with the theory", {
       )
     }
   }
+})
+
+# hardcore a_matrix ----
+test_that("a_matrix: hardcore case", {
+
+  skip("TODO: TEST FOR HANNO")
+
+  pars <- c(0.3, 0.1, 1.5, 0.15)
+  lx <- 1048
+  k <- 344
+
+  a_matrix <- mbd::create_a(
+    pars = pars,
+    lx = lx,
+    k = k
+  )
+  coords <- which(is.na(a_matrix), arr.ind = TRUE)
+
+  # test on NaNs
+  for (i in 1:nrow(coords)) {
+    m <- unname(coords[i, 1] - 1)
+    n <- unname(coords[i, 2] - 1)
+    testthat::expect_true(is.nan(a_matrix[m + 1, n + 1]))
+
+    # entry [m,n] is (m - 1 + 2k) * lambda * (m == n + 1) +
+    # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
+    # sum(2 ^ j * choose(k, j) * choose(n, m - n - j))
+    j <- 0:min(m - n, k)
+    mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
+      log(nu) +
+      log(1 - q) * k +
+      log(q) * (m - n) +
+      log(1 - q) * (2 * n - m)
+    mn2s <- log(2) * j + lchoose(k, j) + lchoose(n, m - n - j)
+
+    min_mn2 <- min(mn2s)
+    a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
+    if (is.nan(a_matrix_mn) || a_matrix_mn == 0 || is.infinite(a_matrix_mn)) {
+      max_mn2 <- max(mn2s)
+      a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+    }
+
+    testthat::expect_equal(
+      a_matrix_mn,
+      a_matrix[m + 1, n + 1]
+    )
+  }
+
+  # randomized test across the whole matrix (some values might differ so the
+  # test might require to be defined up to some tolerance)
+  for (seed in 1:1e2) {
+    set.seed(seed); print_from_global(var = "seed") # function def at the start
+    m <- sample(x = 1:lx, size = 1)
+    n <- sample(x = 1:(m - 1), size = 1)
+
+    # entry [m,n] is (m - 1 + 2k) * lambda * (m == n + 1) +
+    # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
+    # sum(2 ^ j * choose(k, j) * choose(n, m - n - j))
+    j <- 0:min(m - n, k)
+    mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
+      log(nu) +
+      log(1 - q) * k +
+      log(q) * (m - n) +
+      log(1 - q) * (2 * n - m)
+    mn2s <- log(2) * j + lchoose(k, j) + lchoose(n, m - n - j)
+
+    min_mn2 <- min(mn2s)
+    a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
+    if (is.nan(a_matrix_mn) || a_matrix_mn == 0 || is.infinite(a_matrix_mn)) {
+      max_mn2 <- max(mn2s)
+      a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+    }
+
+    testthat::expect_equal(
+      a_matrix_mn,
+      a_matrix[m + 1, n + 1]
+    )
+  }
+
 })

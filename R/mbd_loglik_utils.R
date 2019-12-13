@@ -36,7 +36,7 @@ hyper_a_hanno <- function(
   for (dst in 2:n_species) {
     src <- dst - 1
     s <- src:min(n_species, 2 * src + k - 1)
-    matrix_a[s + 2, dst] <- matrix_a[s, src] + matrix_a[s + 1, src]
+    matrix_a[s + 2, dst] <- matrix_a[s, src] + matrix_a[s + 1, src] # check here! TODO
     m <- s - 1
     n <- src - 1
     matrix_a[s, src] <- matrix_a[s, src] * q ^ (m - n) * (1 - q) ^ (2 * n - m)
@@ -137,6 +137,67 @@ create_a <- function(
 
   matrix_a <- matrix
   matrix_a
+}
+
+#' @title The A matrix
+#' @description Creates the A matrix but in a slower, more understandable way.
+#' @inheritParams default_params_doc
+#' @param no_species_out_of_the_matrix If true prevents interactions from states
+#'  describing number of species greater than lx
+#' @details This is not to be called by the user.
+#' @author Giovanni Laudanno
+#' @export
+create_a_slow <- function(
+  pars,
+  k,
+  lx,
+  no_species_out_of_the_matrix = FALSE
+) {
+
+  lambda <- pars[1]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4]
+
+  mat <- matrix(0, lx + 1, lx + 1)
+  mat[col(mat) == row(mat) + 1] <- mu * (1:lx)
+
+  # lower triangular matrix: m > n
+  for (m in 1:lx) {
+    for (n in 0:(m - 1)) {
+      j <- 0:min(m - n, k)
+      mat[m + 1, n + 1] <-
+        (m == n + 1) * lambda * (m - 1 + 2 * k) +
+        nu *
+        (1 - q) ^ k *
+        q ^ (m - n) *
+        (1 - q) ^ (2 * n - m) *
+        sum(
+          (2 ^ j) * choose(k, j) * choose(n, m - n - j)
+        )
+    }
+  }
+  # main diagonal
+  m <- 0:lx
+  nu_terms <- rep(0, lx + 1)
+  if (no_species_out_of_the_matrix == TRUE) {
+    for (n in 0:(lx - 1)) {
+      limit <- min(n + k, lx - n)
+      avec <- 1:limit
+      nu_terms[n + 1] <-
+        sum(
+          choose(n + k, avec) * (q ^ avec) * (1 - q) ^ (n + k - avec)
+        )
+    }
+  } else {
+    nu_terms <- (1 - (1 - q) ^ (m + k))
+  }
+  diag(mat) <-
+    -nu * nu_terms +
+    -mu * (m + k) +
+    -lambda * (m + k) +
+    no_species_out_of_the_matrix * lambda * c(rep(0, lx), 1) * (m + k)
+  mat
 }
 
 #' @title B matrix

@@ -106,7 +106,10 @@ mbd_solve <- function(
   methodes <- c("lsoda", "ode45", "lsodes")
   i <- 1
   out <- NULL
-  while (is.null(out) && i <= length(methodes)) {
+  while (
+    (is.null(out) | any(is.nan(out))) &&
+    i <= length(methodes)
+  ) {
     methode <- methodes[i]
     temp <- mbd::my_try_catch(
       mbd::mbd_solve_methode(
