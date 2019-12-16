@@ -158,25 +158,39 @@ create_a_slow <- function(
   mu <- pars[2]
   nu <- pars[3]
   q <- pars[4]
+  mvec <- 1:lx - 1
 
   mat <- matrix(0, lx + 1, lx + 1)
-  mat[col(mat) == row(mat) + 1] <- mu * (1:lx)
+  mat[col(mat) == row(mat) + 1] <- mu * (mvec + 1)
 
   # lower triangular matrix: m > n
   for (m in 1:lx) {
     for (n in 0:(m - 1)) {
       j <- 0:min(m - n, k)
-      mat[m + 1, n + 1] <-
-        (m == n + 1) * lambda * (m - 1 + 2 * k) +
-        nu *
-        (1 - q) ^ k *
-        q ^ (m - n) *
-        (1 - q) ^ (2 * n - m) *
-        sum(
-          (2 ^ j) * choose(k, j) * choose(n, m - n - j)
-        )
+      j <- j[n >= (m - n - j)]
+      if (length(j) > 0) {
+        mn1 <-
+          log(nu) +
+          log(1 - q) * k +
+          log(q) * (m - n) +
+          log(1 - q) * (2 * n - m)
+        mn2s <- log(2) * j + lchoose(k, j) + lchoose(n, m - n - j)
+
+        min_mn2 <- min(mn2s)
+        a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
+        if (is.nan(a_matrix_mn) || a_matrix_mn == 0 || is.infinite(a_matrix_mn)) {
+          max_mn2 <- max(mn2s)
+          a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+        }
+      } else {
+        a_matrix_mn <- 0
+      }
+      mat[m + 1, n + 1] <- a_matrix_mn
     }
   }
+  mat[col(mat) == row(mat) - 1] <- mat[col(mat) == row(mat) - 1] +
+    lambda * (mvec + 2 * k)
+
   # main diagonal
   m <- 0:lx
   nu_terms <- rep(0, lx + 1)
