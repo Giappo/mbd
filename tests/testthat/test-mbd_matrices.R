@@ -262,7 +262,7 @@ test_that("a_matrix: hardcore case", {
 
     # entry [m,n] is (m - 1 + 2k) * lambda * (m == n + 1) +
     # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
-    # sum(2 ^ j * choose(k, j) * choose(n, m - n - j))
+    # Σ_{j}^{min(m - n, k)}  * choose(k, j) * choose(n, m - n - j)
     j <- 0:min(m - n, k)
     mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
       log(nu) +
@@ -293,7 +293,7 @@ test_that("a_matrix: hardcore case", {
 
     # entry [m,n] is (m - 1 + 2k) * lambda * (m == n + 1) +
     # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
-    # sum(2 ^ j * choose(k, j) * choose(n, m - n - j))
+    # Σ_{j}^{min(m - n, k)} * choose(k, j) * choose(n, m - n - j)
     j <- 0:min(m - n, k)
     mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
       log(nu) +
@@ -318,7 +318,7 @@ test_that("a_matrix: hardcore case", {
 })
 
 # hellish a_matrix----
-test_that("a_matrix: hellish case: if it works here, it works everywhere ", {
+test_that("a_matrix: hellish case: if it works here, it works everywhere", {
 
   skip("TODO: TEST FOR HANNO")
 
@@ -345,7 +345,7 @@ test_that("a_matrix: hellish case: if it works here, it works everywhere ", {
 
     # entry [m,n] is (m - 1 + 2k) * lambda * (m == n + 1) +
     # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
-    # sum(2 ^ j * choose(k, j) * choose(n, m - n - j))
+    # Σ_{j}^{min(m - n, k)} 2 ^ j * choose(k, j) * choose(n, m - n - j)
     j <- 0:min(m - n, k)
     mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
       log(nu) +
@@ -376,7 +376,7 @@ test_that("a_matrix: hellish case: if it works here, it works everywhere ", {
 
     # entry [m,n] is (m - 1 + 2k) * lambda * (m == n + 1) +
     # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
-    # sum(2 ^ j * choose(k, j) * choose(n, m - n - j))
+    # Σ_{j}^{min(m - n, k)} 2 ^ j * choose(k, j) * choose(n, m - n - j)
     j <- 0:min(m - n, k)
     mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
       log(nu) +
