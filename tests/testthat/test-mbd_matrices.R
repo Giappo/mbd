@@ -255,7 +255,7 @@ test_that("a_matrix: hardcore case", {
   coords <- which(is.na(a_matrix), arr.ind = TRUE)
 
   # test on NaNs
-  for (i in 1:nrow(coords)) {
+  for (i in seq_len(nrow(coords))) {
     m <- unname(coords[i, 1] - 1)
     n <- unname(coords[i, 2] - 1)
     testthat::expect_true(is.nan(a_matrix[m + 1, n + 1]))
@@ -338,7 +338,7 @@ test_that("a_matrix: hellish case: if it works here, it works everywhere", {
   coords <- which(is.na(a_matrix), arr.ind = TRUE)
 
   # test on NaNs
-  for (i in 1:nrow(coords)) {
+  for (i in seq_len(nrow(coords))) {
     m <- unname(coords[i, 1] - 1)
     n <- unname(coords[i, 2] - 1)
     testthat::expect_true(is.nan(a_matrix[m + 1, n + 1]))
