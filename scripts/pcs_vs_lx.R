@@ -39,12 +39,10 @@ data_folder <- system.file("extdata", package = get_pkg_name())
 if (!dir.exists(data_folder)) {
   dir.create(data_folder)
 }
-name <- "pc_vs_lx-hi_params"
-# name <- "pc_vs_lx-razzo_params"
+name <- "nee_vs_p_and_q-params_grid"
 filename <- file.path(data_folder, name)
 filename_png <- paste0(filename, ".png")
 filename_rdata <- paste0(filename, ".RData")
-# filename2 <- filename
 filename2 <- file.path(pkg_folder, name)
 filename2_png <- paste0(filename2, ".png")
 filename2_rdata <- paste0(filename2, ".RData")
@@ -61,13 +59,19 @@ if (file.exists(filename2_rdata)) {
 # pars setting
 fortran <- TRUE
 eqs <- c("p_eq", "q_eq", "nee")
-mbd_params <- mbd::mbd_experiment_pars()
-mbd_params <- rbind(mbd_params[c(14, 16), ], mbd_params[c(14, 16), ], mbd_params[c(14, 16), ])
-mbd_params$q <- c(0.9, 0.9, 0.95, 0.95, 0.98, 0.98)
+# mbd_params <- mbd::mbd_experiment_pars()
+mbd_params <- expand.grid(
+  lambda = c(0.15),
+  mu = c(0.05),
+  nu = c(0.4, 0.8),
+  q = c(0.1, 0.3, 0.5, 0.7, 0.9),
+  age = c(6),
+  cond = 1
+)
 lx_min <- 5
-lx_max <- 120
-lx_seq <- seq(from = lx_min, to = lx_max, by = 5)
-# lx_seq2 <- seq(from = max(lx_min, lx_loaded + 5), to = lx_max, by = 5)
+lx_max <- 130
+lx_seq <- seq(from = lx_min, to = lx_max, by = 5); lx_seq2 <- lx_seq
+lx_seq2 <- seq(from = max(lx_min, lx_loaded + 5), to = lx_max, by = 5)
 res <- data.frame(matrix(
   NA,
   nrow = length(eqs) * nrow(mbd_params),
@@ -79,7 +83,7 @@ if (file.exists(filename2_rdata)) {
 colnames(res) <- c(colnames(mbd_params), "eq", paste0("lx=", lx_seq))
 for (i in seq_along(lx_seq)) {
   lx <- lx_seq[i]
-  # if (lx %in% lx_seq2) {
+  if (lx %in% lx_seq2) {
     cat("lx =", lx, "\n")
     for (j in 1:nrow(mbd_params)) {
       pars <- unlist(unname(mbd_params[j, mbd::get_param_names()]))
@@ -144,4 +148,4 @@ for (i in seq_along(lx_seq)) {
 
     res3 -> res
   }
-# }
+}

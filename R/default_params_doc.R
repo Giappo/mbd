@@ -81,7 +81,7 @@
 #' @param matrix a matrix
 #' @param matrix_a The A matrix from the theory that represents the ODE system.
 #' @param matrix_builder function used to build the transition matrix.
-#' Default option is \code{hyper_a_hanno}
+#' Default option is \code{hyper_matrix2}
 #' @param max_iter Sets the maximum number of iterations in the optimization
 #' @param max_k something
 #' @param max_number_of_species something
