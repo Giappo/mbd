@@ -6,7 +6,7 @@
 #'  sum_j 2 ^ j choose(k, j) * choose(n, m - n - j)
 #' @inheritParams default_params_doc
 #' @examples
-#'   m <- mbd::hyper_a_hanno(n_species = 2, k = 2, q = 0.1)
+#'   m <- mbd::hyper_matrix0(n_species = 2, k = 2, q = 0.1)
 #'   testthat::expect_equal(m[1, 1], 0.81)
 #'   testthat::expect_equal(m[1, 2], 0.00)
 #'   testthat::expect_equal(m[1, 3], 0.00)
@@ -18,7 +18,7 @@
 #'   testthat::expect_equal(m[3, 3], 0.6561)
 #' @author Hanno Hildenbrandt, adapted by Richel J.C. Bilderbeek
 #' @export
-hyper_a_hanno <- function(
+hyper_matrix0 <- function(
   n_species,
   k,
   q
@@ -36,7 +36,7 @@ hyper_a_hanno <- function(
   for (dst in 2:n_species) {
     src <- dst - 1
     s <- src:min(n_species, 2 * src + k - 1)
-    matrix_a[s + 2, dst] <- matrix_a[s, src] + matrix_a[s + 1, src] # check here! TODO
+    matrix_a[s + 2, dst] <- matrix_a[s, src] + matrix_a[s + 1, src] # big number
     m <- s - 1
     n <- src - 1
     matrix_a[s, src] <- matrix_a[s, src] * q ^ (m - n) * (1 - q) ^ (2 * n - m)
@@ -44,6 +44,87 @@ hyper_a_hanno <- function(
   matrix_a[n_species, n_species] <- matrix_a[n_species, n_species] *
     (1 - q) ^ (n_species - 1)
   matrix_a[1:n_species, 1:n_species]
+}
+
+#' Function to build a matrix, used in creating the A and B operators.
+#' It produces the structure
+#'  q ^ (m - n) * (1 - q) ^ (k + 2 * n-m) *
+#'  sum_j 2 ^ j choose(k, j) * choose(n, m - n - j)
+#' @inheritParams default_params_doc
+#' @author Hanno Hildenbrandt
+#' @export
+hyper_matrix1 <- function(
+  n_species,
+  k,
+  q
+) {
+  if (n_species > 46340) {
+    stop("'n_species' must be below 46340. ",
+         "Cannot allocate matrix with 2^31 elements")
+  }
+  # HG function: fast O(N), updated after Moulis meeting
+  j <- 0:k
+  a_1 <- (1 - q) ^ (k) * choose(k, j) * (2) ^ j
+  n_species <- n_species + 1
+  M <- diag(a_1[1], nrow = n_species + 2, ncol = n_species)
+  M[1:(k + 1), 1] <- a_1
+  for (dst in 2:n_species) {
+    src <- dst - 1
+    s <- src:min(n_species, 2 * src + k - 1)
+    m <- s - 1
+    n <- src - 1
+    M[s + 2, dst] <- M[s, src] + M[s + 1, src]
+    X <- log2(M[s, src])
+    a <- X / log2(q)
+    M[s, src] <- (q ^ (m - n + a) * (1 - q) ^ (2 * n - m))
+  }
+  M[n_species, n_species] <- M[n_species, n_species] * (1 - q) ^ (n_species - 1)
+  M[1:n_species, 1:n_species]
+}
+
+#' Function to build a matrix, used in creating the A and B operators.
+#' It produces the structure
+#'  q ^ (m - n) * (1 - q) ^ (k + 2 * n-m) *
+#'  sum_j 2 ^ j choose(k, j) * choose(n, m - n - j)
+#' @inheritParams default_params_doc
+#' @author Hanno Hildenbrandt, adapted by Giovanni Laudanno
+#' @export
+hyper_matrix2 <- function(
+  n_species,
+  k,
+  q
+) {
+  if (n_species > 46340) {
+    stop("'n_species' must be below 46340. ",
+         "Cannot allocate matrix with 2^31 elements")
+  }
+  # HG function: fast O(N), updated after Moulis meeting
+  func <- function(m, n) (q ^ (m - n) * (1 - q) ^ (2 * n - m))
+  m_min <- k
+  n_min <- ceiling(k / 2)
+  mins <- func(m_min, n_min)
+
+  j <- 0:k
+  a_1 <- (1 - q) ^ (k) * choose(k, j) * (2) ^ j
+  a_1 <- a_1 * mins
+  n_species <- n_species + 1
+  M <- diag(a_1[1], nrow = n_species + 2, ncol = n_species)
+  M[1:(k + 1), 1] <- a_1
+  for (dst in 2:n_species) {
+    src <- dst - 1
+    s <- src:min(n_species, 2 * src + k - 1)
+    m <- s - 1
+    n <- src - 1
+    M[s + 2, dst] <- M[s, src] + M[s + 1, src]
+    X <- log2(M[s, src])
+    a <- X / log2(q)
+    M[s, src] <- (q ^ (a + (m - m_min) - (n - n_min)) *
+                    (1 - q) ^ (2 * (n - n_min) - (m - m_min)))
+  }
+  M[n_species, n_species] <- M[n_species, n_species] * (1 - q) ^ (n_species - 1)
+  M[!is.finite(M)] <- 0
+
+  M[1:n_species, 1:n_species]
 }
 
 #' @title N matrix
@@ -58,7 +139,7 @@ create_n <- function(
   k,
   b,
   lx,
-  matrix_builder = mbd::hyper_a_hanno
+  matrix_builder = mbd::hyper_matrix2
 ) {
   if (b > k) {
     stop("you can't have more births than species present in the phylogeny") # nolint
@@ -84,7 +165,7 @@ create_a <- function(
   pars,
   k,
   lx,
-  matrix_builder = mbd::hyper_a_hanno,
+  matrix_builder = mbd::hyper_matrix2,
   no_species_out_of_the_matrix = FALSE
 ) {
   if (k > lx) {
@@ -169,8 +250,7 @@ create_a_slow <- function(
       j <- 0:min(m - n, k)
       j <- j[n >= (m - n - j)]
       if (length(j) > 0) {
-        mn1 <-
-          log(nu) +
+        mn1 <- log(nu) +
           log(1 - q) * k +
           log(q) * (m - n) +
           log(1 - q) * (2 * n - m)
@@ -178,7 +258,11 @@ create_a_slow <- function(
 
         min_mn2 <- min(mn2s)
         a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
-        if (is.nan(a_matrix_mn) || a_matrix_mn == 0 || is.infinite(a_matrix_mn)) {
+        if (
+          is.nan(a_matrix_mn) ||
+          a_matrix_mn == 0 ||
+          is.infinite(a_matrix_mn)
+        ) {
           max_mn2 <- max(mn2s)
           a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
         }
@@ -226,7 +310,7 @@ create_b <- function(
   k,
   b,
   lx,
-  matrix_builder = mbd::hyper_a_hanno
+  matrix_builder = mbd::hyper_matrix2
 ) {
   if (b > k) {
     stop("you can't have more births than species present in the phylogeny") # nolint

@@ -175,7 +175,7 @@ The ids are defined as follows:
 \item{matrix_a}{The A matrix from the theory that represents the ODE system.}
 
 \item{matrix_builder}{function used to build the transition matrix.
-Default option is \code{hyper_a_hanno}}
+Default option is \code{hyper_matrix2}}
 
 \item{max_iter}{Sets the maximum number of iterations in the optimization}
 

@@ -234,10 +234,8 @@ test_that("b_matrix: # entries are in accordance with the theory", {
   }
 })
 
-# hardcore a_matrix ----
-test_that("a_matrix: hardcore case", {
-
-  skip("TODO: TEST FOR HANNO")
+# hardcore a_matrix: test on nans ----
+test_that("hardcore a_matrix: test on nans", {
 
   pars <- c(0.3, 0.1, 1.5, 0.15)
   lx <- 1048
@@ -262,27 +260,54 @@ test_that("a_matrix: hardcore case", {
 
     # entry [m,n] is (m - 1 + 2k) * lambda * (m == n + 1) +
     # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
-    # Σ_{j}^{min(m - n, k)}  * choose(k, j) * choose(n, m - n - j)
+    # Σ_{j}^{min(m - n, k)} * choose(k, j) * choose(n, m - n - j)
     j <- 0:min(m - n, k)
-    mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
-      log(nu) +
+    mn1 <- log(nu) +
       log(1 - q) * k +
       log(q) * (m - n) +
       log(1 - q) * (2 * n - m)
     mn2s <- log(2) * j + lchoose(k, j) + lchoose(n, m - n - j)
 
     min_mn2 <- min(mn2s)
-    a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
-    if (is.nan(a_matrix_mn) || a_matrix_mn == 0 || is.infinite(a_matrix_mn)) {
-      max_mn2 <- max(mn2s)
-      a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+    max_mn2 <- max(mn2s)
+    if (min_mn2 == max_mn2) {
+      a_matrix_mn <- 0
+    } else {
+      a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
+      if (
+        is.nan(a_matrix_mn) ||
+        a_matrix_mn == 0 ||
+        is.infinite(a_matrix_mn)
+      ) {
+        a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+      }
     }
+    a_matrix_mn <- a_matrix_mn + (m == n + 1) *
+      lambda * (m - 1 + 2 * k)
 
     testthat::expect_equal(
       a_matrix_mn,
       a_matrix[m + 1, n + 1]
     )
   }
+})
+
+# hardcore a_matrix: random checks on the matrix ----
+test_that("hardcore a_matrix: random checks on the matrix", {
+
+  pars <- c(0.3, 0.1, 1.5, 0.15)
+  lx <- 1048
+  k <- 344
+  lambda <- pars[1]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4]
+
+  a_matrix <- mbd::create_a(
+    pars = pars,
+    lx = lx,
+    k = k
+  )
 
   # randomized test across the whole matrix (some values might differ so the
   # test might require to be defined up to some tolerance)
@@ -295,32 +320,38 @@ test_that("a_matrix: hardcore case", {
     # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
     # Σ_{j}^{min(m - n, k)} * choose(k, j) * choose(n, m - n - j)
     j <- 0:min(m - n, k)
-    mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
-      log(nu) +
+    mn1 <- log(nu) +
       log(1 - q) * k +
       log(q) * (m - n) +
       log(1 - q) * (2 * n - m)
     mn2s <- log(2) * j + lchoose(k, j) + lchoose(n, m - n - j)
 
     min_mn2 <- min(mn2s)
-    a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
-    if (is.nan(a_matrix_mn) || a_matrix_mn == 0 || is.infinite(a_matrix_mn)) {
-      max_mn2 <- max(mn2s)
-      a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+    max_mn2 <- max(mn2s)
+    if (min_mn2 == max_mn2) {
+      a_matrix_mn <- 0
+    } else {
+      a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
+      if (
+        is.nan(a_matrix_mn) ||
+        a_matrix_mn == 0 ||
+        is.infinite(a_matrix_mn)
+      ) {
+        a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+      }
     }
+    a_matrix_mn <- a_matrix_mn + (m == n + 1) *
+      lambda * (m - 1 + 2 * k)
 
     testthat::expect_equal(
       a_matrix_mn,
       a_matrix[m + 1, n + 1]
     )
   }
-
 })
 
-# hellish a_matrix----
-test_that("a_matrix: hellish case: if it works here, it works everywhere", {
-
-  skip("TODO: TEST FOR HANNO")
+# hellish a_matrix: test on nans----
+test_that("hellish a_matrix: test on nans", {
 
   pars <- c(0.4, 0.1, 3.2, 0.2)
   lx <- 1800
@@ -345,27 +376,54 @@ test_that("a_matrix: hellish case: if it works here, it works everywhere", {
 
     # entry [m,n] is (m - 1 + 2k) * lambda * (m == n + 1) +
     # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
-    # Σ_{j}^{min(m - n, k)} 2 ^ j * choose(k, j) * choose(n, m - n - j)
+    # Σ_{j}^{min(m - n, k)} * choose(k, j) * choose(n, m - n - j)
     j <- 0:min(m - n, k)
-    mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
-      log(nu) +
+    mn1 <- log(nu) +
       log(1 - q) * k +
       log(q) * (m - n) +
       log(1 - q) * (2 * n - m)
     mn2s <- log(2) * j + lchoose(k, j) + lchoose(n, m - n - j)
 
     min_mn2 <- min(mn2s)
-    a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
-    if (is.nan(a_matrix_mn) || a_matrix_mn == 0 || is.infinite(a_matrix_mn)) {
-      max_mn2 <- max(mn2s)
-      a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+    max_mn2 <- max(mn2s)
+    if (min_mn2 == max_mn2) {
+      a_matrix_mn <- 0
+    } else {
+      a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
+      if (
+        is.nan(a_matrix_mn) ||
+        a_matrix_mn == 0 ||
+        is.infinite(a_matrix_mn)
+      ) {
+        a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+      }
     }
+    a_matrix_mn <- a_matrix_mn + (m == n + 1) *
+      lambda * (m - 1 + 2 * k)
 
     testthat::expect_equal(
       a_matrix_mn,
       a_matrix[m + 1, n + 1]
     )
   }
+})
+
+# hellish a_matrix: random checks on the matrix----
+test_that("hellish a_matrix: random checks on the matrix", {
+
+  pars <- c(0.4, 0.1, 3.2, 0.2)
+  lx <- 1800
+  k <- 500
+  lambda <- pars[1]
+  mu <- pars[2]
+  nu <- pars[3]
+  q <- pars[4]
+
+  a_matrix <- mbd::create_a(
+    pars = pars,
+    lx = lx,
+    k = k
+  )
 
   # randomized test across the whole matrix (some values might differ so the
   # test might require to be defined up to some tolerance)
@@ -376,26 +434,34 @@ test_that("a_matrix: hellish case: if it works here, it works everywhere", {
 
     # entry [m,n] is (m - 1 + 2k) * lambda * (m == n + 1) +
     # nu * (1 - q) ^ k * q ^ (m - n) * (1 - q) ^ (2n - m) *
-    # Σ_{j}^{min(m - n, k)} 2 ^ j * choose(k, j) * choose(n, m - n - j)
+    # Σ_{j}^{min(m - n, k)} * choose(k, j) * choose(n, m - n - j)
     j <- 0:min(m - n, k)
-    mn1 <- (m == n + 1) * (log(lambda) + log(m - 1 + 2 * k)) +
-      log(nu) +
+    mn1 <- log(nu) +
       log(1 - q) * k +
       log(q) * (m - n) +
       log(1 - q) * (2 * n - m)
     mn2s <- log(2) * j + lchoose(k, j) + lchoose(n, m - n - j)
 
     min_mn2 <- min(mn2s)
-    a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
-    if (is.nan(a_matrix_mn) || a_matrix_mn == 0 || is.infinite(a_matrix_mn)) {
-      max_mn2 <- max(mn2s)
-      a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+    max_mn2 <- max(mn2s)
+    if (min_mn2 == max_mn2) {
+      a_matrix_mn <- 0
+    } else {
+      a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
+      if (
+        is.nan(a_matrix_mn) ||
+        a_matrix_mn == 0 ||
+        is.infinite(a_matrix_mn)
+      ) {
+        a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
+      }
     }
+    a_matrix_mn <- a_matrix_mn + (m == n + 1) *
+      lambda * (m - 1 + 2 * k)
 
     testthat::expect_equal(
       a_matrix_mn,
       a_matrix[m + 1, n + 1]
     )
   }
-
 })

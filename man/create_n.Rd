@@ -4,7 +4,7 @@
 \alias{create_n}
 \title{N matrix}
 \usage{
-create_n(pars, k, b, lx, matrix_builder = mbd::hyper_a_hanno)
+create_n(pars, k, b, lx, matrix_builder = mbd::hyper_matrix2)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -22,7 +22,7 @@ create_n(pars, k, b, lx, matrix_builder = mbd::hyper_a_hanno)
 \item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{matrix_builder}{function used to build the transition matrix.
-Default option is \code{hyper_a_hanno}}
+Default option is \code{hyper_matrix2}}
 }
 \description{
 Creates the N matrix,

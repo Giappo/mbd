@@ -4,7 +4,7 @@
 \alias{create_a}
 \title{The A matrix}
 \usage{
-create_a(pars, k, lx, matrix_builder = mbd::hyper_a_hanno,
+create_a(pars, k, lx, matrix_builder = mbd::hyper_matrix2,
   no_species_out_of_the_matrix = FALSE)
 }
 \arguments{
@@ -21,7 +21,7 @@ create_a(pars, k, lx, matrix_builder = mbd::hyper_a_hanno,
 \item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{matrix_builder}{function used to build the transition matrix.
-Default option is \code{hyper_a_hanno}}
+Default option is \code{hyper_matrix2}}
 
 \item{no_species_out_of_the_matrix}{If true prevents interactions from states
 describing number of species greater than lx}
