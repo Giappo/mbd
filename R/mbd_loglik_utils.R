@@ -66,20 +66,21 @@ hyper_matrix1 <- function(
   j <- 0:k
   a_1 <- (1 - q) ^ (k) * choose(k, j) * (2) ^ j
   n_species <- n_species + 1
-  M <- diag(a_1[1], nrow = n_species + 2, ncol = n_species)
-  M[1:(k + 1), 1] <- a_1
+  mat <- diag(a_1[1], nrow = n_species + 2, ncol = n_species)
+  mat[1:(k + 1), 1] <- a_1
   for (dst in 2:n_species) {
     src <- dst - 1
     s <- src:min(n_species, 2 * src + k - 1)
     m <- s - 1
     n <- src - 1
-    M[s + 2, dst] <- M[s, src] + M[s + 1, src]
-    X <- log2(M[s, src])
-    a <- X / log2(q)
-    M[s, src] <- (q ^ (m - n + a) * (1 - q) ^ (2 * n - m))
+    mat[s + 2, dst] <- mat[s, src] + mat[s + 1, src]
+    log_col <- log2(mat[s, src])
+    a <- log_col / log2(q)
+    mat[s, src] <- (q ^ (m - n + a) * (1 - q) ^ (2 * n - m))
   }
-  M[n_species, n_species] <- M[n_species, n_species] * (1 - q) ^ (n_species - 1)
-  M[1:n_species, 1:n_species]
+  mat[n_species, n_species] <-
+    mat[n_species, n_species] * (1 - q) ^ (n_species - 1)
+  mat[1:n_species, 1:n_species]
 }
 
 #' Function to build a matrix, used in creating the A and B operators.
@@ -108,23 +109,24 @@ hyper_matrix2 <- function(
   a_1 <- (1 - q) ^ (k) * choose(k, j) * (2) ^ j
   a_1 <- a_1 * mins
   n_species <- n_species + 1
-  M <- diag(a_1[1], nrow = n_species + 2, ncol = n_species)
-  M[1:(k + 1), 1] <- a_1
+  mat <- diag(a_1[1], nrow = n_species + 2, ncol = n_species)
+  mat[1:(k + 1), 1] <- a_1
   for (dst in 2:n_species) {
     src <- dst - 1
     s <- src:min(n_species, 2 * src + k - 1)
     m <- s - 1
     n <- src - 1
-    M[s + 2, dst] <- M[s, src] + M[s + 1, src]
-    X <- log2(M[s, src])
-    a <- X / log2(q)
-    M[s, src] <- (q ^ (a + (m - m_min) - (n - n_min)) *
+    mat[s + 2, dst] <- mat[s, src] + mat[s + 1, src]
+    log_col <- log2(mat[s, src])
+    a <- log_col / log2(q)
+    mat[s, src] <- (q ^ (a + (m - m_min) - (n - n_min)) *
                     (1 - q) ^ (2 * (n - n_min) - (m - m_min)))
   }
-  M[n_species, n_species] <- M[n_species, n_species] * (1 - q) ^ (n_species - 1)
-  M[!is.finite(M)] <- 0
+  mat[n_species, n_species] <-
+    mat[n_species, n_species] * (1 - q) ^ (n_species - 1)
+  mat[!is.finite(mat)] <- 0
 
-  M[1:n_species, 1:n_species]
+  mat[1:n_species, 1:n_species]
 }
 
 #' @title N matrix
@@ -245,33 +247,36 @@ create_a_slow <- function(
   mat[col(mat) == row(mat) + 1] <- mu * (mvec + 1)
 
   # lower triangular matrix: m > n
-  for (m in 1:lx) {
-    for (n in 0:(m - 1)) {
-      j <- 0:min(m - n, k)
-      j <- j[n >= (m - n - j)]
-      if (length(j) > 0) {
-        mn1 <- log(nu) +
-          log(1 - q) * k +
-          log(q) * (m - n) +
-          log(1 - q) * (2 * n - m)
-        mn2s <- log(2) * j + lchoose(k, j) + lchoose(n, m - n - j)
+  griglia <- expand.grid(m = 1:lx, n = 0:(lx - 1))
+  griglia <- unname(as.matrix(griglia[griglia[, 1] > griglia[, 2],]))
+  for (i in 1:nrow(griglia)) {
+    m <- griglia[i, 1]
+    n <- griglia[i, 2]
+    j <- 0:min(m - n, k)
+    j <- j[n >= (m - n - j)]
+    if (length(j) > 0) {
+      mn1 <- log(nu) +
+        log(1 - q) * k +
+        log(q) * (m - n) +
+        log(1 - q) * (2 * n - m)
+      mn2s <- log(2) * j + lchoose(k, j) + lchoose(n, m - n - j)
 
-        min_mn2 <- min(mn2s)
-        a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
-        if (
-          is.nan(a_matrix_mn) ||
-          a_matrix_mn == 0 ||
-          is.infinite(a_matrix_mn)
-        ) {
-          max_mn2 <- max(mn2s)
-          a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
-        }
-      } else {
-        a_matrix_mn <- 0
+      min_mn2 <- min(mn2s)
+      a_matrix_mn <- sum(exp(mn2s - min_mn2)) * exp(min_mn2 + mn1)
+      if (
+        is.nan(a_matrix_mn) ||
+        a_matrix_mn == 0 ||
+        is.infinite(a_matrix_mn)
+      ) {
+        max_mn2 <- max(mn2s)
+        a_matrix_mn <- sum(exp(mn2s - max_mn2)) * exp(max_mn2 + mn1)
       }
-      mat[m + 1, n + 1] <- a_matrix_mn
+    } else {
+      a_matrix_mn <- 0
     }
+    mat[m + 1, n + 1] <- a_matrix_mn
   }
+
   mat[col(mat) == row(mat) - 1] <- mat[col(mat) == row(mat) - 1] +
     lambda * (mvec + 2 * k)
 
