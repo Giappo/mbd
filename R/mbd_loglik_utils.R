@@ -248,8 +248,8 @@ create_a_slow <- function(
 
   # lower triangular matrix: m > n
   griglia <- expand.grid(m = 1:lx, n = 0:(lx - 1))
-  griglia <- unname(as.matrix(griglia[griglia[, 1] > griglia[, 2],]))
-  for (i in 1:nrow(griglia)) {
+  griglia <- unname(as.matrix(griglia[griglia[, 1] > griglia[, 2], ]))
+  for (i in seq_len(nrow(griglia))) {
     m <- griglia[i, 1]
     n <- griglia[i, 2]
     j <- 0:min(m - n, k)
