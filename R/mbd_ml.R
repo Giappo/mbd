@@ -52,7 +52,7 @@ mbd_ml <- function(
   n_0 = 2,
   cond = 1,
   missnumspec = 0,
-  lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
+  lx = mbd::default_lx(brts = brts, missnumspec = missnumspec),
   ml_steps = 2,
   optim_ids = rep(TRUE, length(start_pars)),
   true_pars = start_pars,

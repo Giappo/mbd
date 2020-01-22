@@ -13,7 +13,7 @@ mbd_loglik <- function(
   n_0 = 2,
   cond = 1,
   missnumspec = 0,
-  lx = min(1 + 3 * (length(brts) + max(missnumspec)), mbd::max_lx()),
+  lx = mbd::default_lx(brts = brts, missnumspec = missnumspec),
   tips_interval = c(n_0 * (cond > 0), Inf),
   q_threshold = 1e-3,
   fortran = TRUE

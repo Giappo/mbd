@@ -355,6 +355,16 @@ max_lx <- function() {
   maximum_lx
 }
 
+#' Default value for lx
+#' @export
+default_lx <- function(
+  brts,
+  missnumspec = 0
+) {
+  def_lx <- min(1 + 2 * (length(brts) + max(missnumspec)), mbd::max_lx())
+  def_lx
+}
+
 #' Test for pure birth in \link{mbd_loglik}
 #' @inheritParams default_params_doc
 #' @export

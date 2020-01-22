@@ -14,6 +14,7 @@ mbd_main <- function(
   start_pars = c(0.3, 0.1, 1.5, 0.15),
   optim_ids = rep(TRUE, length(start_pars)),
   ml_steps = 2,
+  missnumspec = 0,
   loglik_functions = mbd::mbd_loglik,
   project_folder = NULL,
   verbose = FALSE,
@@ -78,13 +79,14 @@ mbd_main <- function(
       brts = brts,
       cond = cond,
       n_0 = n_0,
+      missnumspec = missnumspec,
       tips_interval = tips_interval,
       start_pars = start_pars,
       optim_ids = optim_ids,
       ml_steps = ml_steps,
       true_pars = sim_pars,
       verbose = verbose,
-      lx = min(1 + 3 * length(brts), mbd::max_lx()),
+      lx = mbd::default_lx(brts = brts, missnumspec = missnumspec),
       q_threshold = q_threshold,
       maxiter = maxiter
     )
