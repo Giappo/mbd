@@ -6,11 +6,11 @@
   under a multiple birth-death diversification model}
 \usage{
 mbd_ml(loglik_function = mbd::mbd_loglik, brts, start_pars = c(0.5,
-  0.3, 0.5, 0.3), n_0 = 2, cond = 1, missnumspec = 0, lx = min(1 +
-  3 * (length(brts) + max(missnumspec)), mbd::max_lx()), ml_steps = 2,
-  optim_ids = rep(TRUE, length(start_pars)), true_pars = start_pars,
-  tips_interval = c(n_0 * (cond > 0), Inf), q_threshold = 0.001,
-  verbose = TRUE, maxiter = 10000)
+  0.3, 0.5, 0.3), n_0 = 2, cond = 1, missnumspec = 0,
+  lx = mbd::default_lx(brts = brts, missnumspec = missnumspec),
+  ml_steps = 2, optim_ids = rep(TRUE, length(start_pars)),
+  true_pars = start_pars, tips_interval = c(n_0 * (cond > 0), Inf),
+  q_threshold = 0.001, verbose = TRUE, maxiter = 10000)
 }
 \arguments{
 \item{loglik_function}{the loglik function}

@@ -7,7 +7,7 @@
 mbd_main(sim_pars, cond = 1, n_0 = 2, age = 10,
   tips_interval = c(n_0 * (cond > 0), Inf), seed, start_pars = c(0.3,
   0.1, 1.5, 0.15), optim_ids = rep(TRUE, length(start_pars)),
-  ml_steps = 2, loglik_functions = mbd::mbd_loglik,
+  ml_steps = 2, missnumspec = 0, loglik_functions = mbd::mbd_loglik,
   project_folder = NULL, verbose = FALSE, q_threshold = 1e-04,
   maxiter = 10000)
 }
@@ -44,6 +44,9 @@ It works only if cond == 1, otherwise it must be set to c(0, Inf).}
 routine. Each step will increment the absolute and relative tolerances
 of the optimizer as well as the number of equations used by
 the likelihood function.}
+
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny.}
 
 \item{loglik_functions}{the loglik_functions you want to use}
 
