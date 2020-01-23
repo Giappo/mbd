@@ -4,8 +4,15 @@
 \alias{create_results_file_name}
 \title{Create results file name}
 \usage{
-create_results_file_name(results_folder, sim_pars, optim_ids, cond, n_0,
-  t_0s, seed)
+create_results_file_name(
+  results_folder,
+  sim_pars,
+  optim_ids,
+  cond,
+  n_0,
+  t_0s,
+  seed
+)
 }
 \arguments{
 \item{results_folder}{The results folder insider the project folder.}

@@ -6,6 +6,12 @@
 \usage{
 default_lx(brts, missnumspec = 0)
 }
+\arguments{
+\item{brts}{A set of branching times of a phylogeny.}
+
+\item{missnumspec}{The number of species that are in the clade,
+but missing in the phylogeny.}
+}
 \description{
 Default value for lx
 }

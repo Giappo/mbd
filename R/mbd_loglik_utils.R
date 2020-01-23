@@ -356,6 +356,7 @@ max_lx <- function() {
 }
 
 #' Default value for lx
+#' @inheritParams default_params_doc
 #' @export
 default_lx <- function(
   brts,
@@ -368,7 +369,7 @@ default_lx <- function(
 #' Test for pure birth in \link{mbd_loglik}
 #' @inheritParams default_params_doc
 #' @export
-is_pbd <- function(
+is_pmb <- function(
   pars,
   tips_interval,
   cond,

@@ -4,8 +4,13 @@
 \alias{create_a}
 \title{The A matrix}
 \usage{
-create_a(pars, k, lx, matrix_builder = mbd::hyper_matrix2,
-  no_species_out_of_the_matrix = FALSE)
+create_a(
+  pars,
+  k,
+  lx,
+  matrix_builder = mbd::hyper_matrix2,
+  no_species_out_of_the_matrix = FALSE
+)
 }
 \arguments{
 \item{pars}{vector of parameters:

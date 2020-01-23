@@ -23,21 +23,25 @@ mbd_ode_fortran <- function(
   } else if (runmod == "mbd_runmodpcp" | runmod == "mbd_runmodpcq") {
     initfunc <- "mbd_initmodpc"
   }
-  probs <- deSolve::ode(
-    y = initprobs,
-    parms = c(nn + 0.),
-    rpar = parsvec,
-    times = tvec,
-    func = runmod,
-    initfunc = initfunc,
-    ynames = c("SV"),
-    dimens = nn + 1,
-    nout = 1,
-    outnames = c("Sum"),
-    dllname = "mbd",
-    atol = atol,
-    rtol = rtol,
-    method = methode
+  options(warn = -1)
+  on.exit(options(warn = 0))
+  utils::capture.output(
+    probs <- deSolve::ode(
+      y = initprobs,
+      parms = c(nn + 0.),
+      rpar = parsvec,
+      times = tvec,
+      func = runmod,
+      initfunc = initfunc,
+      ynames = c("SV"),
+      dimens = nn + 1,
+      nout = 1,
+      outnames = c("Sum"),
+      dllname = "mbd",
+      atol = atol,
+      rtol = rtol,
+      method = methode
+    )
   )
   probs <- probs[, 1:(nn + 1)]
   return(probs)

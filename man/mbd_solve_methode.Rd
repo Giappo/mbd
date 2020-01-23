@@ -4,8 +4,13 @@
 \alias{mbd_solve_methode}
 \title{mbd ODE system integrator for a specific ode method}
 \usage{
-mbd_solve_methode(vector, time_interval, func = mbd::mbd_loglik_rhs,
-  parms, methode = "lsoda")
+mbd_solve_methode(
+  vector,
+  time_interval,
+  func = mbd::mbd_loglik_rhs,
+  parms,
+  methode = "lsoda"
+)
 }
 \arguments{
 \item{vector}{a vector}

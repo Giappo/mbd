@@ -4,8 +4,7 @@
 \alias{mbd_integrate}
 \title{performs integration of the ode}
 \usage{
-mbd_integrate(y, times, func, parms, atol, rtol, tcrit,
-  methode = "lsoda")
+mbd_integrate(y, times, func, parms, atol, rtol, tcrit, methode = "lsoda")
 }
 \arguments{
 \item{y}{something}

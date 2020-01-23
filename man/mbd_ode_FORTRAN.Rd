@@ -4,8 +4,15 @@
 \alias{mbd_ode_fortran}
 \title{Performs the integration of the ode using FORTRAN code}
 \usage{
-mbd_ode_fortran(initprobs, tvec, parsvec, atol, rtol, methode,
-  runmod = "mbd_runmod")
+mbd_ode_fortran(
+  initprobs,
+  tvec,
+  parsvec,
+  atol,
+  rtol,
+  methode,
+  runmod = "mbd_runmod"
+)
 }
 \arguments{
 \item{initprobs}{initial probabilities}
