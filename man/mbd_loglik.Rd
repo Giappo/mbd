@@ -4,10 +4,17 @@
 \alias{mbd_loglik}
 \title{Calculates the likelihood for a multiple birth-death process}
 \usage{
-mbd_loglik(pars, brts, n_0 = 2, cond = 1, missnumspec = 0,
+mbd_loglik(
+  pars,
+  brts,
+  n_0 = 2,
+  cond = 1,
+  missnumspec = 0,
   lx = mbd::default_lx(brts = brts, missnumspec = missnumspec),
-  tips_interval = c(n_0 * (cond > 0), Inf), q_threshold = 0.001,
-  fortran = TRUE)
+  tips_interval = c(n_0 * (cond > 0), Inf),
+  q_threshold = 0.001,
+  fortran = TRUE
+)
 }
 \arguments{
 \item{pars}{vector of parameters:

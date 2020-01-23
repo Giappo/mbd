@@ -55,7 +55,7 @@ mbd_loglik <- function(
   }
 
   # Use Pure Multiple Birth when there is no extinction
-  if (mbd::is_pbd(
+  if (mbd::is_pmb(
     pars = pars,
     cond = cond,
     n_0 = n_0,

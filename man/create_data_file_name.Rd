@@ -4,8 +4,7 @@
 \alias{create_data_file_name}
 \title{Create data file name}
 \usage{
-create_data_file_name(data_folder, sim_pars, optim_ids, cond, n_0, t_0s,
-  seed)
+create_data_file_name(data_folder, sim_pars, optim_ids, cond, n_0, t_0s, seed)
 }
 \arguments{
 \item{data_folder}{The data folder insider the project folder.}

@@ -4,8 +4,7 @@
 \alias{condprob_sim}
 \title{Estimates conditional probability using simulations}
 \usage{
-condprob_sim(brts, parmsvec, lx = 10000, saveit = TRUE,
-  starting_seed = 1)
+condprob_sim(brts, parmsvec, lx = 10000, saveit = TRUE, starting_seed = 1)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}

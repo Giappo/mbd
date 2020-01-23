@@ -9,7 +9,6 @@ get_param_names <- function() {
 #' @title Loglik functions in mbd package
 #' @author Giovanni Laudanno
 #' @description Get all the loglik functions in mbd package
-#' @inheritParams default_params_doc
 #' @return loglik functions
 #' @export
 mbd_logliks_function <- function() {
@@ -28,7 +27,6 @@ mbd_logliks_function <- function() {
 #' @title Get package name
 #' @author Giovanni Laudanno
 #' @description Get package name
-#' @inheritParams default_params_doc
 #' @return Package name
 #' @export
 get_pkg_name <- function() {
@@ -39,7 +37,6 @@ get_pkg_name <- function() {
 #' @title Conditionings
 #' @author Giovanni Laudanno
 #' @description Gives the conditionings accepted by mbd
-#' @inheritParams default_params_doc
 #' @return the conditionings
 #' @export
 mbd_conds <- function() {
@@ -49,7 +46,6 @@ mbd_conds <- function() {
 
 #' @title Eqs for condprob
 #' @description Eqs for condprob
-#' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @return the conditionings
 #' @export
@@ -61,7 +57,6 @@ mbd_condprob_eqs <- function() {
 #' @title Logliks for the experiment
 #' @author Giovanni Laudanno
 #' @description Get the loglik functions to use for the experiment
-#' @inheritParams default_params_doc
 #' @return loglik functions to use for the experiment
 #' @export
 mbd_experiment_logliks <- function() {
@@ -338,7 +333,6 @@ count_percentage_mb_events <- function(brts) {
 }
 
 #' Create an empty phylogeny
-#' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
 create_empty_phylo <- function() {
