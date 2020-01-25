@@ -196,23 +196,29 @@
    V2 = 0
    V2(2:(N+1),2:(N+1)) = V
    nu_q_mat = RESHAPE(P((3 + 1):(3 + N ** 2)),(/N,N/), order = (/1,2/))
-   !m1 = RESHAPE(P((3 + N ** 2 + 1):(3 + 2 * N ** 2)),(/N,N/), order = (/1,2/))
+   !!m1 = RESHAPE(P((3 + N ** 2 + 1):(3 + 2 * N ** 2)),(/N,N/), order = (/1,2/))
    vec = (/(I, I = 0, N - 1, 1)/)
    DO I = 1, N
      m1(I,:) = vec
      m2(:,I) = vec
    ENDDO
-   !m2 = TRANSPOSE(m1)
-
+   !!m2 = TRANSPOSE(m1)
    m1m2V = (m1+m2)*V
+
    dp=P(1)*((m1-1)*V2(2:(N+1),1:N)+(m2-1)*V2(1:N,2:(N+1))-m1m2V)
    dp=dp+P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))-m1m2V)
+
+   ! final state cannot lose probability
+   dp(N,:)=dp(N,:)+(P(1)+P(2))*m1(N,:)*V(N,:)+P(3)*V(N,:)
+   dp(:,N)=dp(:,N)+(P(1)+P(2))*m2(:,N)*V(:,N)+P(3)*V(:,N)
+   dp(N,N)=dp(N,N)-(P(1)+P(2))*m1m2V(N,N)-P(3)*V(N,N)
 
    CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
    CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
 
    dp=dp+P(3)*V
-   !dp=dp+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
+
+   !!dp=dp+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
 
    dConc = RESHAPE(dp,(/N ** 2/))
 
