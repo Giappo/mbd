@@ -4,6 +4,8 @@
 #' the numerical integration using deSolve.
 #' @param a_reltol relative error tolerance for
 #' the numerical integration using deSolve.
+#' @param absorb set absorbing states when maximum number of allowed species is
+#' reached
 #' @param abstol absolute error tolerance for
 #' the numerical integration using deSolve.
 #' @param atol absolute error tolerance for
@@ -236,6 +238,7 @@
 default_params_doc <- function(
   a_abstol,
   a_reltol,
+  absorb,
   atol,
   abstol,
   account_name,

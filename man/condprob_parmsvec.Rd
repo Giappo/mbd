@@ -2,9 +2,9 @@
 % Please edit documentation in R/mbd_condprob.R
 \name{condprob_parmsvec}
 \alias{condprob_parmsvec}
-\title{Creates vector of parameters for the FORTRAN condprob code}
+\title{Creates vector of parameters for the conditional probability}
 \usage{
-condprob_parmsvec(pars, log_nu_mat, log_q_mat, lx, fortran = TRUE)
+condprob_parmsvec(pars, eq, lx, absorb, fortran = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -15,11 +15,13 @@ condprob_parmsvec(pars, log_nu_mat, log_q_mat, lx, fortran = TRUE)
   \item pars[4] is q, the single-lineage speciation probability;
 }}
 
-\item{log_nu_mat}{logarithmic nu-matrix, used for condprob}
-
-\item{log_q_mat}{logarithmic q-matrix, used for condprob}
+\item{eq}{the equation approach you want to use. It can be "q_eq" for the
+Q-equation of "p_eq" for the P-equation.}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
+
+\item{absorb}{set absorbing states when maximum number of allowed species is
+reached}
 
 \item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 }
@@ -29,7 +31,7 @@ a vector composed of (in order): lambda, mu, nu, components of the
  matrix of rows (m2_mat), components of the empty framed matrix (empty_mat).
 }
 \description{
-Creates vector of parameters for the FORTRAN condprob code
+Creates vector of parameters for the conditional probability
 }
 \author{
 Giovanni Laudanno

@@ -1,118 +1,127 @@
-# Build Parmsvec ----
+# parmsvec ----
 
-#' Creates log nu matrix for the Q-equation for condprob
+#' Creates vector of parameters for the conditional probability calculated with
+#' the P-equation
+#' @return nu_matrix for the P equation
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
-condprob_qeq_log_nu_mat <- function(lx) {
+condprob_nu_matrix_p <- function(
+  pars,
+  lx,
+  absorb
+) {
   mbd::check_lx(lx)
-  nvec <- 1:lx - 1
-  log_nu_mat <- matrix(-Inf, nrow = lx, ncol = lx)
-  for (m1 in nvec) {
-    for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
-      log_nu_mat[m1 + 1, m1 - a1 + 1] <- log(m1 + 1) +
-        lfactorial(m1 - a1) -
-        lfactorial(m1 - 2 * a1 + 1) -
-        lfactorial(a1)
-    }
-  }
-  rownames(log_nu_mat) <- paste0("m1=", nvec)
-  colnames(log_nu_mat) <- paste0("n1=", nvec)
-  log_nu_mat
-}
 
-#' Creates log q-matrix for the Q-equation for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_qeq_log_q_mat <- function(lx, q) {
-  mbd::check_lx(lx)
+  nu <- pars[3]
+  q <- pars[4]
   nvec <- 1:lx - 1
-  log_q_mat <- matrix(-Inf, nrow = lx, ncol = lx)
-  if (q != 0) {
-    for (m1 in nvec) {
-      for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
-        log_q_mat[m1 + 1, m1 - a1 + 1] <-
-          a1 * log(q) + (m1 + 1 - 2 * a1) * log(1 - q)
-      }
-    }
-  }
-  rownames(log_q_mat) <- paste0("m1=", nvec)
-  colnames(log_q_mat) <- paste0("n1=", nvec)
-  log_q_mat
-}
 
-#' Creates log nu matrix for the P-equation for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_peq_log_nu_mat <- function(lx) {
-  mbd::check_lx(lx)
-  nvec <- 1:lx - 1
-  log_nu_mat <- matrix(-Inf, nrow = lx, ncol = lx)
-  for (m1 in nvec) {
-    for (n1 in 0:m1) {
-      log_nu_mat[m1 + 1, n1 + 1] <- lchoose(n1, max(0, m1 - n1))
-    }
-  }
-  rownames(log_nu_mat) <- paste0("m1=", nvec)
-  colnames(log_nu_mat) <- paste0("n1=", nvec)
-  log_nu_mat
-}
+  log_q_mat <- log_nu_mat <- matrix(-Inf, nrow = lx, ncol = lx)
 
-#' Creates log q matrix for the P-equation for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_peq_log_q_mat <- function(lx, q) {
-  mbd::check_lx(lx)
-  nvec <- 1:lx - 1
-  log_q_mat <- matrix(-Inf, nrow = lx, ncol = lx)
-  if (q != 0) {
+  if (nu > 0 && q > 0) {
     for (m1 in nvec) {
       for (n1 in 0:m1) {
+        # nu component
+        log_nu_mat[m1 + 1, n1 + 1] <-
+          lchoose(n1, max(0, m1 - n1))
+        # q component
         log_q_mat[m1 + 1, n1 + 1] <-
-          (m1 - n1) * log(q) + (2 * n1 - m1) * log(1 - q)
+          (m1 - n1) * log(q) +
+          (2 * n1 - m1) * log(1 - q)
       }
     }
+    nu_q_mat <- exp(log_nu_mat + log_q_mat)
+
+    # absorbing state?
+    if (absorb == TRUE) {
+      mm <- lx - 1
+      nu_q_mat[lx, ] <- rep(0, lx)
+      nvec <- 1:lx - 1
+      nvec2 <- nvec[2 * nvec - mm > 0]
+      for (n in nvec2) {
+        k <- 0:(2 * n - mm)
+        nu_q_mat[lx, n + 1] <- sum(
+          choose(n, mm - n + k) *
+            q ^ (mm - n + k) *
+            (1 - q) ^ (n - (mm - n + k))
+        )
+      }
+      testit::assert(all(
+        abs(colSums(nu_q_mat) - 1) < 1e-5
+      ))
+    }
+
+  } else {
+    nu_q_mat <- diag(rep(1, lx))
   }
-  rownames(log_q_mat) <- paste0("m1=", nvec)
-  colnames(log_q_mat) <- paste0("n1=", nvec)
-  log_q_mat
+  rownames(nu_q_mat) <- paste0("m1=", nvec)
+  colnames(nu_q_mat) <- paste0("n1=", nvec)
+
+  nu_q_mat
 }
 
-#' Creates log nu matrix for the specified equation for condprob
+#' Creates vector of parameters for the conditional probability calculated with
+#' the P-equation
+#' @return nu_matrix for the P equation
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
 #' @export
-condprob_log_nu_mat <- function(lx, eq) {
+condprob_nu_matrix_q <- function(
+  pars,
+  lx,
+  absorb
+) {
   mbd::check_lx(lx)
-  mbd::check_condprob_eq(eq = eq)
-  if (eq == "q_eq") {
-    log_nu_mat <- mbd::condprob_qeq_log_nu_mat(lx)
+
+  nu <- pars[3]
+  q <- pars[4]
+  nvec <- 1:lx - 1
+
+  log_q_mat <- log_nu_mat <- matrix(-Inf, nrow = lx, ncol = lx)
+
+  if (nu > 0 && q > 0) {
+    for (m1 in nvec) {
+      for (a1 in 0:floor((m1 + 1) / 2)) { # nolint lintrbot is math's enemy
+        # nu component
+        log_nu_mat[m1 + 1, m1 - a1 + 1] <-
+          log(m1 + 1) +
+          lfactorial(m1 - a1) -
+          lfactorial(m1 - 2 * a1 + 1) -
+          lfactorial(a1)
+        # q component
+        log_q_mat[m1 + 1, m1 - a1 + 1] <-
+          a1 * log(q) +
+          (m1 + 1 - 2 * a1) * log(1 - q)
+      }
+    }
+    nu_q_mat <- exp(log_nu_mat + log_q_mat)
+
+    # absorbing state?
+    if (absorb == TRUE) {
+      mm <- lx - 1
+      nvec2 <- nvec[2 * nvec - mm + 1 > 0]
+      for (n in nvec2) {
+        k <- 0:(2 * n - mm + 1)
+        nu_q_mat[lx, n + 1] <- sum(
+          (
+            choose(n, mm - n + k) + 2 * choose(n, mm - n + k - 1)
+          ) *
+            q ^ (mm - n + k) *
+            (1 - q) ^ (n + 1 - (mm - n + k))
+        )
+      }
+    }
   } else {
-    log_nu_mat <- mbd::condprob_peq_log_nu_mat(lx)
+    nu_q_mat <- diag(rep(1, lx))
   }
-  log_nu_mat
+  rownames(nu_q_mat) <- paste0("m1=", nvec)
+  colnames(nu_q_mat) <- paste0("n1=", nvec)
+
+  nu_q_mat
 }
 
-#' Creates log q matrix for the specified equation for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_log_q_mat <- function(lx, q, eq) {
-  q <- unlist(unname(q))
-  mbd::check_lx(lx)
-  mbd::check_condprob_eq(eq = eq)
-  if (eq == "q_eq") {
-    log_q_mat <- mbd::condprob_qeq_log_q_mat(lx = lx, q = q)
-  } else {
-    log_q_mat <- mbd::condprob_peq_log_q_mat(lx = lx, q = q)
-  }
-  log_q_mat
-}
-
-#' Creates vector of parameters for the FORTRAN condprob code
+#' Creates vector of parameters for the conditional probability
 #' @return a vector composed of (in order): lambda, mu, nu, components of the
 #'  nu-q matrix, components of the matrix of columns (m1_mat), components of the
 #'  matrix of rows (m2_mat), components of the empty framed matrix (empty_mat).
@@ -121,28 +130,31 @@ condprob_log_q_mat <- function(lx, q, eq) {
 #' @export
 condprob_parmsvec <- function(
   pars,
-  log_nu_mat,
-  log_q_mat,
+  eq,
   lx,
+  absorb,
   fortran = TRUE
 ) {
   mbd::check_lx(lx)
 
-  lx2 <- lx ^ 2
   lambda <- pars[1]
   mu <- pars[2]
   nu <- pars[3]
-  q <- pars[4]
 
-  if (nu > 0 && q > 0) {
-    log_nu_mat <- log_nu_mat[1:lx, 1:lx]
-    log_q_mat <- log_q_mat[1:lx, 1:lx]
-    nu_q_mat <- exp(log_nu_mat + log_q_mat)
-  } else {
-    nu_q_mat <- diag(rep(1, lx))
+  if (eq == "q_eq") {
+    nu_q_mat <- mbd::condprob_nu_matrix_q(pars = pars, lx = lx, absorb = absorb)
   }
+  if (eq == "p_eq") {
+    nu_q_mat <- mbd::condprob_nu_matrix_p(pars = pars, lx = lx, absorb = absorb)
+  }
+  if (eq != "q_eq" && eq != "p_eq") {
+    lx <- 10
+    fortran <- FALSE
+    nu_q_mat <- mbd::condprob_nu_matrix_p(pars = pars, lx = lx, absorb = absorb)
+  }
+
   if (fortran == TRUE) {
-    dim(nu_q_mat) <- c(lx2, 1)
+    dim(nu_q_mat) <- c(lx ^ 2, 1)
     parmsvec <- c(
       lambda,
       mu,
@@ -150,9 +162,6 @@ condprob_parmsvec <- function(
       nu_q_mat
     )
   } else {
-    lambda <- pars[1]
-    mu <- pars[2]
-    nu <- pars[3]
     empty_mat <- matrix(0, nrow = (lx + 2), ncol = (lx + 2))
     m1 <- col(nu_q_mat) - 1
     m2 <- row(nu_q_mat) - 1
@@ -168,34 +177,6 @@ condprob_parmsvec <- function(
   }
   parmsvec
 }
-
-#' Quickly builds parmsvec
-#' @inheritParams default_params_doc
-#' @export
-create_fast_parmsvec <- function(
-  pars,
-  lx,
-  eq,
-  fortran
-) {
-  pars <- unlist(unname(pars))
-  if (eq == "sim" || eq == "nee") {
-    lx <- 10
-    fortran <- FALSE
-  }
-  mbd::check_lx(lx)
-
-  parmsvec <- mbd::condprob_parmsvec(
-    pars = pars,
-    log_nu_mat = mbd::condprob_log_nu_mat(lx = lx, eq = eq),
-    log_q_mat = mbd::condprob_log_q_mat(lx = lx, q = pars[4], eq = eq),
-    lx = lx,
-    fortran = fortran
-  )
-  parmsvec
-}
-
-# Differentials in R ----
 
 # condprob_p -----
 
@@ -262,8 +243,7 @@ condprob_dp <- function(
   empty_mat,
   t
 ) {
-  lx2 <- length(pvec)
-  lx <- sqrt(lx2)
+  lx <- sqrt(length(pvec))
 
   mm <- 1 + 1:lx
 
@@ -278,7 +258,7 @@ condprob_dp <- function(
   dp_nu <-
     mbd::condprob_dp_nu(pp = pp, nu_matrix = nu_matrix)
   dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
-  dim(dp) <- c(lx2, 1)
+  dim(dp) <- c(lx ^ 2, 1)
   dp
 }
 
@@ -298,6 +278,37 @@ condprob_dp_rhs <- function(t, x, parms) {
     empty_mat = parms$empty_mat,
     t = t
   ))
+}
+
+#' Conditional probability P(n1, n2) for all the states n1 and n2
+#' @inheritParams default_params_doc
+#' @author Giovanni Laudanno
+#' @export
+condprob_p_n1_n2 <- function(
+  brts,
+  parmsvec,
+  lx,
+  rhs_function = mbd::condprob_dp_rhs
+) {
+  mbd::check_lx(lx)
+
+  age <- max(abs(brts)) # time between crown age and present
+
+  # Define starting vector
+  p_0 <- matrix(0, nrow = lx, ncol = lx)
+  p_0[2, 2] <- 1
+  dim(p_0) <- c(lx ^ 2, 1)
+
+  # Integrate
+  p_out <- mbd::mbd_solve(
+    vector = p_0,
+    time_interval = age,
+    func = rhs_function,
+    parms = parmsvec
+  )
+
+  p_n1_n2 <- matrix(p_out, nrow = lx, ncol = lx)
+  p_n1_n2
 }
 
 # condprob_q -----
@@ -366,8 +377,7 @@ condprob_dq <- function(
   empty_mat,
   t
 ) {
-  lx2 <- length(qvec)
-  lx <- sqrt(lx2)
+  lx <- sqrt(length(qvec))
 
   mm <- 2:(lx + 1)
 
@@ -385,7 +395,7 @@ condprob_dq <- function(
     qq = qq, nu_matrix = nu_matrix
   )
   dq <- lambda * dq_lambda + mu * dq_mu + nu * dq_nu
-  dq <- matrix(dq, nrow = lx2, ncol = 1)
+  dq <- matrix(dq, nrow = lx ^ 2, ncol = 1)
   dq
 }
 
@@ -407,40 +417,6 @@ condprob_dq_rhs <- function(t, x, parms) {
   ))
 }
 
-# Compute probability distributions ----
-
-#' Conditional probability P(n1, n2) for all the states n1 and n2
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_p_n1_n2 <- function(
-  brts,
-  parmsvec,
-  lx,
-  rhs_function = mbd::condprob_dp_rhs
-) {
-  mbd::check_lx(lx)
-
-  lx2 <- lx ^ 2
-  age <- max(abs(brts)) # time between crown age and present
-
-  # Define starting vector
-  p_0 <- matrix(0, nrow = lx, ncol = lx)
-  p_0[2, 2] <- 1
-  dim(p_0) <- c(lx2, 1)
-
-  # Integrate
-  p_out <- mbd::mbd_solve(
-    vector = p_0,
-    time_interval = age,
-    func = rhs_function,
-    parms = parmsvec
-  )
-
-  p_n1_n2 <- matrix(p_out, nrow = lx, ncol = lx)
-  p_n1_n2
-}
-
 #' Conditional probability Q(m1, m2) for all the states m1 and m2
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
@@ -453,15 +429,14 @@ condprob_q_m1_m2 <- function(
 ) {
   mbd::check_lx(lx)
 
-  lx2 <- lx ^ 2
-  nu_q_mat <- parmsvec[3 + 1:lx2]
+  nu_q_mat <- parmsvec[3 + 1:(lx ^ 2)]
   dim(nu_q_mat) <- c(lx, lx)
   age <- max(abs(brts)) # time between crown age and present
 
   # Define starting vector
   q_0 <- matrix(0, nrow = lx, ncol = lx)
   q_0[1, 1] <- 1
-  dim(q_0) <- c(lx2, 1)
+  dim(q_0) <- c(lx ^ 2, 1)
 
   # Integrate
   q_out <- mbd::mbd_solve(
@@ -478,7 +453,7 @@ condprob_q_m1_m2 <- function(
   p_m1_m2
 }
 
-# Conditional probability ----
+# conditional probability ----
 
 #' Conditional probability calculated with the P-approach
 #' @inheritParams default_params_doc
@@ -656,11 +631,14 @@ condprob_nee <- function(
   q <- 1 - parmsvec$nu_matrix[2, 2]
   pars <- c(lambda, mu, nu, q)
 
-  pc <- mbd::calculate_condprob_nee(
-    pars,
-    brts,
-    n_0 = n_0
-  )
+  nee_pars <- mbd::get_nee_pars(pars = pars)
+  age <- max(abs(brts))
+
+  pc <- mbd::p_t(
+    lambda = nee_pars[1],
+    mu = nee_pars[2],
+    t = age
+  ) ^ n_0
   pc
 }
 
@@ -670,10 +648,10 @@ condprob_nee <- function(
 #' @export
 condprob <- function(
   brts,
-  fortran = TRUE,
+  parmsvec,
   lx,
   eq,
-  parmsvec
+  fortran = TRUE
 ) {
 
   if (eq == "sim") {
@@ -717,173 +695,30 @@ calculate_condprob <- function(
   brts,
   lx,
   eq = "nee",
+  absorb = TRUE,
   fortran = TRUE
 ) {
+
+  if (eq == "nee") {
+    lx <- 10
+  }
 
   mbd::condprob(
     brts = brts,
     fortran = fortran,
     lx = lx,
     eq = eq,
-    parmsvec = mbd::create_fast_parmsvec(
+    parmsvec = mbd::condprob_parmsvec(
       pars = pars,
-      lx = lx,
       eq = eq,
+      lx = lx,
+      absorb = absorb,
       fortran = fortran
     )
   )
 }
 
-#' Calculate conditional probability using an approximation based on Nee et al.
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-calculate_condprob_nee <- function(
-  pars,
-  brts,
-  n_0 = 2
-) {
-  nee_pars <- mbd::get_nee_pars(pars = pars)
-  age <- max(abs(brts))
-
-  pc <- mbd::p_t(
-    lambda = nee_pars[1],
-    mu = nee_pars[2],
-    t = age
-  ) ^ n_0
-  pc
-}
-
-# Condprob selector ----
-
-#' Selects the best eq for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_selector_middle <- function(
-  pars,
-  brts,
-  lx = 34,
-  fortran = TRUE
-) {
-  lx_max <- 150
-  log_nu_mat_p <- mbd::condprob_log_nu_mat(lx = lx_max, eq = "p_eq")
-  log_q_mat_p <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "p_eq")
-  log_nu_mat_q <- mbd::condprob_log_nu_mat(lx = lx_max, eq = "q_eq")
-  log_q_mat_q <- mbd::condprob_log_q_mat(lx = lx_max, q = pars[4], eq = "q_eq")
-
-  lx_start <- 3
-  lx_end <- lx
-  lx_seq <- unique(ceiling(seq(
-      from = lx_start,
-      to = lx_end,
-      length.out = 6
-    )))
-  testit::assert(lx_end <= lx_max)
-  pc_p <- pc_q <- rep(0, length(lx_seq))
-  for (l in seq_along(lx_seq)) {
-    lx <- lx_seq[l]
-    pc_q[l] <- mbd::condprob(
-      brts = brts,
-      fortran = fortran,
-      lx = lx,
-      eq = "q_eq",
-      parmsvec = mbd::condprob_parmsvec(
-        pars = pars,
-        log_nu_mat = log_nu_mat_q,
-        log_q_mat = log_q_mat_q,
-        lx = lx,
-        fortran = fortran
-      )
-    )
-    pc_p[l] <- mbd::condprob(
-      brts = brts,
-      fortran = fortran,
-      lx = lx,
-      eq = "p_eq",
-      parmsvec = mbd::condprob_parmsvec(
-        pars = pars,
-        log_nu_mat = log_nu_mat_p,
-        log_q_mat = log_q_mat_p,
-        lx = lx,
-        fortran = fortran
-      )
-    )
-  }
-
-  # spline
-  x_p <- lx_seq
-  y_p <- pc_p
-  x_q <- lx_seq
-  y_q <- pc_q
-  fit_p <- stats::splinefun(x = x_p, y = y_p, method = "monoH.FC")
-  fit_q <- stats::splinefun(x = x_q, y = y_q, method = "monoH.FC")
-  f <- function(x) fit_p(x, deriv = 0L) - fit_q(x, deriv = 0L)
-  lx_meet <- stats::uniroot(f, interval = c(0, 1e36))$root
-  y3 <- fit_p(lx_meet)
-
-  if (1 == 2) {
-    # visualization
-    ## real points
-    graphics::plot(y_p ~ x_p, ylim = c(0, 1), col = "red")
-    graphics::points(y_q ~ x_q, col = "blue")
-    ## extrapolated points
-    x <- seq(10, lx_meet * 1.2, length.out = 10)
-    graphics::plot(fit_p(x) ~ x, ylim = c(0, 1), col = "red")
-    graphics::points(fit_q(x) ~ x, col = "blue")
-    ## difference function between fp and fq
-    x <- seq(5, 120, length.out = 200)
-    min(f(x))
-    graphics::plot(f(x) ~ x, col = "red")
-  }
-
-  if (y3 < 0.5) {
-    eq <- "q_eq"
-  } else {
-    eq <- "p_eq"
-  }
-  eq
-}
-
-#' Selects the best eq for condprob
-#' @inheritParams default_params_doc
-#' @author Giovanni Laudanno
-#' @export
-condprob_select_eq <- function(
-  pars,
-  brts,
-  fortran = TRUE
-) {
-
-  pc <- mbd::calculate_condprob_nee(
-    pars = pars,
-    brts = brts
-  )
-
-  pc_tolerance <- 0.03
-  if (pc < (0.5 + pc_tolerance) && pc > (0.5 - pc_tolerance)) {
-    dist <- (1 / pc_tolerance) * abs(pc - 0.5)
-    dist <- dist ^ 2
-    t_crown <- max(abs(brts))
-    lx_min <- min(8 + 2 * t_crown, 18)
-    lx_max <- min(23 + 2 * t_crown, 34)
-    eq <- mbd::condprob_selector_middle(
-      pars = pars,
-      brts = brts,
-      fortran = fortran,
-      lx = ceiling(lx_max + (lx_min - lx_max) * dist)
-    )
-  } else {
-    if (pc < 0.5) {
-      eq <- "q_eq"
-    } else {
-      eq <- "p_eq"
-    }
-  }
-  eq
-}
-
-# Condprob utils ----
+# condprob utils ----
 
 #' Maximum allowed value for lx in condprob
 #' @export

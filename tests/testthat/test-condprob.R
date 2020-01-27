@@ -15,24 +15,22 @@ print_from_global <- function(var = "seed") {
 # diagonal in p_nu_matrix is (1 - q) ^ m (+ k) ----
 test_that("diagonal in p_nu_matrix is (1 - q) ^ m (+ k)", {
 
-  skip("Use Nee instead")
-
+  lambda <- 0.8
+  mu <- 0.2
+  nu <- 1
   q <- 0.2
+  pars <- c(lambda, mu, nu, q)
   lx <- 8
 
   eq <- "p_eq"
-  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
-  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, eq = eq, q = q)
-  nu_q_mat <- exp(log_nu_mat + log_q_mat)
+  nu_q_mat <- mbd::condprob_nu_matrix_p(pars = pars, lx = lx, absorb = FALSE)
   testthat::expect_equal(
     diag(nu_q_mat),
     (1 - q) ^ (0:(lx - 1))
   )
 
   eq <- "q_eq"
-  log_nu_mat <- mbd::condprob_log_nu_mat(lx = lx, eq = eq)
-  log_q_mat <- mbd::condprob_log_q_mat(lx = lx, eq = eq, q = q)
-  nu_q_mat <- exp(log_nu_mat + log_q_mat)
+  nu_q_mat <- mbd::condprob_nu_matrix_q(pars = pars, lx = lx, absorb = FALSE)
   testthat::expect_equal(
     diag(nu_q_mat),
     (1 - q) ^ (0:(lx - 1) + 1) # k is equal to 1
@@ -43,8 +41,6 @@ test_that("diagonal in p_nu_matrix is (1 - q) ^ m (+ k)", {
 # right parmsvec in FORTRAN and R ----
 test_that("right parmsvec in FORTRAN and R", {
 
-  skip("Use Nee instead")
-
   pars <- c(0.3, 0.1, 1.7, 0.13)
   lx <- 6
   lx2 <- lx ^ 2
@@ -53,21 +49,36 @@ test_that("right parmsvec in FORTRAN and R", {
   fortran <- TRUE
   ## P equation
   eq <- "p_eq"
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = fortran)
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   testthat::expect_equal(length(parmsvec), 3 + lx2)
   ## Q equation
   eq <- "p_eq"
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = fortran)
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   testthat::expect_equal(length(parmsvec), 3 + lx2)
 
   # R
   fortran <- FALSE
   ## P equation
   eq <- "p_eq"
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = fortran)
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   testthat::expect_true(parmsvec$lambda == pars[1])
   testthat::expect_true(parmsvec$mu == pars[2])
   testthat::expect_true(parmsvec$nu == pars[3])
@@ -76,8 +87,13 @@ test_that("right parmsvec in FORTRAN and R", {
   testthat::expect_equal(dim(parmsvec$empty_mat), c(lx + 2, lx + 2))
   ## Q equation
   eq <- "p_eq"
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = fortran)
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   testthat::expect_true(parmsvec$lambda == pars[1])
   testthat::expect_true(parmsvec$mu == pars[2])
   testthat::expect_true(parmsvec$nu == pars[3])
@@ -90,15 +106,19 @@ test_that("right parmsvec in FORTRAN and R", {
 # right differentials in R ----
 test_that("right differentials in R", {
 
-  skip("Use Nee instead")
-
   pars <- c(0.2, 0.1, 1.4, 0.12)
   lx <- 40
 
   # test for the P-equation
   eq <- "p_eq"
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = FALSE)
+  fortran <- FALSE
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   pp <- matrix(0, lx, lx)
   pp[2, 2] <- 1
   pvec <- matrix(pp, lx ^ 2, 1)
@@ -131,8 +151,14 @@ test_that("right differentials in R", {
 
   # test for Q-equation
   eq <- "q_eq"
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = FALSE)
+  fortran <- FALSE
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   qvec <- c(1, rep(0, lx ^ 2 - 1))
   dq <- mbd::condprob_dq(
     qvec = qvec,
@@ -151,8 +177,6 @@ test_that("right differentials in R", {
 # full P_{n1, n2} and Q_{m1, m2} distributions ----
 test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
-  skip("Use Nee instead")
-
   pars <- c(0.3, 0.15, 1.8, 0.11)
   lx <- 18
   brts <- c(8)
@@ -160,8 +184,14 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
   # P equation
   eq <- "p_eq"
   ## R
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = FALSE)
+  fortran <- FALSE
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   p_r <- mbd::condprob_p_n1_n2(
     brts = brts,
     parmsvec = parmsvec,
@@ -170,8 +200,14 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
   )
   testthat::expect_equal(p_r, t(p_r))
   ## FORTRAN
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = TRUE)
+  fortran <- TRUE
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   p_fortran <- mbd::condprob_p_n1_n2(
     brts = brts,
     parmsvec = parmsvec,
@@ -184,8 +220,14 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
   # P equation
   eq <- "q_eq"
   ## R
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = FALSE)
+  fortran <- FALSE
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   q_r <- mbd::condprob_q_m1_m2(
     brts = brts,
     parmsvec = parmsvec,
@@ -194,8 +236,14 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
   )
   testthat::expect_equal(q_r, t(q_r))
   ## FORTRAN
-  parmsvec <-
-    mbd::create_fast_parmsvec(pars = pars, lx = lx, eq = eq, fortran = TRUE)
+  fortran <- TRUE
+  parmsvec <- mbd::condprob_parmsvec(
+    pars = pars,
+    eq = eq,
+    lx = lx,
+    absorb = FALSE,
+    fortran = fortran
+  )
   q_fortran <- mbd::condprob_q_m1_m2(
     brts = brts,
     parmsvec = parmsvec,
@@ -212,22 +260,44 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 # P_{n1, n2} sums up to one ----
 test_that("P_{n1, n2} sums up to one", {
 
-  skip("Use Nee instead")
-
   pars <- c(0.2, 0.1, 2.5, 0.2)
   lx <- 22
   brts <- c(2)
   eq <- "p_eq"
+  fortran <- TRUE
 
+  # no absorb
+  absorb <- FALSE
   p_n1_n2 <- mbd::condprob_p_n1_n2(
     rhs_function = "mbd_runmodpcp",
     brts = brts,
     lx = lx,
-    parmsvec = mbd::create_fast_parmsvec(
+    parmsvec = mbd::condprob_parmsvec(
       pars = pars,
-      lx = lx,
       eq = eq,
-      fortran = TRUE
+      lx = lx,
+      absorb = absorb,
+      fortran = fortran
+    )
+  )
+
+  testthat::expect_gt(
+    sum(p_n1_n2),
+    0.99
+  )
+
+  # no absorb
+  absorb <- TRUE
+  p_n1_n2 <- mbd::condprob_p_n1_n2(
+    rhs_function = "mbd_runmodpcp",
+    brts = brts,
+    lx = lx,
+    parmsvec = mbd::condprob_parmsvec(
+      pars = pars,
+      eq = eq,
+      lx = lx,
+      absorb = absorb,
+      fortran = fortran
     )
   )
 
@@ -241,11 +311,9 @@ test_that("P_{n1, n2} sums up to one", {
 # FORTRAN vs R: same result but FORTRAN is faster ----
 test_that("FORTRAN vs R: same result but FORTRAN is faster", {
 
-  skip("Use Nee instead")
-
   brts <- c(8)
   pars <- c(0.2, 0.1, 1.2, 0.12)
-  lx <- 20
+  lx <- 18
 
   # test for the P-equation
   eq <- "p_eq"
@@ -298,15 +366,13 @@ test_that("FORTRAN vs R: same result but FORTRAN is faster", {
 # FORTRAN vs R: hard test ----
 test_that("FORTRAN vs R: hard test", {
 
-  skip("Use Nee instead")
-
   if (!is_on_ci()) {
     skip("To be performed on ci.")
   }
 
   brts <- c(10)
   pars <- c(0.2, 0.1, 1.5, 0.14)
-  lx <- 50
+  lx <- 40
 
   # test for the P-equation
   eq <- "p_eq"
@@ -359,8 +425,6 @@ test_that("FORTRAN vs R: hard test", {
 # condprob for mu = 0 ----
 test_that("condprob for mu = 0", {
 
-  skip("Use Nee instead")
-
   pars <- c(0.2, 0, 1, 0.1)
   brts <- c(3)
   cond <- 1
@@ -393,14 +457,16 @@ test_that("condprob for mu = 0", {
 # bd: nu = q = 0 ----
 test_that("nu = q = 0", {
 
-  skip("Use Nee instead")
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
 
   pars <- c(0.2, 0.15, 0, 0)
   brts <- c(1)
   cond <- 1
   n_0 <- 2
   lx <- 15
-  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2 + is_on_ci())
+  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2)
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
     test0 <- exp(
@@ -440,14 +506,16 @@ test_that("nu = q = 0", {
 # bd: nu = 0 ----
 test_that("nu = 0", {
 
-  skip("Use Nee instead")
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
 
   pars <- c(0.2, 0.15, 0, 0.5)
   brts <- c(1)
   cond <- 1
   n_0 <- 2
   lx <- 15
-  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2 + is_on_ci())
+  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2)
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
     test0 <- exp(
@@ -487,14 +555,16 @@ test_that("nu = 0", {
 # bd: q = 0 ----
 test_that("q = 0", {
 
-  skip("Use Nee instead")
+  if (!is_on_ci()) {
+    skip("To be performed on ci.")
+  }
 
   pars <- c(0.2, 0.15, 3, 0)
   brts <- c(1)
   cond <- 1
   n_0 <- 2
   lx <- 15
-  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2 + is_on_ci())
+  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2)
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
     test0 <- exp(
@@ -527,141 +597,6 @@ test_that("q = 0", {
         )
       }
     }
-  }
-
-})
-
-# condprob_select_eq ----
-test_that("condprob_select_eq: standard cases", {
-
-  skip("Use Nee instead")
-
-  max_seed <- 2 + 33 * is_on_ci()
-  for (seed in 1:max_seed) {
-    set.seed(seed)
-    print_from_global("seed")
-    lambda <- runif(n = 1, min = 0.05, max = 0.3)
-    mu <- runif(n = 1, min = 0, max = lambda)
-    nu <- runif(n = 1, min = 0.3, max = 2.3)
-    q <- runif(n = 1, min = 0.05, max = 0.35)
-    pars <- c(lambda, mu, nu, q)
-    brts <- c(8)
-
-    pc <- mbd::calculate_condprob_nee(pars = pars, brts = brts)
-    n_sims <- ceiling(
-      max(
-        min(1 / abs(pc - 0.5) ^ 2, 1e4),
-        200
-      )
-    )
-    print_from_global("n_sims")
-    pc_sim <- mbd::calculate_condprob(
-      pars = pars,
-      brts = brts,
-      lx = n_sims,
-      eq = "sim"
-    )
-
-    if (pc_sim > 0.5) {
-      right_eq <- "p_eq"
-    } else {
-      right_eq <- "q_eq"
-    }
-    print_from_global("pc_sim")
-    print_from_global("pc")
-    t_select <- system.time(
-      eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
-    )[[3]]
-    testthat::expect_equal(eq, right_eq)
-    testthat::expect_lt(t_select, 300) # select in less than 5 mins
-  }
-
-})
-
-# probcond_select_eq: nasty case ----
-test_that("probcond_select_eq: nasty case", {
-
-  skip("Use Nee instead")
-
-  if (!is_on_ci()) {
-    skip("To be performed on ci.")
-  }
-
-  pars <- c(1.50, 0.15, 1.35, 0.09)
-  brts <- c(5, 2.53, 0.79)
-  fortran <- TRUE
-  lx <- 20
-
-  pc_sim <- mbd::condprob_sim(
-    brts = brts,
-    parmsvec = mbd::create_fast_parmsvec(
-      pars = pars,
-      lx = lx,
-      eq = "sim",
-      fortran = TRUE
-    ),
-    lx = 50,
-    saveit = TRUE,
-    starting_seed = 1
-  )
-  if (pc_sim > 0.5) {
-    right_eq <- "p_eq"
-  } else {
-    right_eq <- "q_eq"
-  }
-
-  eq <- mbd::condprob_select_eq(
-    pars = pars,
-    brts = brts,
-    fortran = fortran
-  )
-  testthat::expect_equal(eq, right_eq)
-
-})
-
-# probcond_select_eq: more nasty cases ----
-test_that("probcond_select_eq: more nasty cases", {
-
-  skip("Use Nee instead")
-
-  max_seed <- 2 + 33 * is_on_ci()
-  for (seed in 1:max_seed) {
-    if (seed == 15 || seed == 27 || seed == 35) next # too slow for simulations
-    set.seed(seed)
-    print_from_global("seed")
-    lambda <- runif(n = 1, min = 0.05, max = 1.5)
-    mu <- runif(n = 1, min = 0, max = lambda)
-    nu <- runif(n = 1, min = 0.3, max = 2.9)
-    q <- runif(n = 1, min = 0.05, max = 0.4)
-    pars <- c(lambda, mu, nu, q)
-    brts <- c(5)
-
-    pc <- mbd::calculate_condprob_nee(pars = pars, brts = brts)
-    n_sims <- ceiling(
-      max(
-        min(1 / abs(pc - 0.5) ^ 2, 1e4),
-        200
-      )
-    )
-    print_from_global("n_sims")
-    pc_sim <- mbd::calculate_condprob(
-      pars = pars,
-      brts = brts,
-      lx = n_sims,
-      eq = "sim"
-    )
-    if (pc_sim > 0.5) {
-      right_eq <- "p_eq"
-    } else {
-      right_eq <- "q_eq"
-    }
-    print_from_global("pc_sim")
-    print_from_global("pc")
-    t_select <- system.time(
-      eq <- mbd::condprob_select_eq(pars = pars, brts = brts, fortran = TRUE)
-    )[[3]]
-    testthat::expect_equal(eq, right_eq)
-    testthat::expect_lt(t_select, 300) # select in less than 5 mins
   }
 
 })

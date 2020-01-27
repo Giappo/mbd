@@ -4,7 +4,7 @@
 \alias{calculate_condprob}
 \title{Calculate conditional probability: user mode}
 \usage{
-calculate_condprob(pars, brts, lx, eq = "nee", fortran = TRUE)
+calculate_condprob(pars, brts, lx, eq = "nee", absorb = TRUE, fortran = TRUE)
 }
 \arguments{
 \item{pars}{vector of parameters:
@@ -21,6 +21,9 @@ calculate_condprob(pars, brts, lx, eq = "nee", fortran = TRUE)
 
 \item{eq}{the equation approach you want to use. It can be "q_eq" for the
 Q-equation of "p_eq" for the P-equation.}
+
+\item{absorb}{set absorbing states when maximum number of allowed species is
+reached}
 
 \item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 }
