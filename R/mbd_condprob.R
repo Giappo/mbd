@@ -36,9 +36,8 @@ condprob_nu_matrix_p <- function(
     # absorbing state?
     if (absorb == TRUE) {
       mm <- lx - 1
-      nu_q_mat[lx, ] <- rep(0, lx)
       nvec <- 1:lx - 1
-      nvec2 <- nvec[2 * nvec - mm > 0]
+      nvec2 <- nvec[2 * nvec - mm >= 0]
       for (n in nvec2) {
         k <- 0:(2 * n - mm)
         nu_q_mat[lx, n + 1] <- sum(
@@ -262,12 +261,109 @@ condprob_dp <- function(
   dp
 }
 
+#' Calculates the lambda component of dp
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
+#' @export
+condprob_dp_lambda_absorb <- function(
+  pp,
+  pp2,
+  m1,
+  m2,
+  mm
+) {
+  mm_minus_one <- mm - 1
+  m1a <- m1
+  m1a[, lx] <- 0
+  m2a <- t(m1a)
+
+  dp1 <- (m1 - 1) * pp2[mm, mm_minus_one] +
+    (m2 - 1) * pp2[mm_minus_one, mm] -
+    (m1a + m2a) * pp
+  dp1
+}
+
+#' Calculates the mu component of dp
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
+#' @export
+condprob_dp_mu_absorb <- function(
+  pp,
+  pp2,
+  m1,
+  m2,
+  mm
+) {
+  mm_plus_one <- mm + 1
+  m1a <- m1
+  m1a[, lx] <- 0
+  m2a <- t(m1a)
+
+  dp2 <- (m1 + 1) * pp2[mm, mm_plus_one] +
+    (m2 + 1) * pp2[mm_plus_one, mm] -
+    (m1a + m2a) * pp
+  dp2
+}
+
+#' Auxilary function for cond_prob_p, computing rhs
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
+#' @export
+condprob_dp_absorb <- function(
+  pvec,
+  lambda,
+  mu,
+  nu,
+  nu_matrix,
+  m1,
+  m2,
+  empty_mat,
+  t
+) {
+  lx <- sqrt(length(pvec))
+
+  mm <- 1 + 1:lx
+
+  pp <- matrix(pvec, nrow = lx, ncol = lx)
+  pp2 <- empty_mat
+  pp2[mm, mm] <- pp
+
+  dp_lambda <- mbd::condprob_dp_lambda_absorb(
+    pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm
+  )
+  dp_mu <- mbd::condprob_dp_mu_absorb(
+    pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm
+  )
+  dp_nu <- mbd::condprob_dp_nu(pp = pp, nu_matrix = nu_matrix)
+  dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
+  dim(dp) <- c(lx ^ 2, 1)
+  dp
+}
+
 #' Auxilary function for cond_prob_p, computing rhs
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @inheritParams default_params_doc
 #' @export
 condprob_dp_rhs <- function(t, x, parms) {
   list(mbd::condprob_dp(
+    pvec = x,
+    lambda = parms$lambda,
+    mu = parms$mu,
+    nu = parms$nu,
+    nu_matrix = parms$nu_matrix,
+    m1 = parms$m1,
+    m2 = parms$m2,
+    empty_mat = parms$empty_mat,
+    t = t
+  ))
+}
+
+#' Auxilary function for cond_prob_p, computing rhs
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
+#' @export
+condprob_dp_absorb_rhs <- function(t, x, parms) {
+  list(mbd::condprob_dp_absorb(
     pvec = x,
     lambda = parms$lambda,
     mu = parms$mu,
@@ -463,14 +559,19 @@ condprob_p <- function(
   brts,
   parmsvec,
   fortran = TRUE,
-  lx
+  lx,
+  absorb
 ) {
   mbd::check_lx(lx)
 
   if (fortran == TRUE) {
     rhs_function <- "mbd_runmodpcp"
   } else {
-    rhs_function <- mbd::condprob_dp_rhs
+    if (absorb == FALSE) {
+      rhs_function <- mbd::condprob_dp_rhs
+    } else {
+      rhs_function <- mbd::condprob_dp_absorb_rhs
+    }
   }
   p_n1_n2 <- mbd::condprob_p_n1_n2(
     brts = brts,
@@ -491,7 +592,8 @@ condprob_q <- function(
   brts,
   parmsvec,
   fortran = TRUE,
-  lx
+  lx,
+  absorb
 ) {
   mbd::check_lx(lx)
 
@@ -504,7 +606,8 @@ condprob_q <- function(
     brts = brts,
     parmsvec = parmsvec,
     rhs_function = rhs_function,
-    lx = lx
+    lx = lx,
+    absorb = absorb
   )
   pc <- sum(q_m1_m2)
   mbd::check_pc(pc = pc)
@@ -651,6 +754,7 @@ condprob <- function(
   parmsvec,
   lx,
   eq,
+  absorb = TRUE,
   fortran = TRUE
 ) {
 
@@ -665,16 +769,18 @@ condprob <- function(
     return(mbd::condprob_p(
       brts = brts,
       parmsvec = parmsvec,
-      fortran = fortran,
-      lx = lx
+      lx = lx,
+      absorb = absorb,
+      fortran = fortran
     ))
   }
   if (eq == "q_eq") {
     return(mbd::condprob_q(
       brts = brts,
       parmsvec = parmsvec,
-      fortran = fortran,
-      lx = lx
+      lx = lx,
+      absorb = absorb,
+      fortran = fortran
     ))
   }
   if (eq == "nee") {

@@ -4,7 +4,7 @@
 \alias{condprob}
 \title{Calculate conditional probability: loglik mode}
 \usage{
-condprob(brts, parmsvec, lx, eq, fortran = TRUE)
+condprob(brts, parmsvec, lx, eq, absorb = TRUE, fortran = TRUE)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
@@ -15,6 +15,9 @@ condprob(brts, parmsvec, lx, eq, fortran = TRUE)
 
 \item{eq}{the equation approach you want to use. It can be "q_eq" for the
 Q-equation of "p_eq" for the P-equation.}
+
+\item{absorb}{set absorbing states when maximum number of allowed species is
+reached}
 
 \item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 }

@@ -177,9 +177,12 @@ test_that("right differentials in R", {
 # full P_{n1, n2} and Q_{m1, m2} distributions ----
 test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
+  skip("Rampal")
+
   pars <- c(0.3, 0.15, 1.8, 0.11)
   lx <- 18
   brts <- c(8)
+  absorb <- TRUE
 
   # P equation
   eq <- "p_eq"
@@ -189,7 +192,7 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
     pars = pars,
     eq = eq,
     lx = lx,
-    absorb = FALSE,
+    absorb = absorb,
     fortran = fortran
   )
   p_r <- mbd::condprob_p_n1_n2(
@@ -205,7 +208,7 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
     pars = pars,
     eq = eq,
     lx = lx,
-    absorb = FALSE,
+    absorb = absorb,
     fortran = fortran
   )
   p_fortran <- mbd::condprob_p_n1_n2(
@@ -217,7 +220,7 @@ test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
   testthat::expect_equal(p_fortran, t(p_fortran))
   testthat::expect_equal(p_fortran, p_r)
 
-  # P equation
+  # Q equation
   eq <- "q_eq"
   ## R
   fortran <- FALSE
