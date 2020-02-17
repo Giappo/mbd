@@ -261,11 +261,29 @@ condprob_dp <- function(
   dp
 }
 
+#' Auxilary function for cond_prob_p, computing rhs
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
+#' @export
+condprob_dp_rhs <- function(t, x, parms) {
+  list(mbd::condprob_dp(
+    pvec = x,
+    lambda = parms$lambda,
+    mu = parms$mu,
+    nu = parms$nu,
+    nu_matrix = parms$nu_matrix,
+    m1 = parms$m1,
+    m2 = parms$m2,
+    empty_mat = parms$empty_mat,
+    t = t
+  ))
+}
+
 #' Calculates the lambda component of dp
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @inheritParams default_params_doc
 #' @export
-condprob_dp_lambda_absorb <- function(
+condprob_dp_absorb_lambda <- function(
   pp,
   pp2,
   m1,
@@ -287,7 +305,7 @@ condprob_dp_lambda_absorb <- function(
 #' @author Giovanni Laudanno, Bart Haegeman
 #' @inheritParams default_params_doc
 #' @export
-condprob_dp_mu_absorb <- function(
+condprob_dp_absorb_mu <- function(
   pp,
   pp2,
   m1,
@@ -328,34 +346,16 @@ condprob_dp_absorb <- function(
   pp2 <- empty_mat
   pp2[mm, mm] <- pp
 
-  dp_lambda <- mbd::condprob_dp_lambda_absorb(
+  dp_lambda <- mbd::condprob_dp_absorb_lambda(
     pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm
   )
-  dp_mu <- mbd::condprob_dp_mu_absorb(
+  dp_mu <- mbd::condprob_dp_absorb_mu(
     pp = pp, pp2 = pp2, m1 = m1, m2 = m2, mm = mm
   )
   dp_nu <- mbd::condprob_dp_nu(pp = pp, nu_matrix = nu_matrix)
   dp <- lambda * dp_lambda + mu * dp_mu + nu * dp_nu
   dim(dp) <- c(lx ^ 2, 1)
   dp
-}
-
-#' Auxilary function for cond_prob_p, computing rhs
-#' @author Giovanni Laudanno, Bart Haegeman
-#' @inheritParams default_params_doc
-#' @export
-condprob_dp_rhs <- function(t, x, parms) {
-  list(mbd::condprob_dp(
-    pvec = x,
-    lambda = parms$lambda,
-    mu = parms$mu,
-    nu = parms$nu,
-    nu_matrix = parms$nu_matrix,
-    m1 = parms$m1,
-    m2 = parms$m2,
-    empty_mat = parms$empty_mat,
-    t = t
-  ))
 }
 
 #' Auxilary function for cond_prob_p, computing rhs
@@ -513,6 +513,105 @@ condprob_dq_rhs <- function(t, x, parms) {
   ))
 }
 
+#' Calculates the lambda component of dq
+#' @inheritParams default_params_doc
+#' @export
+condprob_dq_absorb_lambda <- function(
+  qq,
+  qq2,
+  m1,
+  m2,
+  mm
+) {
+  k <- 1
+  mm_minus_one <- mm - 1
+  m1a <- m1
+  m1a[, lx] <- - k
+  m2a <- t(m1a)
+
+  dq1 <- (2 * k + m1 - 1) * qq2[mm, mm_minus_one] +
+    (2 * k + m2 - 1) * qq2[mm_minus_one, mm] -
+    (2 * k + m1a + m2a) * qq # ok
+  dq1
+}
+
+#' Calculates the mu component of dq
+#' @inheritParams default_params_doc
+#' @export
+condprob_dq_absorb_mu <- function(
+  qq,
+  qq2,
+  m1,
+  m2,
+  mm
+) {
+  k <- 1
+  mm_plus_one <- mm + 1
+  m1a <- m1
+  m1a[, lx] <- - k
+  m2a <- t(m1a)
+
+  dq2 <- (m1 + 1) * qq2[mm, mm_plus_one] +
+    (m2 + 1) * qq2[mm_plus_one, mm] -
+    (2 * k + m1a + m2a) * qq # ok
+  dq2
+}
+
+#' Auxilary function for cond_prob_q, creating rhs
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
+#' @export
+condprob_dq_absorb <- function(
+  qvec,
+  lambda,
+  mu,
+  nu,
+  nu_matrix,
+  m1,
+  m2,
+  empty_mat,
+  t
+) {
+  lx <- sqrt(length(qvec))
+
+  mm <- 2:(lx + 1)
+
+  qq <- matrix(qvec, nrow = lx, ncol = lx)
+  qq2 <- empty_mat
+  qq2[mm, mm] <- qq
+
+  dq_lambda <- mbd::condprob_dq_lambda(
+    qq = qq, qq2 = qq2, m1 = m1, m2 = m2, mm = mm
+  )
+  dq_mu <- mbd::condprob_dq_mu(
+    qq = qq, qq2 = qq2, m1 = m1, m2 = m2, mm = mm
+  )
+  dq_nu <- mbd::condprob_dq_nu(
+    qq = qq, nu_matrix = nu_matrix
+  )
+  dq <- lambda * dq_lambda + mu * dq_mu + nu * dq_nu
+  dq <- matrix(dq, nrow = lx ^ 2, ncol = 1)
+  dq
+}
+
+#' Auxilary function for cond_prob_q, creating rhs
+#' @author Giovanni Laudanno, Bart Haegeman
+#' @inheritParams default_params_doc
+#' @export
+condprob_dq_absorb_rhs <- function(t, x, parms) {
+  list(mbd::condprob_dq_absorb(
+    qvec = x,
+    lambda = parms$lambda,
+    mu = parms$mu,
+    nu = parms$nu,
+    nu_matrix = parms$nu_matrix,
+    m1 = parms$m1,
+    m2 = parms$m2,
+    empty_mat = parms$empty_mat,
+    t = t
+  ))
+}
+
 #' Conditional probability Q(m1, m2) for all the states m1 and m2
 #' @inheritParams default_params_doc
 #' @author Giovanni Laudanno
@@ -600,7 +699,11 @@ condprob_q <- function(
   if (fortran == TRUE) {
     rhs_function <- "mbd_runmodpcq"
   } else {
-    rhs_function <- mbd::condprob_dq_rhs
+    if (absorb == FALSE) {
+      rhs_function <- mbd::condprob_dq_rhs
+    } else {
+      rhs_function <- mbd::condprob_dq_absorb_rhs
+    }
   }
   q_m1_m2 <- mbd::condprob_q_m1_m2(
     brts = brts,
