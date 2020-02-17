@@ -4,16 +4,16 @@
 \alias{condprob_q}
 \title{Conditional probability calculated with the Q-approach}
 \usage{
-condprob_q(brts, parmsvec, fortran = TRUE, lx, absorb)
+condprob_q(brts, parmsvec, lx, fortran = TRUE, absorb)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
 
 \item{parmsvec}{parameters to pass to the FORTRAN scripts}
 
-\item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
-
 \item{lx}{it is the number of ODEs considered for the computation.}
+
+\item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 
 \item{absorb}{set absorbing states when maximum number of allowed species is
 reached}

@@ -12,37 +12,42 @@ print_from_global <- function(var = "seed") {
   }
 }
 
-# diagonal in p_nu_matrix is (1 - q) ^ m (+ k) ----
-testthat::test_that("diagonal in p_nu_matrix is (1 - q) ^ m (+ k)", {
+# colSums respect constraints ----
+test_that("colSums respect constraints", {
 
-  absorb <- FALSE
-  lambda <- 0.8
-  mu <- 0.2
-  nu <- 1
-  q <- 0.2
-  pars <- c(lambda, mu, nu, q)
-  lx <- 8
+  q_vec <- 0.1 * 1:5
+  for (q in q_vec) {
+    absorb <- TRUE
+    lambda <- 0.8
+    mu <- 0.2
+    nu <- 1
 
-  eq <- "p_eq"
-  nu_q_mat <- mbd::condprob_nu_matrix_p(pars = pars, lx = lx, absorb = absorb)
-  testthat::expect_equal(
-    diag(nu_q_mat),
-    (1 - q) ^ (0:(lx - 1))
-  )
+    pars <- c(lambda, mu, nu, q)
+    lx <- 8
 
-  eq <- "q_eq"
-  nu_q_mat <- mbd::condprob_nu_matrix_q(pars = pars, lx = lx, absorb = absorb)
-  testthat::expect_equal(
-    diag(nu_q_mat),
-    (1 - q) ^ (0:(lx - 1) + 1) # k is equal to 1
-  )
+    eq <- "p_eq"
+    nu_q_mat <- mbd::condprob_nu_matrix_p(pars = pars, lx = lx, absorb = absorb)
+    testthat::expect_equal(
+      unname(colSums(nu_q_mat)),
+      rep(1, nrow(nu_q_mat))
+    )
+
+    eq <- "q_eq"
+    nu_q_mat <- mbd::condprob_nu_matrix_q(pars = pars, lx = lx, absorb = absorb)
+    testthat::expect_equal(
+      # diag(nu_q_mat),
+      # (1 - q) ^ (0:(lx - 1) + 1) # k is equal to 1
+      unname(colSums(nu_q_mat)),
+      rep(1 + q, nrow(nu_q_mat))
+    )
+  }
 
 })
 
 # right parmsvec in FORTRAN and R ----
 testthat::test_that("right parmsvec in FORTRAN and R", {
 
-  absorb <- FALSE
+  absorb <- TRUE
   pars <- c(0.3, 0.1, 1.7, 0.13)
   lx <- 6
   lx2 <- lx ^ 2
@@ -108,7 +113,7 @@ testthat::test_that("right parmsvec in FORTRAN and R", {
 # right differentials in R----
 testthat::test_that("right differentials in R", {
 
-  absorb <- FALSE
+  absorb <- TRUE
   fortran <- FALSE
   pars <- c(0.2, 0.1, 1.4, 0.12)
   lx <- 40
@@ -129,10 +134,10 @@ testthat::test_that("right differentials in R", {
   mm <- 1 + 1:lx
   pp2[mm, mm] <- pp
 
-  dp_la <- mbd::condprob_dp_lambda(
+  dp_la <- mbd::condprob_dp_absorb_lambda(
     pp = pp, pp2 = pp2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
   )
-  dp_mu <- mbd::condprob_dp_mu(
+  dp_mu <- mbd::condprob_dp_absorb_mu(
     pp = pp, pp2 = pp2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
   )
   dp_nu <- mbd::condprob_dp_nu(pp = pp, nu_matrix = parmsvec$nu_matrix)
@@ -179,9 +184,9 @@ testthat::test_that("right differentials in R", {
 # full P_{n1, n2} and Q_{m1, m2} distributions ----
 testthat::test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
-  absorb <- FALSE
+  absorb <- TRUE
   pars <- c(0.3, 0.15, 1.8, 0.11)
-  lx <- 18
+  lx <- 30
   brts <- c(8)
 
   # P equation
@@ -199,7 +204,7 @@ testthat::test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
     brts = brts,
     parmsvec = parmsvec,
     lx = lx,
-    rhs_function = mbd::condprob_dp_rhs
+    rhs_function = mbd::condprob_dp_absorb_rhs
   )
   testthat::expect_equal(p_r, t(p_r))
   testthat::expect_true(all(p_r <= 1))
@@ -216,10 +221,10 @@ testthat::test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
     brts = brts,
     parmsvec = parmsvec,
     lx = lx,
-    rhs_function = "mbd_runmodpcp"
+    rhs_function = "mbd_runmodpcp_abs"
   )
   testthat::expect_equal(p_fortran, t(p_fortran))
-  testthat::expect_equal(p_fortran, p_r)
+  testthat::expect_equal(p_fortran, p_r, tolerance = 1e-3 * p_r)
 
   # Q equation
   eq <- "q_eq"
@@ -236,7 +241,7 @@ testthat::test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
     brts = brts,
     parmsvec = parmsvec,
     lx = lx,
-    rhs_function = mbd::condprob_dq_rhs
+    rhs_function = mbd::condprob_dq_absorb_rhs
   )
   testthat::expect_equal(q_r, t(q_r))
   testthat::expect_true(all(q_r <= 1))
@@ -253,27 +258,27 @@ testthat::test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
     brts = brts,
     parmsvec = parmsvec,
     lx = lx,
-    rhs_function = "mbd_runmodpcq"
+    rhs_function = "mbd_runmodpcq_abs"
   )
   testthat::expect_equal(q_fortran, t(q_fortran))
 
   # compare the two
-  testthat::expect_equal(q_fortran, q_r)
+  testthat::expect_equal(q_fortran, q_r, tolerance = 1e-3 * q_r)
 
 })
 
 # P_{n1, n2} sums up to one ----
 testthat::test_that("P_{n1, n2} sums up to one", {
 
-  absorb <- FALSE
+  absorb <- TRUE
   pars <- c(0.2, 0.1, 2.5, 0.2)
-  lx <- 22
+  lx <- 30
   brts <- c(2)
   eq <- "p_eq"
   fortran <- TRUE
 
   p_n1_n2 <- mbd::condprob_p_n1_n2(
-    rhs_function = "mbd_runmodpcp",
+    rhs_function = "mbd_runmodpcp_abs",
     brts = brts,
     lx = lx,
     parmsvec = mbd::condprob_parmsvec(
@@ -297,7 +302,7 @@ testthat::test_that("P_{n1, n2} sums up to one", {
   # no absorb
   absorb <- TRUE
   p_n1_n2 <- mbd::condprob_p_n1_n2(
-    rhs_function = "mbd_runmodpcp",
+    rhs_function = "mbd_runmodpcp_abs",
     brts = brts,
     lx = lx,
     parmsvec = mbd::condprob_parmsvec(
@@ -323,7 +328,7 @@ testthat::test_that("P_{n1, n2} sums up to one", {
 # FORTRAN vs R: same result but FORTRAN is faster ----
 testthat::test_that("FORTRAN vs R: same result but FORTRAN is faster", {
 
-  absorb <- FALSE
+  absorb <- TRUE
   brts <- c(5)
   pars <- c(0.2, 0.1, 1.2, 0.12)
   lx <- 22
@@ -387,7 +392,7 @@ test_that("FORTRAN vs R: hard test", {
     skip("To be performed on ci.")
   }
 
-  absorb <- FALSE
+  absorb <- TRUE
   brts <- c(7)
   pars <- c(0.2, 0.15, 1.5, 0.10)
   lx <- 38
@@ -447,7 +452,7 @@ test_that("FORTRAN vs R: hard test", {
 # condprob for mu = 0 ----
 test_that("condprob for mu = 0", {
 
-  absorb <- FALSE
+  absorb <- TRUE
   pars <- c(0.2, 0, 1, 0.1)
   brts <- c(3)
   cond <- 1
@@ -486,7 +491,7 @@ test_that("nu = q = 0", {
     skip("To be performed on ci.")
   }
 
-  absorb <- FALSE
+  absorb <- TRUE
   pars <- c(0.2, 0.15, 0, 0)
   brts <- c(1)
   cond <- 1
@@ -537,7 +542,7 @@ test_that("nu = 0", {
     skip("To be performed on ci.")
   }
 
-  absorb <- FALSE
+  absorb <- TRUE
   pars <- c(0.2, 0.15, 0, 0.5)
   brts <- c(1)
   cond <- 1
@@ -588,7 +593,7 @@ test_that("q = 0", {
     skip("To be performed on ci.")
   }
 
-  absorb <- FALSE
+  absorb <- TRUE
   pars <- c(0.2, 0.15, 3, 0)
   brts <- c(1)
   cond <- 1
@@ -641,7 +646,7 @@ test_that("probcond vs probcond_sim", {
     skip("To be performed on ci.")
   }
 
-  absorb <- FALSE
+  absorb <- TRUE
   pars <- c(0.2, 0.1, 1.0, 0.15)
   age <- 10
   brts <- c(age)

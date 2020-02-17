@@ -312,15 +312,20 @@ condprob_dp_absorb_mu <- function(
   m2,
   mm
 ) {
+  rm(m2)
   mm_plus_one <- mm + 1
   m1a <- m1
   m1a[, lx] <- 0
   m2a <- t(m1a)
+  m1_plus1 <- m1 + 1
+  m1_plus1[, (lx - 1):lx] <- 0 # all elements >= to N = lx - 1 must become zero
+  m2_plus1 <- t(m1_plus1)
 
-  dp2 <- (m1 + 1) * pp2[mm, mm_plus_one] +
-    (m2 + 1) * pp2[mm_plus_one, mm] -
-    (m1a + m2a) * pp
-  dp2
+  dp_mu_1 <- m1_plus1 * pp2[mm, mm_plus_one]
+  dp_mu_2 <- m2_plus1 * pp2[mm_plus_one, mm]
+  dp_mu_3 <- (m1a + m2a) * pp
+  dp_mu <- dp_mu_1 + dp_mu_2 - dp_mu_3
+  dp_mu
 }
 
 #' Auxilary function for cond_prob_p, computing rhs
@@ -545,16 +550,27 @@ condprob_dq_absorb_mu <- function(
   m2,
   mm
 ) {
+  # k <- 1
+  # mm_plus_one <- mm + 1
+  # m1a <- m1
+  # m1a[, lx] <- - k
+  # m2a <- t(m1a)
+
+  rm(m2)
   k <- 1
   mm_plus_one <- mm + 1
   m1a <- m1
-  m1a[, lx] <- - k
+  m1a[, lx] <- 0
   m2a <- t(m1a)
+  m1_plus1 <- m1 + 1
+  m1_plus1[, (lx - 1):lx] <- 0 # all elements >= to N = lx - 1 must become zero
+  m2_plus1 <- t(m1_plus1)
 
-  dq2 <- (m1 + 1) * qq2[mm, mm_plus_one] +
-    (m2 + 1) * qq2[mm_plus_one, mm] -
-    (2 * k + m1a + m2a) * qq # ok
-  dq2
+  dq_mu_1 <- m1_plus1 * qq2[mm, mm_plus_one]
+  dq_mu_2 <- m2_plus1 * qq2[mm_plus_one, mm]
+  dq_mu_3 <- (2 * k + m1a + m2a) * qq # ok
+  dq_mu <- dq_mu_1 + dq_mu_2 - dq_mu_3
+  dq_mu
 }
 
 #' Auxilary function for cond_prob_q, creating rhs
@@ -657,14 +673,18 @@ condprob_q_m1_m2 <- function(
 condprob_p <- function(
   brts,
   parmsvec,
-  fortran = TRUE,
   lx,
+  fortran = TRUE,
   absorb
 ) {
   mbd::check_lx(lx)
 
   if (fortran == TRUE) {
-    rhs_function <- "mbd_runmodpcp"
+    if (absorb == FALSE) {
+      rhs_function <- "mbd_runmodpcp"
+    } else {
+      rhs_function <- "mbd_runmodpcp_abs"
+    }
   } else {
     if (absorb == FALSE) {
       rhs_function <- mbd::condprob_dp_rhs
@@ -690,14 +710,18 @@ condprob_p <- function(
 condprob_q <- function(
   brts,
   parmsvec,
-  fortran = TRUE,
   lx,
+  fortran = TRUE,
   absorb
 ) {
   mbd::check_lx(lx)
 
   if (fortran == TRUE) {
-    rhs_function <- "mbd_runmodpcq"
+    if (absorb == FALSE) {
+      rhs_function <- "mbd_runmodpcq"
+    } else {
+      rhs_function <- "mbd_runmodpcq_abs"
+    }
   } else {
     if (absorb == FALSE) {
       rhs_function <- mbd::condprob_dq_rhs
@@ -709,8 +733,7 @@ condprob_q <- function(
     brts = brts,
     parmsvec = parmsvec,
     rhs_function = rhs_function,
-    lx = lx,
-    absorb = absorb
+    lx = lx
   )
   pc <- sum(q_m1_m2)
   mbd::check_pc(pc = pc)
