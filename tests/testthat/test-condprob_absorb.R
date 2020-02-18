@@ -171,12 +171,20 @@ testthat::test_that("right differentials in R", {
     fortran = fortran
   )
   # qvec <- c(1, rep(0, lx ^ 2 - 1))
-  set.seed(42)
+
+  # set.seed(42)
+  set.seed(4)
   qvec <- runif(n = lx ^ 2); qvec <- qvec / sum(qvec)
   qq <- matrix(qvec, lx, lx)
   qq2 <- parmsvec$empty_mat
   mm <- 1 + 1:lx
-  qq2[mm, mm] <- pp
+  qq2[mm, mm] <- qq
+
+  # qq <- matrix(0, lx, lx)
+  # qq[2, lx] <- 1
+  # qq2 <- parmsvec$empty_mat
+  # mm <- 1 + 1:lx
+  # qq2[mm, mm] <- qq
 
   dq_la <- mbd::condprob_dq_absorb_lambda(
     qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
@@ -185,12 +193,10 @@ testthat::test_that("right differentials in R", {
     qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
   )
   dq_nu <- mbd::condprob_dq_nu(qq = qq, nu_matrix = parmsvec$nu_matrix)
-  testthat::expect_true(sum(dq_la) < 1)
-  testthat::expect_true(sum(dq_la) > 0)
-  testthat::expect_true(sum(dq_mu) < 1)
-  testthat::expect_true(sum(dq_mu) > 0)
-  testthat::expect_true(sum(dq_nu) < 1)
-  testthat::expect_true(sum(dq_nu) > 0)
+
+  testthat::expect_true(sum(dq_la) <= 0)
+  testthat::expect_true(sum(dq_mu) <= 0)
+  testthat::expect_true(sum(dq_nu) <= 0)
 
   dq <- mbd::condprob_dq_absorb(
     qvec = qvec,

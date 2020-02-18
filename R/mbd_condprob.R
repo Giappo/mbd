@@ -531,7 +531,7 @@ condprob_dq_absorb_lambda <- function(
   k <- 1
   mm_minus_one <- mm - 1
   m1a <- m1
-  m1a[, lx] <- - k
+  m1a[, lx] <- 0
   m2a <- t(m1a)
 
   dq1 <- (2 * k + m1 - 1) * qq2[mm, mm_minus_one] +
