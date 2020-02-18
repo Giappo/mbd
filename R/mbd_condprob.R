@@ -531,13 +531,14 @@ condprob_dq_absorb_lambda <- function(
   k <- 1
   mm_minus_one <- mm - 1
   m1a <- m1
-  m1a[, lx] <- 0
+  m1a[, lx] <- - k
   m2a <- t(m1a)
 
-  dq1 <- (2 * k + m1 - 1) * qq2[mm, mm_minus_one] +
-    (2 * k + m2 - 1) * qq2[mm_minus_one, mm] -
-    (2 * k + m1a + m2a) * qq # ok
-  dq1
+  dq_lambda_1 <- (2 * k + m1 - 1) * qq2[mm, mm_minus_one]
+  dq_lambda_2 <- (2 * k + m2 - 1) * qq2[mm_minus_one, mm]
+  dq_lambda_3 <- (2 * k + m1a + m2a) * qq
+  dq_lambda <- dq_lambda_1 + dq_lambda_2 - dq_lambda_3
+  dq_lambda
 }
 
 #' Calculates the mu component of dq
