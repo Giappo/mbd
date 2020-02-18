@@ -113,7 +113,7 @@
 !......................... declaration section.............................
       INTEGER           :: neq, ip(*), i, ii
       DOUBLE PRECISION  :: t, Conc(N), dConc(N), yout(*)
-      !REAL(16)          :: V(N)
+      !REAL(16)         :: V(N)
 
 ! parameters - named here
       DOUBLE PRECISION rn

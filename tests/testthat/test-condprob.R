@@ -445,7 +445,7 @@ test_that("FORTRAN vs R: hard test", {
 })
 
 # condprob for mu = 0 ----
-test_that("condprob for mu = 0", {
+testthat::test_that("condprob for mu = 0", {
 
   absorb <- FALSE
   pars <- c(0.2, 0, 1, 0.1)
@@ -480,10 +480,10 @@ test_that("condprob for mu = 0", {
 })
 
 # bd: nu = q = 0 ----
-test_that("nu = q = 0", {
+testthat::test_that("nu = q = 0", {
 
   if (!is_on_ci()) {
-    skip("To be performed on ci.")
+    testthat::skip("To be performed on ci.")
   }
 
   absorb <- FALSE
@@ -531,10 +531,10 @@ test_that("nu = q = 0", {
 })
 
 # bd: nu = 0 ----
-test_that("nu = 0", {
+testthat::test_that("nu = 0", {
 
   if (!is_on_ci()) {
-    skip("To be performed on ci.")
+    testthat::skip("To be performed on ci.")
   }
 
   absorb <- FALSE
@@ -582,10 +582,10 @@ test_that("nu = 0", {
 })
 
 # bd: q = 0 ----
-test_that("q = 0", {
+testthat::test_that("q = 0", {
 
   if (!is_on_ci()) {
-    skip("To be performed on ci.")
+    testthat::skip("To be performed on ci.")
   }
 
   absorb <- FALSE
@@ -633,12 +633,12 @@ test_that("q = 0", {
 })
 
 # probcond vs probcond_sim ----
-test_that("probcond vs probcond_sim", {
+testthat::test_that("probcond vs probcond_sim", {
 
-  skip("Use Nee instead")
+  testthat::skip("Use Nee instead")
 
   if (!is_on_ci()) {
-    skip("To be performed on ci.")
+    testthat::skip("To be performed on ci.")
   }
 
   absorb <- FALSE

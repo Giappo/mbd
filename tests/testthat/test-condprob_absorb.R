@@ -13,7 +13,7 @@ print_from_global <- function(var = "seed") {
 }
 
 # colSums respect constraints ----
-test_that("colSums respect constraints", {
+testthat::test_that("colSums respect constraints", {
 
   q_vec <- 0.1 * 1:5
   for (q in q_vec) {
@@ -127,9 +127,12 @@ testthat::test_that("right differentials in R", {
     absorb = absorb,
     fortran = fortran
   )
-  pp <- matrix(0, lx, lx)
-  pp[2, 2] <- 1
-  pvec <- matrix(pp, lx ^ 2, 1)
+  # pp <- matrix(0, lx, lx)
+  # pp[2, 2] <- 1
+  # pvec <- matrix(pp, lx ^ 2, 1)
+  set.seed(42)
+  pvec <- runif(n = lx ^ 2); pvec <- pvec / sum(pvec)
+  pp <- matrix(pvec, lx, lx)
   pp2 <- parmsvec$empty_mat
   mm <- 1 + 1:lx
   pp2[mm, mm] <- pp
@@ -144,7 +147,8 @@ testthat::test_that("right differentials in R", {
   testthat::expect_equal(sum(dp_la), 0, tolerance = 10 * .Machine$double.eps)
   testthat::expect_equal(sum(dp_mu), 0, tolerance = 10 * .Machine$double.eps)
   testthat::expect_equal(sum(dp_nu), 0, tolerance = 10 * .Machine$double.eps)
-  dp <- mbd::condprob_dp(
+
+  dp <- mbd::condprob_dp_absorb(
     pvec = pvec,
     lambda = parmsvec$lambda,
     mu = parmsvec$mu,
@@ -166,8 +170,29 @@ testthat::test_that("right differentials in R", {
     absorb = absorb,
     fortran = fortran
   )
-  qvec <- c(1, rep(0, lx ^ 2 - 1))
-  dq <- mbd::condprob_dq(
+  # qvec <- c(1, rep(0, lx ^ 2 - 1))
+  set.seed(42)
+  qvec <- runif(n = lx ^ 2); qvec <- qvec / sum(qvec)
+  qq <- matrix(qvec, lx, lx)
+  qq2 <- parmsvec$empty_mat
+  mm <- 1 + 1:lx
+  qq2[mm, mm] <- pp
+
+  dq_la <- mbd::condprob_dq_absorb_lambda(
+    qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+  )
+  dq_mu <- mbd::condprob_dq_absorb_mu(
+    qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+  )
+  dq_nu <- mbd::condprob_dq_nu(qq = qq, nu_matrix = parmsvec$nu_matrix)
+  testthat::expect_true(sum(dq_la) < 1)
+  testthat::expect_true(sum(dq_la) > 0)
+  testthat::expect_true(sum(dq_mu) < 1)
+  testthat::expect_true(sum(dq_mu) > 0)
+  testthat::expect_true(sum(dq_nu) < 1)
+  testthat::expect_true(sum(dq_nu) > 0)
+
+  dq <- mbd::condprob_dq_absorb(
     qvec = qvec,
     lambda = parmsvec$lambda,
     mu = parmsvec$mu,
