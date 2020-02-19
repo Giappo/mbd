@@ -35,15 +35,15 @@ condprob_nu_matrix_p <- function(
 
     # absorbing state?
     if (absorb == TRUE) {
-      mm <- lx - 1
-      nvec <- 1:lx - 1
-      nvec2 <- nvec[2 * nvec - mm >= 0]
+      mm <- lx - 1 # max number of species M
+      nvec <- 1:lx - 1 # all possible numbers of species
+      nvec2 <- nvec[2 * nvec - mm >= 0] # starting states that can cross limit
       for (n in nvec2) {
-        k <- 0:(2 * n - mm)
+        j <- 0:(2 * n - mm)
         nu_q_mat[lx, n + 1] <- sum(
-          choose(n, mm - n + k) *
-            q ^ (mm - n + k) *
-            (1 - q) ^ (n - (mm - n + k))
+          choose(n, mm - n + j) *
+            q ^ (mm - n + j) *
+            (1 - q) ^ (n - (mm - n + j))
         )
       }
       testit::assert(all(
@@ -101,13 +101,11 @@ condprob_nu_matrix_q <- function(
       mm <- lx - 1
       nvec2 <- nvec[2 * nvec - mm + 1 > 0]
       for (n in nvec2) {
-        k <- 0:(2 * n - mm + 1)
+        j <- 0:(2 * n - mm + 1)
         nu_q_mat[lx, n + 1] <- sum(
-          (
-            choose(n, mm - n + k) + 2 * choose(n, mm - n + k - 1)
-          ) *
-            q ^ (mm - n + k) *
-            (1 - q) ^ (n + 1 - (mm - n + k))
+          (choose(n, mm - n + j) + 2 * choose(n, mm - n + j - 1)) *
+            q ^ (mm - n + j) *
+            (1 - q) ^ (n + 1 - (mm - n + j))
         )
       }
     }
@@ -191,10 +189,10 @@ condprob_dp_lambda <- function(
   mm
 ) {
   mm_minus_one <- mm - 1
-  dp1 <- (m1 - 1) * pp2[mm, mm_minus_one] +
+  dp_lambda <- (m1 - 1) * pp2[mm, mm_minus_one] +
     (m2 - 1) * pp2[mm_minus_one, mm] -
     (m1 + m2) * pp # ok
-  dp1
+  dp_lambda
 }
 
 #' Calculates the mu component of dp
@@ -209,10 +207,10 @@ condprob_dp_mu <- function(
   mm
 ) {
   mm_plus_one <- mm + 1
-  dp2 <- (m1 + 1) * pp2[mm, mm_plus_one] +
+  dp_mu <- (m1 + 1) * pp2[mm, mm_plus_one] +
     (m2 + 1) * pp2[mm_plus_one, mm] -
     (m1 + m2) * pp # ok
-  dp2
+  dp_mu
 }
 
 #' Calculates the nu component of dp
@@ -223,8 +221,8 @@ condprob_dp_nu <- function(
   pp,
   nu_matrix
 ) {
-  dp3 <- nu_matrix %*% pp %*% t(nu_matrix) - pp
-  dp3
+  dp_nu <- nu_matrix %*% pp %*% t(nu_matrix) - pp
+  dp_nu
 }
 
 #' Auxilary function for cond_prob_p, computing rhs
@@ -295,10 +293,10 @@ condprob_dp_absorb_lambda <- function(
   m1a[, lx] <- 0
   m2a <- t(m1a)
 
-  dp1 <- (m1 - 1) * pp2[mm, mm_minus_one] +
+  dp_lambda <- (m1 - 1) * pp2[mm, mm_minus_one] +
     (m2 - 1) * pp2[mm_minus_one, mm] -
     (m1a + m2a) * pp
-  dp1
+  dp_lambda
 }
 
 #' Calculates the mu component of dp
