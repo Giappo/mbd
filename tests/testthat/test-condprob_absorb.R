@@ -115,100 +115,127 @@ testthat::test_that("right differentials in R", {
 
   absorb <- TRUE
   fortran <- FALSE
-  pars <- c(0.2, 0.1, 1.4, 0.12)
   lx <- 40
 
-  # test for the P-equation
-  eq <- "p_eq"
-  parmsvec <- mbd::condprob_parmsvec(
-    pars = pars,
-    eq = eq,
-    lx = lx,
-    absorb = absorb,
-    fortran = fortran
-  )
-  # pp <- matrix(0, lx, lx)
-  # pp[2, 2] <- 1
-  # pvec <- matrix(pp, lx ^ 2, 1)
-  set.seed(42)
-  pvec <- runif(n = lx ^ 2); pvec <- pvec / sum(pvec)
-  pp <- matrix(pvec, lx, lx)
-  pp2 <- parmsvec$empty_mat
-  mm <- 1 + 1:lx
-  pp2[mm, mm] <- pp
+  for (seed in 1:100) {
+    set.seed(seed)
+    pars[1] <- runif(n = 1, min = 0, max = 1)
+    pars[2] <- runif(n = 1, min = 0, max = pars[1])
+    pars[3] <- runif(n = 1, min = 0, max = 2)
+    pars[4] <- runif(n = 1, min = 0.01, max = 0.8)
 
-  dp_la <- mbd::condprob_dp_absorb_lambda(
-    pp = pp, pp2 = pp2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
-  )
-  dp_mu <- mbd::condprob_dp_absorb_mu(
-    pp = pp, pp2 = pp2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
-  )
-  dp_nu <- mbd::condprob_dp_nu(pp = pp, nu_matrix = parmsvec$nu_matrix)
-  testthat::expect_equal(sum(dp_la), 0, tolerance = 10 * .Machine$double.eps)
-  testthat::expect_equal(sum(dp_mu), 0, tolerance = 10 * .Machine$double.eps)
-  testthat::expect_equal(sum(dp_nu), 0, tolerance = 10 * .Machine$double.eps)
+    # test for the P-equation
+    eq <- "p_eq"
+    parmsvec <- mbd::condprob_parmsvec(
+      pars = pars,
+      eq = eq,
+      lx = lx,
+      absorb = absorb,
+      fortran = fortran
+    )
+    set.seed(seed)
+    pvec <- runif(n = lx ^ 2); pvec <- pvec / sum(pvec)
+    pp <- matrix(pvec, lx, lx)
+    pp2 <- parmsvec$empty_mat
+    mm <- 1 + 1:lx
+    pp2[mm, mm] <- pp
 
-  dp <- mbd::condprob_dp_absorb(
-    pvec = pvec,
-    lambda = parmsvec$lambda,
-    mu = parmsvec$mu,
-    nu = parmsvec$nu,
-    nu_matrix = parmsvec$nu_matrix,
-    m1 = parmsvec$m1,
-    m2 = parmsvec$m2,
-    empty_mat = parmsvec$empty_mat
-  )
-  testthat::expect_equal(length(dp), lx ^ 2)
-  testthat::expect_equal(sum(dp), 0, tolerance = 1e-5 * max(dp))
+    dp_la <- mbd::condprob_dp_absorb_lambda(
+      pp = pp, pp2 = pp2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+    )
+    dp_mu <- mbd::condprob_dp_absorb_mu(
+      pp = pp, pp2 = pp2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+    )
+    dp_nu <- mbd::condprob_dp_nu(pp = pp, nu_matrix = parmsvec$nu_matrix)
+    testthat::expect_equal(sum(dp_la), 0, tolerance = 100 * .Machine$double.eps)
+    testthat::expect_equal(sum(dp_mu), 0, tolerance = 100 * .Machine$double.eps)
+    testthat::expect_equal(sum(dp_nu), 0, tolerance = 100 * .Machine$double.eps)
 
-  # test for Q-equation
-  eq <- "q_eq"
-  parmsvec <- mbd::condprob_parmsvec(
-    pars = pars,
-    eq = eq,
-    lx = lx,
-    absorb = absorb,
-    fortran = fortran
-  )
-  # qvec <- c(1, rep(0, lx ^ 2 - 1))
+    dp <- mbd::condprob_dp_absorb(
+      pvec = pvec,
+      lambda = parmsvec$lambda,
+      mu = parmsvec$mu,
+      nu = parmsvec$nu,
+      nu_matrix = parmsvec$nu_matrix,
+      m1 = parmsvec$m1,
+      m2 = parmsvec$m2,
+      empty_mat = parmsvec$empty_mat
+    )
+    testthat::expect_equal(length(dp), lx ^ 2)
+    testthat::expect_equal(sum(dp), 0, tolerance = 1e-5 * max(dp))
+    # test for Q-equation
+    eq <- "q_eq"
+    parmsvec <- mbd::condprob_parmsvec(
+      pars = pars,
+      eq = eq,
+      lx = lx,
+      absorb = absorb,
+      fortran = fortran
+    )
+    parmsvec_noabs <- mbd::condprob_parmsvec(
+      pars = pars,
+      eq = eq,
+      lx = lx,
+      absorb = FALSE,
+      fortran = fortran
+    )
 
-  # set.seed(42)
-  set.seed(4)
-  qvec <- runif(n = lx ^ 2); qvec <- qvec / sum(qvec)
-  qq <- matrix(qvec, lx, lx)
-  qq2 <- parmsvec$empty_mat
-  mm <- 1 + 1:lx
-  qq2[mm, mm] <- qq
+    set.seed(seed)
+    qvec <- runif(n = lx ^ 2); qvec <- qvec / sum(qvec)
+    qq <- matrix(qvec, lx, lx)
+    qq2 <- parmsvec$empty_mat
+    mm <- 1 + 1:lx
+    qq2[mm, mm] <- qq
 
-  # qq <- matrix(0, lx, lx)
-  # qq[2, lx] <- 1
-  # qq2 <- parmsvec$empty_mat
-  # mm <- 1 + 1:lx
-  # qq2[mm, mm] <- qq
+    dq_la_abs <- mbd::condprob_dq_absorb_lambda(
+      qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+    )
+    dq_la <- mbd::condprob_dq_lambda(
+      qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+    )
+    dq_mu_abs <- mbd::condprob_dq_absorb_mu(
+      qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+    )
+    dq_mu <- mbd::condprob_dq_mu(
+      qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
+    )
+    dq_nu_abs <- mbd::condprob_dq_nu(
+      qq = qq, nu_matrix = parmsvec$nu_matrix
+    )
+    dq_nu <- mbd::condprob_dq_nu(
+      qq = qq, nu_matrix = parmsvec_noabs$nu_matrix
+    )
 
-  dq_la <- mbd::condprob_dq_absorb_lambda(
-    qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
-  )
-  dq_mu <- mbd::condprob_dq_absorb_mu(
-    qq = qq, qq2 = qq2, m1 = parmsvec$m1, m2 = parmsvec$m2, mm = mm
-  )
-  dq_nu <- mbd::condprob_dq_nu(qq = qq, nu_matrix = parmsvec$nu_matrix)
+    testthat::expect_true(sum(dq_la) - sum(dq_la_abs) <= 1e-5)
+    testthat::expect_true(length(dq_la) == length(dq_la_abs))
+    testthat::expect_true(sum(dq_mu) - sum(dq_mu_abs) <= 1e-5)
+    testthat::expect_true(length(dq_mu) == length(dq_mu_abs))
+    testthat::expect_true(sum(dq_nu) - sum(dq_nu_abs) <= 1e-5)
+    testthat::expect_true(length(dq_nu) == length(dq_nu_abs))
 
-  testthat::expect_true(sum(dq_la) <= 0)
-  testthat::expect_true(sum(dq_mu) <= 0)
-  testthat::expect_true(sum(dq_nu) <= 0)
-
-  dq <- mbd::condprob_dq_absorb(
-    qvec = qvec,
-    lambda = parmsvec$lambda,
-    mu = parmsvec$mu,
-    nu = parmsvec$nu,
-    nu_matrix = parmsvec$nu_matrix,
-    m1 = parmsvec$m1,
-    m2 = parmsvec$m2,
-    empty_mat = parmsvec$empty_mat
-  )
-  testthat::expect_equal(length(dq), lx ^ 2)
+    dq_abs <- mbd::condprob_dq(
+      qvec = qvec,
+      lambda = parmsvec$lambda,
+      mu = parmsvec$mu,
+      nu = parmsvec$nu,
+      nu_matrix = parmsvec$nu_matrix,
+      m1 = parmsvec$m1,
+      m2 = parmsvec$m2,
+      empty_mat = parmsvec$empty_mat
+    )
+    dq_noabs <- mbd::condprob_dq(
+      qvec = qvec,
+      lambda = parmsvec_noabs$lambda,
+      mu = parmsvec_noabs$mu,
+      nu = parmsvec_noabs$nu,
+      nu_matrix = parmsvec_noabs$nu_matrix,
+      m1 = parmsvec_noabs$m1,
+      m2 = parmsvec_noabs$m2,
+      empty_mat = parmsvec_noabs$empty_mat
+    )
+    testthat::expect_true(sum(dq_noabs) - sum(dq_abs) <= 1e-5)
+    testthat::expect_equal(length(dq_abs), lx ^ 2)
+  }
 
 })
 
@@ -308,30 +335,6 @@ testthat::test_that("P_{n1, n2} sums up to one", {
   eq <- "p_eq"
   fortran <- TRUE
 
-  p_n1_n2 <- mbd::condprob_p_n1_n2(
-    rhs_function = "mbd_runmodpcp_abs",
-    brts = brts,
-    lx = lx,
-    parmsvec = mbd::condprob_parmsvec(
-      pars = pars,
-      eq = eq,
-      lx = lx,
-      absorb = absorb,
-      fortran = fortran
-    )
-  )
-
-  testthat::expect_gt(
-    sum(p_n1_n2),
-    0.99
-  )
-  testthat::expect_lte(
-    sum(p_n1_n2),
-    1
-  )
-
-  # no absorb
-  absorb <- TRUE
   p_n1_n2 <- mbd::condprob_p_n1_n2(
     rhs_function = "mbd_runmodpcp_abs",
     brts = brts,

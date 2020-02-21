@@ -294,30 +294,6 @@ testthat::test_that("P_{n1, n2} sums up to one", {
     1
   )
 
-  # no absorb
-  absorb <- TRUE
-  p_n1_n2 <- mbd::condprob_p_n1_n2(
-    rhs_function = "mbd_runmodpcp",
-    brts = brts,
-    lx = lx,
-    parmsvec = mbd::condprob_parmsvec(
-      pars = pars,
-      eq = eq,
-      lx = lx,
-      absorb = absorb,
-      fortran = fortran
-    )
-  )
-
-  testthat::expect_gt(
-    sum(p_n1_n2),
-    0.99
-  )
-  testthat::expect_lte(
-    sum(p_n1_n2),
-    1
-  )
-
 })
 
 # FORTRAN vs R: same result but FORTRAN is faster ----

@@ -98,15 +98,19 @@ condprob_nu_matrix_q <- function(
 
     # absorbing state?
     if (absorb == TRUE) {
-      mm <- lx - 1
-      nvec2 <- nvec[2 * nvec - mm + 1 > 0]
+      nvec <- 1:lx - 1 # possible number of starting species
+      n_max <- lx - 1 # max number of species M
+      nvec2 <- nvec[2 * nvec + 1 > n_max] # starting states crossing the limit
       for (n in nvec2) {
-        j <- 0:(2 * n - mm + 1)
-        nu_q_mat[lx, n + 1] <- sum(
-          (choose(n, mm - n + j) + 2 * choose(n, mm - n + j - 1)) *
-            q ^ (mm - n + j) *
-            (1 - q) ^ (n + 1 - (mm - n + j))
+        j <- 0:(2 * n - n_max + 1) # overshoots on single column
+        # print(j)
+        temp <- sum(
+          (choose(n, n_max - n + j) + 2 * choose(n, n_max - n + j - 1)) *
+            q ^ (n_max - n + j) *
+            (1 - q) ^ (n + 1 - (n_max - n + j))
         )
+        # print(temp)
+        nu_q_mat[lx, n + 1] <- temp
       }
     }
   } else {
@@ -529,7 +533,8 @@ condprob_dq_absorb_lambda <- function(
   k <- 1
   mm_minus_one <- mm - 1
   m1a <- m1
-  m1a[, lx] <- - k
+  # m1a[, lx] <- - k
+  m1a[, lx] <- - 0
   m2a <- t(m1a)
 
   dq_lambda_1 <- (2 * k + m1 - 1) * qq2[mm, mm_minus_one]
@@ -549,16 +554,11 @@ condprob_dq_absorb_mu <- function(
   m2,
   mm
 ) {
-  # k <- 1
-  # mm_plus_one <- mm + 1
-  # m1a <- m1
-  # m1a[, lx] <- - k
-  # m2a <- t(m1a)
-
   rm(m2)
   k <- 1
   mm_plus_one <- mm + 1
   m1a <- m1
+  # m1a[, lx] <- -k
   m1a[, lx] <- 0
   m2a <- t(m1a)
   m1_plus1 <- m1 + 1
@@ -595,10 +595,10 @@ condprob_dq_absorb <- function(
   qq2 <- empty_mat
   qq2[mm, mm] <- qq
 
-  dq_lambda <- mbd::condprob_dq_lambda(
+  dq_lambda <- mbd::condprob_dq_absorb_lambda(
     qq = qq, qq2 = qq2, m1 = m1, m2 = m2, mm = mm
   )
-  dq_mu <- mbd::condprob_dq_mu(
+  dq_mu <- mbd::condprob_dq_absorb_mu(
     qq = qq, qq2 = qq2, m1 = m1, m2 = m2, mm = mm
   )
   dq_nu <- mbd::condprob_dq_nu(
