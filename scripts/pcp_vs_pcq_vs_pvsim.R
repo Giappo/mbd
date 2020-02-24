@@ -7,7 +7,7 @@ lx_min <- 10
 # lx_max <- 20
 lx_max <- 80
 parses <- expand.grid(
-  lambda = 0.2,
+  lambda = 0.3,
   mu = c(0, 0.1),
   nu = c(0, 0.5, 1, 1.5, 2),
   q = c(0.1, 0.15, 0.2)

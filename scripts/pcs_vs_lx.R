@@ -63,7 +63,7 @@ eqs <- c("p_eq", "q_eq", "nee")
 mbd_params <- expand.grid(
   lambda = c(0.15),
   mu = c(0.05),
-  nu = c(0.4, 0.8),
+  nu = c(0.5, 1.0),
   q = c(0.1, 0.3, 0.5, 0.7, 0.9),
   age = c(6),
   cond = 1
