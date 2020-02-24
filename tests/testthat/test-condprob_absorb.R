@@ -1,4 +1,4 @@
-context("condprob")
+context("condprob_absorb")
 
 is_on_ci <- function() {
   is_it_on_appveyor <- Sys.getenv("APPVEYOR") != ""
@@ -112,10 +112,11 @@ testthat::test_that("right differentials in R", {
 
   absorb <- TRUE
   fortran <- FALSE
-  lx <- 40
+  lx <- 30
 
   for (seed in 1:100) {
     set.seed(seed)
+    pars <- rep(NA, 4)
     pars[1] <- runif(n = 1, min = 0, max = 1)
     pars[2] <- runif(n = 1, min = 0, max = pars[1])
     pars[3] <- runif(n = 1, min = 0, max = 2)
@@ -284,7 +285,7 @@ testthat::test_that("P_{n1, n2} sums up to one", {
 })
 
 # FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions ----
-testthat::test_that("FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions", {
+testthat::test_that("FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2}", {
 
   absorb <- TRUE
   pars <- c(0.3, 0.15, 1.8, 0.11)
@@ -326,7 +327,7 @@ testthat::test_that("FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions"
     rhs_function = "mbd_runmodpcp_abs"
   )
   testthat::expect_equal(p_fortran, t(p_fortran))
-  testthat::expect_equal(p_fortran, p_r, tolerance = 1e-3 * p_r)
+  testthat::expect_equal(p_fortran, p_r, tolerance = 1e-4 * abs(p_r))
 
   # Q equation
   eq <- "q_eq"
@@ -365,7 +366,7 @@ testthat::test_that("FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions"
   testthat::expect_equal(q_fortran, t(q_fortran))
 
   # compare the two
-  testthat::expect_equal(q_fortran, q_r, tolerance = 1e-3 * q_r)
+  testthat::expect_equal(q_fortran, q_r, tolerance = 1e-4 * abs(q_r))
 
 })
 
@@ -399,7 +400,7 @@ testthat::test_that("FORTRAN vs R: same result but FORTRAN is faster", {
       absorb = absorb
     )
   )[[3]]
-  testthat::expect_equal(pc_r, pc_fortran, tolerance = 1e-3)
+  testthat::expect_equal(pc_fortran, pc_r, tolerance = 1e-4 * abs(pc_r))
   testthat::expect_true(tp_fortran <= tp_r)
 
   # test for the Q-equation
@@ -424,7 +425,7 @@ testthat::test_that("FORTRAN vs R: same result but FORTRAN is faster", {
       absorb = absorb
     )
   )[[3]]
-  testthat::expect_equal(qc_r, qc_fortran, tolerance = 1e-3)
+  testthat::expect_equal(qc_fortran, qc_r, tolerance = 1e-4 * abs(qc_r))
   testthat::expect_true(tq_fortran <= tq_r)
 
 })
@@ -439,7 +440,7 @@ test_that("FORTRAN vs R: hard test", {
   absorb <- TRUE
   brts <- c(7)
   pars <- c(0.2, 0.15, 1.5, 0.10)
-  lx <- 38
+  lx <- 30
 
   # test for the P-equation
   eq <- "p_eq"
@@ -463,7 +464,7 @@ test_that("FORTRAN vs R: hard test", {
       absorb = absorb
     )
   )[[3]]
-  testthat::expect_equal(pc_r, pc_fortran, tolerance = 1e-3)
+  testthat::expect_equal(pc_fortran, pc_r, tolerance = 1e-4 * abs(pc_r))
   testthat::expect_true(tp_fortran <= tp_r)
 
   # test for the Q-equation
@@ -488,7 +489,7 @@ test_that("FORTRAN vs R: hard test", {
       absorb = absorb
     )
   )[[3]]
-  testthat::expect_equal(qc_r, qc_fortran, tolerance = 1e-3)
+  testthat::expect_equal(qc_fortran, qc_r, tolerance = 1e-4 * abs(qc_r))
   testthat::expect_true(tq_fortran <= tq_r)
 
 })
@@ -497,6 +498,7 @@ test_that("FORTRAN vs R: hard test", {
 test_that("condprob for mu = 0", {
 
   absorb <- TRUE
+  fortran <- TRUE
   pars <- c(0.2, 0, 1, 0.1)
   brts <- c(3)
   cond <- 1
@@ -508,7 +510,7 @@ test_that("condprob for mu = 0", {
       brts = brts,
       lx = lx,
       eq = "p_eq",
-      fortran = TRUE,
+      fortran = fortran,
       absorb = absorb
     ),
     1,
@@ -520,7 +522,7 @@ test_that("condprob for mu = 0", {
       brts = brts,
       lx = lx,
       eq = "q_eq",
-      fortran = TRUE,
+      fortran = fortran,
       absorb = absorb
     ),
     1,

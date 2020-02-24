@@ -409,13 +409,13 @@
      m2(:,I) = vec
    ENDDO
    m1a=m1
-   m1a(:,N)=0
-   m1m2a = m1a+TRANSPOSE(m1a)
-   m1m2aV = (m1m2a+2)*V
-   m1p1 = m1+1
-   m1p1(:,N) = 0
-   m1p1(:,N-1) = 0
-   m2p1 = TRANSPOSE(m1p1)
+   m1a(:,N)=-1
+   m1m2a=m1a+TRANSPOSE(m1a)
+   m1m2aV=(m1m2a+2)*V
+   m1p1=m1+1
+   m1p1(:,N-1)=0
+   m1p1(:,N)=0
+   m2p1=TRANSPOSE(m1p1)
 
    dq=P(1)*((m1+1)*V2(2:(N+1),1:N)+(m2+1)*V2(1:N,2:(N+1))-m1m2aV)
    dq=dq+P(2)*((m1p1)*V2(2:(N+1),3:(N+2))+(m2p1)*V2(3:(N+2),2:(N+1))-m1m2aV)

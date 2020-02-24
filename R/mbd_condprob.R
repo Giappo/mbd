@@ -35,15 +35,15 @@ condprob_nu_matrix_p <- function(
 
     # absorbing state?
     if (absorb == TRUE) {
-      mm <- lx - 1 # max number of species M
+      n_max <- lx - 1 # max number of species M
       nvec <- 1:lx - 1 # all possible numbers of species
-      nvec2 <- nvec[2 * nvec - mm >= 0] # starting states that can cross limit
+      nvec2 <- nvec[2 * nvec >= n_max] # starting states crossing the limit
       for (n in nvec2) {
-        j <- 0:(2 * n - mm)
+        j <- 0:(2 * n - n_max)
         nu_q_mat[lx, n + 1] <- sum(
-          choose(n, mm - n + j) *
-            q ^ (mm - n + j) *
-            (1 - q) ^ (n - (mm - n + j))
+          choose(n, n_max - n + j) *
+            q ^ (n_max - n + j) *
+            (1 - q) ^ (n - (n_max - n + j))
         )
       }
       testit::assert(all(
@@ -98,18 +98,16 @@ condprob_nu_matrix_q <- function(
 
     # absorbing state?
     if (absorb == TRUE) {
-      nvec <- 1:lx - 1 # possible number of starting species
       n_max <- lx - 1 # max number of species M
-      nvec2 <- nvec[2 * nvec + 1 > n_max] # starting states crossing the limit
+      nvec <- 1:lx - 1 # possible number of starting species
+      nvec2 <- nvec[2 * nvec + 1 >= n_max] # starting states crossing the limit
       for (n in nvec2) {
         j <- 0:(2 * n - n_max + 1) # overshoots on single column
-        # print(j)
         temp <- sum(
           (choose(n, n_max - n + j) + 2 * choose(n, n_max - n + j - 1)) *
             q ^ (n_max - n + j) *
             (1 - q) ^ (n + 1 - (n_max - n + j))
         )
-        # print(temp)
         nu_q_mat[lx, n + 1] <- temp
       }
     }
@@ -292,6 +290,7 @@ condprob_dp_absorb_lambda <- function(
   m2,
   mm
 ) {
+  lx <- ncol(m1)
   mm_minus_one <- mm - 1
   m1a <- m1
   m1a[, lx] <- 0
@@ -315,6 +314,7 @@ condprob_dp_absorb_mu <- function(
   mm
 ) {
   rm(m2)
+  lx <- ncol(m1)
   mm_plus_one <- mm + 1
   m1a <- m1
   m1a[, lx] <- 0
@@ -530,11 +530,11 @@ condprob_dq_absorb_lambda <- function(
   m2,
   mm
 ) {
+  lx <- ncol(m1)
   k <- 1
   mm_minus_one <- mm - 1
   m1a <- m1
-  # m1a[, lx] <- - k
-  m1a[, lx] <- - 0
+  m1a[, lx] <- -k
   m2a <- t(m1a)
 
   dq_lambda_1 <- (2 * k + m1 - 1) * qq2[mm, mm_minus_one]
@@ -555,11 +555,11 @@ condprob_dq_absorb_mu <- function(
   mm
 ) {
   rm(m2)
+  lx <- ncol(m1)
   k <- 1
   mm_plus_one <- mm + 1
   m1a <- m1
-  # m1a[, lx] <- -k
-  m1a[, lx] <- 0
+  m1a[, lx] <- -k
   m2a <- t(m1a)
   m1_plus1 <- m1 + 1
   m1_plus1[, (lx - 1):lx] <- 0 # all elements >= to N = lx - 1 must become zero
@@ -963,22 +963,4 @@ max_lx_condprob <- function() {
 min_lx_condprob <- function() {
   min_lx <- 20
   min_lx
-}
-
-#' Fix the value for lx for condprob in \link{mbd_loglik}
-#' @inheritParams default_params_doc
-#' @export
-get_lx_condprob <- function(pars, n_0, age, lx) {
-  rm(pars)
-  rm(n_0)
-  rm(age)
-
-  lx_condprob <- max(
-    mbd::min_lx_condprob(),
-    min(
-      mbd::max_lx_condprob(),
-      ceiling(lx / 2)
-    )
-  )
-  lx_condprob
 }

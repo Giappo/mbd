@@ -1,14 +1,24 @@
-context("condprob_simplified")
+context("condprob_all")
+
+is_on_ci <- function() {
+  is_it_on_appveyor <- Sys.getenv("APPVEYOR") != ""
+  is_it_on_travis <- Sys.getenv("TRAVIS") != ""
+  is_it_on_appveyor || is_it_on_travis # nolint internal function
+}
 
 # test all condprobs ----
 testthat::test_that("test all condprobs", {
 
-  absorbs <- c(TRUE, FALSE)
+  if (is_on_ci()) {
+    absorbs <- c(TRUE, FALSE)
+    brts <- c(4)
+  } else {
+    absorbs <- c(TRUE)
+    brts <- c(3)
+  }
   fortrans <- c(TRUE, FALSE)
   eqs <- c("p_eq", "q_eq")
-
   pars <- c(0.3, 0.15, 1.8, 0.11)
-  brts <- c(4)
 
   nas <- rep(NA, length(absorbs) * length(fortrans) * length(eqs))
   df <- data.frame(

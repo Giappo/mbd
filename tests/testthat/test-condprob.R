@@ -210,7 +210,7 @@ testthat::test_that("P_{n1, n2} sums up to one", {
 })
 
 # FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions ----
-testthat::test_that("FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions", {
+testthat::test_that("FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2}", {
 
   absorb <- FALSE
   pars <- c(0.3, 0.15, 1.8, 0.11)
@@ -325,7 +325,7 @@ testthat::test_that("FORTRAN vs R: same result but FORTRAN is faster", {
       absorb = absorb
     )
   )[[3]]
-  testthat::expect_equal(pc_r, pc_fortran, tolerance = 1e-3)
+  testthat::expect_equal(pc_fortran, pc_r, tolerance = 1e-4 * abs(pc_r))
   testthat::expect_true(tp_fortran <= tp_r)
 
   # test for the Q-equation
@@ -350,7 +350,7 @@ testthat::test_that("FORTRAN vs R: same result but FORTRAN is faster", {
       absorb = absorb
     )
   )[[3]]
-  testthat::expect_equal(qc_r, qc_fortran, tolerance = 1e-3)
+  testthat::expect_equal(qc_fortran, qc_r, tolerance = 1e-4 * abs(qc_r))
   testthat::expect_true(tq_fortran <= tq_r)
 
 })
@@ -389,7 +389,7 @@ test_that("FORTRAN vs R: hard test", {
       absorb = absorb
     )
   )[[3]]
-  testthat::expect_equal(pc_r, pc_fortran, tolerance = 1e-3)
+  testthat::expect_equal(pc_fortran, pc_r, tolerance = 1e-4 * abs(pc_r))
   testthat::expect_true(tp_fortran <= tp_r)
 
   # test for the Q-equation
@@ -414,7 +414,7 @@ test_that("FORTRAN vs R: hard test", {
       absorb = absorb
     )
   )[[3]]
-  testthat::expect_equal(qc_r, qc_fortran, tolerance = 1e-3)
+  testthat::expect_equal(qc_fortran, qc_r, tolerance = 1e-4 * abs(qc_r))
   testthat::expect_true(tq_fortran <= tq_r)
 
 })
