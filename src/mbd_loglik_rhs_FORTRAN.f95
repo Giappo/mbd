@@ -282,10 +282,9 @@
    dp=dp+P(2)*((m1p1)*V2(2:(N+1),3:(N+2))+(m2p1)*V2(3:(N+2),2:(N+1))-m1m2aV)
 
    ! final state cannot lose probability
-   !dp(N,:)=dp(N,:)+P(2)*m1(N,:)*V(N,:)
-   !dp(:,N)=dp(:,N)+P(2)*m2(:,N)*V(:,N)
-   !dp(N,N)=dp(N,N)-P(2)*m1m2V(N,N)
-   !dp(N,:)=dp(N,:)-P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))
+   !dp(N,:)=dp(N,:)+(P(1)+P(2))*m1(N,:)*V(N,:)
+   !dp(:,N)=dp(:,N)+(P(1)+P(2))*m2(:,N)*V(:,N)
+   !dp(N,N)=dp(N,N)-(P(1)+P(2))*m1m2V(N,N)
 
    CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
    CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
