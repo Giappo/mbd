@@ -3,8 +3,6 @@ context("condprob_simplified")
 # test all condprobs ----
 testthat::test_that("test all condprobs", {
 
-  skip("There are still problems with the absorb")
-
   absorbs <- c(TRUE, FALSE)
   fortrans <- c(TRUE, FALSE)
   eqs <- c("p_eq", "q_eq")
@@ -12,7 +10,7 @@ testthat::test_that("test all condprobs", {
   pars <- c(0.3, 0.15, 1.8, 0.11)
   brts <- c(4)
 
-  nas <- rep(NA, length(absorbs) * length(fortrans) * length(eqs) + 1)
+  nas <- rep(NA, length(absorbs) * length(fortrans) * length(eqs))
   df <- data.frame(
     pc = nas,
     eq = nas,
