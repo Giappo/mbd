@@ -15,15 +15,14 @@ print_from_global <- function(var = "seed") {
 # colSums respect constraints ----
 testthat::test_that("colSums respect constraints", {
 
+  absorb <- TRUE
+  lambda <- 0.8
+  mu <- 0.2
+  nu <- 1
+  lx <- 18
   q_vec <- 0.1 * 1:5
   for (q in q_vec) {
-    absorb <- TRUE
-    lambda <- 0.8
-    mu <- 0.2
-    nu <- 1
-
     pars <- c(lambda, mu, nu, q)
-    lx <- 8
 
     eq <- "p_eq"
     nu_q_mat <- mbd::condprob_nu_matrix_p(pars = pars, lx = lx, absorb = absorb)
@@ -35,8 +34,6 @@ testthat::test_that("colSums respect constraints", {
     eq <- "q_eq"
     nu_q_mat <- mbd::condprob_nu_matrix_q(pars = pars, lx = lx, absorb = absorb)
     testthat::expect_equal(
-      # diag(nu_q_mat),
-      # (1 - q) ^ (0:(lx - 1) + 1) # k is equal to 1
       unname(colSums(nu_q_mat)),
       rep(1 + q, nrow(nu_q_mat))
     )
@@ -49,7 +46,7 @@ testthat::test_that("right parmsvec in FORTRAN and R", {
 
   absorb <- TRUE
   pars <- c(0.3, 0.1, 1.7, 0.13)
-  lx <- 6
+  lx <- 16
   lx2 <- lx ^ 2
 
   # FORTRAN
@@ -239,8 +236,55 @@ testthat::test_that("right differentials in R", {
 
 })
 
-# full P_{n1, n2} and Q_{m1, m2} distributions ----
-testthat::test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
+# P_{n1, n2} sums up to one ----
+testthat::test_that("P_{n1, n2} sums up to one", {
+
+  absorb <- TRUE
+  pars <- c(0.2, 0.1, 2.5, 0.2)
+  lx <- 22
+  brts <- c(2)
+  eq <- "p_eq"
+
+  # R
+  fortran <- FALSE
+  p_n1_n2 <- mbd::condprob_p_n1_n2(
+    rhs_function = mbd::condprob_dp_absorb_rhs,
+    brts = brts,
+    lx = lx,
+    parmsvec = mbd::condprob_parmsvec(
+      pars = pars,
+      eq = eq,
+      lx = lx,
+      absorb = absorb,
+      fortran = fortran
+    )
+  )
+  testthat::expect_equal(
+    1, sum(p_n1_n2), tolerance = 1e-10
+  )
+
+  # FORTRAN
+  fortran <- TRUE
+  p_n1_n2 <- mbd::condprob_p_n1_n2(
+    rhs_function = "mbd_runmodpcp_abs",
+    brts = brts,
+    lx = lx,
+    parmsvec = mbd::condprob_parmsvec(
+      pars = pars,
+      eq = eq,
+      lx = lx,
+      absorb = absorb,
+      fortran = fortran
+    )
+  )
+  testthat::expect_equal(
+    1, sum(p_n1_n2), tolerance = 1e-10
+  )
+
+})
+
+# FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions ----
+testthat::test_that("FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions", {
 
   absorb <- TRUE
   pars <- c(0.3, 0.15, 1.8, 0.11)
@@ -322,40 +366,6 @@ testthat::test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
   # compare the two
   testthat::expect_equal(q_fortran, q_r, tolerance = 1e-3 * q_r)
-
-})
-
-# P_{n1, n2} sums up to one ----
-testthat::test_that("P_{n1, n2} sums up to one", {
-
-  absorb <- TRUE
-  pars <- c(0.2, 0.1, 2.5, 0.2)
-  lx <- 30
-  brts <- c(2)
-  eq <- "p_eq"
-  fortran <- TRUE
-
-  p_n1_n2 <- mbd::condprob_p_n1_n2(
-    rhs_function = "mbd_runmodpcp_abs",
-    brts = brts,
-    lx = lx,
-    parmsvec = mbd::condprob_parmsvec(
-      pars = pars,
-      eq = eq,
-      lx = lx,
-      absorb = absorb,
-      fortran = fortran
-    )
-  )
-
-  testthat::expect_gt(
-    sum(p_n1_n2),
-    0.99
-  )
-  testthat::expect_lte(
-    sum(p_n1_n2),
-    1
-  )
 
 })
 

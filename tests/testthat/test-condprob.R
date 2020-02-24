@@ -176,8 +176,41 @@ testthat::test_that("right differentials in R", {
 
 })
 
-# full P_{n1, n2} and Q_{m1, m2} distributions ----
-testthat::test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
+# P_{n1, n2} sums up to one ----
+testthat::test_that("P_{n1, n2} sums up to one", {
+
+  absorb <- FALSE
+  pars <- c(0.2, 0.1, 2.5, 0.2)
+  lx <- 22
+  brts <- c(2)
+  eq <- "p_eq"
+  fortran <- TRUE #faster
+
+  p_n1_n2 <- mbd::condprob_p_n1_n2(
+    rhs_function = "mbd_runmodpcp",
+    brts = brts,
+    lx = lx,
+    parmsvec = mbd::condprob_parmsvec(
+      pars = pars,
+      eq = eq,
+      lx = lx,
+      absorb = absorb,
+      fortran = fortran
+    )
+  )
+  testthat::expect_gt(
+    sum(p_n1_n2),
+    0.99
+  )
+  testthat::expect_lte(
+    sum(p_n1_n2),
+    1
+  )
+
+})
+
+# FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions ----
+testthat::test_that("FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2} distributions", {
 
   absorb <- FALSE
   pars <- c(0.3, 0.15, 1.8, 0.11)
@@ -259,40 +292,6 @@ testthat::test_that("full P_{n1, n2} and Q_{m1, m2} distributions", {
 
   # compare the two
   testthat::expect_equal(q_fortran, q_r)
-
-})
-
-# P_{n1, n2} sums up to one ----
-testthat::test_that("P_{n1, n2} sums up to one", {
-
-  absorb <- FALSE
-  pars <- c(0.2, 0.1, 2.5, 0.2)
-  lx <- 22
-  brts <- c(2)
-  eq <- "p_eq"
-  fortran <- TRUE
-
-  p_n1_n2 <- mbd::condprob_p_n1_n2(
-    rhs_function = "mbd_runmodpcp",
-    brts = brts,
-    lx = lx,
-    parmsvec = mbd::condprob_parmsvec(
-      pars = pars,
-      eq = eq,
-      lx = lx,
-      absorb = absorb,
-      fortran = fortran
-    )
-  )
-
-  testthat::expect_gt(
-    sum(p_n1_n2),
-    0.99
-  )
-  testthat::expect_lte(
-    sum(p_n1_n2),
-    1
-  )
 
 })
 
