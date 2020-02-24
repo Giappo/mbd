@@ -233,7 +233,8 @@
       DOUBLE PRECISION  :: t, Conc(N ** 2), dConc(N ** 2), yout(*)
       DOUBLE PRECISION  :: vec(N)
       DOUBLE PRECISION  :: dp(N,N), V(N, N), V2(N + 2, N + 2)
-      DOUBLE PRECISION  :: nu_q_mat(N,N), m1(N, N), m2(N,N), m1m2V(N, N)
+      DOUBLE PRECISION  :: nu_q_mat(N,N), m1(N, N), m2(N,N)
+      DOUBLE PRECISION  :: m1m2a(N,N), m1m2aV(N, N), m1p1(N,N), m2p1(N,N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -267,15 +268,24 @@
      m2(:,I) = vec
    ENDDO
    !m2 = TRANSPOSE(m1)
-   m1m2V = (m1+m2)*V
+   m1m2a = m1+m2
+   m1m2a(N,:)=0
+   m1m2a(:,N)=0
+   !m1m2V = (m1+m2)*V
+   m1m2aV = (m1m2a)*V
+   m1p1 = m1+1
+   m1p1(:,N) = 0
+   m1p1(:,N-1) = 0
+   m2p1 = TRANSPOSE(m1p1)
 
-   dp=P(1)*((m1-1)*V2(2:(N+1),1:N)+(m2-1)*V2(1:N,2:(N+1))-m1m2V)
-   dp=dp+P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))-m1m2V)
+   dp=P(1)*((m1-1)*V2(2:(N+1),1:N)+(m2-1)*V2(1:N,2:(N+1))-m1m2aV)
+   dp=dp+P(2)*((m1p1)*V2(2:(N+1),3:(N+2))+(m2p1)*V2(3:(N+2),2:(N+1))-m1m2aV)
 
    ! final state cannot lose probability
-   dp(N,:)=dp(N,:)+(P(1)+P(2))*m1(N,:)*V(N,:)
-   dp(:,N)=dp(:,N)+(P(1)+P(2))*m2(:,N)*V(:,N)
-   dp(N,N)=dp(N,N)-(P(1)+P(2))*m1m2V(N,N)
+   !dp(N,:)=dp(N,:)+P(2)*m1(N,:)*V(N,:)
+   !dp(:,N)=dp(:,N)+P(2)*m2(:,N)*V(:,N)
+   !dp(N,N)=dp(N,N)-P(2)*m1m2V(N,N)
+   !dp(N,:)=dp(N,:)-P(2)*((m1+1)*V2(2:(N+1),3:(N+2))+(m2+1)*V2(3:(N+2),2:(N+1))
 
    CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
    CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
