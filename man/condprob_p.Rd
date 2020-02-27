@@ -4,16 +4,19 @@
 \alias{condprob_p}
 \title{Conditional probability calculated with the P-approach}
 \usage{
-condprob_p(brts, parmsvec, fortran = TRUE, lx)
+condprob_p(brts, parmsvec, lx, fortran = TRUE, absorb)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
 
 \item{parmsvec}{parameters to pass to the FORTRAN scripts}
 
+\item{lx}{it is the number of ODEs considered for the computation.}
+
 \item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 
-\item{lx}{it is the number of ODEs considered for the computation.}
+\item{absorb}{set absorbing states when maximum number of allowed species is
+reached}
 }
 \description{
 Conditional probability calculated with the P-approach

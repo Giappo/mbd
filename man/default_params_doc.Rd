@@ -8,6 +8,7 @@ documentation.}
 default_params_doc(
   a_abstol,
   a_reltol,
+  absorb,
   atol,
   abstol,
   account_name,
@@ -184,6 +185,9 @@ the numerical integration using deSolve.}
 
 \item{a_reltol}{relative error tolerance for
 the numerical integration using deSolve.}
+
+\item{absorb}{set absorbing states when maximum number of allowed species is
+reached}
 
 \item{atol}{absolute error tolerance for
 the numerical integration using deSolve.}

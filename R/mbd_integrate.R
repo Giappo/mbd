@@ -20,7 +20,12 @@ mbd_ode_fortran <- function(
   }
   if (runmod == "mbd_runmod") {
     initfunc <- "mbd_initmod"
-  } else if (runmod == "mbd_runmodpcp" | runmod == "mbd_runmodpcq") {
+  } else if (
+    runmod == "mbd_runmodpcp" |
+    runmod == "mbd_runmodpcq" |
+    runmod == "mbd_runmodpcp_abs" |
+    runmod == "mbd_runmodpcq_abs"
+  ) {
     initfunc <- "mbd_initmodpc"
   }
   options(warn = -1)

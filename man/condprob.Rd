@@ -4,19 +4,22 @@
 \alias{condprob}
 \title{Calculate conditional probability: loglik mode}
 \usage{
-condprob(brts, fortran = TRUE, lx, eq, parmsvec)
+condprob(brts, parmsvec, lx, eq, absorb = TRUE, fortran = TRUE)
 }
 \arguments{
 \item{brts}{A set of branching times of a phylogeny.}
 
-\item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
+\item{parmsvec}{parameters to pass to the FORTRAN scripts}
 
 \item{lx}{it is the number of ODEs considered for the computation.}
 
 \item{eq}{the equation approach you want to use. It can be "q_eq" for the
 Q-equation of "p_eq" for the P-equation.}
 
-\item{parmsvec}{parameters to pass to the FORTRAN scripts}
+\item{absorb}{set absorbing states when maximum number of allowed species is
+reached}
+
+\item{fortran}{Set it to TRUE if you want to use FORTRAN routine.}
 }
 \description{
 Calculate conditional probability: loglik mode
