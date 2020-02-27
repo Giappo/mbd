@@ -5,7 +5,7 @@ Version: 0.2
 Author: Giovanni Laudanno <glaudanno@gmail.com>
 Maintainer: Giovanni Laudanno <glaudanno@gmail.com>
 Depends: 
-  R (>= 3.2.0)
+  R (>= 3.5.0)
 Imports: 
   DDD,
   deSolve,
