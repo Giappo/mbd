@@ -6,6 +6,12 @@ is_on_ci <- function() {
   is_it_on_appveyor || is_it_on_travis # nolint internal function
 }
 
+print_from_global <- function(var = "seed") {
+  if (var %in% ls(.GlobalEnv)) {
+    cat(var, "is", get(var), "\n")
+  }
+}
+
 # test all condprobs ----
 testthat::test_that("test all condprobs", {
 
@@ -31,12 +37,12 @@ testthat::test_that("test all condprobs", {
   for (absorb in absorbs) {
     for (eq in eqs) {
       if (absorb) {
-        lx <- 30
+        lx <- 20
       } else {
-        lx <- 65
+        lx <- 40
       }
       for (fortran in fortrans) {
-        print(i)
+        print_from_global("i")
         df$pc[i] <- mbd::calculate_condprob(
           pars = pars,
           brts = brts,
@@ -55,10 +61,11 @@ testthat::test_that("test all condprobs", {
 
   pc_best <- df$pc[df$eq == "p_eq" & df$absorb == TRUE & df$fortran == FALSE]
   for (i in seq_len(nrow(df))) {
+    tolerance <- 1e-3
     testthat::expect_equal(
       df$pc[i],
       pc_best,
-      tolerance = 1e-4
+      tolerance = tolerance
     )
   }
 

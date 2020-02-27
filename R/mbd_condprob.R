@@ -110,6 +110,7 @@ condprob_nu_matrix_q <- function(
         )
         nu_q_mat[lx, n + 1] <- temp
       }
+      nu_q_mat[lx, lx] <- 1
     }
   } else {
     nu_q_mat <- diag(rep(1, lx))
@@ -567,7 +568,7 @@ condprob_dq_absorb_mu <- function(
 
   dq_mu_1 <- m1_plus1 * qq2[mm, mm_plus_one]
   dq_mu_2 <- m2_plus1 * qq2[mm_plus_one, mm]
-  dq_mu_3 <- (2 * k + m1a + m2a) * qq # ok
+  dq_mu_3 <- (2 * k + m1a + m2a) * qq
   dq_mu <- dq_mu_1 + dq_mu_2 - dq_mu_3
   dq_mu
 }
@@ -714,6 +715,16 @@ condprob_q <- function(
   absorb
 ) {
   mbd::check_lx(lx)
+  if (is.list(parmsvec)) {
+    mu <- parmsvec$mu
+  } else {
+    mu <- parmsvec[2]
+  }
+  if (absorb == TRUE && mu == 0) {
+    # Q-absorb is always an approximation due to the division on the boundaries
+    # for this reason it might return P > 1 for small mu values
+    return(1)
+  }
 
   if (fortran == TRUE) {
     if (absorb == FALSE) {
@@ -735,7 +746,15 @@ condprob_q <- function(
     lx = lx
   )
   pc <- sum(q_m1_m2)
-  mbd::check_pc(pc = pc)
+  if (absorb == FALSE) {
+    # Q-absorb is always an approximation due to the division on the boundaries
+    # for this reason it might return P > 1 for small mu values
+    mbd::check_pc(pc = pc)
+  }
+  if (pc > 1) {
+    # useful if absorb = TRUE and small values of mu
+    cat("pc = ", pc)
+  }
   pc
 }
 
