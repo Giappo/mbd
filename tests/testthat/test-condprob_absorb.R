@@ -289,7 +289,7 @@ testthat::test_that("FORTRAN vs R: full P_{n1, n2} and Q_{m1, m2}", {
 
   absorb <- TRUE
   pars <- c(0.3, 0.15, 1.8, 0.11)
-  lx <- 10
+  lx <- 15
   brts <- c(8)
 
   # P equation
@@ -376,7 +376,7 @@ testthat::test_that("FORTRAN vs R: same result but FORTRAN is faster", {
   absorb <- TRUE
   brts <- c(5)
   pars <- c(0.2, 0.1, 1.2, 0.12)
-  lx <- 10
+  lx <- 15
 
   # test for the P-equation
   eq <- "p_eq"
@@ -536,16 +536,12 @@ test_that("condprob for mu = 0", {
 # bd: nu = q = 0 ----
 test_that("nu = q = 0", {
 
-  if (!is_on_ci()) {
-    skip("To be performed on ci.")
-  }
-
   absorb <- TRUE
   pars <- c(0.2, 0.15, 0, 0)
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 10
+  lx <- 15
   mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2)
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
@@ -587,17 +583,14 @@ test_that("nu = q = 0", {
 # bd: nu = 0 ----
 test_that("nu = 0", {
 
-  if (!is_on_ci()) {
-    skip("To be performed on ci.")
-  }
-
   absorb <- TRUE
   pars <- c(0.2, 0.15, 0, 0.5)
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 10
-  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2)
+  lx <- 15
+  mu_vec <- seq(from = 0.05, to = pars[2], length.out = 2)
+  mu <- 0.05
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
     test0 <- exp(
@@ -638,17 +631,13 @@ test_that("nu = 0", {
 # bd: q = 0 ----
 test_that("q = 0", {
 
-  if (!is_on_ci()) {
-    skip("To be performed on ci.")
-  }
-
   absorb <- TRUE
   pars <- c(0.2, 0.15, 3, 0)
   brts <- c(1)
   cond <- 1
   n_0 <- 2
-  lx <- 10
-  mu_vec <- seq(from = 0.05, to = pars[1], length.out = 2)
+  lx <- 15
+  mu_vec <- seq(from = 0.05, to = pars[2], length.out = 2)
   for (m in seq_along(mu_vec)) {
     pars[2] <- mu_vec[m]
     test0 <- exp(

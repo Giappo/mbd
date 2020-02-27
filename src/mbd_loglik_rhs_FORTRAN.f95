@@ -113,6 +113,7 @@
 !......................... declaration section.............................
       INTEGER           :: neq, ip(*), i, ii
       DOUBLE PRECISION  :: t, Conc(N), dConc(N), yout(*)
+      !REAL(16)         :: V(N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -138,6 +139,14 @@
 !mbd_loglik_rhs <- function(t, x, params) {
 !  list(params %*% x)
 !}
+
+      !DO I = 1, N
+      !  V(I) = 0
+      !  DO II = 1, N
+      !    V(I) = V(I) + P((II - 1) * N + I) * Conc(II)
+      !  ENDDO
+      !  dConc(I) = V(I)
+      !ENDDO
 
       dConc = MATMUL(RESHAPE(P,(/N,N/), order = (/1,2/)),Conc)
 
@@ -187,11 +196,13 @@
    V2 = 0
    V2(2:(N+1),2:(N+1)) = V
    nu_q_mat = RESHAPE(P((3 + 1):(3 + N ** 2)),(/N,N/), order = (/1,2/))
+   !m1 = RESHAPE(P((3 + N ** 2 + 1):(3 + 2 * N ** 2)),(/N,N/), order = (/1,2/))
    vec = (/(I, I = 0, N - 1, 1)/)
    DO I = 1, N
      m1(I,:) = vec
      m2(:,I) = vec
    ENDDO
+   !m2 = TRANSPOSE(m1)
    m1m2V = (m1+m2)*V
 
    dp=P(1)*((m1-1)*V2(2:(N+1),1:N)+(m2-1)*V2(1:N,2:(N+1))-m1m2V)
@@ -199,10 +210,9 @@
 
    CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
    CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
-   dp = dp + P(3) * V
 
-   ! The last three lines are the same as:
-   ! dp=dp+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
+   dp=dp+P(3)*V
+   !dp=dp+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
 
    dConc = RESHAPE(dp,(/N ** 2/))
 
@@ -224,7 +234,7 @@
       DOUBLE PRECISION  :: vec(N)
       DOUBLE PRECISION  :: dp(N,N), V(N, N), V2(N + 2, N + 2)
       DOUBLE PRECISION  :: nu_q_mat(N,N), m1(N, N), m2(N,N), m1a(N, N)
-      DOUBLE PRECISION  :: m1m2aV(N, N), m1p1(N,N), m2p1(N,N)
+      DOUBLE PRECISION  :: m1m2a(N,N), m1m2aV(N, N), m1p1(N,N), m2p1(N,N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -257,22 +267,28 @@
      m1(I,:) = vec
      m2(:,I) = vec
    ENDDO
-   m1a = m1
-   m1a(:,N) = 0
-   m1m2aV = (m1a + TRANSPOSE(m1a)) * V
-   m1p1 = m1 + 1
-   m1p1(:,(N - 1):N) = 0
+   m1a=m1
+   m1a(:,N)=0
+   m1m2a = m1a+TRANSPOSE(m1a)
+   m1m2aV = (m1m2a)*V
+   m1p1 = m1+1
+   m1p1(:,N) = 0
+   m1p1(:,N-1) = 0
    m2p1 = TRANSPOSE(m1p1)
 
    dp=P(1)*((m1-1)*V2(2:(N+1),1:N)+(m2-1)*V2(1:N,2:(N+1))-m1m2aV)
    dp=dp+P(2)*((m1p1)*V2(2:(N+1),3:(N+2))+(m2p1)*V2(3:(N+2),2:(N+1))-m1m2aV)
 
+   ! final state cannot lose probability
+   !dp(N,:)=dp(N,:)+(P(1)+P(2))*m1(N,:)*V(N,:)
+   !dp(:,N)=dp(:,N)+(P(1)+P(2))*m2(:,N)*V(:,N)
+   !dp(N,N)=dp(N,N)-(P(1)+P(2))*m1m2V(N,N)
+
    CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
    CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
-   dp = dp + P(3) * V
 
-   ! The last three lines are the same as:
-   ! dp=dp+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
+   dp=dp+P(3)*V
+   !dp=dp+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
 
    dConc = RESHAPE(dp,(/N ** 2/))
 
@@ -333,10 +349,10 @@
 
    CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
    CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
-   dq = dq + P(3) * V
 
-   ! The last three lines are the same as:
-   ! dq=dq+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
+   dq=dq+P(3)*V
+
+   !dq=dq+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
 
    dConc = RESHAPE(dq,(/N ** 2/))
 
@@ -359,7 +375,7 @@
       DOUBLE PRECISION  :: vec(N)
       DOUBLE PRECISION  :: dq(N,N), V(N, N), V2(N + 2, N + 2)
       DOUBLE PRECISION  :: nu_q_mat(N,N), m1(N, N), m2(N,N), m1a(N, N)
-      DOUBLE PRECISION  :: m1m2aV(N, N), m1p1(N,N), m2p1(N,N)
+      DOUBLE PRECISION  :: m1m2a(N,N), m1m2aV(N, N), m1p1(N,N), m2p1(N,N)
 
 ! parameters - named here
       DOUBLE PRECISION rn
@@ -392,12 +408,14 @@
      m1(I,:) = vec
      m2(:,I) = vec
    ENDDO
-   m1a = m1
-   m1a(:,N) = -1
-   m1m2aV = (m1a + TRANSPOSE(m1a)) * V
-   m1p1 = m1 + 1
-   m1p1(:,(N - 1):N) = 0
-   m2p1 = TRANSPOSE(m1p1)
+   m1a=m1
+   m1a(:,N)=-1
+   m1m2a=m1a+TRANSPOSE(m1a)
+   m1m2aV=(m1m2a+2)*V
+   m1p1=m1+1
+   m1p1(:,N-1)=0
+   m1p1(:,N)=0
+   m2p1=TRANSPOSE(m1p1)
 
    dq=P(1)*((m1+1)*V2(2:(N+1),1:N)+(m2+1)*V2(1:N,2:(N+1))-m1m2aV)
    dq=dq+P(2)*((m1p1)*V2(2:(N+1),3:(N+2))+(m2p1)*V2(3:(N+2),2:(N+1))-m1m2aV)
@@ -409,12 +427,10 @@
 
    CALL dgemm('n','n',N,N,N,1.d0,nu_q_mat,N,V,N,0.d0,m1,N)
    CALL dgemm('n','t',N,N,N,1.d0,m1,N,nu_q_mat,N,-1.d0,V,N)
-   dq = dq + P(3) * V
 
-   ! The last three lines are the same as:
-   ! dq=dq+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
+   dq=dq+P(3)*V
+   !dq=dq+P(3)*(MATMUL(MATMUL(nu_q_mat,V),TRANSPOSE(nu_q_mat)) - V)
 
    dConc = RESHAPE(dq,(/N ** 2/))
 
    END SUBROUTINE mbd_runmodpcq_abs
-

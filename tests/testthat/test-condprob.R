@@ -301,7 +301,7 @@ testthat::test_that("FORTRAN vs R: same result but FORTRAN is faster", {
   absorb <- FALSE
   brts <- c(5)
   pars <- c(0.2, 0.1, 1.2, 0.12)
-  lx <- 22
+  lx <- 24
 
   # test for the P-equation
   eq <- "p_eq"
