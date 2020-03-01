@@ -1,40 +1,6 @@
 library(mbd)
 # path setting
-get_dropbox_folder <- function() {
-
-  if (!require("RJSONIO")) {install.packages("RJSONIO")}
-
-  if (Sys.info()['sysname'] == 'Darwin')
-  {
-    info <- RJSONIO::fromJSON(
-      file.path(path.expand("~"),'.dropbox','info.json'))
-  }
-  if (Sys.info()['sysname'] == 'Windows')
-  {
-    info <- RJSONIO::fromJSON(
-      if (file.exists(file.path(Sys.getenv('APPDATA'), 'Dropbox','info.json'))) {
-        file.path(Sys.getenv('APPDATA'), 'Dropbox', 'info.json')
-      } else {
-        file.path(Sys.getenv('LOCALAPPDATA'),'Dropbox','info.json')
-      }
-    )
-  }
-  dropbox_base <- info$personal$path
-  dropbox_base
-}
-get_project_folder <- function(project_name = get_pkg_name()) {
-  db_dir <- get_dropbox_folder()
-  home_dir <- db_dir
-  home_dir <- file.path(db_dir, "university", "Progress")
-  home_files <- list.files(paste0(home_dir))
-  project_folder <- home_files[which(grepl(
-    pattern = project_name,
-    x = home_files
-  ))]
-  project_folder <- file.path(home_dir, project_folder)
-  project_folder
-}
-pkg_folder <- file.path(get_project_folder(), "mbd", "inst", "extdata")
+pkg_folder <- file.path(getwd(), "inst", "extdata")
 data_folder <- system.file("extdata", package = get_pkg_name())
 if (!dir.exists(data_folder)) {
   dir.create(data_folder)
@@ -51,7 +17,6 @@ filename2_rdata <- paste0(filename2, ".RData")
 fortran <- TRUE
 absorbs <- c(TRUE, FALSE)
 eqs <- c("p_eq", "nee", "q_eq")
-# mbd_params <- mbd::mbd_experiment_pars()
 mbd_params <- expand.grid(
   lambda = c(0.3),
   mu = c(0.1),
@@ -62,9 +27,10 @@ mbd_params <- expand.grid(
   eq = eqs,
   absorb = absorbs
 )
+mbd_params$eqabsorb <- interaction(mbd_params$eq, mbd_params$absorb)
 # lx settings
 lx_min <- 10
-lx_max <- 50
+lx_max <- 100
 if (file.exists(filename2_rdata)) {
   load(filename2_rdata)
   lx_loaded <- 0
@@ -80,7 +46,7 @@ lx_seq2 <- seq(from = max(lx_min, lx_loaded + 5), to = lx_max, by = 5)
 res <- data.frame(matrix(
   NA,
   nrow = nrow(mbd_params),
-  ncol = ncol(mbd_params) + length(lx_seq)
+  ncol = ncol(mbd_params) + length(lx_seq) + 1
 ))
 if (file.exists(filename2_rdata)) {
   res[1:nrow(res2), 1:ncol(res2)] <- res2
@@ -96,11 +62,15 @@ for (i in seq_along(lx_seq)) {
       age <- mbd_params[j, "age"]
       brts <- c(age)
       eq <- mbd_params[j, "eq"]
+      absorb <- mbd_params[j, "absorb"]
+      eqabsorb <- mbd_params[j, "eqabsorb"]
+
       res[j, mbd::get_param_names()] <- pars
       res[j, "cond"] <- cond
       res[j, "age"] <- age
       res[j, "eq"] <- as.character(eq)
       res[j, "absorb"] <- absorb
+      res[j, "eqabsorb"] <- as.character(eqabsorb)
       res[j, paste0("lx=", lx)] <- mbd::calculate_condprob(
         pars = pars,
         brts = brts,
@@ -123,19 +93,32 @@ for (i in seq_along(lx_seq)) {
     df2[, "lx"] <- as.numeric(gsub(x = df2[, "lx"], pattern = "lx=", replacement = ""))
     df2$parsetting <- interaction(df2$lambda, df2$mu, df2$nu, df2$q, sep = "-")
 
+    allowed_eqabsorb <- c(
+     "p_eq.TRUE",
+     "p_eq.FALSE",
+     # "q_eq.FALSE",
+     "nee.TRUE"
+    )
+    allowed_lx <- df2$lx >= 20
+    df3 <- df2[
+      df2$eqabsorb %in% allowed_eqabsorb &
+        allowed_lx,
+      ]
+
     # plot i-th
     pc_plot <- ggplot2::ggplot(
-      data = df2,
+      data = df3,
       ggplot2::aes(
         x = lx,
         y = value,
-        colour = eq:absorb
+        colour = eqabsorb
       )
     ) +
       ggplot2::geom_line() +
       ggplot2::theme_bw() +
       ggplot2::facet_wrap(
-        parsetting ~ .
+        parsetting ~ .,
+        scales = "free"
       ) +
       ggplot2::ggtitle(paste0(
         "Conditional probabilities vs lx - pars = c(lambda, mu, nu, q) - age = ", age

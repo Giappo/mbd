@@ -753,7 +753,7 @@ condprob_q <- function(
   }
   if (pc > 1) {
     # useful if absorb = TRUE and small values of mu
-    cat("pc = ", pc)
+    cat("pc = ", pc, "\n")
   }
   pc
 }
