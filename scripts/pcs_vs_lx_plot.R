@@ -106,9 +106,8 @@ pc_plot <- ggplot2::ggplot(
   ggplot2::geom_line() +
   ggplot2::theme_bw() +
   ggplot2::facet_wrap(
-  # ggplot2::facet_grid(
+    ncol = 5,
     parsetting ~ .,
-    # nu ~ q,
     scales = "free",
     labeller = ggplot2::labeller(
       nu = ggplot2::as_labeller(nu_labels, ggplot2::label_parsed),
@@ -127,13 +126,47 @@ pc_plot <- ggplot2::ggplot(
   ) +
   ggplot2::xlab("N")
 pc_plot
+pc_plot2 <- ggplot2::ggplot(
+  data = df3,
+  ggplot2::aes(
+    x = lx,
+    y = value,
+    colour = model
+  )
+) +
+  ggplot2::geom_line() +
+  ggplot2::theme_bw() +
+  ggplot2::facet_wrap(
+    nrow = 5,
+    parsetting ~ .,
+    scales = "free",
+    labeller = ggplot2::labeller(
+      nu = ggplot2::as_labeller(nu_labels, ggplot2::label_parsed),
+      q = ggplot2::as_labeller(q_labels, ggplot2::label_parsed)
+    )
+  ) +
+  ggplot2::ggtitle(
+    paste0("Conditional probabilities vs N"),
+    subtitle = expression(paste(
+      "pars = (", lambda, ", ", mu, ", ", nu, ", q) - age = ", 6
+    ))
+  ) +
+  ggplot2::theme(
+    plot.title = ggplot2::element_text(hjust = 0.5),
+    plot.subtitle = ggplot2::element_text(hjust = 0.5)
+  ) +
+  ggplot2::xlab("N")
 
 # save
-dpi <- min(2000, 25 * max(lx_seq))
+dpi <- min(1000, 25 * max(lx_seq))
 scale <- 1.5
 ggplot2::ggsave(filename = filename_png, plot = pc_plot, dpi = dpi, scale = scale)
 ggplot2::ggsave(filename = filename2_png, plot = pc_plot, dpi = dpi, scale = scale)
 
+ggplot2::ggsave(filename = paste0(tools::file_path_sans_ext(filename_png), "2.png"), plot = pc_plot2, dpi = dpi, scale = scale)
+ggplot2::ggsave(filename = paste0(tools::file_path_sans_ext(filename2_png), "2.png"), plot = pc_plot2, dpi = dpi, scale = scale)
+
+
 # detail
-# ggplot2::ggsave(filename = file.path(dirname(filename_png), "pc_detail.png"), plot = pc_plot, dpi = dpi, scale = scale)
-# ggplot2::ggsave(filename = file.path(dirname(filename2_png), "pc_detail.png"), plot = pc_plot, dpi = dpi, scale = scale)
+# ggplot2::ggsave(filename = file.path(dirname(filename_png), "condprobs_detail.png"), plot = pc_plot, dpi = dpi, scale = scale)
+# ggplot2::ggsave(filename = file.path(dirname(filename2_png), "condprobs_detail.png"), plot = pc_plot, dpi = dpi, scale = scale)
