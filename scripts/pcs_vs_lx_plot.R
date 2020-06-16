@@ -1,6 +1,6 @@
 library(mbd) #rm(list = ls())
 # path setting
-pkg_folder <- file.path(getwd(), "inst", "extdata")
+pkg_folder <- file.path(dirname(file.choose()), "inst", "extdata")
 data_folder <- system.file("extdata", package = get_pkg_name())
 if (!dir.exists(data_folder)) {
   dir.create(data_folder)
@@ -12,7 +12,7 @@ filename_rdata <- paste0(filename, ".RData")
 filename2 <- file.path(pkg_folder, name)
 filename2_png <- paste0(filename2, ".png")
 filename2_rdata <- paste0(filename2, ".RData")
-load(file.path(pkg_folder, paste0(name, ".RData")))
+load(file.path(data_folder, paste0(name, ".RData")))
 
 # lx settings
 lx_seq <- sort(as.numeric(
@@ -88,10 +88,11 @@ df3$model <- plyr::revalue(
     "p_eq.TRUE" = "Pc - absorb"
   )
 )
+df3 <- df3 %>% dplyr::rename(Model = model)
 df4 <- df3
 df4["value"] <- log10(df4["value"])
-df5 <- df4[df4[, "model"] == "Nee" | df4[, "model"] == "Pc - absorb", ]
-df6 <- df3[df3[, "model"] == "Nee" | df3[, "model"] == "Pc - absorb", ]
+df5 <- df4[df4[, "Model"] == "Nee" | df4[, "Model"] == "Pc - absorb", ]
+df6 <- df3[df3[, "Model"] == "Nee" | df3[, "Model"] == "Pc - absorb", ]
 df6 <- df6[df6$lx <= 40, ]
 
 # plot i-th
@@ -100,7 +101,7 @@ pc_plot <- ggplot2::ggplot(
   ggplot2::aes(
     x = lx,
     y = value,
-    colour = model
+    colour = Model
   )
 ) +
   ggplot2::geom_line() +
@@ -122,7 +123,8 @@ pc_plot <- ggplot2::ggplot(
   ) +
   ggplot2::theme(
     plot.title = ggplot2::element_text(hjust = 0.5),
-    plot.subtitle = ggplot2::element_text(hjust = 0.5)
+    plot.subtitle = ggplot2::element_text(hjust = 0.5),
+    legend.position = "bottom"
   ) +
   ggplot2::xlab("N")
 pc_plot
@@ -131,7 +133,7 @@ pc_plot2 <- ggplot2::ggplot(
   ggplot2::aes(
     x = lx,
     y = value,
-    colour = model
+    colour = Model
   )
 ) +
   ggplot2::geom_line() +
@@ -153,19 +155,33 @@ pc_plot2 <- ggplot2::ggplot(
   ) +
   ggplot2::theme(
     plot.title = ggplot2::element_text(hjust = 0.5),
-    plot.subtitle = ggplot2::element_text(hjust = 0.5)
+    plot.subtitle = ggplot2::element_text(hjust = 0.5),
+    legend.position = "bottom"
   ) +
-  ggplot2::xlab("N")
+  ggplot2::xlab("N"); pc_plot2
 
 # save
 dpi <- min(1000, 25 * max(lx_seq))
-scale <- 1.5
-ggplot2::ggsave(filename = filename_png, plot = pc_plot, dpi = dpi, scale = scale)
-ggplot2::ggsave(filename = filename2_png, plot = pc_plot, dpi = dpi, scale = scale)
+scale <- 0.85
+ratio <- 300 / 220
+width <- 180
+ggplot2::ggsave(
+  filename = filename_png, plot = pc_plot, dpi = dpi, scale = scale,
+  width = 210, height = 297, units = "mm"
+)
+ggplot2::ggsave(
+  filename = filename2_png, plot = pc_plot, dpi = dpi, scale = scale,
+  width = 210, height = 297, units = "mm"
+)
 
-ggplot2::ggsave(filename = paste0(tools::file_path_sans_ext(filename_png), "2.png"), plot = pc_plot2, dpi = dpi, scale = scale)
-ggplot2::ggsave(filename = paste0(tools::file_path_sans_ext(filename2_png), "2.png"), plot = pc_plot2, dpi = dpi, scale = scale)
-
+ggplot2::ggsave(
+  filename = paste0(tools::file_path_sans_ext(filename_png), "2.png"), plot = pc_plot2, dpi = dpi, scale = scale,
+  width = width, height = width * ratio, units = "mm"
+)
+ggplot2::ggsave(
+  filename = paste0(tools::file_path_sans_ext(filename2_png), "2.png"), plot = pc_plot2, dpi = dpi, scale = scale,
+  width = width, height = width * ratio, units = "mm"
+)
 
 # detail
 # ggplot2::ggsave(filename = file.path(dirname(filename_png), "condprobs_detail.png"), plot = pc_plot, dpi = dpi, scale = scale)
