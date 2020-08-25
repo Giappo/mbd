@@ -1,6 +1,13 @@
 language: r
 cache: packages
 
+matrix:
+  include:
+  - r: release
+    os: linux
+  - r: devel
+    os: linux
+
 r_packages:
   - BH
   - devtools
@@ -22,10 +29,10 @@ before_script:
   - if [ -f ".lintr" ]; then echo "Do use Hadley Wickham's style guide"; exit 1; fi
   # proselint
   - sudo pip install proselint
-  
+
 script:
   - travis_wait 60 R CMD build .
-  - travis_wait 60 R CMD check mbd*tar.gz
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_R_VERSION_STRING" == "release" ]; then travis_wait 60 R CMD check *tar.gz; fi
 
 after_success:
   - Rscript -e 'lintr::lint_package()'
