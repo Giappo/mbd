@@ -1,5 +1,5 @@
 ## ------------------------------------------------------------------------
-# devtools::install_github("Giappo/mbd", quiet = TRUE)
+# devtools::install_github("Giappo/mbd", quiet = TRUE) # nolint
 library(mbd)
 
 ## ------------------------------------------------------------------------
@@ -15,8 +15,8 @@ q <- 0.1 # single-lineage speciation probability
 crown_age <- 1
 sim_pars <- c(lambda, mu, nu, q)
 sim <- mbd::mbd_sim(
-  pars = sim_pars, 
-  n_0 = 2, # Use a crown age 
+  pars = sim_pars,
+  n_0 = 2, # Use a crown age
   age = crown_age,
   cond = 1 # Condition on non-extinction
 )
@@ -35,14 +35,14 @@ knitr::kable(head(sim$brts))
 
 ## ------------------------------------------------------------------------
 mbd::mbd_loglik(
-  pars = c(lambda, mu, nu, q), 
-  brts = sim$brts, 
-  n_0 = 2, # Crown age 
-  cond = 1  # Non-extinction 
+  pars = c(lambda, mu, nu, q),
+  brts = sim$brts,
+  n_0 = 2, # Crown age
+  cond = 1  # Non-extinction
 )
 
 ## ------------------------------------------------------------------------
-phylogeny <- ape::read.tree(text = "((A:1, B:1):2, C:3);")  
+phylogeny <- ape::read.tree(text = "((A:1, B:1):2, C:3);")
 ape::plot.phylo(phylogeny)
 brts <- ape::branching.times(phylogeny)
 
@@ -60,4 +60,3 @@ out <- mbd::mbd_ml(
   verbose = TRUE
 )
 knitr::kable(out)
-
