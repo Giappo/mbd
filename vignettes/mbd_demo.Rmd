@@ -69,8 +69,8 @@ Then we set some basic parameters to create a simulated tree:
 crown_age <- 1
 sim_pars <- c(lambda, mu, nu, q)
 sim <- mbd::mbd_sim(
-  pars = sim_pars, 
-  n_0 = 2, # Use a crown age 
+  pars = sim_pars,
+  n_0 = 2, # Use a crown age
   age = crown_age,
   cond = 1 # Condition on non-extinction
 )
@@ -141,8 +141,8 @@ generated the branching times:
 
 ```{r}
 mbd::mbd_loglik(
-  pars = c(lambda, mu, nu, q), 
-  brts = sim$brts, 
+  pars = c(lambda, mu, nu, q),
+  brts = sim$brts,
   n_0 = 2, # Crown age
   cond = 1  # Non-extinction
 )
